@@ -8,10 +8,11 @@ def load_prompt(file):
   """
 
   prompt = []
-  with open(file, "r") as f:
+  with open(file, "r", encoding="utf-8") as f:
     lines = f.readlines()
 
   i = 0
+  question = 150
   while i < len(lines):
     # Lấy câu hỏi
     question = lines[i].strip()
@@ -37,7 +38,7 @@ def load_prompt(file):
       "role": "user" if i % 2 == 1 else "model",
     })
 
-  return prompt, question
+  return prompt
 
 # Save json
 def vals_save(file_name, variable_name, variable_value):

@@ -5,7 +5,7 @@ import re
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 
-from utils.funcs import load_prompt
+from utils.funcs import load_prompt, txt_read
 
 safety ={
         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.	BLOCK_NONE,
@@ -19,7 +19,8 @@ model = genai.GenerativeModel('gemini-pro', safety_settings=safety)
 igmodel = genai.GenerativeModel('gemini-pro-vision', safety_settings=safety)
 
 prompt = load_prompt("saves/chat.txt")
-remind, num = load_prompt("saves/limit.txt")
+remind = load_prompt("saves/limit.txt")
+num = txt_read("saves/limit.txt")
 
 limit = 150
 
