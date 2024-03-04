@@ -7,7 +7,7 @@ from utils.reply import reply_id
 @tasks.loop(seconds=1)
 async def sec_check():
     from utils.bot import bot, val
-    if val.CD < 2 and val.now_chat:
+    if val.CD == 0 and val.now_chat:
         await reply_id()
         
     if val.CD > 0:
