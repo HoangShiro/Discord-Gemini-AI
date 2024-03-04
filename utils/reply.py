@@ -48,6 +48,6 @@ async def reply_id():
             text = list_to_str(val.now_chat)
             reply = await gemini_rep(text)
             await channel.send(reply)
-            val.set('CD', 3)
+            val.set('CD', 10)
         val.set('now_chat', [])
         val.set('CD_idle', 0)

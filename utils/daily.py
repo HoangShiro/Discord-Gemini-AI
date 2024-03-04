@@ -13,6 +13,8 @@ async def sec_check():
         val.set('CD', 300)
     if val.CD_idle < 300:
         val.update('CD_idle', 1)
+        if val.CD == 0:
+            val.set('CD', 5)
     
     if val.CD == 0 and val.now_chat:
         await reply_id()

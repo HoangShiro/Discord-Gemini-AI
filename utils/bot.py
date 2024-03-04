@@ -115,7 +115,7 @@ async def on_message(message):
     if not val.now_chat:
         val.set('now_chat', [chat])
     else:
-        val.now_chat = val.now_chat.append(chat)
+        val.now_chat = val.now_chat.extend(chat)
     if val.now_chat:
         if len(val.now_chat) >= 10:
             val.now_chat.pop(0)
@@ -127,12 +127,12 @@ async def on_message(message):
         val.update('CD', -100)"""
 
     # Trả lời tin nhắn ngay nếu nhắc tới bot
-    if str(bot.user.id) in message.content:
+    if bot.user in message.mentions:
         async with message.channel.typing():
             text = list_to_str(val.now_chat)
             reply = await gemini_rep(text)
             await message.reply(reply)
-            val.set('CD', 3)
+            val.set('CD', 10)
         val.set('now_chat', [])
         val.set('CD_idle', 0)
 
