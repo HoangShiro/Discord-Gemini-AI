@@ -127,7 +127,7 @@ async def on_message(message):
         val.update('CD', -100)"""
 
     # Trả lời tin nhắn ngay nếu nhắc tới bot
-    if bot.user.id in message.content:
+    if str(bot.user.id) in message.content:
         async with message.channel.typing():
             text = list_to_str(val.now_chat)
             reply = await gemini_rep(text)
