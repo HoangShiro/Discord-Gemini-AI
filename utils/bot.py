@@ -68,7 +68,9 @@ val = AllStatus()
 async def on_ready():
     await bot.change_presence(activity=now_mood, status=idle_status)
     val.set('ai_name', bot.user.name)
-    await sec_check()
+    
+    asyncio.create_task(sec_check())
+    sec_check.start()
 
     print(f'{val.ai_name} đã sẵn sàng!')
 
