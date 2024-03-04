@@ -4,7 +4,7 @@ from io import BytesIO
 from discord.ext import commands, tasks
 from discord.ui import View, button
 
-from saves.keys.py import discord_bot_key
+from saves.keys import discord_bot_key
 from utils.api import *
 from utils.status import *
 from utils.reply import *
