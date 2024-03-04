@@ -89,14 +89,19 @@ async def on_message(message):
     # Check bot public hay bot private
     user_name = "Noname"
     if val.owner_uid != 0:
-        user_name = message.author.name
         if message.author.id != val.owner_uid: return
     else:
-        user_name = message.author.nick
-        if not user_name:
-            user_name = message.author.name
         if message.content:
             val.set('ai_channel', message.channel.id)
+
+    # Lấy user name
+    user_name = ""
+    try:
+        user_name = message.author.nick
+    except:
+        pass
+    if not user_name:
+        user_name = message.author.name
 
     # Xử lý tin nhắn
     if message.content and not message.attachments:
