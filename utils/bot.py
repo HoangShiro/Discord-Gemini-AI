@@ -1,4 +1,4 @@
-import discord, PIL.Image, asyncio, json, os
+import discord, PIL.Image, asyncio, json
 
 from io import BytesIO
 from discord.ext import commands, tasks
