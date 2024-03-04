@@ -116,7 +116,7 @@ async def on_message(message):
         val.set('now_chat', [chat])
         print(val.now_chat)
     else:
-        new_chat = [val.now_chat, chat]
+        new_chat = val.now_chat.append(chat)
         val.set('now_chat', new_chat)
         print(val.now_chat)
     if val.now_chat:
