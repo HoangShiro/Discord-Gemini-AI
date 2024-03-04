@@ -16,5 +16,5 @@ async def sec_check():
         if val.CD == 0:
             val.set('CD', 5)
     
-    if val.CD == 0 and val.now_chat:
+    if val.CD < 2 and val.now_chat:
         await reply_id()

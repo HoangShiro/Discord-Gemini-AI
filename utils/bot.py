@@ -86,7 +86,7 @@ async def on_message(message):
         val.set('prompt_fix', False)
         return
 
-    if message.author == bot.user or message.content.startswith((".", "<", "!", ",", "/")): return
+    if message.author == bot.user or message.content.startswith((".", "!", ",", "/")): return
 
     # Check bot public hay bot private
     user_name = "Noname"
