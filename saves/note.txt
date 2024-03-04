@@ -1,0 +1,5 @@
+config file here.
+- prompt.txt: Prompt file.
+- limit.txt: Tell your AI to shorten the chat or correct the content if it becomes out of control.
+- vals.json: Bot values.
+- keys.py: Secrets.
