@@ -110,7 +110,10 @@ async def on_message(message):
         chat = f"{user_name}: " + await IMG_read(message)
     
     # Nhớ tin nhắn
-    val.now_chat = val.now_chat.append(chat)
+    if not val.now_chat:
+        val.set('now_chat', [chat])
+    else:
+        val.now_chat = val.now_chat.append(chat)
     if val.now_chat:
         if len(val.now_chat) >= 10:
             val.now_chat.pop(0)
