@@ -7,6 +7,9 @@ from utils.reply import reply_id
 @tasks.loop(seconds=1)
 async def sec_check():
     from utils.bot import bot, val
+    if val.CD < 2 and val.now_chat:
+        await reply_id()
+        
     if val.CD > 0:
         val.update('CD', -1)
     if val.CD_idle == 300:
@@ -15,6 +18,3 @@ async def sec_check():
         val.update('CD_idle', 1)
         if val.CD == 0:
             val.set('CD', 5)
-    
-    if val.CD < 2 and val.now_chat:
-        await reply_id()
