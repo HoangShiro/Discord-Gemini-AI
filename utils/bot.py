@@ -116,7 +116,7 @@ async def on_message(message):
         val.set('now_chat', [chat])
         print(val.now_chat)
     else:
-        val.set('now_chat', val.now_chat.append([chat]))
+        #val.set('now_chat', val.now_chat.append(chat))
         print(val.now_chat)
     if val.now_chat:
         if len(val.now_chat) >= 10:
