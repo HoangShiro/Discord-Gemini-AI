@@ -111,8 +111,9 @@ async def on_message(message):
     
     # Nhớ tin nhắn
     val.now_chat = val.now_chat.append(chat)
-    if len(val.now_chat) >= 10:
-        val.now_chat.pop(0)
+    if val.now_chat:
+        if len(val.now_chat) >= 10:
+            val.now_chat.pop(0)
 
     # Nếu tin nhắn có nhắc tới bot
     """names = val.ai_name.split(" ")

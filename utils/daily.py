@@ -8,7 +8,7 @@ from utils.reply import reply_id
 async def sec_check():
     from utils.bot import bot, val
     if val.CD > 0:
-        val.update('CD' -1)
+        val.update('CD', -1)
     if val.CD_idle == 300:
         val.set('CD', 300)
     if val.CD_idle < 300:
