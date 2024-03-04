@@ -1,5 +1,5 @@
 """Xử lý thông tin của API"""
-from saves.keys.py import ggai_key
+from saves.keys import ggai_key
 
 import re
 import google.generativeai as genai
