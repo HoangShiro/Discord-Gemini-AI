@@ -114,9 +114,10 @@ async def on_message(message):
     # Nhớ tin nhắn
     if not val.now_chat:
         val.set('now_chat', [chat])
+        print(val.now_chat)
     else:
-        new_chat = val.now_chat.extend(chat)
-        val.set('now_chat', new_chat)
+        val.set('now_chat', val.now_chat.append(chat))
+        print(val.now_chat)
     if val.now_chat:
         if len(val.now_chat) >= 10:
             val.now_chat.pop(0)
