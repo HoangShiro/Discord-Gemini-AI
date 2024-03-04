@@ -68,7 +68,7 @@ val = AllStatus()
 async def on_ready():
     await bot.change_presence(activity=now_mood, status=idle_status)
     val.set('ai_name', bot.user.name)
-    
+
     asyncio.create_task(sec_check())
     sec_check.start()
 
@@ -127,7 +127,7 @@ async def on_message(message):
         val.update('CD', -100)"""
 
     # Trả lời tin nhắn ngay nếu nhắc tới bot
-    if bot.user in message.mentions:
+    if bot.user.id in message.content:
         async with message.channel.typing():
             text = list_to_str(val.now_chat)
             reply = await gemini_rep(text)
