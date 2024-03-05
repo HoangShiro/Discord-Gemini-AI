@@ -19,21 +19,22 @@ model = genai.GenerativeModel('gemini-pro', safety_settings=safety)
 igmodel = genai.GenerativeModel('gemini-pro-vision', safety_settings=safety)
 
 prompt = load_prompt("saves/chat.txt")
-remind = load_prompt("saves/limit.txt")
-num = txt_read("saves/limit.txt")
-
-limit = 150
-
-if num:
-    num = re.sub(r"[^\d]", "", num)
-if num:
-    limit = int(num)
 
 chat = model.start_chat(history=prompt)
 
 # Gemini
 async def gemini_rep(mess):
     response = chat.send_message(mess)
+
+    remind = load_prompt("saves/limit.txt")
+    num = txt_read("saves/limit.txt")
+
+    limit = 150
+
+    if num:
+        num = re.sub(r"[^\d]", "", num)
+    if num:
+        limit = int(num)
     if len(response.text) > limit:
         chat.history.extend(remind)
     return response.text

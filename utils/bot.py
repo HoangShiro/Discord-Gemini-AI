@@ -201,9 +201,10 @@ async def newchat(interaction: discord.Interaction):
     if val.owner_uid != 0:
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(f"`Bạn hem có quyền sử dụng lệnh nỳ.`", ephemeral=True)
-        
+    
+    new_prpt = load_prompt("saves/chat.txt")
     chat.history.clear()
-    chat.history.extend(prompt)
+    chat.history.extend(new_prpt)
     await char_check()
     await interaction.response.send_message(f"`Đã làm mới cuộc trò chuyện. Tính cách hiện tại: {val.ai_char}`", ephemeral=True)
 
