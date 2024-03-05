@@ -146,18 +146,21 @@ async def on_message(message):
     val.set('last_uname', user_name)
 
     # Xử lý tin nhắn
+    chat = ""
     if message.content and not message.attachments:
         chat = f"{user_name}: " + message.content
     elif message.attachments:
         chat = f"{user_name}: " + await IMG_read(message)
     
     # Nhớ tin nhắn
-    if not val.now_chat:
-        val.set('now_chat', [chat])
-    else:
-        new_chat = val.now_chat
-        new_chat.append(chat)
-        val.set('now_chat', new_chat)
+    if chat:
+        if not val.now_chat:
+            val.set('now_chat', [chat])
+        else:
+            new_chat = val.now_chat
+            new_chat.append(chat)
+            val.set('now_chat', new_chat)
+            
     if val.now_chat:
         if len(val.now_chat) >= 10:
             val.now_chat.pop(0)
