@@ -53,7 +53,7 @@ async def reply_id():
         val.set('CD_idle', 0)
 
 # Set tính cách nhân vật dựa vào prompt
-def char_check():
+async def char_check():
     from utils.bot import val
     chat = txt_read('saves/chat.txt')
     prompt = txt_read('utils/char.txt')
@@ -62,7 +62,7 @@ def char_check():
 
     txt = "innocent"
     try:
-        char = gemini_task(all_prpt)
+        char = await gemini_task(all_prpt)
         if char.lower() in char_list:
             print(f"tính cách của {val.ai_name}: ", txt)
             txt = char.lower()

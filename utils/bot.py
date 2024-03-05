@@ -102,7 +102,7 @@ async def on_ready():
 
     val.set('ai_name', bot.user.name)
 
-    char_check()
+    await char_check()
 
     asyncio.create_task(sec_check())
     sec_check.start()
