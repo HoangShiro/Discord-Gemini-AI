@@ -216,7 +216,7 @@ async def give_bot(interaction: discord.Interaction, view: discord.Option(
         prompt = txt_read('saves/limit.txt')
 
     if fix:
-        await interaction.response.send_message(f"```{prompt}```\nHãy gửi prompt mới vào chat:")
+        await interaction.response.send_message(f"```fix\n{prompt}\n```\n> Hãy gửi prompt mới vào chat:")
     else:
         await interaction.response.send_message(f"```{prompt}```")
 
