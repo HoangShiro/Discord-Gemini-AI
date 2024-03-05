@@ -204,8 +204,8 @@ async def newchat(interaction: discord.Interaction):
         
     chat.history.clear()
     chat.history.extend(prompt)
-    asyncio.create_task(char_check())
-    await interaction.response.send_message(f"`Đã làm mới cuộc trò chuyện.`", ephemeral=True)
+    await char_check()
+    await interaction.response.send_message(f"`Đã làm mới cuộc trò chuyện. Tính cách hiện tại: {val.ai_char}`", ephemeral=True)
 
 # Chuyển chế độ chat
 @bot.slash_command(name="chatmode", description=f"Kêu {val.ai_name} chat public/private.")
