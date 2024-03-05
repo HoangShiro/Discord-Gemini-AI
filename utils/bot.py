@@ -137,8 +137,11 @@ async def on_message(message):
     if bot.user in message.mentions:
         async with message.channel.typing():
             text = list_to_str(val.now_chat)
-            reply = await gemini_rep(text)
-            await message.reply(reply)
+            try:
+                reply = await gemini_rep(text)
+                await message.reply(reply)
+            except Exception as e:
+                print("Lỗi Reply on_message: ", e)
             val.set('CD', 10)
         val.set('now_chat', [])
         val.set('CD_idle', 0)

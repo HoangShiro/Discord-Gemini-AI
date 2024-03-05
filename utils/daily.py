@@ -8,7 +8,10 @@ from utils.reply import reply_id
 async def sec_check():
     from utils.bot import bot, val
     if val.CD == 0 and val.now_chat:
-        await reply_id()
+        try:
+            await reply_id()
+        except Exception as e:
+            print("Lỗi Reply Sec_check: ", e)
         
     if val.CD > 0:
         val.update('CD', -1)
