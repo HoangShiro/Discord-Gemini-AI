@@ -83,7 +83,8 @@ async def on_message(message):
     # Dành cho fix prompt
     if val.prompt_fix and message.author.id == val.old_owner_uid:
         if len(message.content) >= 50 and message.content.count("\n") > 0:
-            txt_save(f'saves/{val.prompt_fix}.txt', message.content)
+            fix_mess = message.content.strip("`")
+            txt_save(f'saves/{val.prompt_fix}.txt', fix_mess)
             await message.channel.send(f'`Đã đổi prompt: {val.prompt_fix}.`')
         else:
             await message.channel.send('`Prompt phải dài hơn 50 ký tự và tối thiểu 2 dòng.`')
@@ -216,7 +217,7 @@ async def give_bot(interaction: discord.Interaction, view: discord.Option(
         prompt = txt_read('saves/limit.txt')
 
     if fix:
-        await interaction.response.send_message(f"```fix\n{prompt}\n```\n> Hãy gửi prompt mới vào chat:")
+        await interaction.response.send_message(f"```{prompt}```\n> Hãy gửi prompt mới vào chat:")
     else:
         await interaction.response.send_message(f"```{prompt}```")
 
