@@ -68,6 +68,8 @@ val = AllStatus()
 
 @bot.event
 async def on_ready():
+    val.load('user_files/vals.json')
+    
     await bot.change_presence(activity=now_mood, status=idle_status)
     val.set('ai_name', bot.user.name)
 
