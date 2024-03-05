@@ -57,7 +57,7 @@ async def h_check():
 def get_current_period(timezone_name="Asia/Bangkok"):
     from utils.bot import bot, val
     my_timezone = pytz.timezone(timezone_name)
-    now = datetime.datetime.now(my_timezone)
+    now = datetime.now(my_timezone)
 
     # Define time ranges here (adjust based on your preferences):
     morning_start = datetime.time(hour=7)
