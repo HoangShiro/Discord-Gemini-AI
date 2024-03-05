@@ -199,7 +199,7 @@ async def give_bot(interaction: discord.Interaction, view: discord.Option(
             discord.OptionChoice(name="Limit", value="limit"),
         ],
     ) = "char", fix: bool = False):
-    if val.old_owner_uid != interaction.user.id:
+    if val.owner_uid != interaction.user.id:
         return await interaction.response.send_message(f"`Bạn hem có quyền sử dụng lệnh nỳ.`", ephemeral=True)
     prompt = ""
     if view == "chat":

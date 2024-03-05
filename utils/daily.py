@@ -16,5 +16,3 @@ async def sec_check():
         val.set('CD', 300)
     if val.CD_idle < 301:
         val.update('CD_idle', 1)
-        if val.CD == 0:
-            val.set('CD', 5)
