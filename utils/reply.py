@@ -64,7 +64,7 @@ async def char_check():
     try:
         char = await gemini_task(all_prpt)
         if char.lower() in char_list:
-            print(f"tính cách của {val.ai_name}: ", txt)
+            print(f"tính cách của {val.ai_name}: ", char)
             txt = char.lower()
         else:
             print(f"tính cách '{char}' không hợp lệ.")
