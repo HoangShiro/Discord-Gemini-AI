@@ -238,12 +238,12 @@ async def cslog(interaction: discord.Interaction, get: discord.Option(
     ) = "now_chat", chat: bool = False, command: bool = False, debug: bool = False):
     if interaction.user.id == val.owner_uid:
         if get:
-            v = await val.get(get)
+            v = val.get(get)
             await interaction.response.send_message(f"{v}", ephemeral=True)
         else:
-            await val.set('chat_log', chat)
-            await val.set('cmd_csl', command)
-            await val.set('bug_csl', debug)
+            val.set('chat_log', chat)
+            val.set('cmd_csl', command)
+            val.set('bug_csl', debug)
             await interaction.response.send_message(f"`Chat log: {chat}, Command log: {command}, Status log: {debug}.`", ephemeral=True)
     else:
         await interaction.response.send_message(f"`Chỉ {val.ai_name} mới có thể xem nhật ký của cô ấy.`", ephemeral=True)
