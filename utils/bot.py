@@ -102,8 +102,6 @@ async def on_ready():
 
     val.set('ai_name', bot.user.name)
 
-    await char_check()
-
     asyncio.create_task(sec_check())
     sec_check.start()
 
@@ -206,7 +204,8 @@ async def newchat(interaction: discord.Interaction):
         
     chat.history.clear()
     chat.history.extend(prompt)
-    await interaction.response.send_message(f"`Đã làm mới cuộc trò chuyện.`", ephemeral=True)
+    await char_check()
+    await interaction.response.send_message(f"`Đã làm mới cuộc trò chuyện. Tính cách hiện tại: {val.ai_char}`", ephemeral=True)
 
 # Chuyển chế độ chat
 @bot.slash_command(name="chatmode", description=f"Kêu {val.ai_name} chat public/private.")
@@ -259,7 +258,6 @@ async def give_bot(interaction: discord.Interaction, view: discord.Option(
         if fix:
             val.set('prompt_fix', "limit")
         prompt = txt_read('saves/limit.txt')
-
     if fix:
         await interaction.response.send_message(f"```{prompt}```\n> Hãy gửi prompt mới vào chat:")
     else:
@@ -273,6 +271,7 @@ async def cslog(interaction: discord.Interaction, get: discord.Option(
             discord.OptionChoice(name="owner_uid"),
             discord.OptionChoice(name="old_owner_uid"),
             discord.OptionChoice(name="ai_name"),
+            discord.OptionChoice(name="ai_char"),
             discord.OptionChoice(name="ai_channel"),
             discord.OptionChoice(name="total_chat"),
             discord.OptionChoice(name="CD"),
@@ -281,6 +280,15 @@ async def cslog(interaction: discord.Interaction, get: discord.Option(
             discord.OptionChoice(name="cmd_csl"),
             discord.OptionChoice(name="bug_csl"),
             discord.OptionChoice(name="prompt_fix"),
+            discord.OptionChoice(name="normal_act"),
+            discord.OptionChoice(name="breakday_act"),
+            discord.OptionChoice(name="weekend"),
+            discord.OptionChoice(name="to_breaktime"),
+            discord.OptionChoice(name="to_worktime"),
+            discord.OptionChoice(name="chat_speed"),
+            discord.OptionChoice(name="friendliness"),
+            discord.OptionChoice(name="now_period"),
+            discord.OptionChoice(name="last_uname"),
         ],
     ) = "now_chat", chat: bool = False, command: bool = False, debug: bool = False):
     if interaction.user.id == val.owner_uid:
