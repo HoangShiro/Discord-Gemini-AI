@@ -239,7 +239,7 @@ async def cslog(interaction: discord.Interaction, get: discord.Option(
     if interaction.user.id == val.owner_uid:
         if get:
             v = val.get(get)
-            await interaction.response.send_message(f"{v}", ephemeral=True)
+            await interaction.response.send_message(f"Giá trị của {get} là: {v}", ephemeral=True)
         else:
             val.set('chat_log', chat)
             val.set('cmd_csl', command)
