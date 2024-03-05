@@ -204,8 +204,8 @@ async def newchat(interaction: discord.Interaction):
         
     chat.history.clear()
     chat.history.extend(prompt)
-    await char_check()
-    await interaction.response.send_message(f"`Đã làm mới cuộc trò chuyện. Tính cách hiện tại: {val.ai_char}`", ephemeral=True)
+    asyncio.create_task(char_check())
+    await interaction.response.send_message(f"`Đã làm mới cuộc trò chuyện.`", ephemeral=True)
 
 # Chuyển chế độ chat
 @bot.slash_command(name="chatmode", description=f"Kêu {val.ai_name} chat public/private.")
@@ -246,9 +246,11 @@ async def give_bot(interaction: discord.Interaction, view: discord.Option(
             discord.OptionChoice(name="Character", value="chat"),
             discord.OptionChoice(name="Limit", value="limit"),
         ],
-    ) = "char", fix: bool = False):
+    ) = "char", fix: bool = False, char_check: bool = False):
     if val.owner_uid != interaction.user.id:
         return await interaction.response.send_message(f"`Bạn hem có quyền sử dụng lệnh nỳ.`", ephemeral=True)
+    if char_check:
+        return await interaction.response.send_message(f"`Tính cách hiện tại: {val.ai_char}`", ephemeral=True)
     prompt = ""
     if view == "chat":
         prompt = txt_read('saves/chat.txt')
