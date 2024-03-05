@@ -1,6 +1,5 @@
 """Quản lý thời gian"""
 import json, os, time, datetime, asyncio, discord, random, pytz
-from datetime import datetime, timedelta
 from pytz import timezone
 from discord.ext import tasks
 from utils.reply import reply_id
@@ -57,7 +56,7 @@ async def h_check():
 def get_current_period(timezone_name="Asia/Bangkok"):
     from utils.bot import bot, val
     my_timezone = pytz.timezone(timezone_name)
-    now = datetime.now(my_timezone)
+    now = datetime.datetime.now(my_timezone)
 
     # Define time ranges here (adjust based on your preferences):
     morning_start = datetime.time(hour=7)
