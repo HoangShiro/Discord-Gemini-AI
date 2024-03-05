@@ -53,7 +53,7 @@ async def reply_id():
         val.set('CD_idle', 0)
 
 # Set tính cách nhân vật dựa vào prompt
-async def char_check():
+def char_check():
     from utils.bot import val
     chat = txt_read('saves/chat.txt')
     prompt = txt_read('utils/char.txt')
