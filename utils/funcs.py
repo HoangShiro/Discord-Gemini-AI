@@ -98,6 +98,25 @@ def list_to_str(list):
         my_str += item + "\n"
     return my_str
 
+# Xử lý lời nhắc  
+def remmid_edit(list1, filter, text):
+  
+  new_list = []
+  
+  # Duyệt qua từng phần tử trong list1.
+  if list1:
+    for item in list1:
+        # Kiểm tra xem phần tử có bắt đầu bằng "Time: " hay không.
+        if not item.startswith(filter):
+            # Thêm phần tử vào list mới.
+            new_list.append(item)
+
+    # Chèn chuỗi "text" vào đầu list mới.
+    new_list.insert(0, text)
+
+  # Trả về list mới.
+  return new_list
+
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
   print(p)

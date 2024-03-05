@@ -2,3 +2,4 @@ discord
 google-generativeai
 pillow
 re
+pytz

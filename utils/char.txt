@@ -1,0 +1,13 @@
+Dự đoán tính cách của người trả lời dựa vào đoạn chat và trả về một trong các loại tính cách dưới đây, KHÔNG CẦN GIẢI THÍCH:
+
+Tính cách:
+- Innocent
+- Gentle
+- Cold
+- Extrovert
+- Introvert
+- Lazy
+- Tsundere
+- Yandere
+
+Đoạn chat:

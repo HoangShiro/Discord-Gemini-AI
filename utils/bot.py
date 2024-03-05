@@ -9,7 +9,7 @@ from utils.api import *
 from utils.status import *
 from utils.reply import *
 from utils.funcs import *
-from utils.daily import sec_check
+from utils.daily import sec_check, h_check
 
 intents = discord.Intents.all()
 bot = commands.Bot(intents=intents, command_prefix="!")
@@ -20,15 +20,25 @@ class AllStatus:
         self.owner_uid = 0
         self.old_owner_uid = 0
         self.ai_name = "AI"
+        self.ai_char = "innocent"
         self.ai_channel = 0
         self.total_chat = 0
         self.now_chat = []
         self.CD = 300
         self.CD_idle = 0
+        self.to_breaktime = 300
+        self.to_worktime = 301
+        self.normal_act = "Waking up ☀️"
+        self.breakday_act = "Chilling 💫"
+        self.weekend = False
+        self.chat_speed = 5
+        self.friendliness = 5
         self.chat_csl = False
         self.cmd_csl = False
         self.bug_csl = False
         self.prompt_fix = ""
+        self.now_period = ""
+        self.last_uname = "User"
 
     def update(self, val_name, value):
         if hasattr(self, val_name):
@@ -64,18 +74,41 @@ class AllStatus:
         for attr, value in vars(self).items():
             print(f"[vals.json] - {attr}: {value}")
 
+    def load_val_char(self, filename, character, time):
+        with open(filename, "r") as f:
+            data = json.load(f)
+
+        # Kiểm tra tính hợp lệ của tên tính cách và thời gian
+        if character not in data:
+            raise ValueError(f"Tính cách '{character}' không tồn tại.")
+        if time not in data[character]:
+            raise ValueError(f"Thời gian '{time}' không tồn tại.")
+
+        # Load các giá trị vào self
+        self.to_breaktime = data[character][time]["to_breaktime"]
+        self.to_worktime = data[character][time]["to_worktime"]
+        self.chat_speed = data[character][time]["chat_speed"]
+        self.normal_act = data[character][time]["normal_act"]
+        self.breakday_act = data[character][time]["breakday_act"]
+        self.friendliness = data[character][time]["friendliness"]
+
+
+
 val = AllStatus()
 
 @bot.event
 async def on_ready():
     val.load('saves/vals.json')
 
-    await bot.change_presence(activity=now_mood, status=idle_status)
     val.set('ai_name', bot.user.name)
 
     asyncio.create_task(sec_check())
     sec_check.start()
 
+    asyncio.create_task(h_check())
+    h_check.start()
+
+    await status_busy_set()
     print(f'{val.ai_name} đã sẵn sàng!')
 
 @bot.event
@@ -110,6 +143,8 @@ async def on_message(message):
     if not user_name:
         user_name = message.author.name
 
+    val.set('last_uname', user_name)
+
     # Xử lý tin nhắn
     if message.content and not message.attachments:
         chat = f"{user_name}: " + message.content
@@ -133,19 +168,20 @@ async def on_message(message):
     if call:
         val.update('CD', -100)"""
     # Đợi đến lượt trả lời nếu người khác vẫn đang nhắn
-    if val.CD_idle < 300:
-        val.set('CD', 10)
+    if val.CD_idle < val.to_worktime:
+        val.set('CD', val.chat_speed)
 
     # Trả lời tin nhắn ngay nếu nhắc tới bot
     if bot.user in message.mentions:
         async with message.channel.typing():
             text = list_to_str(val.now_chat)
             try:
+                await status_chat_set()
                 reply = await gemini_rep(text)
                 await message.reply(reply)
             except Exception as e:
                 print("Lỗi Reply on_message: ", e)
-            val.set('CD', 10)
+            val.set('CD', val.chat_speed)
         val.set('now_chat', [])
         val.set('CD_idle', 0)
 

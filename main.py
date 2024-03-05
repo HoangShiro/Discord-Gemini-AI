@@ -27,5 +27,6 @@ if __name__ == '__main__':
     createfile('saves/chat.txt')
     createfile('saves/limit.txt')
     json_update('saves/vals.json', default_values)
+    json_update('saves/char.json', char)
 
     start()

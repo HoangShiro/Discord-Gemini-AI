@@ -1,8 +1,8 @@
 """Các hàm trả lời"""
 import PIL.Image, asyncio
 from io import BytesIO
-from utils.funcs import list_to_str
-from utils.api import igemini_text, gemini_rep
+from utils.funcs import list_to_str, txt_read
+from utils.api import igemini_text, gemini_rep, gemini_task
 
 # Xử lý hình ảnh -> text
 async def IMG_read(message):
@@ -48,6 +48,27 @@ async def reply_id():
             text = list_to_str(val.now_chat)
             reply = await gemini_rep(text)
             await channel.send(reply)
-            val.set('CD', 10)
+            val.set('CD', val.chat_speed)
         val.set('now_chat', [])
         val.set('CD_idle', 0)
+
+# Set tính cách nhân vật dựa vào prompt
+async def char_check():
+    from utils.bot import val
+    chat = txt_read('saves/chat.txt')
+    prompt = txt_read('utils/char.txt')
+    all_prpt = prompt + "\n" + chat
+    char_list = ['innocent', 'gentle', 'cold', 'extrovert', 'introvert', 'lazy', 'tsundere', 'yandere']
+
+    txt = "innocent"
+    try:
+        char = gemini_task(all_prpt)
+        if char.lower() in char_list:
+            print(f"tính cách của {val.ai_name}: ", txt)
+            txt = char.lower()
+        else:
+            print(f"tính cách '{char}' không hợp lệ.")
+    except Exception as e:
+            print("Lỗi khi phân tích tính cách: ", e)
+    
+    val.set('ai_char', txt)

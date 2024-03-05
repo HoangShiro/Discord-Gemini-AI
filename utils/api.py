@@ -46,3 +46,9 @@ async def igemini_text(img, text=None):
     else:
         rep = igmodel.generate_content([text, img])
     return rep.text
+
+# Gemini task
+async def gemini_task(mess):
+    task = model.generate_content(mess)
+    return task.text
+
