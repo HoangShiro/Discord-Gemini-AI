@@ -73,20 +73,24 @@ def get_current_period(timezone_name="Asia/Bangkok"):
     night_start = datetime.time(hour=23)
     night_end = datetime.time(hour=6, minute=59)  # Covers midnight to morning
 
+    act = val.normal_act
+    if val.weekend:
+        act = val.breakday_act
+
     if morning_start <= now.time() <= morning_end:
-        remmid_edit(val.now_chat, "Time: ", f"Time: morning - {now.time}")
+        remmid_edit(val.now_chat, "Your Phone: ", f"Your Phone: morning - {now.time}. Bạn đang '{act}'.")
         return "morning"
     elif noon_start <= now.time() <= noon_end:
-        remmid_edit(val.now_chat, "Time: ", f"Time: noon - {now.time}")
+        remmid_edit(val.now_chat, "Your Phone: ", f"Your Phone: noon - {now.time}. Bạn đang '{act}'.")
         return "noon"
     elif afternoon_start <= now.time() <= afternoon_end:
-        remmid_edit(val.now_chat, "Time: ", f"Time: afternoon - {now.time}")
+        remmid_edit(val.now_chat, "Your Phone: ", f"Your Phone: afternoon - {now.time}. Bạn đang '{act}'.")
         return "afternoon"
     elif evening_start <= now.time() <= evening_end:
-        remmid_edit(val.now_chat, "Time: ", f"Time: night - {now.time}")
+        remmid_edit(val.now_chat, "Your Phone: ", f"Your Phone: night - {now.time}. Bạn đang '{act}'.")
         return "night"
     else:
-        remmid_edit(val.now_chat, "Time: ", f"Time: sleep - {now.time}")
+        remmid_edit(val.now_chat, "Your Phone: ", f"Your Phone: sleep - {now.time}. Bạn đang '{act}'.")
         return "sleep"
     
 def is_weekend(timezone_name="Asia/Bangkok"):
