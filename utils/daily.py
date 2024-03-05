@@ -1,6 +1,5 @@
 """Quản lý thời gian"""
 import json, os, time, datetime, asyncio, discord, random, pytz
-from pytz import timezone
 from discord.ext import tasks
 from utils.reply import reply_id
 from utils.funcs import remmid_edit
@@ -92,7 +91,7 @@ def get_current_period(timezone_name="Asia/Bangkok"):
     
 def is_weekend(timezone_name="Asia/Bangkok"):
   # Lấy ngày hiện tại với múi giờ "Asia/Bangkok"
-  today = datetime.now(timezone(timezone_name))
+  today = datetime.datetime.now(pytz.timezone(timezone_name))
 
   # Kiểm tra xem ngày hôm nay có phải là Thứ 7 hoặc CN hay không
   return today.weekday() in [5, 6]
