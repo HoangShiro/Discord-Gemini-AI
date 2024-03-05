@@ -84,9 +84,9 @@ async def on_message(message):
     if val.prompt_fix and message.author.id == val.old_owner_uid:
         if len(message.content) >= 100 and message.content.count("\n") > 0:
             txt_save(f'saves/{val.prompt_fix}.txt', message.content)
-            message.channel.send(f'`Đã đổi prompt: {val.prompt_fix}.')
+            await message.channel.send(f'`Đã đổi prompt: {val.prompt_fix}.')
         else:
-            message.channel.send('`Prompt phải dài hơn 100 ký tự và tối thiểu 2 dòng.')
+            await message.channel.send('`Prompt phải dài hơn 100 ký tự và tối thiểu 2 dòng.')
         val.set('prompt_fix', False)
         return
 
