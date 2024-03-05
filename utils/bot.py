@@ -132,6 +132,9 @@ async def on_message(message):
     call = any(part in text for part in names)
     if call:
         val.update('CD', -100)"""
+    # Đợi đến lượt trả lời nếu người khác vẫn đang nhắn
+    if val.CD_idle < 300:
+        val.set('CD', 10)
 
     # Trả lời tin nhắn ngay nếu nhắc tới bot
     if bot.user in message.mentions:
