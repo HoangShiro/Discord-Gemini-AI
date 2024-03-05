@@ -26,6 +26,8 @@ class AllStatus:
         self.CD = 300
         self.CD_idle = 0
         self.chat_csl = False
+        self.cmd_csl = False
+        self.bug_csl = False
         self.prompt_fix = ""
 
     def update(self, val_name, value):
@@ -215,6 +217,36 @@ async def give_bot(interaction: discord.Interaction, view: discord.Option(
         await interaction.response.send_message(f"```{prompt}```\nHãy gửi prompt mới vào chat:")
     else:
         await interaction.response.send_message(f"```{prompt}```")
+
+@bot.slash_command(name="clogs", description=f"Nhật ký của {val.ai_name}")
+async def cslog(interaction: discord.Interaction, get: discord.Option(
+        description="Chọn giá trị muốn kiểm tra:",
+        choices=[
+            discord.OptionChoice(name="now_chat"),
+            discord.OptionChoice(name="owner_uid"),
+            discord.OptionChoice(name="old_owner_uid"),
+            discord.OptionChoice(name="ai_name"),
+            discord.OptionChoice(name="ai_channel"),
+            discord.OptionChoice(name="total_chat"),
+            discord.OptionChoice(name="CD"),
+            discord.OptionChoice(name="CD_idle"),
+            discord.OptionChoice(name="chat_csl"),
+            discord.OptionChoice(name="cmd_csl"),
+            discord.OptionChoice(name="bug_csl"),
+            discord.OptionChoice(name="prompt_fix"),
+        ],
+    ) = "now_chat", chat: bool = False, command: bool = False, debug: bool = False):
+    if interaction.user.id == val.owner_uid:
+        if get:
+            v = await val.get(get)
+            await interaction.response.send_message(f"{v}", ephemeral=True)
+        else:
+            await val.set('chat_log', chat)
+            await val.set('cmd_csl', command)
+            await val.set('bug_csl', debug)
+            await interaction.response.send_message(f"`Chat log: {chat}, Command log: {command}, Status log: {debug}.`", ephemeral=True)
+    else:
+        await interaction.response.send_message(f"`Chỉ {val.ai_name} mới có thể xem nhật ký của cô ấy.`", ephemeral=True)
 
 def bot_run():
     bot.run(discord_bot_key)
