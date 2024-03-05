@@ -90,7 +90,7 @@ class AllStatus:
         self.chat_speed = data[character][time]["chat_speed"]
         self.normal_act = data[character][time]["normal_act"]
         self.breakday_act = data[character][time]["breakday_act"]
-        self.friendliness = data[character][time]["friendliness"]
+        self.friendliness = data[character]["friendliness"]
 
 
 
