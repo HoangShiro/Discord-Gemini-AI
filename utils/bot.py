@@ -212,8 +212,8 @@ async def newchat(interaction: discord.Interaction):
     new_prpt = load_prompt("saves/chat.txt")
     chat.history.clear()
     chat.history.extend(new_prpt)
+    await interaction.response.send_message(f"`Đã làm mới cuộc trò chuyện.`", ephemeral=True)
     await char_check()
-    await interaction.response.send_message(f"`Đã làm mới cuộc trò chuyện. Tính cách hiện tại: {val.ai_char}`", ephemeral=True)
 
 # Chuyển chế độ chat
 @bot.slash_command(name="chatmode", description=f"Kêu {val.ai_name} chat public/private.")
