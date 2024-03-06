@@ -90,7 +90,7 @@ async def send_mess(channel, reply, rep = False):
     if not rep:
         await channel.send(reply)
     else:
-        channel.reply(reply)
+        await channel.reply(reply)
     return
 
   # Cắt tin nhắn thành các phần nhỏ hơn 500 ký tự.
@@ -110,5 +110,5 @@ async def send_mess(channel, reply, rep = False):
     if not rep:
         await channel.send(message)
     else:
-        channel.reply(message)
+        await channel.reply(message)
     await asyncio.sleep(3)
