@@ -24,6 +24,7 @@ chat = model.start_chat(history=prompt)
 
 # Gemini
 async def gemini_rep(mess):
+    from utils.bot import val
     response = chat.send_message(mess)
 
     remind = load_prompt("saves/limit.txt")
@@ -37,6 +38,7 @@ async def gemini_rep(mess):
         limit = int(num)
     if len(response.text) > limit:
         chat.history.extend(remind)
+    val.update('total_rep', 1)
     return response.text
 
 # Gemini Vision

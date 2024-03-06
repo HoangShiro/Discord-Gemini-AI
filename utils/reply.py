@@ -47,7 +47,7 @@ async def reply_id():
         async with channel.typing():
             text = list_to_str(val.now_chat)
             reply = await gemini_rep(text)
-            await channel.send(reply)
+            await send_mess(channel, reply)
             val.set('CD', val.chat_speed)
         val.set('now_chat', [])
         val.set('CD_idle', 0)
@@ -72,3 +72,40 @@ async def char_check():
             print("Lỗi khi phân tích tính cách: ", e)
     
     val.set('ai_char', txt)
+
+# Xử lý và gửi tin nhắn
+async def send_mess(channel, reply, rep: bool = False):
+  """
+  Hàm này gửi tin nhắn `reply` thành nhiều lần nếu tin nhắn quá dài.
+
+  Args:
+    channel: Kênh Discord để gửi tin nhắn.
+    reply: Nội dung tin nhắn.
+
+  Returns:
+    None.
+  """
+
+  if len(reply) <= 2000:
+    await channel.send(reply)
+    return
+
+  # Cắt tin nhắn thành các phần nhỏ hơn 500 ký tự.
+  messages = []
+  while len(reply) > 0:
+    message = reply[:500]
+    # Tìm vị trí dấu câu gần nhất để cắt.
+    for i in range(len(message)-1, -1, -1):
+      if message[i] in [".", "?", "!"]:
+        message = message[:i+1]
+        break
+    messages.append(message)
+    reply = reply[len(message):]
+
+  # Gửi từng phần tin nhắn một.
+  for message in messages:
+    if not rep:
+        await channel.send(message)
+    else:
+        channel.reply(message)
+    await asyncio.sleep(3)

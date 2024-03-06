@@ -17,6 +17,12 @@ async def sec_check():
             await reply_id()
         except Exception as e:
             print("Lỗi Reply Sec_check: ", e)
+            val.update('stop_chat', 1)
+            # Xử lý nếu chat lỗi liên tục
+            if val.stop_chat == 3:
+                val.set('stop_chat', 0)
+                val.set('CD', val.to_breaktime)
+                await status_busy_set()
 
     # Trời lại làm việc nếu không có chat mới
     elif val.CD == 0 and not val.now_chat:

@@ -22,8 +22,10 @@ class AllStatus:
         self.ai_name = "AI"
         self.ai_char = "innocent"
         self.ai_channel = 0
-        self.total_chat = 0
+        self.total_rep = 0
+        self.total_mess = 0
         self.now_chat = []
+        self.stop_chat = 0
         self.CD = 300
         self.CD_idle = 0
         self.to_breaktime = 300
@@ -125,7 +127,8 @@ async def on_message(message):
         return
 
     if message.author == bot.user or message.content.startswith((".", "!", ",", "/")): return
-
+    val.update('total_mess', 1)
+    
     # Check bot public hay bot private
     user_name = "Noname"
     if val.owner_uid != 0:
@@ -181,12 +184,12 @@ async def on_message(message):
             try:
                 await status_chat_set()
                 reply = await gemini_rep(text)
-                await message.reply(reply)
+                await send_mess(message, reply, True)
+                val.set('now_chat', [])
+                val.set('CD_idle', 0)
             except Exception as e:
                 print("Lỗi Reply on_message: ", e)
             val.set('CD', val.chat_speed)
-        val.set('now_chat', [])
-        val.set('CD_idle', 0)
 
 # Kết nối lại
 @bot.slash_command(name="reconnect", description=f"Kết nối lại với {val.ai_name}.")
@@ -279,7 +282,8 @@ async def cslog(interaction: discord.Interaction, get: discord.Option(
             discord.OptionChoice(name="ai_name"),
             discord.OptionChoice(name="ai_char"),
             discord.OptionChoice(name="ai_channel"),
-            discord.OptionChoice(name="total_chat"),
+            discord.OptionChoice(name="total_rep"),
+            discord.OptionChoice(name="total_mess"),
             discord.OptionChoice(name="CD"),
             discord.OptionChoice(name="CD_idle"),
             discord.OptionChoice(name="chat_csl"),
