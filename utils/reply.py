@@ -74,7 +74,7 @@ async def char_check():
     val.set('ai_char', txt)
 
 # Xử lý và gửi tin nhắn
-async def send_mess(channel, reply, rep: bool = False):
+async def send_mess(channel, reply, rep = False):
   """
   Hàm này gửi tin nhắn `reply` thành nhiều lần nếu tin nhắn quá dài.
 
