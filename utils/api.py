@@ -39,6 +39,11 @@ async def gemini_rep(mess):
     if len(response.text) > limit:
         chat.history.extend(remind)
     val.update('total_rep', 1)
+    if val.bug_csl:
+        print("\n")
+        print("===== [CHAT HISTORY] =====")
+        print(chat.history)
+        print("\n")
     return response.text
 
 # Gemini Vision

@@ -154,9 +154,10 @@ async def on_message(message):
         chat = f"{user_name}: " + message.content
     elif message.attachments:
         chat = f"{user_name}: " + await IMG_read(message)
-    
     # Nhớ tin nhắn
     if chat:
+        if val.chat_csl:
+            print(chat)
         if not val.now_chat:
             val.set('now_chat', [chat])
         else:

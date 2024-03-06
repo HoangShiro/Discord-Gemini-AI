@@ -75,40 +75,35 @@ async def char_check():
 
 # Xử lý và gửi tin nhắn
 async def send_mess(channel, reply, rep = False):
-  """
-  Hàm này gửi tin nhắn `reply` thành nhiều lần nếu tin nhắn quá dài.
+    from utils.bot import val
 
-  Args:
-    channel: Kênh Discord để gửi tin nhắn.
-    reply: Nội dung tin nhắn.
+    # In ra console
+    if val.chat_csl: print(f"[{val.ai_name} - {val.ai_char}]: {reply}")
 
-  Returns:
-    None.
-  """
+    # Send thẳng nếu ít hơn 2000 ký tự
+    if len(reply) <= 2000:
+        if not rep:
+            await channel.send(reply)
+        else:
+            await channel.reply(reply)
+        return
 
-  if len(reply) <= 2000:
-    if not rep:
-        await channel.send(reply)
-    else:
-        await channel.reply(reply)
-    return
+    # Cắt tin nhắn thành các phần nhỏ hơn 500 ký tự.
+    messages = []
+    while len(reply) > 0:
+        message = reply[:500]
+        # Tìm vị trí dấu câu gần nhất để cắt.
+        for i in range(len(message)-1, -1, -1):
+            if message[i] in [".", "?", "!"]:
+                message = message[:i+1]
+                break
+        messages.append(message)
+        reply = reply[len(message):]
 
-  # Cắt tin nhắn thành các phần nhỏ hơn 500 ký tự.
-  messages = []
-  while len(reply) > 0:
-    message = reply[:500]
-    # Tìm vị trí dấu câu gần nhất để cắt.
-    for i in range(len(message)-1, -1, -1):
-      if message[i] in [".", "?", "!"]:
-        message = message[:i+1]
-        break
-    messages.append(message)
-    reply = reply[len(message):]
-
-  # Gửi từng phần tin nhắn một.
-  for message in messages:
-    if not rep:
-        await channel.send(message)
-    else:
-        await channel.reply(message)
-    await asyncio.sleep(3)
+    # Gửi từng phần tin nhắn một.
+    for message in messages:
+        if not rep:
+            await channel.send(message)
+        else:
+            await channel.reply(message)
+        await asyncio.sleep(3)
