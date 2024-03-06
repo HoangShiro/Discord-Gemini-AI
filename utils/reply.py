@@ -90,7 +90,7 @@ async def send_mess(channel, reply, rep = False):
     if not rep:
         await channel.send(reply)
     else:
-        channel.reply(message)
+        channel.reply(reply)
     return
 
   # Cắt tin nhắn thành các phần nhỏ hơn 500 ký tự.
