@@ -135,6 +135,7 @@ async def on_message(message):
     # Check bot public hay bot private
     user_name = "Noname"
     if not val.public:
+        if message.guild: return
         if message.author.id != val.owner_uid: return
     else:
         if message.content:
@@ -178,8 +179,7 @@ async def on_message(message):
     if call:
         val.update('CD', -100)"""
     # Đợi đến lượt trả lời nếu người khác vẫn đang nhắn
-    if val.CD_idle < val.to_worktime:
-        val.set('CD', val.chat_speed)
+    if val.CD_idle < val.to_worktime and val.public: val.set('CD', val.chat_speed)
 
     # Trả lời tin nhắn ngay nếu nhắc tới bot
     if bot.user in message.mentions:
@@ -198,8 +198,8 @@ async def on_message(message):
                 new_chat = val.now_chat
                 all_chat = old_chat.append(new_chat)
                 val.set('now_chat', all_chat)
-                
-            val.set('CD', val.chat_speed)
+
+            if val.public: val.set('CD', val.chat_speed)
             val.set('CD_idle', 0)
 
 # Kết nối lại
@@ -222,6 +222,7 @@ async def newchat(interaction: discord.Interaction):
     new_prpt = load_prompt("saves/chat.txt")
     chat.history.clear()
     chat.history.extend(new_prpt)
+    val.set('CD', 0)
     await interaction.response.send_message(f"`Đã làm mới cuộc trò chuyện.`")
     await char_check()
 
