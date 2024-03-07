@@ -15,8 +15,8 @@ async def sec_check():
         await reply_id()
         
     # Trời lại làm việc nếu không có chat mới
-    elif val.CD == 0 and not val.now_chat:
-        val.set('CD', val.to_breaktime)
+    #elif val.CD == 0 and not val.now_chat:
+    #    val.set('CD', val.to_breaktime)
     
     # Đếm ngược tới thời gian check tin nhắn
     if val.CD > 0:
