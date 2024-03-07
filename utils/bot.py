@@ -305,7 +305,7 @@ async def cslog(interaction: discord.Interaction, get: discord.Option(
         ],
     ) = "now_chat", chat: bool = False, command: bool = False, debug: bool = False):
     if interaction.user.id == val.owner_uid:
-        if get:
+        if get and not (chat or command or debug):
             v = val.get(get)
             await interaction.response.send_message(f"Giá trị của {get} là: {v}", ephemeral=True)
         else:
