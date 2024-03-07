@@ -181,7 +181,6 @@ async def on_message(message):
     # Đợi đến lượt trả lời nếu người khác vẫn đang nhắn
     if val.CD_idle < val.to_worktime:
         if val.public: val.set('CD', val.chat_speed)
-        #else: val.set('CD', 1)
 
     # Trả lời tin nhắn ngay nếu nhắc tới bot
     if bot.user in message.mentions:
