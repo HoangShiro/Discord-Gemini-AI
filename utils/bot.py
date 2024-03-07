@@ -110,6 +110,8 @@ async def on_ready():
     asyncio.create_task(h_check())
     h_check.start()
 
+    val.load_val_char('saves/char.json', val.ai_char, val.now_period)
+
     await status_busy_set()
     print(f'{val.ai_name} đã sẵn sàng!')
 
@@ -212,7 +214,7 @@ async def newchat(interaction: discord.Interaction):
     new_prpt = load_prompt("saves/chat.txt")
     chat.history.clear()
     chat.history.extend(new_prpt)
-    await interaction.response.send_message(f"`Đã làm mới cuộc trò chuyện.`", ephemeral=True)
+    await interaction.response.send_message(f"`Đã làm mới cuộc trò chuyện.`")
     await char_check()
 
 # Chuyển chế độ chat

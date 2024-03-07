@@ -56,6 +56,8 @@ async def h_check():
     period = get_current_period()
     val.set('now_period', period)
     val.load_val_char('saves/char.json', val.ai_char, period)
+    if val.CD_idle == val.to_worktime:
+        await status_busy_set()
 
 # Lấy khoảng thời gian và xử lý các tác vụ
 def get_current_period(timezone_name="Asia/Bangkok"):
