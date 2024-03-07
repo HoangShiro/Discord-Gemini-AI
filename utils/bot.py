@@ -246,7 +246,7 @@ async def chat_mode(interaction: discord.Interaction):
     await interaction.response.send_message(f"`{val.ai_name} sẽ {n}.`", ephemeral=True)
 
 # Chuyển master
-@bot.slash_command(name="giveowner", description=f"Trao {val.ai_name} cho người khác.")
+@bot.slash_command(name="giveowner", description=f"Tặng {val.ai_name} cho người khác.")
 async def give_bot(interaction: discord.Interaction, uid: float = None):
     if val.owner_uid == 0:
         new_uid = interaction.user.id
