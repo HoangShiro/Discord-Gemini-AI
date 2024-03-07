@@ -226,6 +226,7 @@ async def newchat(interaction: discord.Interaction):
     chat.history.extend(new_prpt)
     val.set('CD', 1)
     val.set('CD_idle', 1)
+    val.set('now_chat', [])
     await interaction.response.send_message(f"`Đã làm mới cuộc trò chuyện.`")
     await char_check()
 
@@ -246,7 +247,7 @@ async def chat_mode(interaction: discord.Interaction):
 
 # Chuyển master
 @bot.slash_command(name="giveowner", description=f"Trao {val.ai_name} cho người khác.")
-async def give_bot(interaction: discord.Interaction, uid: int = None):
+async def give_bot(interaction: discord.Interaction, uid: float = None):
     if val.owner_uid == 0:
         new_uid = interaction.user.id
         if uid:
