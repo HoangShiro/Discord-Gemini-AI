@@ -266,7 +266,7 @@ async def give_bot(interaction: discord.Interaction, uid: str = None):
         user = await bot.fetch_user(uid)
         if not user:
             return await interaction.response.send_message(f"`User không tồn tại.`", ephemeral=True)
-        val.set('owner_uid', new_uid)
+        val.set('owner_uid', uid)
         await interaction.response.send_message(f"`Bạn vừa tặng {val.ai_name} cho {user.name}.`", ephemeral=True)
     else:
         await interaction.response.send_message(f"`Bạn đã sở hữu {val.ai_name} rồi.`", ephemeral=True)
