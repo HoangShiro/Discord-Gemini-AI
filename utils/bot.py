@@ -247,12 +247,16 @@ async def chat_mode(interaction: discord.Interaction):
 
 # Chuyển master
 @bot.slash_command(name="giveowner", description=f"Tặng {val.ai_name} cho người khác.")
-async def give_bot(interaction: discord.Interaction, uid: float = None):
+async def give_bot(interaction: discord.Interaction, uid: str = None):
+    if uid:
+        uid = int(uid)
     if val.owner_uid == 0:
         new_uid = interaction.user.id
         if uid:
             new_uid = uid
         user = await bot.fetch_user(new_uid)
+        if not user:
+            return await interaction.response.send_message(f"`User không tồn tại.`", ephemeral=True)
         val.set('owner_uid', new_uid)
         return await interaction.response.send_message(f"`{user.name} vừa làm master của {val.ai_name}.`", ephemeral=True)
     elif val.owner_uid != interaction.user.id:
@@ -260,6 +264,8 @@ async def give_bot(interaction: discord.Interaction, uid: float = None):
         return await interaction.response.send_message(f"`{user.name} hiện đang master của {val.ai_name}.`", ephemeral=True)
     elif val.owner_uid == interaction.user.id and uid and uid != interaction.user.id:
         user = await bot.fetch_user(uid)
+        if not user:
+            return await interaction.response.send_message(f"`User không tồn tại.`", ephemeral=True)
         val.set('owner_uid', new_uid)
         await interaction.response.send_message(f"`Bạn vừa tặng {val.ai_name} cho {user.name}.`", ephemeral=True)
     else:
