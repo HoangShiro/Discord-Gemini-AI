@@ -58,7 +58,7 @@ async def reply_id():
                 print("Lỗi Reply Sec_check: ", e)
                 old_chat = val.old_chat
                 new_chat = val.now_chat
-                all_chat = old_chat.append(new_chat)
+                all_chat = old_chat.extend(new_chat)
                 val.set('now_chat', all_chat)
                 # Xử lý nếu chat lỗi liên tục
                 val.update('stop_chat', 1)

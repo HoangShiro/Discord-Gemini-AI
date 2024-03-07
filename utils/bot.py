@@ -198,7 +198,7 @@ async def on_message(message):
                 print("Lỗi Reply on_message: ", e)
                 old_chat = val.old_chat
                 new_chat = val.now_chat
-                all_chat = old_chat.append(new_chat)
+                all_chat = old_chat.extend(new_chat)
                 val.set('now_chat', all_chat)
 
             val.set('CD', val.chat_speed)
