@@ -110,9 +110,9 @@ async def on_ready():
     asyncio.create_task(h_check())
     h_check.start()
 
-    #val.load_val_char('saves/char.json', val.ai_char, val.now_period)
+    val.load_val_char('saves/char.json', val.ai_char, val.now_period)
 
-    #await status_busy_set()
+    await status_busy_set()
     print(f'{val.ai_name} đã sẵn sàng!')
 
 @bot.event
