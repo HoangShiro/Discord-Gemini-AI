@@ -309,7 +309,7 @@ async def cslog(interaction: discord.Interaction, get: discord.Option(
             v = val.get(get)
             await interaction.response.send_message(f"Giá trị của {get} là: {v}", ephemeral=True)
         else:
-            val.set('chat_log', chat)
+            val.set('chat_csl', chat)
             val.set('cmd_csl', command)
             val.set('bug_csl', debug)
             await interaction.response.send_message(f"`Chat log: {chat}, Command log: {command}, Status log: {debug}.`", ephemeral=True)
