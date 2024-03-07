@@ -66,7 +66,7 @@ async def reply_id():
                     val.set('stop_chat', 0)
                     val.set('CD', val.to_breaktime)
                     await status_busy_set()
-            val.set('CD', val.chat_speed)
+            if val.public: val.set('CD', val.chat_speed)
             val.set('CD_idle', 0)
 
 # Set tính cách nhân vật dựa vào prompt
