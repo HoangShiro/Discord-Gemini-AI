@@ -222,8 +222,8 @@ async def newchat(interaction: discord.Interaction):
     new_prpt = load_prompt("saves/chat.txt")
     chat.history.clear()
     chat.history.extend(new_prpt)
-    val.set('CD', 0)
-    val.set('CD_idle', 0)
+    val.set('CD', 1)
+    val.set('CD_idle', 1)
     await interaction.response.send_message(f"`Đã làm mới cuộc trò chuyện.`")
     await char_check()
 
