@@ -202,6 +202,7 @@ async def on_message(message):
                 val.set('now_chat', all_chat)
 
             if val.public: val.set('CD', val.chat_speed)
+            else: val.set('CD', 0)
             val.set('CD_idle', 0)
 
 # Kết nối lại
