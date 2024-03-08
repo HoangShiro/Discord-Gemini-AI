@@ -9,6 +9,7 @@ from utils.api import *
 from utils.status import *
 from utils.reply import *
 from utils.funcs import *
+from utils.ui import *
 from utils.daily import sec_check, h_check, get_real_time
 
 intents = discord.Intents.all()
@@ -24,6 +25,7 @@ class AllStatus:
         self.ai_channel = 0
         self.total_rep = 0
         self.total_mess = 0
+        self.last_mess_id = 0
         self.now_chat = []
         self.old_chat = []
         self.stop_chat = 0
@@ -104,6 +106,8 @@ async def on_ready():
     val.load('saves/vals.json')
 
     val.set('ai_name', bot.user.name)
+
+    await load_btt()
 
     asyncio.create_task(sec_check())
     sec_check.start()

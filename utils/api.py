@@ -26,7 +26,7 @@ chat = model.start_chat(history=prompt)
 async def gemini_rep(mess):
     from utils.bot import val
     from utils.daily import get_real_time
-    response = chat.send_message(mess)
+    response = await chat.send_message_async(mess)
 
     remind = load_prompt("saves/limit.txt")
     num = txt_read("saves/limit.txt")
@@ -46,19 +46,21 @@ async def gemini_rep(mess):
         print("===== [CHAT HISTORY] =====")
         print(chat.history)
         print("\n")
+
+    print(chat.last)
     return response.text
 
 # Gemini Vision
 async def igemini_text(img, text=None):
     rep = "Có lỗi khi phân tích ảnh!"
     if not text:
-        rep = igmodel.generate_content(img)
+        rep = await igmodel.generate_content_async(img)
     else:
-        rep = igmodel.generate_content([text, img])
+        rep = await igmodel.generate_content_async([text, img])
     return rep.text
 
 # Gemini task
 async def gemini_task(mess):
-    task = model.generate_content(mess)
+    task = await model.generate_content_async(mess)
     return task.text
 
