@@ -4,11 +4,11 @@ from io import BytesIO
 from utils.funcs import list_to_str, txt_read
 from utils.api import igemini_text, gemini_rep, gemini_task
 from utils.status import status_busy_set, status_chat_set
-from utils.daily import get_real_time
 
 # Xử lý hình ảnh -> text
 async def IMG_read(message):
     """Hàm xử lý hình ảnh"""
+    from utils.daily import get_real_time
     all_text = ""
 
     for attachment in message.attachments:
@@ -33,6 +33,7 @@ async def IMG_read(message):
 # Reply sau khoảng thời gian với channel id
 async def reply_id():
     from utils.bot import bot, val
+    from utils.daily import get_real_time
     channel = None
     # Tạo channel DM nếu là bot private
     if not val.public:
@@ -95,7 +96,7 @@ async def char_check():
 # Xử lý và gửi tin nhắn
 async def send_mess(channel, reply, rep = False, inter = False):
     from utils.bot import val
-
+    from utils.daily import get_real_time
     # In ra console
     if val.chat_csl: print(f"<{get_real_time()}> [{val.ai_name} - {val.ai_char}]: {reply}")
 
