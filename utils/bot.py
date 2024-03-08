@@ -161,7 +161,7 @@ async def on_message(message):
     # Nhớ tin nhắn
     if chat:
         if val.chat_csl:
-            print(f"<{get_real_time}> {chat}")
+            print(f"<{get_real_time()}> {chat}")
         if not val.now_chat:
             val.set('now_chat', [chat])
         else:
