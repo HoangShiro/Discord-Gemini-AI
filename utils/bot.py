@@ -155,13 +155,15 @@ async def on_message(message):
     # Xử lý tin nhắn
     chat = ""
     if message.content and not message.attachments:
-        chat = f"{user_name}: " + message.content
+        if val.public: chat = f"{user_name}: " + message.content
+        else: chat = message.content
     elif message.attachments:
-        chat = f"{user_name}: " + await IMG_read(message)
+        if val.public: chat = f"{user_name}: " + await IMG_read(message)
+        else: chat = await IMG_read(message)
     # Nhớ tin nhắn
     if chat:
         if val.chat_csl:
-            print(f"<{get_real_time()}> {chat}")
+            print(f"{get_real_time()}> {chat}")
         if not val.now_chat:
             val.set('now_chat', [chat])
         else:
@@ -194,7 +196,7 @@ async def on_message(message):
                 reply = await gemini_rep(text)
                 await send_mess(message, reply, True)
             except Exception as e:
-                print(f"<{get_real_time()}> Lỗi Reply on_message: ", e)
+                print(f"{get_real_time()}> Lỗi Reply on_message: ", e)
                 old_chat = val.old_chat
                 new_chat = val.now_chat
                 all_chat = old_chat + new_chat
