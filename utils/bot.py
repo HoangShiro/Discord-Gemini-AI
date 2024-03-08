@@ -9,7 +9,7 @@ from utils.api import *
 from utils.status import *
 from utils.reply import *
 from utils.funcs import *
-from utils.daily import sec_check, h_check
+from utils.daily import sec_check, h_check, get_real_time
 
 intents = discord.Intents.all()
 bot = commands.Bot(intents=intents, command_prefix="!")
