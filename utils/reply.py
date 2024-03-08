@@ -4,6 +4,7 @@ from io import BytesIO
 from utils.funcs import list_to_str, txt_read
 from utils.api import igemini_text, gemini_rep, gemini_task
 from utils.status import status_busy_set, status_chat_set
+from utils.daily import get_real_time
 
 # Xử lý hình ảnh -> text
 async def IMG_read(message):
@@ -24,6 +25,7 @@ async def IMG_read(message):
                 itext = f"*gửi hình ảnh có nội dung: '{text}'*"
             all_text = f"{all_text}\n" + itext
         except (OSError, IOError):
+            print(f"<{get_real_time()}> VISION error: ", IOError)
             pass
         
     return all_text
@@ -55,7 +57,7 @@ async def reply_id():
                 reply = await gemini_rep(text)
                 await send_mess(channel, reply)
             except Exception as e:
-                print("Lỗi Reply Sec_check: ", e)
+                print(f"<{get_real_time()}> Lỗi Reply Sec_check: ", e)
                 old_chat = val.old_chat
                 new_chat = val.now_chat
                 all_chat = old_chat + new_chat
@@ -86,22 +88,24 @@ async def char_check():
         else:
             print(f"tính cách '{char}' không hợp lệ.")
     except Exception as e:
-            print("Lỗi khi phân tích tính cách: ", e)
+            print(f"<{get_real_time()}> Lỗi khi phân tích tính cách: ", e)
     
     val.set('ai_char', txt)
 
 # Xử lý và gửi tin nhắn
-async def send_mess(channel, reply, rep = False):
+async def send_mess(channel, reply, rep = False, inter = False):
     from utils.bot import val
 
     # In ra console
-    if val.chat_csl: print(f"[{val.ai_name} - {val.ai_char}]: {reply}")
+    if val.chat_csl: print(f"<{get_real_time()}> [{val.ai_name} - {val.ai_char}]: {reply}")
 
     # Send thẳng nếu ít hơn 2000 ký tự
     if len(reply) <= 2000:
         if not rep:
             await channel.send(reply)
-        else:
+        elif inter:
+            await channel.channel.send(reply)
+        elif rep:
             await channel.reply(reply)
         return
 
@@ -121,6 +125,8 @@ async def send_mess(channel, reply, rep = False):
     for message in messages:
         if not rep:
             await channel.send(message)
-        else:
+        elif inter:
+            await channel.channel.send(message)
+        elif rep:
             await channel.reply(message)
         await asyncio.sleep(3)

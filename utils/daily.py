@@ -15,8 +15,8 @@ async def sec_check():
         await reply_id()
         
     # Trời lại làm việc nếu không có chat mới
-    #elif val.CD == 0 and not val.now_chat:
-    #    val.set('CD', val.to_breaktime)
+    elif val.CD == 0 and not val.now_chat:
+        val.set('CD', val.to_breaktime)
     
     # Đếm ngược tới thời gian check tin nhắn
     if val.CD > 0:
@@ -90,10 +90,18 @@ def get_current_period(timezone_name="Asia/Bangkok"):
     else:
         remmid_edit(val.now_chat, "Your Phone: ", f"Your Phone: sleep - {now.time}. Bạn đang '{act}'.")
         return "sleep"
-    
+
+# Ngày nghỉ?  
 def is_weekend(timezone_name="Asia/Bangkok"):
   # Lấy ngày hiện tại với múi giờ "Asia/Bangkok"
   today = datetime.datetime.now(pytz.timezone(timezone_name))
 
   # Kiểm tra xem ngày hôm nay có phải là Thứ 7 hoặc CN hay không
   return today.weekday() in [5, 6]
+
+# Lấy thời gian thực HH:MM:SS
+def get_real_time(timezone_name="Asia/Bangkok"):
+    my_timezone = pytz.timezone(timezone_name)
+    now = datetime.datetime.now(my_timezone)
+
+    return f"{now.hour}:{now.minute}:{now.second}"

@@ -161,7 +161,7 @@ async def on_message(message):
     # Nhớ tin nhắn
     if chat:
         if val.chat_csl:
-            print(chat)
+            print(f"<{get_real_time}> {chat}")
         if not val.now_chat:
             val.set('now_chat', [chat])
         else:
@@ -194,7 +194,7 @@ async def on_message(message):
                 reply = await gemini_rep(text)
                 await send_mess(message, reply, True)
             except Exception as e:
-                print("Lỗi Reply on_message: ", e)
+                print(f"<{get_real_time()}> Lỗi Reply on_message: ", e)
                 old_chat = val.old_chat
                 new_chat = val.now_chat
                 all_chat = old_chat + new_chat
@@ -294,8 +294,10 @@ async def give_bot(interaction: discord.Interaction, view: discord.Option(
             val.set('prompt_fix', "limit")
         prompt = txt_read('saves/limit.txt')
     if fix:
-        await interaction.response.send_message(f"```{prompt}```\n> Hãy gửi prompt mới vào chat:")
+        await send_mess(interaction, f"```{prompt}```\n> Hãy gửi prompt mới vào chat:", inter=True)
+        #await interaction.response.send_message(f"```{prompt}```\n> Hãy gửi prompt mới vào chat:")
     else:
+        await send_mess(interaction, f"```{prompt}```", inter=True)
         await interaction.response.send_message(f"```{prompt}```")
 
 @bot.slash_command(name="clogs", description=f"Nhật ký của {val.ai_name}")
