@@ -101,13 +101,14 @@ async def send_mess(channel, reply, rep = False, inter = False):
     if val.chat_csl: print(f"{get_real_time()}> [{val.ai_name} - {val.ai_char}]: {reply}")
 
     # Send thẳng nếu ít hơn 2000 ký tự
+    mid = 0
     if len(reply) <= 2000:
         if not rep:
-            await channel.send(reply)
+            mids = await channel.send(reply)
         elif inter:
-            await channel.channel.send(reply)
+            mids = await channel.channel.send(reply)
         elif rep:
-            await channel.reply(reply)
+            mids = await channel.reply(reply)
         return
 
     # Cắt tin nhắn thành các phần nhỏ hơn 500 ký tự.
@@ -125,9 +126,11 @@ async def send_mess(channel, reply, rep = False, inter = False):
     # Gửi từng phần tin nhắn một.
     for message in messages:
         if not rep:
-            await channel.send(message)
+            mids = await channel.send(message)
         elif inter:
-            await channel.channel.send(message)
+            mids = await channel.channel.send(message)
         elif rep:
-            await channel.reply(message)
+            mids = await channel.reply(message)
         await asyncio.sleep(3)
+    
+    print(mids.id)
