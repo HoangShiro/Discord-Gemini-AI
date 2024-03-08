@@ -300,7 +300,7 @@ async def give_bot(interaction: discord.Interaction, view: discord.Option(
         #await interaction.response.send_message(f"```{prompt}```\n> Hãy gửi prompt mới vào chat:")
     else:
         await send_mess(interaction, f"```{prompt}```", inter=True)
-        await interaction.response.send_message(f"```{prompt}```")
+        #await interaction.response.send_message(f"```{prompt}```")
 
 @bot.slash_command(name="clogs", description=f"Nhật ký của {val.ai_name}")
 async def cslog(interaction: discord.Interaction, get: discord.Option(
