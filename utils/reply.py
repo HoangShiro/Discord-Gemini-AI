@@ -109,6 +109,7 @@ async def send_mess(channel, reply, rep = False, inter = False):
             mids = await channel.channel.send(reply)
         elif rep:
             mids = await channel.reply(reply)
+        print(mids.id)
         return
 
     # Cắt tin nhắn thành các phần nhỏ hơn 500 ký tự.
@@ -132,5 +133,4 @@ async def send_mess(channel, reply, rep = False, inter = False):
         elif rep:
             mids = await channel.reply(message)
         await asyncio.sleep(3)
-    
-    print(mids.id)
+        print(mids.id)
