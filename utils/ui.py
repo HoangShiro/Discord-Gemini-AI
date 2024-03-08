@@ -1,7 +1,6 @@
 """GIAO DIỆN"""
 import discord, datetime, pytz, asyncio
 from discord.ui import View
-from utils.funcs import list_to_str
 
 rmv_bt = discord.ui.Button(label="➖", custom_id="remove", style=discord.ButtonStyle.grey)
 rc_bt = discord.ui.Button(label="💫 re chat", custom_id="rc", style=discord.ButtonStyle.grey)
@@ -19,15 +18,22 @@ async def rmv_bt_atv(interaction):
 async def rc_atv(interaction):
     from utils.bot import val
     from utils.api import chat, gemini_rep
+    from utils.daily import get_real_time
+    from utils.funcs import list_to_str
+
     await byB(interaction)
-    chat.last
+    last = chat.history[-4:]
     chat.rewind()
     try:
         text = list_to_str(val.old_chat)
         rep = await gemini_rep(text)
+        await interaction.message.edit(content=rep)
     except Exception as e:
-        pass
-
+        chat.history.extend(last)
+        print(f"{get_real_time()}> Lỗi ui - re chat: ", e)
+    
+    if val.public: val.set('CD', val.chat_speed)
+    val.set('CD_idle', 0)
 
 
 # Bypass button:

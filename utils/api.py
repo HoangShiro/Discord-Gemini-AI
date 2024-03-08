@@ -46,7 +46,6 @@ async def gemini_rep(mess):
         print("===== [CHAT HISTORY] =====")
         print(chat.history)
         print("\n")
-
     return response.text
 
 # Gemini Vision
