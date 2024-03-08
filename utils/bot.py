@@ -198,7 +198,7 @@ async def on_message(message):
                 val.set('old_chat', old_chat) # Lưu chat cũ
                 val.set('now_chat', [])
                 reply = await gemini_rep(text)
-                await send_mess(message, reply, True)
+                await send_mess(message, reply, rep=True)
             except Exception as e:
                 print(f"{get_real_time()}> Lỗi Reply on_message: ", e)
                 old_chat = val.old_chat
