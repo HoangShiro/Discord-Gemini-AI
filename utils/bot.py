@@ -296,11 +296,11 @@ async def give_bot(interaction: discord.Interaction, view: discord.Option(
             val.set('prompt_fix', "limit")
         prompt = txt_read('saves/limit.txt')
     if fix:
-        await send_mess(interaction, f"```{prompt}```\n> Hãy gửi prompt mới vào chat:", inter=True)
-        #await interaction.response.send_message(f"```{prompt}```\n> Hãy gửi prompt mới vào chat:")
+        await interaction.response.send_message("> Hãy gửi prompt mới vào chat.", ephemeral=True)
+        await send_mess(interaction, prompt, inter=True)
     else:
-        await send_mess(interaction, f"```{prompt}```", inter=True)
-        #await interaction.response.send_message(f"```{prompt}```")
+        await interaction.response.send_message(f"> '{view}' Prompt: ", ephemeral=True)
+        await send_mess(interaction, prompt, inter=True)
 
 @bot.slash_command(name="clogs", description=f"Nhật ký của {val.ai_name}")
 async def cslog(interaction: discord.Interaction, get: discord.Option(
