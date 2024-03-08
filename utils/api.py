@@ -47,7 +47,7 @@ async def gemini_rep(mess):
         print(chat.history)
         print("\n")
 
-    a = chat.last
+    a = await chat.last
     print(a)
     return response.text
 
