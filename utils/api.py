@@ -47,8 +47,6 @@ async def gemini_rep(mess):
         print(chat.history)
         print("\n")
 
-    a = await chat.last
-    print(a)
     return response.text
 
 # Gemini Vision
