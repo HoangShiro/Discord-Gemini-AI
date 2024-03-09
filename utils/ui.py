@@ -10,6 +10,14 @@ continue_bt = discord.ui.Button(label="✨ continue", custom_id="continue", styl
 async def load_btt():
     rmv_bt.callback = rmv_bt_atv
 
+# Button add
+async def DM_button():
+    view = View(timeout=None)
+    view.add_item(rmv_bt)
+    view.add_item(rc_bt)
+    view.add_item(continue_bt)
+    return view
+
 # Remove message
 async def rmv_bt_atv(interaction):
     await interaction.message.delete()
@@ -35,6 +43,18 @@ async def rc_atv(interaction):
     if val.public: val.set('CD', val.chat_speed)
     val.set('CD_idle', 0)
 
+
+# Edit message with mess id
+async def edit_last_msg(msg=None, view=None):
+    from utils.bot import bot, val
+
+    channel_id = val.ai_channel
+    message_id = val.last_mess_id
+    message = await bot.get_message(channel_id, message_id)
+    if not msg:
+        await message.edit(view=view)
+    else:
+        await message.edit(content=msg, view=view)
 
 # Bypass button:
 async def byB(interaction):

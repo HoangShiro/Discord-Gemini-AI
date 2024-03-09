@@ -97,22 +97,29 @@ async def char_check():
 async def send_mess(channel, reply, rep = False, inter = False):
     from utils.bot import val
     from utils.daily import get_real_time
+    from utils.ui import DM_button, edit_last_msg
     # In ra console
     if val.chat_csl: print(f"{get_real_time()}> [{val.ai_name} - {val.ai_char}]: {reply}")
+
+    # Thêm button nếu là DM channel
+    view = None
+    if not val.public: view = await DM_button()
 
     # Send thẳng nếu ít hơn 2000 ký tự
     mid = 0
     if len(reply) <= 2000:
+        await edit_last_msg()
         if not rep:
-            mids = await channel.send(reply)
+            mids = await channel.send(reply, view=view)
         elif inter:
-            mids = await channel.channel.send(reply)
+            mids = await channel.channel.send(reply, view=view)
         elif rep:
-            mids = await channel.reply(reply)
+            mids = await channel.reply(reply, view=view)
         mid = mids.id
         val.set('last_mess_id', mid)
         return
 
+    await edit_last_msg()
     # Cắt tin nhắn thành các phần nhỏ hơn 500 ký tự.
     messages = []
     while len(reply) > 0:
@@ -134,6 +141,3 @@ async def send_mess(channel, reply, rep = False, inter = False):
         elif rep:
             mids = await channel.reply(message)
         await asyncio.sleep(3)
-
-    mid = mids.id
-    val.set('last_mess_id', mid)
