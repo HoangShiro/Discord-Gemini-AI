@@ -117,6 +117,9 @@ def remmid_edit(list1, filter, text):
   # Trả về list mới.
   return new_list
 
+# lấy cặp lịch sử cuối
+
+
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
   print(p)

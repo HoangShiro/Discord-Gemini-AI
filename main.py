@@ -26,6 +26,7 @@ if __name__ == '__main__':
     update_cfg("saves/moods.py", mood_names)
     createfile('saves/chat.txt')
     createfile('saves/limit.txt')
+    createfile('saves/continue.txt')
     json_update('saves/vals.json', default_values)
     json_update('saves/char.json', char)
 
