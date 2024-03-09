@@ -24,9 +24,10 @@ async def rmv_bt_atv(interaction):
     from utils.api import chat
 
     await interaction.message.delete()
+    chat.rewind()
+    if val.last_mess_id == val.old_mess_id: return
     val.set('last_mess_id', val.old_mess_id)
     await edit_last_msg(view=await DM_button())
-    chat.rewind()
 
 # Rechat
 async def rc_atv(interaction):
@@ -65,7 +66,7 @@ async def edit_last_msg(msg=None, view=None):
     try:
         message = await channel.fetch_message(message_id)
     except Exception as e:
-        print(f"{get_real_time()}> Lỗi ui - edit msg: ", e)
+        #print(f"{get_real_time()}> Lỗi ui - edit msg: ", e)
         return
     
     if not msg:
