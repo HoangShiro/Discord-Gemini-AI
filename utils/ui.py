@@ -55,6 +55,7 @@ async def edit_last_msg(msg=None, view=None):
     from utils.bot import bot, val
 
     message_id = val.last_mess_id
+
     user = await bot.fetch_user(val.owner_uid)
     if user.dm_channel is None:
         await user.create_dm()
@@ -62,6 +63,7 @@ async def edit_last_msg(msg=None, view=None):
     channel = bot.get_channel(channel_id)
     message = await channel.fetch_message(message_id)
     
+    print(message)
     if not msg:
         await message.edit(view=view)
     else:
