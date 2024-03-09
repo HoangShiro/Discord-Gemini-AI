@@ -281,7 +281,7 @@ async def give_bot(interaction: discord.Interaction, uid: str = None):
 
 # Thao tác với prompt
 @bot.slash_command(name="prompts", description=f"Xem/sửa prompt cho {val.ai_name}.")
-async def give_bot(interaction: discord.Interaction, view: discord.Option(
+async def prompts(interaction: discord.Interaction, view: discord.Option(
         description="Chọn prompt muốn xem:",
         choices=[
             discord.OptionChoice(name="Character", value="chat"),
