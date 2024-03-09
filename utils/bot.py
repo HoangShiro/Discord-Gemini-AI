@@ -26,6 +26,7 @@ class AllStatus:
         self.total_rep = 0
         self.total_mess = 0
         self.last_mess_id = 0
+        self.old_mess_id = 0
         self.now_chat = []
         self.old_chat = []
         self.stop_chat = 0

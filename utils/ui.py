@@ -20,7 +20,13 @@ async def DM_button():
 
 # Remove message
 async def rmv_bt_atv(interaction):
+    from utils.bot import val
+    from utils.api import chat
+
     await interaction.message.delete()
+    val.set('last_mess_id', val.old_mess_id)
+    await edit_last_msg(view=await DM_button())
+    chat.rewind()
 
 # Rechat
 async def rc_atv(interaction):

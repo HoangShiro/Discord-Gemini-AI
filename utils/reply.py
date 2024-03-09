@@ -116,6 +116,7 @@ async def send_mess(channel, reply, rep = False, inter = False):
         elif rep:
             mids = await channel.reply(reply, view=view)
         mid = mids.id
+        val.set('old_mess_id', val.last_mess_id)
         val.set('last_mess_id', mid)
         return
 
