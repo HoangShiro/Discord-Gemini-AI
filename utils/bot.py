@@ -248,6 +248,7 @@ async def chat_mode(interaction: discord.Interaction):
         n = "chat riêng tư với bạn."
         val.set('public', False)
     else:
+        await edit_last_msg()
         n = "chat cùng mọi người trong channel."
         val.set('public', True)
     await interaction.response.send_message(f"`{val.ai_name} sẽ {n}.`", ephemeral=True)
