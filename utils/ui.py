@@ -10,6 +10,7 @@ continue_bt = discord.ui.Button(label="✨ continue", custom_id="continue", styl
 async def load_btt():
     rmv_bt.callback = rmv_bt_atv
     rc_bt.callback = rc_atv
+    continue_bt.callback = ctn_atv
 
 # Button add
 async def DM_button():
@@ -50,6 +51,22 @@ async def rc_atv(interaction):
     
     if val.public: val.set('CD', val.chat_speed)
     val.set('CD_idle', 0)
+
+# Continue
+async def ctn_atv(interaction):
+    from utils.bot import val
+    from utils.funcs import txt_read
+
+    await byB(interaction)
+    cmd = []
+    cmd = [txt_read("saves/continue.txt")]
+    if len(str(cmd)) < 4:
+        cmd = ["*tiếp tục: *"]
+    
+    msg = []
+    msg = val.now_chat + cmd
+    val.set('now_chat', msg)
+    val.set('CD', 0)
 
 
 # Edit message with mess id
