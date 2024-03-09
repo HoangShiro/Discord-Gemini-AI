@@ -59,10 +59,10 @@ async def ctn_atv(interaction):
 
     await byB(interaction)
     cmd = []
-    cmd = [txt_read("saves/continue.txt")]
-    if len(str(cmd)) < 4:
-        cmd = ["*tiếp tục: *"]
-    
+    text = txt_read("saves/continue.txt")
+    if len(text) < 4:
+        text = "*tiếp tục: *"
+    cmd.append(text)
     msg = []
     msg = val.now_chat + cmd
     val.set('now_chat', msg)
