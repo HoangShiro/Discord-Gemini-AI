@@ -9,6 +9,7 @@ continue_bt = discord.ui.Button(label="✨ continue", custom_id="continue", styl
 # Button call
 async def load_btt():
     rmv_bt.callback = rmv_bt_atv
+    rc_bt.callback = rc_atv
 
 # Button add
 async def DM_button():
