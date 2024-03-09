@@ -53,6 +53,7 @@ async def rc_atv(interaction):
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None):
     from utils.bot import bot, val
+    from utils.daily import get_real_time
 
     message_id = val.last_mess_id
 
@@ -61,9 +62,12 @@ async def edit_last_msg(msg=None, view=None):
         await user.create_dm()
     channel_id = user.dm_channel.id
     channel = bot.get_channel(channel_id)
-    message = await channel.fetch_message(message_id)
+    try:
+        message = await channel.fetch_message(message_id)
+    except Exception as e:
+        print(f"{get_real_time()}> Lỗi ui - edit msg: ", e)
+        return
     
-    print(message)
     if not msg:
         await message.edit(view=view)
     else:
