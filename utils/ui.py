@@ -50,7 +50,8 @@ async def edit_last_msg(msg=None, view=None):
 
     channel_id = val.ai_channel
     message_id = val.last_mess_id
-    message = await bot.get_message(message_id)
+    channel = bot.get_channel(channel_id)
+    message = await channel.fetch_message(message_id)
     if not msg:
         await message.edit(view=view)
     else:
