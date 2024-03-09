@@ -108,7 +108,7 @@ async def send_mess(channel, reply, rep = False, inter = False):
     # Send thẳng nếu ít hơn 2000 ký tự
     mid = 0
     if len(reply) <= 2000:
-        await edit_last_msg()
+        if not val.public: await edit_last_msg()
         if not rep:
             mids = await channel.send(reply, view=view)
         elif inter:
@@ -119,7 +119,7 @@ async def send_mess(channel, reply, rep = False, inter = False):
         val.set('last_mess_id', mid)
         return
 
-    await edit_last_msg()
+    if not val.public: await edit_last_msg()
     # Cắt tin nhắn thành các phần nhỏ hơn 500 ký tự.
     messages = []
     while len(reply) > 0:

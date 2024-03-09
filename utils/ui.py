@@ -48,10 +48,14 @@ async def rc_atv(interaction):
 async def edit_last_msg(msg=None, view=None):
     from utils.bot import bot, val
 
-    channel_id = val.ai_channel
     message_id = val.last_mess_id
+    user = await bot.fetch_user(val.owner_uid)
+    if user.dm_channel is None:
+        await user.create_dm()
+    channel_id = user.dm_channel.id
     channel = bot.get_channel(channel_id)
     message = await channel.fetch_message(message_id)
+    
     if not msg:
         await message.edit(view=view)
     else:
