@@ -18,6 +18,7 @@ async def sec_check():
     elif val.CD == 0 and not val.now_chat:
         if val.CD_idle == val.to_worktime:
             val.set('CD', val.to_breaktime)
+            await status_busy_set()
     
     # Đếm ngược tới thời gian check tin nhắn
     if val.CD > 0:
