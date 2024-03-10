@@ -208,6 +208,9 @@ async def on_message(message: discord.Message):
                 val.set('now_chat', [])
                 reply = await gemini_rep(text)
                 await send_mess(message, reply, rep=True)
+                if val.to_worktime < 300:
+                    if val.public: val.update('to_worktime', 10)
+                    else: val.update('to_worktime', 120)
             except Exception as e:
                 print(f"{get_real_time()}> Lỗi Reply on_message: ", e)
                 old_chat = val.old_chat

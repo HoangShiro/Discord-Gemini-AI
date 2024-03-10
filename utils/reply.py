@@ -58,6 +58,9 @@ async def reply_id():
                 val.set('now_chat', [])
                 reply = await gemini_rep(text)
                 await send_mess(channel, reply)
+                if val.to_worktime < 300:
+                    if val.public: val.update('to_worktime', 10)
+                    else: val.update('to_worktime', 120)
             except Exception as e:
                 print(f"{get_real_time()}> Lỗi Reply Sec_check: ", e)
                 old_chat = val.old_chat
