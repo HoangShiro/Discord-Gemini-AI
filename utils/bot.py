@@ -245,10 +245,12 @@ async def newchat(interaction: discord.Interaction):
                                    au_link=interaction.user.display_avatar)
     mess = await interaction.response.send_message(embed=embed, view=view)
     await char_check()
-    embed, view = await bot_notice(tt="Đã làm mới cuộc trò chuyện 🌟", color=0xff8a8a)
+    embed, view = await bot_notice(tt="Đã làm mới cuộc trò chuyện 🌟",
+                                   au_name=interaction.user.display_name,
+                                   au_avatar=interaction.user.display_avatar,
+                                   au_link=interaction.user.display_avatar,
+                                   color=0xff8a8a)
     await mess.edit_original_response(embed=embed)
-    mid = mess.id
-    #await edit_last_msg(embed=embed, view=view, message_id=mid)
 
 
 # Chuyển chế độ chat
