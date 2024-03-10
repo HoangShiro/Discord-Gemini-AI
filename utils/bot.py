@@ -118,7 +118,6 @@ val = AllStatus()
 
 @bot.event
 async def on_ready():
-    val.load('saves/vals.json')
 
     val.set('ai_name', bot.user.name)
 
@@ -431,6 +430,7 @@ async def cslog(interaction: discord.Interaction, get: discord.Option(
 
 def bot_run():
     try:
+        val.load('saves/vals.json')
         bot.run(val.bot_key)
     except Exception as e:
         print("\n")
