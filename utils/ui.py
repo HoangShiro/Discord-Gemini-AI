@@ -67,13 +67,10 @@ async def rc_atv(interaction):
 # Continue
 async def ctn_atv(interaction):
     from utils.bot import val
-    from utils.funcs import txt_read
 
     await byB(interaction)
     cmd = []
-    text = txt_read("saves/continue.txt")
-    if len(text) < 4:
-        text = "*tiếp tục: *"
+    text = val.dm_chat_next
     cmd.append(text)
     msg = []
     msg = val.now_chat + cmd

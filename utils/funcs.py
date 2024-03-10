@@ -1,6 +1,7 @@
 """Các hàm chức năng"""
-import json, os, time, datetime, pytz, asyncio, jaconv, re
+import json, os, time, datetime, pytz, asyncio, jaconv, re, random
 
+from discord import FFmpegPCMAudio
 from translate import Translator
 from mtranslate import translate
 from langdetect import detect
@@ -172,6 +173,73 @@ def text_tts_cut(cvb):
 
     # Trả về chuỗi văn bản đã cắt ngắn.
     return cvb_cn
+
+# Join voice channel
+async def v_join(message):
+    u_ch_id = message.author.voice.channel.id
+    u_vc = message.author.voice.channel
+    b_ch = None
+    if message.guild.voice_client:
+        b_ch = message.guild.voice_client.channel
+        b_vc = message.guild.voice_client
+    if b_ch and b_ch.id != u_ch_id:
+        await b_vc.disconnect()
+        await u_vc.connect()
+    elif not b_ch:
+        await u_vc.connect()
+
+# Join voice channel
+async def v_leave(message):
+    from utils.bot import val
+    b_ch = None
+    if message.guild.voice_client:
+        b_ch = message.guild.voice_client.channel
+        b_vc = message.guild.voice_client
+    if b_ch:
+        await b_vc.disconnect()
+        pr_vch_id = None
+        await val.set('pr_vch_id', pr_vch_id)
+
+# Reconnect to voice channel
+async def voice_rcn():
+    from utils.bot import bot, val
+    pr_v = val.pr_vch_id
+    if pr_v:
+        vc = await bot.get_channel(pr_v).connect()
+        sound = await sob('greeting')
+        await voice_send(sound, vc)
+
+# Send voice
+async def voice_send(url, ch):
+    from utils.daily import get_real_time
+    audio_source = FFmpegPCMAudio(url)
+    await asyncio.sleep(0.5)
+    try:
+      ch.play(audio_source, after=lambda e: print('Player error: %s' % e) if e else None)
+    except Exception as e:
+      print(f"{get_real_time()}> Send voice error: ", e)
+
+# Voice make
+async def voice_make_tts(mess, answ):
+    from utils.bot import val
+    from utils.api import tts_get
+    url = await tts_get(answ, val.vv_speaker, val.vv_pitch, val.vv_iscale, val.vv_speed)
+    if mess.guild.voice_client:
+        b_ch = mess.guild.voice_client.channel.id
+        b_vc = mess.guild.voice_client
+        await voice_send(url, b_vc)
+        await val.set('pr_vch_id', b_ch)
+
+# Soundboard get
+async def sob(sound_list, sound=None):
+    audio_dir = "/sound"
+    if not sound:
+        audio_dir = f"./sound/{sound_list}"
+        audio_files = [os.path.join(audio_dir, f) for f in os.listdir(audio_dir) if f.endswith(".wav")]
+        audio_file = random.choice(audio_files)
+    else:
+        audio_file = f"{audio_dir}/{sound}"
+    return audio_file
 
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')

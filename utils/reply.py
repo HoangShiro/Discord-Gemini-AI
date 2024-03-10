@@ -1,7 +1,7 @@
 """Các hàm trả lời"""
-import PIL.Image, asyncio
+import PIL.Image, asyncio, re, discord
 from io import BytesIO
-from utils.funcs import list_to_str, txt_read
+from utils.funcs import list_to_str, txt_read, v_join, v_leave
 from utils.api import igemini_text, gemini_rep, gemini_task
 from utils.status import status_busy_set, status_chat_set
 
@@ -143,3 +143,22 @@ async def send_mess(channel, reply, rep = False, inter = False):
         elif rep:
             mids = await channel.reply(message)
         await asyncio.sleep(3)
+
+# Hàm xử lý lệnh trong tin nhắn
+async def cmd_msg(mess):
+    from utils.bot import val
+    # Voice
+    answ = mess.content
+    uname = mess.author.display_name
+    if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'joi|jum', answ, re.IGNORECASE):
+        if mess.author.voice and mess.author.voice.channel:
+            await v_join(mess)
+        else:
+            umess = val.vc_invite.replace("<user>", uname)
+            new_chat = val.now_chat
+            new_chat.append(umess)
+            val.set('now_chat', new_chat)
+            val.set('CD', 1)
+            pass
+    if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'leav|out', answ, re.IGNORECASE):
+        await v_leave(mess)

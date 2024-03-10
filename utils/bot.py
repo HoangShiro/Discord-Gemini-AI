@@ -49,6 +49,11 @@ class AllStatus:
         self.vv_pitch = 0
         self.vv_iscale = 1.5
         self.vv_speed = 1
+        self.pr_vch_id = 0
+
+        # Lời nhắc
+        self.dm_chat_next = "*Tiếp tục: *" # Tiếp tục chat trong DM channel
+        self.vc_invite = "(SYSTEM): <user> mời bạn vào voice chat nhưng <user> lại không đang trong voice channel nào, hãy hỏi lại." # Voice
 
     def update(self, val_name, value):
         if hasattr(self, val_name):
@@ -102,7 +107,6 @@ class AllStatus:
         self.breakday_act = data[character][time]["breakday_act"]
         self.friendliness = data[character]["friendliness"]
 
-
 val = AllStatus()
 
 @bot.event
@@ -150,13 +154,7 @@ async def on_message(message):
             val.set('ai_channel', message.channel.id)
 
     # Lấy user name
-    user_name = ""
-    try:
-        user_name = message.author.nick
-    except:
-        pass
-    if not user_name:
-        user_name = message.author.name
+    user_name = message.author.display_name
 
     val.set('last_uname', user_name)
 
@@ -220,7 +218,7 @@ async def renew(interaction: discord.Interaction):
     if not val.public:
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(f"`Bạn hem có quyền sử dụng lệnh nỳ.`", ephemeral=True)
-        
+
     await interaction.response.send_message(f"`Đang kết nối lại...`", ephemeral=True)
     await bot.close()
 
@@ -251,7 +249,6 @@ async def newchat(interaction: discord.Interaction):
                                    au_link=interaction.user.display_avatar,
                                    color=0xff8a8a)
     await mess.edit_original_response(embed=embed)
-
 
 # Chuyển chế độ chat
 @bot.slash_command(name="chatmode", description=f"Kêu {val.ai_name} chat public/private.")
