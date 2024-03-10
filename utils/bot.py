@@ -247,6 +247,7 @@ async def newchat(interaction: discord.Interaction):
     await char_check()
     embed, view = await bot_notice(tt="Đã làm mới cuộc trò chuyện 🌟", color=0xff8a8a)
     mid = mess.id
+    print(mid)
     await edit_last_msg(embed=embed, view=view, message_id=mid)
 
 
