@@ -153,7 +153,7 @@ async def cmd_msg(answ):
     # Voice
     guild = bot.get_guild(val.ai_guild)
     voice_channels = guild.voice_channels
-
+    
     if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'joi|jum|vào|nhảy|chui', answ, re.IGNORECASE):
         found = False
         # Duyệt qua từng kênh thoại
@@ -163,19 +163,20 @@ async def cmd_msg(answ):
 
         # Kiểm tra xem member có tên trong list "name" có đang trong kênh thoại hay không
             for member in members:
+                print(member.display_name)
                 if member.display_name in name:
                 # Tham gia kênh thoại
                     await channel.connect()
                     found = True
                     break
 
-        if not found:
+        """if not found:
             umess = val.vc_invite
             new_chat = val.now_chat
             new_chat.append(umess)
             val.set('now_chat', new_chat)
             val.set('CD', 1)
-            pass
+            pass"""
 
     if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'leav|out|rời|khỏi', answ, re.IGNORECASE):
         await auto_v_leave(bot)
