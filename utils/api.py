@@ -22,6 +22,8 @@ prompt = load_prompt("saves/chat.txt")
 
 chat = model.start_chat(history=prompt)
 
+alt_trans = False
+
 # Gemini
 async def gemini_rep(mess):
     from utils.bot import val
@@ -81,7 +83,7 @@ async def tts_get(text, speaker, pitch, intonation_scale, speed):
         text_fill = text
     cnv_text = romaji_to_katakana(text_fill)
     cut_text = text_tts_cut(cnv_text)
-    url = f"https://deprecatedapis.tts.quest/v2/voicevox/audio/?key={vv_key}&text={cnv_text}&speaker={speaker}&pitch={pitch}&intonationScale={intonation_scale}&speed={speed}"
+    url = f"https://deprecatedapis.tts.quest/v2/voicevox/audio/?key={vv_key}&text={cut_text}&speaker={speaker}&pitch={pitch}&intonationScale={intonation_scale}&speed={speed}"
     
     """response = requests.get(url)
     st_log = await vals_load('user_files/vals.json', 'st_log')
