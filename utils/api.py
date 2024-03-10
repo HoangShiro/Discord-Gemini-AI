@@ -12,9 +12,13 @@ safety ={
         HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold. BLOCK_NONE,
     }
 
-with open("saves/vals.json", "r") as f:
-    data = json.load(f)
-gai_key = data["gai_key"]
+gai_key = ""
+try:
+    with open("saves/vals.json", "r") as f:
+        data = json.load(f)
+    gai_key = data["gai_key"]
+except Exception as e:
+    pass
 
 genai.configure(api_key=gai_key)
 
