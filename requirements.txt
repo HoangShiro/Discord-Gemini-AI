@@ -3,3 +3,6 @@ google-generativeai
 pillow
 re
 pytz
+translate
+langdetect
+jaconv
