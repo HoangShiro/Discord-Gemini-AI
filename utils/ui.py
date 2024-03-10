@@ -118,13 +118,15 @@ async def byB(interaction):
 """ EMBED """
 
 # Embed mặc định
-async def bot_notice(tt=None, des=None, ava_link=None, color=0xffbf75):
+async def bot_notice(tt=None, des=None, ava_link=None, au_name=None, au_link=None, au_avatar=None, color=0xffbf75):
     from utils.bot import bot, val
     if not tt: tt = val.ai_name
     if not des: des = f"Personality: {val.ai_char}."
     if not ava_link: ava_link = bot.user.display_avatar
     embed=discord.Embed(title=tt, description=des, color=color)
     embed.set_thumbnail(url=ava_link)
+    if au_name: embed.set_author(name=au_name, url=au_link, icon_url=au_avatar)
+    
     view = View(timeout=None)
     view.add_item(ermv_bt)
 

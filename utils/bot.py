@@ -238,8 +238,11 @@ async def newchat(interaction: discord.Interaction):
     val.set('CD', 1)
     val.set('CD_idle', 1)
     val.set('now_chat', [])
-    embed, view = await bot_notice(tt="Đang tạo cuộc trò chuyện mới 💫", des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...")
-    mess = await interaction.response.send_message(embed=embed, view=view)
+    embed, view = await bot_notice(tt="Đang tạo cuộc trò chuyện mới 💫",
+                                   des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...",
+                                   au_name=interaction.user.display_name,
+                                   au_avatar=interaction.user.display_avatar)
+    mess = await interaction.channel.send(embed=embed, view=view)
     await char_check()
     embed, view = await bot_notice(tt="Đã làm mới cuộc trò chuyện 🌟", color=0xff8a8a)
     await edit_last_msg(embed=embed, view=view, message_id=mess.id)
