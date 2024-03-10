@@ -4,7 +4,6 @@ from io import BytesIO
 from discord.ext import commands, tasks
 from discord.ui import View, button
 
-from saves.keys import discord_bot_key
 from utils.api import *
 from utils.status import *
 from utils.reply import *
@@ -17,6 +16,11 @@ bot = commands.Bot(intents=intents, command_prefix="!")
 
 class AllStatus:
     def __init__(self):
+        # Keys
+        self.bot_key = ""
+        self.gai_key = ""
+        self.vv_key = ""
+
         # Status
         self.public = False
         self.owner_uid = 0
@@ -52,7 +56,7 @@ class AllStatus:
         self.vv_speed = 1
         self.pr_vch_id = 0
         self.vc_invited = False
-        self.tts_toggle = True
+        self.tts_toggle = False
 
         # Lời nhắc
         self.dm_chat_next = "(SYSTEM): *hãy tiếp tục trò chuyện một cách sáng tạo*" # Tiếp tục chat trong DM channel
@@ -118,6 +122,8 @@ async def on_ready():
 
     val.set('ai_name', bot.user.name)
 
+    gai_key()
+
     await load_btt()
 
     asyncio.create_task(sec_check())
@@ -145,6 +151,7 @@ async def on_message(message: discord.Message):
         return
 
     if message.author == bot.user or message.content.startswith((".", "!", ",", "/")): return
+    if len(val.gai_key) < 39: return await message.channel.send("> Xài lệnh `/setkeys` điền Gemini API key trước.")
     val.update('total_mess', 1)
     
     # Check bot public hay bot private
@@ -216,6 +223,19 @@ async def on_message(message: discord.Message):
             else: val.set('CD', 0)
             val.set('CD_idle', 0)
 
+# set key
+@bot.slash_command(name="setkeys", description=f"Đổi key cho {val.ai_name}.")
+async def keys(interaction: discord.Interaction, gemini: str = None, voicevox: str = None):
+    if val.owner_uid != 0:
+        if interaction.user.id != val.owner_uid:
+                return await interaction.response.send_message(f"`Bạn hem có quyền sử dụng lệnh nỳ.`", ephemeral=True)
+    
+    if gemini:
+        val.set('gai_key', gemini)
+    if voicevox:
+        val.set('vv_key', voicevox)
+    await interaction.response.send_message(f"`Đã cập nhật key cho {val.ai_name}`", ephemeral=True)
+
 # Cập nhật
 @bot.slash_command(name="update", description=f"Cập nhật {val.ai_name}.")
 async def update(interaction: discord.Interaction):
@@ -282,7 +302,12 @@ async def voice(interaction: discord.Interaction, speaker: int = None):
         text = "Đã tắt"
     elif speaker:
         if speaker > 75: return await interaction.response.send_message("`Voice Japanese không tồn tại, chọn voice từ 0 -> 75.`", ephemeral=True)
+        if len(val.vv_key) < 15: return await interaction.response.send_message("> Xài lệnh `/setkeys` điền VoiceVox API key trước.")
         val.set('vv_speaker', speaker)
+        val.set('tts_toggle', True)
+        text = "Đã bật"
+    else:
+        if len(val.vv_key) < 15: return await interaction.response.send_message("> Xài lệnh `/setkeys` điền VoiceVox API key trước.")
         val.set('tts_toggle', True)
         text = "Đã bật"
     await interaction.response.send_message(f"`{text} voice cho {val.ai_name}`", ephemeral=True)
@@ -405,4 +430,10 @@ async def cslog(interaction: discord.Interaction, get: discord.Option(
         await interaction.response.send_message(f"`Chỉ {val.ai_name} mới có thể xem nhật ký của cô ấy.`", ephemeral=True)
 
 def bot_run():
-    bot.run(discord_bot_key)
+    try:
+        bot.run(val.bot_key)
+    except Exception as e:
+        print("\n")
+        print("Nhập Discord bot Token hợp lệ: ")
+        key = input()
+        val.set('bot_key', key)

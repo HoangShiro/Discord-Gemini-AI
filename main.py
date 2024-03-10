@@ -22,7 +22,6 @@ def start():
 if __name__ == '__main__':
     update_bot()
 
-    update_cfg("saves/keys.py", keys_list)
     update_cfg("saves/moods.py", mood_names)
     createfile('saves/chat.txt')
     createfile('saves/limit.txt')
