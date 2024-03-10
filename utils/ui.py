@@ -3,6 +3,7 @@ import discord, datetime, pytz, asyncio
 from discord.ui import View
 
 rmv_bt = discord.ui.Button(label="➖", custom_id="remove", style=discord.ButtonStyle.grey)
+ermv_bt = discord.ui.Button(label="➖", custom_id="remove", style=discord.ButtonStyle.grey)
 rc_bt = discord.ui.Button(label="💫 re chat", custom_id="rc", style=discord.ButtonStyle.grey)
 continue_bt = discord.ui.Button(label="✨ continue", custom_id="continue", style=discord.ButtonStyle.grey)
 
@@ -11,9 +12,13 @@ continue_bt = discord.ui.Button(label="✨ continue", custom_id="continue", styl
 
 # Button call
 async def load_btt():
+    # DM chat
     rmv_bt.callback = rmv_bt_atv
     rc_bt.callback = rc_atv
     continue_bt.callback = ctn_atv
+    
+    # UI
+    ermv_bt.callback = ermv_bt_atv
 
 # Button add
 async def DM_button():
@@ -33,6 +38,10 @@ async def rmv_bt_atv(interaction):
     if val.last_mess_id == val.old_mess_id: return
     val.set('last_mess_id', val.old_mess_id)
     await edit_last_msg(view=await DM_button())
+
+# Remove embed
+async def ermv_bt_atv(interaction):    
+    await interaction.message.delete()
 
 # Rechat
 async def rc_atv(interaction):
@@ -86,7 +95,8 @@ async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
     try:
         message = await channel.fetch_message(message_id)
     except Exception as e:
-        #print(f"{get_real_time()}> Lỗi ui - edit msg: ", e)
+        if val.bug_csl:
+            print(f"{get_real_time()}> Lỗi ui - edit msg: ", e)
         return
     
     if not msg:
@@ -116,6 +126,6 @@ async def bot_notice(tt=None, des=None, ava_link=None, color=0xffbf75):
     embed=discord.Embed(title=tt, description=des, color=color)
     embed.set_thumbnail(url=ava_link)
     view = View(timeout=None)
-    view.add_item(rmv_bt)
+    view.add_item(ermv_bt)
 
     return embed, view
