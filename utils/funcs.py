@@ -197,6 +197,7 @@ async def voice_make_tts(text):
     from utils.bot import val, bot
     from utils.api import tts_get
     from utils.reply import voice_send
+    from utils.daily import get_real_time
     
     guild = bot.get_guild(val.ai_guild)
     # Huỷ nếu không trong voice
@@ -209,11 +210,14 @@ async def voice_make_tts(text):
 
     # Chỉ gửi voice chat nếu user đang trong voice
     for channel in voice_channels:
-            members = channel.members
-            for member in members:
-                if member.display_name in name:
+        members = channel.members
+        for member in members:
+            if member.display_name in name:
+                try:
                     url = await tts_get(text, val.vv_speaker, val.vv_pitch, val.vv_iscale, val.vv_speed)
-                    await voice_send(url, guild.voice_client)
+                except Exception as e:
+                    print(f"{get_real_time()}> lỗi tts: ", e)
+                await voice_send(url, guild.voice_client)
 
 # Soundboard get
 async def sob(sound_list, sound=None):
