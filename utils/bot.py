@@ -230,8 +230,6 @@ async def newchat(interaction: discord.Interaction):
     if not val.public:
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(f"`Bạn hem có quyền sử dụng lệnh nỳ.`", ephemeral=True)
-        
-    await byB(interaction)
 
     if not val.public: await edit_last_msg()
     new_prpt = load_prompt("saves/chat.txt")
@@ -245,7 +243,7 @@ async def newchat(interaction: discord.Interaction):
                                    au_name=interaction.user.display_name,
                                    au_avatar=interaction.user.display_avatar,
                                    au_link=interaction.user.display_avatar)
-    mess = await interaction.channel.send(embed=embed, view=view)
+    mess = await interaction.response.send_message(embed=embed, view=view)
     print(mess.id)
     await char_check()
     embed, view = await bot_notice(tt="Đã làm mới cuộc trò chuyện 🌟", color=0xff8a8a)
