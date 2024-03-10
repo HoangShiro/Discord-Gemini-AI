@@ -272,15 +272,16 @@ async def chat_mode(interaction: discord.Interaction):
 
 # Bật hoặc tắt voice
 @bot.slash_command(name="voice", description=f"Bật hoặc tắt voice của {val.ai_name}.")
-async def update(interaction: discord.Interaction):
+async def voice(interaction: discord.Interaction, speaker: int = None):
     if not val.public:
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(f"`Bạn hem có quyền sử dụng lệnh nỳ.`", ephemeral=True)
     text = ""
-    if val.tts_toggle:
+    if val.tts_toggle and not speaker:
         val.set('tts_toggle', False)
         text = "Đã tắt"
-    else:
+    elif speaker:
+        if speaker > 75: return await interaction.response.send_message("`Voice Japanese không tồn tại, chọn voice từ 0 -> 75.`", ephemeral=True)
         val.set('tts_toggle', True)
         text = "Đã bật"
     await interaction.response.send_message(f"`{text} voice cho {val.ai_name}`", ephemeral=True)
