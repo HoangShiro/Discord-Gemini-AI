@@ -22,6 +22,7 @@ class AllStatus:
         self.owner_uid = 0
         self.ai_name = "AI"
         self.ai_char = "innocent"
+        self.ai_guild = 0
         self.ai_channel = 0
         self.total_rep = 0
         self.total_mess = 0
@@ -52,8 +53,8 @@ class AllStatus:
         self.pr_vch_id = 0
 
         # Lời nhắc
-        self.dm_chat_next = "*Tiếp tục: *" # Tiếp tục chat trong DM channel
-        self.vc_invite = "(SYSTEM): <user> mời bạn vào voice chat nhưng <user> lại không đang trong voice channel nào, hãy hỏi lại." # Voice
+        self.dm_chat_next = "(SYSTEM): *hãy tiếp tục trò chuyện một cách sáng tạo*" # Tiếp tục chat trong DM channel
+        self.vc_invite = "(SYSTEM): Không tìm thấy người đó trong voice channel nào, hãy hỏi lại." # Voice
 
     def update(self, val_name, value):
         if hasattr(self, val_name):
@@ -129,7 +130,7 @@ async def on_ready():
     print(f'{val.ai_name} đã sẵn sàng!')
 
 @bot.event
-async def on_message(message):
+async def on_message(message: discord.Message):
     # Dành cho fix prompt
     if val.prompt_fix and message.author.id == val.owner_uid:
         if len(message.content) >= 50 and message.content.count("\n") > 0:
@@ -151,6 +152,7 @@ async def on_message(message):
         if message.author.id != val.owner_uid: return
     else:
         if message.content:
+            val.set('ai_guild', message.guild.id)
             val.set('ai_channel', message.channel.id)
 
     # Lấy user name

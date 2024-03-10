@@ -1,5 +1,5 @@
 """Các hàm chức năng"""
-import json, os, time, datetime, pytz, asyncio, jaconv, re, random
+import json, os, time, datetime, pytz, asyncio, jaconv, re, random, discord
 
 from discord import FFmpegPCMAudio
 from translate import Translator
@@ -188,7 +188,7 @@ async def v_join(message):
     elif not b_ch:
         await u_vc.connect()
 
-# Join voice channel
+# leave voice channel
 async def v_leave(message):
     from utils.bot import val
     b_ch = None
@@ -199,6 +199,22 @@ async def v_leave(message):
         await b_vc.disconnect()
         pr_vch_id = None
         await val.set('pr_vch_id', pr_vch_id)
+
+# Auto leave voice channel
+async def auto_v_leave(bot: discord.Client):
+  # Lấy voice client của bot
+  voice_client = bot.voice_clients[0]
+
+  # Nếu bot đang ở trong một voice channel
+  if voice_client.is_connected():
+    # Rời khỏi voice channel
+    await voice_client.disconnect()
+
+    # In thông báo
+    print("Bot đã rời khỏi voice channel.")
+  else:
+    # In thông báo
+    print("Bot không ở trong voice channel nào.")
 
 # Reconnect to voice channel
 async def voice_rcn():

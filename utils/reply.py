@@ -1,7 +1,7 @@
 """Các hàm trả lời"""
 import PIL.Image, asyncio, re, discord
 from io import BytesIO
-from utils.funcs import list_to_str, txt_read, v_join, v_leave
+from utils.funcs import list_to_str, txt_read, v_join, v_leave, auto_v_leave
 from utils.api import igemini_text, gemini_rep, gemini_task
 from utils.status import status_busy_set, status_chat_set
 
@@ -105,7 +105,7 @@ async def send_mess(channel, reply, rep = False, inter = False):
     # Thêm button nếu là DM channel
     view = None
     if not val.public: view = await DM_button()
-
+    else: await cmd_msg(reply)
     # Send thẳng nếu ít hơn 2000 ký tự
     mid = 0
     if len(reply) <= 2000:
@@ -145,20 +145,37 @@ async def send_mess(channel, reply, rep = False, inter = False):
         await asyncio.sleep(3)
 
 # Hàm xử lý lệnh trong tin nhắn
-async def cmd_msg(mess):
-    from utils.bot import val
+async def cmd_msg(answ):
+    from utils.bot import val, bot
+
+    chat = val.now_chat
+    name = [message.split(":")[0] for message in chat]
     # Voice
-    answ = mess.content
-    uname = mess.author.display_name
-    if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'joi|jum', answ, re.IGNORECASE):
-        if mess.author.voice and mess.author.voice.channel:
-            await v_join(mess)
-        else:
-            umess = val.vc_invite.replace("<user>", uname)
+    guild = bot.get_guild(val.ai_guild)
+    voice_channels = guild.voice_channels
+
+    if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'joi|jum|vào|nhảy|chui', answ, re.IGNORECASE):
+        found = False
+        # Duyệt qua từng kênh thoại
+        for channel in voice_channels:
+        # Lấy danh sách các thành viên hiện đang trong kênh
+            members = channel.members
+
+        # Kiểm tra xem member có tên trong list "name" có đang trong kênh thoại hay không
+            for member in members:
+                if member.display_name in name:
+                # Tham gia kênh thoại
+                    await channel.connect()
+                    found = True
+                    break
+
+        if not found:
+            umess = val.vc_invite
             new_chat = val.now_chat
             new_chat.append(umess)
             val.set('now_chat', new_chat)
             val.set('CD', 1)
             pass
-    if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'leav|out', answ, re.IGNORECASE):
-        await v_leave(mess)
+
+    if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'leav|out|rời|khỏi', answ, re.IGNORECASE):
+        await auto_v_leave(bot)
