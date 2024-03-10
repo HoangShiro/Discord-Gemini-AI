@@ -75,6 +75,7 @@ async def reply_id():
 # Set tính cách nhân vật dựa vào prompt
 async def char_check():
     from utils.bot import val
+    from utils.daily import get_real_time
     chat = txt_read('saves/chat.txt')
     prompt = txt_read('utils/char.txt')
     all_prpt = prompt + "\n" + chat
