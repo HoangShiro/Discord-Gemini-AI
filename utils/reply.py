@@ -2,7 +2,7 @@
 import PIL.Image, asyncio, re, discord
 from io import BytesIO
 from discord import FFmpegPCMAudio
-from utils.funcs import list_to_str, txt_read, v_leave_auto, sob
+from utils.funcs import list_to_str, txt_read, v_leave_auto, sob, voice_make_tts
 from utils.api import igemini_text, gemini_rep, gemini_task
 from utils.status import status_busy_set, status_chat_set
 
@@ -106,7 +106,7 @@ async def send_mess(channel, reply, rep = False, inter = False):
     # Thêm button nếu là DM channel
     view = None
     if not val.public: view = await DM_button()
-    else: await cmd_msg(reply)
+
     # Send thẳng nếu ít hơn 2000 ký tự
     mid = 0
     if len(reply) <= 2000:
@@ -117,9 +117,14 @@ async def send_mess(channel, reply, rep = False, inter = False):
             mids = await channel.channel.send(reply, view=view)
         elif rep:
             mids = await channel.reply(reply, view=view)
+        
+        # Lưu id của tin nhắn cuối cùng
         mid = mids.id
         val.set('old_mess_id', val.last_mess_id)
         val.set('last_mess_id', mid)
+
+        await cmd_msg(reply) # Xử lý lệnh từ reply
+        if val.tts_toggle: await voice_make_tts(reply) # Gửi voice
         return
 
     if not val.public: await edit_last_msg()
@@ -173,22 +178,24 @@ async def cmd_msg(answ):
 
             for member in members:
                 if member.display_name in name:
-                # Tham gia kênh thoại
+                # Tham gia kênh thoại nếu user có trong vc
                     await v_leave_auto()
                     vc = await channel.connect()
                     sound = await sob('greeting')
                     await voice_send(sound, vc)
                     val.set('pr_vch_id', channel.id)
+                    val.set('vc_invited', False)
                     found = True
                     break
 
-        """if not found:
+        if not found and not val.vc_invited:
             umess = val.vc_invite
             new_chat = val.now_chat
             new_chat.append(umess)
+            val.set('vc_invited', True)
             val.set('now_chat', new_chat)
             val.set('CD', 1)
-            pass"""
+            pass
 
     if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'leav|out|rời|khỏi', answ, re.IGNORECASE):
         await v_leave_auto()

@@ -193,16 +193,27 @@ async def voice_rcn():
         await voice_send(sound, vc)
 
 # Voice make
-async def voice_make_tts(mess, answ):
-    from utils.bot import val
+async def voice_make_tts(text):
+    from utils.bot import val, bot
     from utils.api import tts_get
     from utils.reply import voice_send
-    url = await tts_get(answ, val.vv_speaker, val.vv_pitch, val.vv_iscale, val.vv_speed)
-    if mess.guild.voice_client:
-        b_ch = mess.guild.voice_client.channel.id
-        b_vc = mess.guild.voice_client
-        await voice_send(url, b_vc)
-        await val.set('pr_vch_id', b_ch)
+    
+    guild = bot.get_guild(val.ai_guild)
+    # Huỷ nếu không trong voice
+    if not guild.voice_client: return
+
+    voice_channels = guild.voice_channels
+
+    chat = val.old_chat
+    name = [message.split(":")[0] for message in chat]
+
+    # Chỉ gửi voice chat nếu user đang trong voice
+    for channel in voice_channels:
+            members = channel.members
+            for member in members:
+                if member.display_name in name:
+                    url = await tts_get(text, val.vv_speaker, val.vv_pitch, val.vv_iscale, val.vv_speed)
+                    await voice_send(url, guild.voice_client)
 
 # Soundboard get
 async def sob(sound_list, sound=None):

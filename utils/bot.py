@@ -51,6 +51,8 @@ class AllStatus:
         self.vv_iscale = 1.5
         self.vv_speed = 1
         self.pr_vch_id = 0
+        self.vc_invited = False
+        self.tts_toggle = True
 
         # Lời nhắc
         self.dm_chat_next = "(SYSTEM): *hãy tiếp tục trò chuyện một cách sáng tạo*" # Tiếp tục chat trong DM channel
@@ -214,14 +216,14 @@ async def on_message(message: discord.Message):
             else: val.set('CD', 0)
             val.set('CD_idle', 0)
 
-# Kết nối lại
-@bot.slash_command(name="reconnect", description=f"Kết nối lại với {val.ai_name}.")
-async def renew(interaction: discord.Interaction):
+# Cập nhật
+@bot.slash_command(name="update", description=f"Cập nhật {val.ai_name}.")
+async def update(interaction: discord.Interaction):
     if not val.public:
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(f"`Bạn hem có quyền sử dụng lệnh nỳ.`", ephemeral=True)
 
-    await interaction.response.send_message(f"`Đang kết nối lại...`", ephemeral=True)
+    await interaction.response.send_message(f"`Đang cập nhật...`", ephemeral=True)
     await bot.close()
 
 # Cuộc trò chuyện mới
@@ -267,6 +269,21 @@ async def chat_mode(interaction: discord.Interaction):
         n = "chat cùng mọi người trong channel."
         val.set('public', True)
     await interaction.response.send_message(f"`{val.ai_name} sẽ {n}.`", ephemeral=True)
+
+# Bật hoặc tắt voice
+@bot.slash_command(name="voice", description=f"Bật hoặc tắt voice của {val.ai_name}.")
+async def update(interaction: discord.Interaction):
+    if not val.public:
+        if interaction.user.id != val.owner_uid:
+            return await interaction.response.send_message(f"`Bạn hem có quyền sử dụng lệnh nỳ.`", ephemeral=True)
+    text = ""
+    if val.tts_toggle:
+        val.set('tts_toggle', False)
+        text = "Đã tắt"
+    else:
+        val.set('tts_toggle', True)
+        text = "Đã bật"
+    await interaction.response.send_message(f"`{text} voice cho {val.ai_name}`", ephemeral=True)
 
 # Chuyển master
 @bot.slash_command(name="giveowner", description=f"Tặng {val.ai_name} cho người khác.")
