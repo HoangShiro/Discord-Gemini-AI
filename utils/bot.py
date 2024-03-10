@@ -45,6 +45,10 @@ class AllStatus:
         self.prompt_fix = ""
         self.now_period = ""
         self.last_uname = "User"
+        self.vv_speaker = 46
+        self.vv_pitch = 0
+        self.vv_iscale = 1.5
+        self.vv_speed = 1
 
     def update(self, val_name, value):
         if hasattr(self, val_name):
@@ -97,7 +101,6 @@ class AllStatus:
         self.normal_act = data[character][time]["normal_act"]
         self.breakday_act = data[character][time]["breakday_act"]
         self.friendliness = data[character]["friendliness"]
-
 
 
 val = AllStatus()
@@ -228,14 +231,19 @@ async def newchat(interaction: discord.Interaction):
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(f"`Bạn hem có quyền sử dụng lệnh nỳ.`", ephemeral=True)
 
+    if not val.public: await edit_last_msg()
     new_prpt = load_prompt("saves/chat.txt")
     chat.history.clear()
     chat.history.extend(new_prpt)
     val.set('CD', 1)
     val.set('CD_idle', 1)
     val.set('now_chat', [])
-    await interaction.response.send_message(f"`Đã làm mới cuộc trò chuyện.`")
+    embed, view = await bot_notice(tt="Đang tạo cuộc trò chuyện mới 💫", des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...")
+    mess = await interaction.response.send_message(embed=embed, view=view)
     await char_check()
+    embed, view = await bot_notice(tt="Đã làm mới cuộc trò chuyện 🌟", color=0xff8a8a)
+    await edit_last_msg(embed=embed, view=view, message_id=mess.id)
+
 
 # Chuyển chế độ chat
 @bot.slash_command(name="chatmode", description=f"Kêu {val.ai_name} chat public/private.")

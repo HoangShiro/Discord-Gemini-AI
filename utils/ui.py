@@ -6,6 +6,9 @@ rmv_bt = discord.ui.Button(label="➖", custom_id="remove", style=discord.Button
 rc_bt = discord.ui.Button(label="💫 re chat", custom_id="rc", style=discord.ButtonStyle.grey)
 continue_bt = discord.ui.Button(label="✨ continue", custom_id="continue", style=discord.ButtonStyle.grey)
 
+
+""" BUTTON """
+
 # Button call
 async def load_btt():
     rmv_bt.callback = rmv_bt_atv
@@ -68,13 +71,12 @@ async def ctn_atv(interaction):
     val.set('now_chat', msg)
     val.set('CD', 0)
 
-
 # Edit message with mess id
-async def edit_last_msg(msg=None, view=None):
+async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
     from utils.bot import bot, val
     from utils.daily import get_real_time
 
-    message_id = val.last_mess_id
+    if not message_id: message_id = val.last_mess_id
 
     user = await bot.fetch_user(val.owner_uid)
     if user.dm_channel is None:
@@ -89,8 +91,12 @@ async def edit_last_msg(msg=None, view=None):
     
     if not msg:
         await message.edit(view=view)
-    else:
+    elif msg:
         await message.edit(content=msg, view=view)
+    elif embed:
+        await message.edit(embed=embed)
+    elif embed and view:
+        await message.edit(embed=embed, view=view)
 
 # Bypass button:
 async def byB(interaction):
@@ -98,3 +104,18 @@ async def byB(interaction):
         await interaction.response.send_message(f" ", delete_after = 0)
     except:
         pass
+
+""" EMBED """
+
+# Embed mặc định
+async def bot_notice(tt=None, des=None, ava_link=None, color=0xffbf75):
+    from utils.bot import bot, val
+    if not tt: tt = val.ai_name
+    if not des: des = f"Personality: {val.ai_char}."
+    if not ava_link: ava_link = bot.user.display_avatar
+    embed=discord.Embed(title=tt, description=des, color=color)
+    embed.set_thumbnail(url=ava_link)
+    view = View(timeout=None)
+    view.add_item(rmv_bt)
+
+    return embed, view

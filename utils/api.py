@@ -62,3 +62,36 @@ async def gemini_task(mess):
     task = await model.generate_content_async(mess)
     return task.text
 
+# TTS - VoiceVox
+async def tts_get(text, speaker, pitch, intonation_scale, speed):
+    from utils.funcs import remove_act, romaji_to_katakana, text_translate, text_translate2, text_tts_cut
+    global alt_trans
+    translated = None
+    if not alt_trans:
+        translated = text_translate(text, "ja")
+        if "MYMEMORY WARNING:" in translated:
+            translated = text_translate2(text, "ja")
+            alt_trans = True
+    else:
+        translated = text_translate2(text, "ja")
+    text_fill = remove_act(translated)
+    if not text_fill:
+        if not text:
+            text = "..."
+        text_fill = text
+    cnv_text = romaji_to_katakana(text_fill)
+    cut_text = text_tts_cut(cnv_text)
+    url = f"https://deprecatedapis.tts.quest/v2/voicevox/audio/?key={vv_key}&text={cnv_text}&speaker={speaker}&pitch={pitch}&intonationScale={intonation_scale}&speed={speed}"
+    
+    """response = requests.get(url)
+    st_log = await vals_load('user_files/vals.json', 'st_log')
+
+    if response.status_code == 200:
+        with open('user_files/ai_voice_msg.ogg', 'wb') as f:
+            f.write(response.content)
+        if st_log:
+            print(f"Voice đã được tải về thành công.")
+    else:
+        print(f"Lỗi khi tạo voice, mã lỗi: {response.status_code}")"""
+    
+    return url

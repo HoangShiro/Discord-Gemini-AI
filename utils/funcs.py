@@ -1,5 +1,9 @@
 """Các hàm chức năng"""
-import json, os, time, datetime, pytz, asyncio
+import json, os, time, datetime, pytz, asyncio, jaconv, re
+
+from translate import Translator
+from mtranslate import translate
+from langdetect import detect
 
 # Load prompt
 def load_prompt(file):
@@ -117,8 +121,57 @@ def remmid_edit(list1, filter, text):
   # Trả về list mới.
   return new_list
 
-# lấy cặp lịch sử cuối
+# Translate
+def text_translate(text, target_lang):
+    # Xác định ngôn ngữ của văn bản đầu vào
+    source_lang = detect(text)
+    
+    # Kiểm tra xem ngôn ngữ đầu vào và ngôn ngữ đích có giống nhau hay không
+    if source_lang == target_lang:
+        return text
+    
+    # Dịch văn bản nếu ngôn ngữ đầu vào và ngôn ngữ đích khác nhau
+    translator = Translator(from_lang=source_lang, to_lang=target_lang)
+    translated_text = translator.translate(text)
+    return translated_text
 
+# Hàm dịch dự phòng
+def text_translate2(text, to_language='ja'):
+    translated_text = translate(text, to_language)
+    return translated_text
+
+# Hàm phát hiện ngôn ngữ
+def lang_detect(text):
+    source_lang = detect(text)
+    return source_lang
+
+# Romaji -> Katakana
+def romaji_to_katakana(romaji_text):
+    katakana_text = romaji_text.lower()
+    katakana_text = jaconv.alphabet2kana(katakana_text)
+    return katakana_text
+
+# Text filter for tts
+def remove_act(text):
+    text = re.sub(r'\*([^*]+)\*', '', text)
+    text = re.sub(r'\([^)]+\)', '', text)
+    text = re.sub(r'<[^>]+>', '', text)
+    text = re.sub(r'https?://\S+', '', text)
+    text = text.replace(':3', '')
+    return text
+
+# Cắt bớt for tts
+def text_tts_cut(cvb):
+    # Tìm vị trí ngắt câu gần nhất trước vị trí 200 ký tự.
+    vc = 200
+    while vc > 0 and cvb[vc] not in ".,?!~":
+        vc -= 1
+
+    # Cắt chuỗi văn bản tại vị trí đã tìm được.
+    cvb_cn = cvb[:vc] + '.'
+
+    # Trả về chuỗi văn bản đã cắt ngắn.
+    return cvb_cn
 
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
