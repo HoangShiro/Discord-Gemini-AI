@@ -175,9 +175,9 @@ async def cmd_msg(answ):
                 if member.display_name in name:
                 # Tham gia kênh thoại
                     await v_leave_auto()
-                    await channel.connect()
+                    vc = await channel.connect()
                     sound = await sob('greeting')
-                    await voice_send(sound, channel)
+                    await voice_send(sound, vc)
                     val.set('pr_vch_id', channel.id)
                     found = True
                     break
