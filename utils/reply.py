@@ -150,10 +150,11 @@ async def cmd_msg(answ):
 
     chat = val.now_chat
     name = [message.split(":")[0] for message in chat]
+    print(name)
     # Voice
     guild = bot.get_guild(val.ai_guild)
     voice_channels = guild.voice_channels
-    
+
     if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'joi|jum|vào|nhảy|chui', answ, re.IGNORECASE):
         found = False
         # Duyệt qua từng kênh thoại
