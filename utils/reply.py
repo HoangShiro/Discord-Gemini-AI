@@ -1,7 +1,7 @@
 """Các hàm trả lời"""
 import PIL.Image, asyncio, re, discord
 from io import BytesIO
-from utils.funcs import list_to_str, txt_read, v_join, v_leave, auto_v_leave
+from utils.funcs import list_to_str, txt_read, v_join, v_leave, v_leave_auto
 from utils.api import igemini_text, gemini_rep, gemini_task
 from utils.status import status_busy_set, status_chat_set
 
@@ -167,6 +167,7 @@ async def cmd_msg(answ):
                 print(member.display_name)
                 if member.display_name in name:
                 # Tham gia kênh thoại
+                    await v_leave_auto()
                     await channel.connect()
                     found = True
                     break
@@ -180,4 +181,4 @@ async def cmd_msg(answ):
             pass"""
 
     if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'leav|out|rời|khỏi', answ, re.IGNORECASE):
-        await auto_v_leave(bot)
+        await v_leave_auto()

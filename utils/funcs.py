@@ -201,20 +201,16 @@ async def v_leave(message):
         await val.set('pr_vch_id', pr_vch_id)
 
 # Auto leave voice channel
-async def auto_v_leave(bot: discord.Client):
-  # Lấy voice client của bot
-  voice_client = bot.voice_clients[0]
+async def v_leave_auto():
+    from utils.bot import bot, val
+    # Lấy guild từ ID.
+    guild = bot.get_guild(val.ai_guild)
 
-  # Nếu bot đang ở trong một voice channel
-  if voice_client.is_connected():
-    # Rời khỏi voice channel
-    await voice_client.disconnect()
+    # Kiểm tra xem bot có đang ở trong voice channel hay không.
+    if not guild.voice_client: return
 
-    # In thông báo
-    print("Bot đã rời khỏi voice channel.")
-  else:
-    # In thông báo
-    print("Bot không ở trong voice channel nào.")
+    # Rời voice channel.
+    await guild.voice_client.disconnect()
 
 # Reconnect to voice channel
 async def voice_rcn():
