@@ -231,6 +231,7 @@ async def keys(interaction: discord.Interaction, gemini: str = None, voicevox: s
     if voicevox:
         val.set('vv_key', voicevox)
     await interaction.response.send_message(f"`Đã cập nhật key cho {val.ai_name}`", ephemeral=True)
+    if gemini: await bot.close()
 
 # Cập nhật
 @bot.slash_command(name="update", description=f"Cập nhật {val.ai_name}.")
