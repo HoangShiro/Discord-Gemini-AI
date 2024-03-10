@@ -85,13 +85,20 @@ async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
     from utils.bot import bot, val
     from utils.daily import get_real_time
 
+    # Lấy tin nhắn cũ nhất
     if not message_id: message_id = val.last_mess_id
 
-    user = await bot.fetch_user(val.owner_uid)
-    if user.dm_channel is None:
-        await user.create_dm()
-    channel_id = user.dm_channel.id
-    channel = bot.get_channel(channel_id)
+    # Nếu DM channel
+    if not val.public:
+        user = await bot.fetch_user(val.owner_uid)
+        if user.dm_channel is None:
+            await user.create_dm()
+        channel_id = user.dm_channel.id
+        channel = bot.get_channel(channel_id)
+    # Nếu public channel
+    else:
+        channel = bot.get_channel(val.ai_channel)
+
     try:
         message = await channel.fetch_message(message_id)
     except Exception as e:
@@ -126,7 +133,7 @@ async def bot_notice(tt=None, des=None, ava_link=None, au_name=None, au_link=Non
     embed=discord.Embed(title=tt, description=des, color=color)
     embed.set_thumbnail(url=ava_link)
     if au_name: embed.set_author(name=au_name, url=au_link, icon_url=au_avatar)
-    
+
     view = View(timeout=None)
     view.add_item(ermv_bt)
 
