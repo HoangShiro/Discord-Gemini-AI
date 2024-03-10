@@ -1,7 +1,8 @@
 """Các hàm trả lời"""
 import PIL.Image, asyncio, re, discord
 from io import BytesIO
-from utils.funcs import list_to_str, txt_read, v_join, v_leave, v_leave_auto
+from discord import FFmpegPCMAudio
+from utils.funcs import list_to_str, txt_read, v_leave_auto, sob
 from utils.api import igemini_text, gemini_rep, gemini_task
 from utils.status import status_busy_set, status_chat_set
 
@@ -144,31 +145,40 @@ async def send_mess(channel, reply, rep = False, inter = False):
             mids = await channel.reply(message)
         await asyncio.sleep(3)
 
+# Send voice
+async def voice_send(url, ch):
+    from utils.daily import get_real_time
+    audio_source = FFmpegPCMAudio(url)
+    await asyncio.sleep(0.5)
+    try:
+      ch.play(audio_source, after=lambda e: print('Player error: %s' % e) if e else None)
+    except Exception as e:
+      print(f"{get_real_time()}> Send voice error: ", e)
+
 # Hàm xử lý lệnh trong tin nhắn
 async def cmd_msg(answ):
     from utils.bot import val, bot
 
     chat = val.old_chat
     name = [message.split(":")[0] for message in chat]
-    print(name)
-    # Voice
-    guild = bot.get_guild(val.ai_guild)
-    voice_channels = guild.voice_channels
 
+    # Voice
     if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'joi|jum|vào|nhảy|chui', answ, re.IGNORECASE):
+        guild = bot.get_guild(val.ai_guild)
+        voice_channels = guild.voice_channels
         found = False
-        # Duyệt qua từng kênh thoại
+
         for channel in voice_channels:
-        # Lấy danh sách các thành viên hiện đang trong kênh
             members = channel.members
 
-        # Kiểm tra xem member có tên trong list "name" có đang trong kênh thoại hay không
             for member in members:
-                print(member.display_name)
                 if member.display_name in name:
                 # Tham gia kênh thoại
                     await v_leave_auto()
                     await channel.connect()
+                    sound = await sob('greeting')
+                    await voice_send(sound, channel)
+                    val.set('pr_vch_id', channel.id)
                     found = True
                     break
 

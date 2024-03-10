@@ -1,7 +1,6 @@
 """Các hàm chức năng"""
-import json, os, time, datetime, pytz, asyncio, jaconv, re, random, discord
+import json, os, time, datetime, pytz, asyncio, jaconv, re, random
 
-from discord import FFmpegPCMAudio
 from translate import Translator
 from mtranslate import translate
 from langdetect import detect
@@ -174,67 +173,30 @@ def text_tts_cut(cvb):
     # Trả về chuỗi văn bản đã cắt ngắn.
     return cvb_cn
 
-# Join voice channel
-async def v_join(message):
-    u_ch_id = message.author.voice.channel.id
-    u_vc = message.author.voice.channel
-    b_ch = None
-    if message.guild.voice_client:
-        b_ch = message.guild.voice_client.channel
-        b_vc = message.guild.voice_client
-    if b_ch and b_ch.id != u_ch_id:
-        await b_vc.disconnect()
-        await u_vc.connect()
-    elif not b_ch:
-        await u_vc.connect()
-
-# leave voice channel
-async def v_leave(message):
-    from utils.bot import val
-    b_ch = None
-    if message.guild.voice_client:
-        b_ch = message.guild.voice_client.channel
-        b_vc = message.guild.voice_client
-    if b_ch:
-        await b_vc.disconnect()
-        pr_vch_id = None
-        await val.set('pr_vch_id', pr_vch_id)
-
 # Auto leave voice channel
 async def v_leave_auto():
     from utils.bot import bot, val
-    # Lấy guild từ ID.
-    guild = bot.get_guild(val.ai_guild)
 
-    # Kiểm tra xem bot có đang ở trong voice channel hay không.
+    guild = bot.get_guild(val.ai_guild)
     if not guild.voice_client: return
 
-    # Rời voice channel.
     await guild.voice_client.disconnect()
 
 # Reconnect to voice channel
 async def voice_rcn():
     from utils.bot import bot, val
+    from utils.reply import voice_send
     pr_v = val.pr_vch_id
     if pr_v:
         vc = await bot.get_channel(pr_v).connect()
         sound = await sob('greeting')
         await voice_send(sound, vc)
 
-# Send voice
-async def voice_send(url, ch):
-    from utils.daily import get_real_time
-    audio_source = FFmpegPCMAudio(url)
-    await asyncio.sleep(0.5)
-    try:
-      ch.play(audio_source, after=lambda e: print('Player error: %s' % e) if e else None)
-    except Exception as e:
-      print(f"{get_real_time()}> Send voice error: ", e)
-
 # Voice make
 async def voice_make_tts(mess, answ):
     from utils.bot import val
     from utils.api import tts_get
+    from utils.reply import voice_send
     url = await tts_get(answ, val.vv_speaker, val.vv_pitch, val.vv_iscale, val.vv_speed)
     if mess.guild.voice_client:
         b_ch = mess.guild.voice_client.channel.id
