@@ -4,7 +4,7 @@ from io import BytesIO
 from discord.ext import commands, tasks
 from discord.ui import View, button
 
-from utils.api import *
+from utils.api import gemini_rep
 from utils.status import *
 from utils.reply import *
 from utils.funcs import *
@@ -120,8 +120,6 @@ val = AllStatus()
 async def on_ready():
 
     val.set('ai_name', bot.user.name)
-
-    gai_key()
 
     await load_btt()
 

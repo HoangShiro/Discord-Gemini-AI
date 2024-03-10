@@ -3,7 +3,7 @@
 import re
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
-
+from utils.bot import val
 from utils.funcs import load_prompt, txt_read
 
 safety ={
@@ -13,6 +13,8 @@ safety ={
         HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold. BLOCK_NONE,
     }
 
+genai.configure(api_key=val.gai_key)
+
 model = genai.GenerativeModel('gemini-pro', safety_settings=safety)
 igmodel = genai.GenerativeModel('gemini-pro-vision', safety_settings=safety)
 
@@ -21,10 +23,6 @@ prompt = load_prompt("saves/chat.txt")
 chat = model.start_chat(history=prompt)
 
 alt_trans = False
-
-def gai_key():
-    from utils.bot import val
-    genai.configure(api_key=val.gai_key)
 
 # Gemini
 async def gemini_rep(mess):
