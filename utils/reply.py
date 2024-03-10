@@ -148,7 +148,7 @@ async def send_mess(channel, reply, rep = False, inter = False):
 async def cmd_msg(answ):
     from utils.bot import val, bot
 
-    chat = val.now_chat
+    chat = val.old_chat
     name = [message.split(":")[0] for message in chat]
     print(name)
     # Voice
