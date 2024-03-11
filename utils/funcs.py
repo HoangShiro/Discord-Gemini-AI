@@ -302,7 +302,7 @@ async def get_msg_img_url(message: discord.Message):
             url = get_link(message.content)
             if url: val.set('last_img', url)
 
-        elif message.attachments:
+        if message.attachments:
             attachment = message.attachments[0]
             if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png')): val.set('last_img', attachment.url)
 
