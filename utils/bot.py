@@ -43,7 +43,7 @@ class AllStatus:
         self.cmd_csl = False                # Log slash command ra console
         self.bug_csl = False                # Log bug ra console
         self.prompt_fix = ""                # Prompt cần fix với /prompts
-        self.now_period = ""                # Buổi hiện tại
+        self.now_period = "noon"            # Buổi hiện tại
         self.last_uname = "User"            # Username gần nhất
         self.vv_speaker = 46                # Speaker (voicevox)
         self.vv_pitch = 0                   # Cao độ (voicevox)
