@@ -209,7 +209,7 @@ async def cmd_msg_user():
                     image_data = await response.read()
             await bot.user.edit(avatar=image_data)
             avatar_url = bot.user.avatar.url
-            embed, view = await normal_embed(description=f"Avatar mới của {val.ai_name}:", img=avatar_url, color=0xffbf75)
+            embed, view = await normal_embed(description=f"> Avatar mới của {val.ai_name}:", img=avatar_url, color=0xffbf75, delete=True)
             await send_embed(embed=embed, view=view)
 
         except Exception as e:
