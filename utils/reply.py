@@ -52,7 +52,7 @@ async def reply_id():
         async with channel.typing():
             text = list_to_str(val.now_chat)
             reply = await gemini_rep(text)
-            await send_mess(channel, reply)
+            if reply: await send_mess(channel, reply)
 
 # Set tính cách nhân vật dựa vào prompt
 async def char_check():

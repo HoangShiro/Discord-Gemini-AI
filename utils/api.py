@@ -71,6 +71,7 @@ async def gemini_rep(mess):
             print(chat.history)
             print("\n")
 
+        return response.text
     except Exception as e:
         print(f"{get_real_time()}> Lỗi GEMINI API: ", e)
         old_chat = val.old_chat                                     # Khôi phục lại chat của user từ chat cũ nếu API lỗi
@@ -83,10 +84,8 @@ async def gemini_rep(mess):
             val.set('stop_chat', 0)
             val.set('CD', val.to_breaktime)
             await status_busy_set()                                 # Set activity là đang bận
-
-    """ =========================== """
-
-    return response.text
+        
+        return None
 
 # Gemini Vision
 async def igemini_text(img, text=None):

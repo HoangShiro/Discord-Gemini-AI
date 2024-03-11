@@ -210,7 +210,7 @@ async def on_message(message: discord.Message):
         async with message.channel.typing():
             text = list_to_str(val.now_chat)
             reply = await gemini_rep(text)
-            await send_mess(message, reply, rep=True)
+            if reply: await send_mess(message, reply, rep=True)
 
 # set key
 @bot.slash_command(name="setkeys", description=f"Đổi key cho {val.ai_name}.")
