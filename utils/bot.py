@@ -202,8 +202,7 @@ async def on_message(message: discord.Message):
 
     # Trả lời tin nhắn ngay nếu nhắc tới bot
     if bot.user in message.mentions:
-        async with message.channel.typing():
-            asyncio.create_task(reply_id(channel=message, rep=True))
+        asyncio.create_task(reply_id(channel=message, rep=True))
 
 # set key
 @bot.slash_command(name="setkeys", description=f"Đổi key cho {val.ai_name}.")

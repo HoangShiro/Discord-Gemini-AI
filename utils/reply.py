@@ -50,10 +50,16 @@ async def reply_id(channel=None, rep=False):
     
     # Nếu channel tồn tại thì chat
     if channel:
-        async with channel.typing():
-            text = list_to_str(val.now_chat)
-            reply = await gemini_rep(text)
-            if reply: await send_mess(channel, reply, rep)
+        if rep:
+            async with channel.channel.typing():
+                text = list_to_str(val.now_chat)
+                reply = await gemini_rep(text)
+                if reply: await send_mess(channel, reply, rep)
+        else:
+            async with channel.typing():
+                text = list_to_str(val.now_chat)
+                reply = await gemini_rep(text)
+                if reply: await send_mess(channel, reply, rep)
 
 # Set tính cách nhân vật dựa vào prompt
 async def char_check():
