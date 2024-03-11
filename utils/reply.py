@@ -172,7 +172,7 @@ async def cmd_msg_bot(answ):
     name = [message.split(":")[0] for message in chat]
 
     # Voice
-    if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'joi|jum|vào|nhảy|chui', answ, re.IGNORECASE):
+    if re.search(r'vc|voice channel|voice chat|voice', answ, re.IGNORECASE) and re.search(r'joi|jum|vào|nhảy|chui', answ, re.IGNORECASE):
         found = await v_join_auto()
 
         # Nếu không tìm thấy user trong voice
@@ -187,7 +187,7 @@ async def cmd_msg_bot(answ):
     else:
         val.set('vc_invited', False)
 
-    if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'leav|out|rời|khỏi', answ, re.IGNORECASE):
+    if re.search(r'vc|voice channel|voice chat|voice', answ, re.IGNORECASE) and re.search(r'leav|out|rời|khỏi', answ, re.IGNORECASE):
         await v_leave_auto()
 
 async def cmd_msg_user():
