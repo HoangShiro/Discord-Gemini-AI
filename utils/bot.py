@@ -231,7 +231,7 @@ async def on_message(message: discord.Message):
             val.set('CD_idle', 0)
 
 # set key
-@bot.slash_command(name="setkeys", description=f"Đổi key cho {val.ai_name}.")
+@bot.add_command(name="setkeys", description=f"Đổi key cho {val.ai_name}.")
 async def keys(interaction: discord.Interaction, gemini: str = None, voicevox: str = None):
     if val.owner_uid != 0:
         if interaction.user.id != val.owner_uid:
@@ -245,7 +245,7 @@ async def keys(interaction: discord.Interaction, gemini: str = None, voicevox: s
     if gemini: await bot.close()
 
 # Cập nhật
-@bot.slash_command(name="update", description=f"Cập nhật {val.ai_name}.")
+@bot.add_command(name="update", description=f"Cập nhật {val.ai_name}.")
 async def update(interaction: discord.Interaction):
     if not val.public:
         if interaction.user.id != val.owner_uid:
@@ -255,7 +255,7 @@ async def update(interaction: discord.Interaction):
     await bot.close()
 
 # Cuộc trò chuyện mới
-@bot.slash_command(name="newchat", description="Cuộc trò chuyện mới.")
+@bot.add_command(name="newchat", description="Cuộc trò chuyện mới.")
 async def newchat(interaction: discord.Interaction):
     if not val.public:
         if interaction.user.id != val.owner_uid:
@@ -283,7 +283,7 @@ async def newchat(interaction: discord.Interaction):
     await mess.edit_original_response(embed=embed)
 
 # Chuyển chế độ chat
-@bot.slash_command(name="chatmode", description=f"Kêu {val.ai_name} chat public/private.")
+@bot.add_command(name="chatmode", description=f"Kêu {val.ai_name} chat public/private.")
 async def chat_mode(interaction: discord.Interaction):
     if val.owner_uid == 0: return await interaction.response.send_message(f"`Bạn cần sở hữu {val.ai_name} trước.`", ephemeral=True)
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
@@ -299,7 +299,7 @@ async def chat_mode(interaction: discord.Interaction):
     await interaction.response.send_message(f"`{val.ai_name} sẽ {n}.`", ephemeral=True)
 
 # Bật hoặc tắt voice
-@bot.slash_command(name="voice", description=f"Bật hoặc tắt voice của {val.ai_name}.")
+@bot.add_command(name="voice", description=f"Bật hoặc tắt voice của {val.ai_name}.")
 async def voice(interaction: discord.Interaction, speaker: int = None):
     if not val.public:
         if interaction.user.id != val.owner_uid:
@@ -321,7 +321,7 @@ async def voice(interaction: discord.Interaction, speaker: int = None):
     await interaction.response.send_message(f"`{text} voice cho {val.ai_name}`", ephemeral=True)
 
 # Chuyển master
-@bot.slash_command(name="giveowner", description=f"Tặng {val.ai_name} cho người khác.")
+@bot.add_command(name="giveowner", description=f"Tặng {val.ai_name} cho người khác.")
 async def give_bot(interaction: discord.Interaction, uid: str = None):
     if uid:
         uid = int(uid)
@@ -347,7 +347,7 @@ async def give_bot(interaction: discord.Interaction, uid: str = None):
         await interaction.response.send_message(f"`Bạn đã sở hữu {val.ai_name} rồi.`", ephemeral=True)
 
 # Thao tác với prompt
-@bot.slash_command(name="prompts", description=f"Xem/sửa prompt cho {val.ai_name}.")
+@bot.add_command(name="prompts", description=f"Xem/sửa prompt cho {val.ai_name}.")
 async def prompts(interaction: discord.Interaction, view: discord.Option(
         description="Chọn prompt muốn xem:",
         choices=[
@@ -376,7 +376,7 @@ async def prompts(interaction: discord.Interaction, view: discord.Option(
         await send_mess(interaction, prompt, inter=True)
 
 # Đổi avatar
-@bot.slash_command(name="cavatar", description=f"Đổi avatar của {val.ai_name}.")
+@bot.add_command(name="cavatar", description=f"Đổi avatar của {val.ai_name}.")
 async def avatar_c(interaction: discord.Interaction):
     if val.owner_uid != 0:
         if interaction.user.id != val.owner_uid:
@@ -385,7 +385,7 @@ async def avatar_c(interaction: discord.Interaction):
 
 
 # Logs
-@bot.slash_command(name="clogs", description=f"Nhật ký của {val.ai_name}")
+@bot.add_command(name="clogs", description=f"Nhật ký của {val.ai_name}")
 async def cslog(interaction: discord.Interaction, get: discord.Option(
         description="Chọn giá trị muốn kiểm tra:",
         choices=[
