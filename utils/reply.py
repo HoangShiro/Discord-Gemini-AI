@@ -58,6 +58,7 @@ async def reply_id(channel=None, rep=False):
         else:
             async with channel.typing():
                 text = list_to_str(val.now_chat)
+                if not text: return
                 reply = await gemini_rep(text)
                 if reply: await send_mess(channel, reply, rep)
 
