@@ -4,6 +4,7 @@ from io import BytesIO
 from discord.ext import commands, tasks
 from discord.ui import View, button
 
+from utils.api import chat
 from utils.status import *
 from utils.reply import *
 from utils.funcs import *
