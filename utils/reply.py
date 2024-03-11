@@ -185,7 +185,8 @@ async def cmd_msg(answ):
                     await v_leave_auto()
                     vc = await channel.connect()
                     sound = await sob('greeting')
-                    await voice_send(sound, vc)
+                    if sound:
+                        await voice_send(sound, vc)
                     val.set('pr_vch_id', channel.id)
                     val.set('vc_invited', False)
                     found = True

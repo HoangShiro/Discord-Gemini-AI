@@ -190,7 +190,8 @@ async def voice_rcn():
     if pr_v:
         vc = await bot.get_channel(pr_v).connect()
         sound = await sob('greeting')
-        await voice_send(sound, vc)
+        if sound:
+          await voice_send(sound, vc)
 
 # Voice make
 async def voice_make_tts(text):
@@ -222,13 +223,37 @@ async def voice_make_tts(text):
 # Soundboard get
 async def sob(sound_list, sound=None):
     audio_dir = "/sound"
-    if not sound:
-        audio_dir = f"./sound/{sound_list}"
-        audio_files = [os.path.join(audio_dir, f) for f in os.listdir(audio_dir) if f.endswith(".wav")]
-        audio_file = random.choice(audio_files)
+
+    # Handle missing sound_list
+    if not sound_list:
+        print("WARNING: sound_list is empty. No sound will be played.")
+        return None
+
+    # Construct the audio directory based on sound_list or sound
+    if sound:
+        audio_dir = f"{audio_dir}/{sound}"
     else:
-        audio_file = f"{audio_dir}/{sound}"
-    return audio_file
+        audio_dir = f"./sound/{sound_list}"
+
+    try:
+        # Check if directory exists
+        if not os.path.isdir(audio_dir):
+            print(f"WARNING: Directory '{audio_dir}' does not exist. No sound will be played.")
+            return None
+
+        # Filter audio files and handle empty list
+        audio_files = [os.path.join(audio_dir, f) for f in os.listdir(audio_dir) if f.endswith(".wav")]
+        if not audio_files:
+            print(f"WARNING: No WAV audio files found in '{audio_dir}'. No sound will be played.")
+            return None
+
+        # Randomly choose an audio file
+        audio_file = random.choice(audio_files)
+        return audio_file
+
+    except Exception as e:
+        print(f"Error processing sound: {e}")
+        return None
 
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
