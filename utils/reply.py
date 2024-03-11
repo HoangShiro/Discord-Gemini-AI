@@ -32,20 +32,21 @@ async def IMG_read(message):
     return all_text
 
 # Reply sau khoảng thời gian với channel id
-async def reply_id(rep=False):
+async def reply_id(channel=None, rep=False):
     from utils.bot import bot, val
     from utils.daily import get_real_time
-    channel = None
+
     # Tạo channel DM nếu là bot private
-    if not val.public:
-        user = await bot.fetch_user(val.owner_uid)
-        if user.dm_channel is None:
-            await user.create_dm()
-        channel_id = user.dm_channel.id
-        channel = bot.get_channel(channel_id)
-    # Tạo channel public nếu là bot public
-    else:
-        channel = bot.get_channel(val.ai_channel)
+    if not channel:
+        if not val.public:
+            user = await bot.fetch_user(val.owner_uid)
+            if user.dm_channel is None:
+                await user.create_dm()
+            channel_id = user.dm_channel.id
+            channel = bot.get_channel(channel_id)
+        # Tạo channel public nếu là bot public
+        else:
+            channel = bot.get_channel(val.ai_channel)
     
     # Nếu channel tồn tại thì chat
     if channel:
