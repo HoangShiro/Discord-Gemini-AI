@@ -311,9 +311,11 @@ async def get_msg_img_url(message: discord.Message):
         if ref_msg:
             if ref_msg.content and not ref_msg.attachments:
                 url = get_link(message.content)
+                print(url)
                 if url: val.set('last_img', url)
             elif ref_msg.attachments:
                 attachment = message.attachments[0]
+                print(attachment.filename)
                 if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png')): val.set('last_img', attachment.url)
 
 if __name__ == '__main__':
