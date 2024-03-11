@@ -126,7 +126,8 @@ async def send_mess(channel, reply, rep = False, inter = False):
         val.set('old_mess_id', val.last_mess_id)
         val.set('last_mess_id', mid)
 
-        await cmd_msg_bot(reply) # Xử lý lệnh từ reply
+        await cmd_msg_bot(reply) # Xử lý lệnh từ bot
+        await cmd_msg_user() # Xử lý lệnh từ user
         if val.tts_toggle: await voice_make_tts(reply) # Gửi voice
         return
 
@@ -165,7 +166,7 @@ async def voice_send(url, ch):
 
 # Hàm xử lý lệnh trong tin nhắn
 async def cmd_msg_bot(answ):
-    from utils.bot import val, bot
+    from utils.bot import val
 
     chat = val.old_chat
     name = [message.split(":")[0] for message in chat]
@@ -189,11 +190,14 @@ async def cmd_msg_bot(answ):
     if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'leav|out|rời|khỏi', answ, re.IGNORECASE):
         await v_leave_auto()
 
-async def cmd_msg_user(answ):
+async def cmd_msg_user():
     from utils.bot import val, bot
     from utils.daily import get_real_time
     from utils.ui import normal_embed
-    
+    from utils.funcs import list_to_str
+
+    answ = list_to_str(val.old_chat)
+    if not answ: return
     # Avatar change:
     if re.search(r'đổi|thay|chuyển|set|dùng|change|use', answ, re.IGNORECASE) and re.search(r'ava', answ, re.IGNORECASE):
         if not val.public:
