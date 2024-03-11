@@ -196,11 +196,6 @@ async def on_message(message: discord.Message):
         if len(val.now_chat) >= 10:
             val.now_chat.pop(0)
 
-    # Nếu tin nhắn có nhắc tới bot
-    """names = val.ai_name.split(" ")
-    call = any(part in text for part in names)
-    if call:
-        val.update('CD', -100)"""
     # Đợi đến lượt trả lời nếu người khác vẫn đang nhắn
     if val.CD_idle < val.to_worktime:
         if val.public: val.set('CD', val.chat_speed)
@@ -314,16 +309,16 @@ async def give_bot(interaction: discord.Interaction, uid: str = None):
         if not user:
             return await interaction.response.send_message(f"`User không tồn tại.`", ephemeral=True)
         val.set('owner_uid', new_uid)
-        return await interaction.response.send_message(f"`{user.name} vừa làm master của {val.ai_name}.`", ephemeral=True)
+        return await interaction.response.send_message(f"`{user.display_name} vừa làm master của {val.ai_name}.`", ephemeral=True)
     elif val.owner_uid != interaction.user.id:
         user = await bot.fetch_user(val.owner_uid)
-        return await interaction.response.send_message(f"`{user.name} hiện đang master của {val.ai_name}.`", ephemeral=True)
+        return await interaction.response.send_message(f"`{user.display_name} hiện đang master của {val.ai_name}.`", ephemeral=True)
     elif val.owner_uid == interaction.user.id and uid and uid != interaction.user.id:
         user = await bot.fetch_user(uid)
         if not user:
             return await interaction.response.send_message(f"`User không tồn tại.`", ephemeral=True)
         val.set('owner_uid', uid)
-        await interaction.response.send_message(f"`Bạn vừa tặng {val.ai_name} cho {user.name}.`", ephemeral=True)
+        await interaction.response.send_message(f"`Bạn vừa tặng {val.ai_name} cho {user.display_name}.`", ephemeral=True)
     else:
         await interaction.response.send_message(f"`Bạn đã sở hữu {val.ai_name} rồi.`", ephemeral=True)
 
