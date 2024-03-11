@@ -50,31 +50,9 @@ async def reply_id():
     # Nếu channel tồn tại thì chat
     if channel:
         async with channel.typing():
-            try:
-                await status_chat_set()
-                text = list_to_str(val.now_chat)
-                old_chat = val.now_chat
-                val.set('old_chat', old_chat) # Lưu chat cũ
-                val.set('now_chat', [])
-                reply = await gemini_rep(text)
-                await send_mess(channel, reply)
-                if val.to_worktime < 300:
-                    if val.public: val.update('to_worktime', 10)
-                    else: val.update('to_worktime', 120)
-            except Exception as e:
-                print(f"{get_real_time()}> Lỗi Reply Sec_check: ", e)
-                old_chat = val.old_chat
-                new_chat = val.now_chat
-                all_chat = old_chat + new_chat
-                val.set('now_chat', all_chat)
-                # Xử lý nếu chat lỗi liên tục
-                val.update('stop_chat', 1)
-                if val.stop_chat == 3:
-                    val.set('stop_chat', 0)
-                    val.set('CD', val.to_breaktime)
-                    await status_busy_set()
-            if val.public: val.set('CD', val.chat_speed)
-            val.set('CD_idle', 0)
+            text = list_to_str(val.now_chat)
+            reply = await gemini_rep(text)
+            await send_mess(channel, reply)
 
 # Set tính cách nhân vật dựa vào prompt
 async def char_check():

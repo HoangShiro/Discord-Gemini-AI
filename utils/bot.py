@@ -209,26 +209,8 @@ async def on_message(message: discord.Message):
     if bot.user in message.mentions:
         async with message.channel.typing():
             text = list_to_str(val.now_chat)
-            try:
-                await status_chat_set()
-                old_chat = val.now_chat
-                val.set('old_chat', old_chat) # Lưu chat cũ
-                val.set('now_chat', [])
-                reply = await gemini_rep(text)
-                await send_mess(message, reply, rep=True)
-                if val.to_worktime < 300:
-                    if val.public: val.update('to_worktime', 10)
-                    else: val.update('to_worktime', 120)
-            except Exception as e:
-                print(f"{get_real_time()}> Lỗi Reply on_message: ", e)
-                old_chat = val.old_chat
-                new_chat = val.now_chat
-                all_chat = old_chat + new_chat
-                val.set('now_chat', all_chat)
-
-            if val.public: val.set('CD', val.chat_speed)
-            else: val.set('CD', 0)
-            val.set('CD_idle', 0)
+            reply = await gemini_rep(text)
+            await send_mess(message, reply, rep=True)
 
 # set key
 @bot.slash_command(name="setkeys", description=f"Đổi key cho {val.ai_name}.")

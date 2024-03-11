@@ -35,9 +35,40 @@ alt_trans = False
 async def gemini_rep(mess):
     from utils.bot import val
     from utils.daily import get_real_time
-    response = await chat.send_message_async(mess)
+    from utils.status import status_busy_set, status_chat_set
 
-    remind = load_prompt("saves/limit.txt")
+    """ GỬI TIN NHẮN TỚI GEMINI API"""
+
+    try:
+        await status_chat_set()                                     # Set activity là đang chat
+        old_chat = val.now_chat                                     # Lưu chat mới vào chat cũ
+        val.set('old_chat', old_chat) # Lưu chat cũ
+        val.set('now_chat', [])                                     # Clear chat mới
+        response = await chat.send_message_async(mess)              # Gửi với API
+
+        if val.to_worktime < 300:                                   # Bot sẽ muốn chat với user lâu hơn
+            if val.public: val.update('to_worktime', 10)
+            else: val.update('to_worktime', 120)
+
+        if val.public: val.set('CD', val.chat_speed)                # Bot sẽ rep ngay nếu là Owner nhắn trong DM channel
+        else: val.set('CD', 0)
+        val.set('CD_idle', 0)                                       # Reset thời gian chờ của bot
+    except Exception as e:
+        print(f"{get_real_time()}> Lỗi GEMINI API: ", e)
+        old_chat = val.old_chat                                     # Khôi phục lại chat của user từ chat cũ nếu API lỗi
+        new_chat = val.now_chat
+        all_chat = old_chat + new_chat
+        val.set('now_chat', all_chat)
+
+        val.update('stop_chat', 1)                                  # Dừng chat nếu lỗi quá 3 lần, thử lại sau khi bot rảnh trở lại
+        if val.stop_chat == 3:
+            val.set('stop_chat', 0)
+            val.set('CD', val.to_breaktime)
+            await status_busy_set()                                 # Set activity là đang bận
+
+    """ =========================== """
+
+    remind = load_prompt("saves/limit.txt")                         # Kiểm tra xem bot có chat dài quá giới hạn, nếu có thì thêm lời nhắc vào history
     num = txt_read("saves/limit.txt")
 
     limit = 150
@@ -46,9 +77,11 @@ async def gemini_rep(mess):
         num = re.sub(r"[^\d]", "", num)
     if num:
         limit = int(num)
+
     if len(response.text) > limit:
         chat.history.extend(remind)
         if val.chat_csl: print(f"{get_real_time()}> ", remind)
+
     val.update('total_rep', 1)
     if val.bug_csl:
         print("\n")
