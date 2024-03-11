@@ -148,7 +148,7 @@ async def send_mess(channel, reply, rep = False, inter = False):
         val.set('old_mess_id', val.last_mess_id)
         val.set('last_mess_id', mid)
 
-        await cmd_msg_bot(reply) # Xử lý lệnh từ bot
+        await cmd_msg() # Xử lý lệnh từ bot
         await cmd_msg_user() # Xử lý lệnh từ user
         if val.tts_toggle: await voice_make_tts(reply) # Gửi voice
         return
@@ -187,14 +187,21 @@ async def voice_send(url, ch):
       print(f"{get_real_time()}> Send voice error: ", e)
 
 # Hàm xử lý lệnh trong tin nhắn
-async def cmd_msg_bot(answ):
+async def cmd_msg():
     from utils.bot import val
+    from utils.api import chat
 
-    chat = val.old_chat
-    name = [message.split(":")[0] for message in chat]
+    u_msg = list_to_str(val.old_chat)
+    ai_msg = chat.last.text
+
+    voice = re.search(r'vc|voice channel|voice chat|voice', u_msg, re.IGNORECASE)
+    join = re.search(r'joi|jum|vào|nhảy|chui|vô', u_msg, re.IGNORECASE)
+    out = re.search(r'leav|out|rời|khỏi', u_msg, re.IGNORECASE)
+    ok = re.search(r'ok|hai|dạ|vâng|sẽ|vô|vào|joi|theo|out|ra|đi|tới|rời|được', ai_msg, re.IGNORECASE)
+    no = re.search(r'no|ko|không|why|tại sao|hem', ai_msg, re.IGNORECASE)
 
     # Voice
-    if re.search(r'vc|voice channel|voice chat|voice', answ, re.IGNORECASE) and re.search(r'joi|jum|vào|nhảy|chui', answ, re.IGNORECASE):
+    if voice and join and ok and not no:
         found = await v_join_auto()
 
         # Nếu không tìm thấy user trong voice
@@ -209,7 +216,7 @@ async def cmd_msg_bot(answ):
     else:
         val.set('vc_invited', False)
 
-    if re.search(r'vc|voice channel|voice chat|voice', answ, re.IGNORECASE) and re.search(r'leav|out|rời|khỏi', answ, re.IGNORECASE):
+    if voice and out and ok and not no:
         await v_leave_auto()
 
 async def cmd_msg_user():

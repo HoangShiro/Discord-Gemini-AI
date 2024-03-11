@@ -25,6 +25,7 @@ class AllStatus:
         self.ai_char = "innocent"           # Tính cách của bot
         self.ai_guild = 0                   # ID server gần nhất
         self.ai_channel = 0                 # ID text channel gần nhất
+        self.ai_chat = ""                   # Chat gần nhất của bot
         self.last_mess_id = 0               # ID tin nhắn gần nhất
         self.old_mess_id = 0                # ID tin nhắn cũ hơn
         self.now_chat = []                  # Các chat hiện tại mà bot chưa rep
