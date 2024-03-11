@@ -30,6 +30,28 @@ async def IMG_read(message):
         
     return all_text
 
+# Xử lý ảnh là link
+async def IMG_link_read(url):
+    """Hàm xử lý hình ảnh"""
+    from utils.daily import get_real_time
+
+    prompt = "Bạn cần phân tích và tóm tắt ngắn gọn nhưng đầy đủ những thứ có trong hình ảnh sau"
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                image_data = await response.read()
+        file_obj = BytesIO(image_data)
+        image = PIL.Image.open(file_obj)
+
+        text = await igemini_text(image, prompt)
+        itext = f"*gửi hình ảnh có nội dung: '{text}'*"
+        return itext
+    
+    except Exception as e:
+        print(f"{get_real_time()}> Link to VISION error: ", e)
+        return None
+
 # Lấy channel
 async def get_channel():
     from utils.bot import bot, val

@@ -181,8 +181,13 @@ async def on_message(message: discord.Message):
     # Xử lý tin nhắn
     chat = ""
     if message.content and not message.attachments:
-        if val.public: chat = f"{user_name}: " + message.content
-        else: chat = message.content
+        url = get_img_link(message.content)
+        vision = None
+        msg = message.content
+        if url: vision = await IMG_link_read(url)
+        if vision: msg = msg + vision
+        if val.public: chat = f"{user_name}: " + msg
+        else: chat = msg
 
     elif message.attachments:
         if val.public: chat = f"{user_name}: " + await IMG_read(message)

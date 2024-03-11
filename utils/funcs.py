@@ -285,7 +285,7 @@ async def sob(sound_list, sound=None):
         return None
 
 # Hàm lấy link
-def get_link(text):
+def get_img_link(text):
     match = re.search(r"(http\S+.\S+.(jpg|jpeg|png))", text)
     if match:
         link = match.group(1)
@@ -297,20 +297,22 @@ def get_link(text):
 async def get_msg_img_url(message: discord.Message):
     from utils.bot import val
 
+    # Khi là tin nhắn thường
     if not message.reference:
         if message.content:
-            url = get_link(message.content)
+            url = get_img_link(message.content)
             if url: val.set('last_img', url)
 
         if message.attachments:
             attachment = message.attachments[0]
             if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png')): val.set('last_img', attachment.url)
 
+    # Khi là tin nhắn được nhắc tới
     else:
         ref_msg = await message.channel.fetch_message(message.reference.message_id)
         if ref_msg:
             if ref_msg.content and not ref_msg.attachments:
-                url = get_link(ref_msg.content)
+                url = get_img_link(ref_msg.content)
                 if url: val.set('last_img', url)
             elif ref_msg.attachments:
                 attachment = ref_msg.attachments[0]
