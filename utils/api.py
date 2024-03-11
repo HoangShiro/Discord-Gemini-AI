@@ -53,6 +53,24 @@ async def gemini_rep(mess):
         if val.public: val.set('CD', val.chat_speed)                # Bot sẽ rep ngay nếu là Owner nhắn trong DM channel
         else: val.set('CD', 0)
         val.set('CD_idle', 0)                                       # Reset thời gian chờ của bot
+
+        remind = load_prompt("saves/limit.txt")                     # Kiểm tra xem bot có chat dài quá giới hạn, nếu có thì thêm lời nhắc vào history
+        num = txt_read("saves/limit.txt")
+        limit = 150
+        if num:
+            num = re.sub(r"[^\d]", "", num)
+        if num:
+            limit = int(num)
+        if len(response.text) > limit:
+            chat.history.extend(remind)
+            if val.chat_csl: print(f"{get_real_time()}> ", remind)
+        val.update('total_rep', 1)
+        if val.bug_csl:
+            print("\n")
+            print("===== [CHAT HISTORY] =====")
+            print(chat.history)
+            print("\n")
+
     except Exception as e:
         print(f"{get_real_time()}> Lỗi GEMINI API: ", e)
         old_chat = val.old_chat                                     # Khôi phục lại chat của user từ chat cũ nếu API lỗi
@@ -68,26 +86,6 @@ async def gemini_rep(mess):
 
     """ =========================== """
 
-    remind = load_prompt("saves/limit.txt")                         # Kiểm tra xem bot có chat dài quá giới hạn, nếu có thì thêm lời nhắc vào history
-    num = txt_read("saves/limit.txt")
-
-    limit = 150
-
-    if num:
-        num = re.sub(r"[^\d]", "", num)
-    if num:
-        limit = int(num)
-
-    if len(response.text) > limit:
-        chat.history.extend(remind)
-        if val.chat_csl: print(f"{get_real_time()}> ", remind)
-
-    val.update('total_rep', 1)
-    if val.bug_csl:
-        print("\n")
-        print("===== [CHAT HISTORY] =====")
-        print(chat.history)
-        print("\n")
     return response.text
 
 # Gemini Vision
