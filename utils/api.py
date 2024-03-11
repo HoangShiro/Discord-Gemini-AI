@@ -44,7 +44,7 @@ async def gemini_rep(mess):
         old_chat = val.now_chat                                     # Lưu chat mới vào chat cũ
         val.set('old_chat', old_chat) # Lưu chat cũ
         val.set('now_chat', [])                                     # Clear chat mới
-        response = await chat.send_message_async(mess)              # Gửi với API
+        response = chat.send_message(mess)              # Gửi với API
 
         if val.to_worktime < 300:                                   # Bot sẽ muốn chat với user lâu hơn
             if val.public: val.update('to_worktime', 10)
@@ -74,9 +74,6 @@ async def gemini_rep(mess):
         return response.text
     except Exception as e:
         print(f"{get_real_time()}> Lỗi GEMINI API: ", e)
-        print(f"Lỗi: {e.__class__.__name__}")
-        print(f"Thông tin chi tiết: {e.args}")
-        print(f"Traceback: {e.__traceback__}")
         old_chat = val.old_chat                                     # Khôi phục lại chat của user từ chat cũ nếu API lỗi
         new_chat = val.now_chat
         all_chat = old_chat + new_chat
