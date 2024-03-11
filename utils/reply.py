@@ -1,5 +1,5 @@
 """Các hàm trả lời"""
-import PIL.Image, asyncio, re, discord
+import PIL.Image, asyncio, re, discord, aiohttp
 from io import BytesIO
 from discord import FFmpegPCMAudio
 from utils.funcs import list_to_str, txt_read, v_leave_auto, voice_make_tts, v_join_auto
@@ -204,8 +204,10 @@ async def cmd_msg_user():
             if val.last_uid != val.owner_uid: return
         if not val.last_img: return
         try:
-            avatar_data = BytesIO(val.last_img).read()
-            await bot.user.edit(avatar=avatar_data)
+            async with aiohttp.ClientSession() as session:
+                async with session.get(val.last_img) as response:
+                    image_data = await response.read()
+            await bot.user.edit(avatar=image_data)
             avatar_url = bot.user.avatar.url
             embed, view = await normal_embed(description=f"Avatar mới của {val.ai_name}:", img=avatar_url, color=0xffbf75)
             await send_embed(embed=embed, view=view)
