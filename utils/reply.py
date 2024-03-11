@@ -203,13 +203,13 @@ async def cmd_msg_user():
         if not val.public:
             if val.last_uid != val.owner_uid: return
         if not val.last_img: return
-        try:
-            await bot.user.edit(avatar=val.last_img)
-            avatar_url = str(bot.user.avatar.url)
-            embed, view = await normal_embed(description=f"Avatar mới của {val.ai_name}:", img=avatar_url, color=0xffbf75)
-            await send_embed(embed=embed, view=view)
+        #try:
+        await bot.user.edit(avatar=val.last_img)
+        avatar_url = bot.user.avatar.url
+        embed, view = await normal_embed(description=f"Avatar mới của {val.ai_name}:", img=avatar_url, color=0xffbf75)
+        await send_embed(embed=embed, view=view)
 
-        except Exception as e:
+        """except Exception as e:
             print(f"{get_real_time()}> lỗi khi đổi avatar: ", e)
             if not val.cavatar:
                 umess = val.set_avatar + str(e)
@@ -218,6 +218,6 @@ async def cmd_msg_user():
                 val.set('cavatar', True)
                 val.set('now_chat', new_chat)
                 val.set('CD', 1)
-                pass
+                pass"""
     else:
         val.set('cavatar', False)
