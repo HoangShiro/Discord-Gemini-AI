@@ -6,3 +6,4 @@ translate
 mtranslate
 langdetect
 jaconv
+PyNaCl
