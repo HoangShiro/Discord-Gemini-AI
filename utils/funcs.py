@@ -299,7 +299,9 @@ async def get_msg_img_url(message: discord.Message):
 
     if not message.reference:
         if message.content:
+            print("1", message.content)
             url = get_link(message.content)
+            print("1", url)
             if url: val.set('last_img', url)
 
         if message.attachments:
@@ -310,13 +312,12 @@ async def get_msg_img_url(message: discord.Message):
         ref_msg = await message.channel.fetch_message(message.reference.message_id)
         if ref_msg:
             if ref_msg.content and not ref_msg.attachments:
-                print(ref_msg.content)
+                print("2", ref_msg.content)
                 url = get_link(message.content)
-                print(url)
+                print("2", url)
                 if url: val.set('last_img', url)
             elif ref_msg.attachments:
-                attachment = message.attachments[0]
-                print(attachment.filename)
+                attachment = ref_msg.attachments[0]
                 if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png')): val.set('last_img', attachment.url)
 
 if __name__ == '__main__':
