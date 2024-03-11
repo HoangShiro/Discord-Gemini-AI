@@ -3,5 +3,6 @@ google-generativeai
 pillow
 pytz
 translate
+mtranslate
 langdetect
 jaconv
