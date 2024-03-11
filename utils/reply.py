@@ -32,7 +32,7 @@ async def IMG_read(message):
     return all_text
 
 # Reply sau khoảng thời gian với channel id
-async def reply_id():
+async def reply_id(rep=False):
     from utils.bot import bot, val
     from utils.daily import get_real_time
     channel = None
@@ -52,7 +52,7 @@ async def reply_id():
         async with channel.typing():
             text = list_to_str(val.now_chat)
             reply = await gemini_rep(text)
-            if reply: await send_mess(channel, reply)
+            if reply: await send_mess(channel, reply, rep)
 
 # Set tính cách nhân vật dựa vào prompt
 async def char_check():
