@@ -1,5 +1,5 @@
 """Các hàm chức năng"""
-import json, os, time, datetime, pytz, asyncio, jaconv, re, random
+import json, os, time, datetime, pytz, asyncio, jaconv, re, random, discord
 
 from translate import Translator
 from mtranslate import translate
@@ -283,6 +283,38 @@ async def sob(sound_list, sound=None):
     except Exception as e:
         print(f"Error processing sound: {e}")
         return None
+
+# Hàm lấy link
+def get_link(text):
+    match = re.search(r"(http\S+.\S+.(jpg|jpeg|png))", text)
+    if match:
+        link = match.group(1)
+        return link
+    else:
+        return None
+
+# Hàm xử lý link ảnh
+async def get_msg_img_url(message: discord.Message):
+    from utils.bot import val
+
+    if not message.reference:
+        if message.content:
+            url = get_link(message.content)
+            if url: val.set('last_img', url)
+
+        elif message.attachments:
+            attachment = message.attachments[0]
+            if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png')): val.set('last_img', attachment.url)
+
+    else:
+        ref_msg = await message.channel.fetch_message(message.reference.message_id)
+        if ref_msg:
+            if ref_msg.content and not ref_msg.attachments:
+                url = get_link(message.content)
+                if url: val.set('last_img', url)
+            elif ref_msg.attachments:
+                attachment = message.attachments[0]
+                if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png')): val.set('last_img', attachment.url)
 
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')

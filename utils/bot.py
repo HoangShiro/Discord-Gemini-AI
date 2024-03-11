@@ -1,4 +1,4 @@
-import discord, PIL.Image, asyncio, json
+import discord, PIL.Image, asyncio, json, re
 
 from io import BytesIO
 from discord.ext import commands, tasks
@@ -14,7 +14,7 @@ from utils.daily import sec_check, h_check, get_real_time
 class AllStatus:
     def __init__(self):
         # Keys
-        self.bot_key = ""                   # Discord TOKEN
+        self.bot_key = ""                   # Discord bot TOKEN
         self.gai_key = ""                   # Gemini API
         self.vv_key = ""                    # VoiceVox API
 
@@ -45,6 +45,7 @@ class AllStatus:
         self.prompt_fix = ""                # Prompt cần fix với /prompts
         self.now_period = "noon"            # Buổi hiện tại
         self.last_uname = "User"            # Username gần nhất
+        self.last_uid = 0                   # UID gần nhất
         self.vv_speaker = 46                # Speaker (voicevox)
         self.vv_pitch = 0                   # Cao độ (voicevox)
         self.vv_iscale = 1.5                # Ngữ điệu (voicevox)
@@ -53,7 +54,8 @@ class AllStatus:
         self.vc_invited = False             # Thông báo lỗi cho user nếu không tìm thấy họ trong voice
         self.tts_toggle = False             # Bật/Tắt voice cho bot
         self.cavatar = False                # Đổi avatar cho bot
-
+        self.last_img = ""                  # URL của ảnh cuối
+        
         # Status
         self.total_rep = 0                  # Số tin nhắn đã trả lời
         self.total_mess = 0                 # Số tin nhắn đã đọc
@@ -61,6 +63,7 @@ class AllStatus:
         # Lời nhắc cho bot
         self.dm_chat_next = "(SYSTEM): *hãy tiếp tục trò chuyện một cách sáng tạo*" # Tiếp tục chat trong DM channel
         self.vc_invite = "(SYSTEM): Không tìm thấy người đó trong voice channel nào, hãy hỏi lại." # Voice
+        self.set_avatar = "(SYSTEM): lỗi khi đổi avatar cho bạn - "
 
         # Lời nhắc cho user
         self.no_perm = "`Bạn hem có quyền sử dụng lệnh nỳ.`" # Không có quyền sử dụng slash
@@ -158,6 +161,8 @@ async def on_message(message: discord.Message):
     if len(val.gai_key) < 39: return await message.channel.send("> Xài lệnh `/setkeys` điền Gemini API key trước.")
     val.update('total_mess', 1)
     
+    asyncio.create_task(get_msg_img_url(message)) # Lấy url img nếu có
+
     # Check bot public hay bot private
     user_name = "Noname"
     if not val.public:
@@ -168,9 +173,9 @@ async def on_message(message: discord.Message):
             val.set('ai_guild', message.guild.id)
             val.set('ai_channel', message.channel.id)
 
-    # Lấy user name
+    # Lấy user name và uid
     user_name = message.author.display_name
-
+    val.set('last_uid', message.author.id)
     val.set('last_uname', user_name)
 
     # Xử lý tin nhắn
@@ -178,9 +183,11 @@ async def on_message(message: discord.Message):
     if message.content and not message.attachments:
         if val.public: chat = f"{user_name}: " + message.content
         else: chat = message.content
+
     elif message.attachments:
         if val.public: chat = f"{user_name}: " + await IMG_read(message)
         else: chat = await IMG_read(message)
+
     # Nhớ tin nhắn
     if chat:
         if val.chat_csl:
@@ -349,15 +356,6 @@ async def prompts(interaction: discord.Interaction, view: discord.Option(
     else:
         await interaction.response.send_message(f"> '{view}' Prompt: ", ephemeral=True)
         await send_mess(interaction, prompt, inter=True)
-
-# Đổi avatar
-@bot.slash_command(name="cavatar", description=f"Đổi avatar của {val.ai_name}.")
-async def avatar_c(interaction: discord.Interaction):
-    if val.owner_uid != 0:
-        if interaction.user.id != val.owner_uid:
-            return await interaction.response.send_message(val.no_perm, ephemeral=True)
-
-
 
 # Logs
 @bot.slash_command(name="clogs", description=f"Nhật ký của {val.ai_name}")

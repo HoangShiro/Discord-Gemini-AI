@@ -135,3 +135,14 @@ async def bot_notice(tt=None, des=None, ava_link=None, au_name=None, au_link=Non
     view.add_item(ermv_bt)
 
     return embed, view
+
+# Embed chung
+async def normal_embed(title=None, description=None, color=None, au_name=None, au_link=None, au_avatar=None, thumb=None, img=None, delete=None):
+    embed=discord.Embed(title=title, description=description, color=color)
+    view = View(timeout=None)
+    if thumb: embed.set_thumbnail(url=thumb)
+    if au_name: embed.set_author(name=au_name, url=au_link, icon_url=au_avatar)
+    if img: embed.set_image(url=img)
+    if delete: view.add_item(ermv_bt)
+
+    return embed, view

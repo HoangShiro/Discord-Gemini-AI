@@ -4,7 +4,6 @@ from io import BytesIO
 from discord import FFmpegPCMAudio
 from utils.funcs import list_to_str, txt_read, v_leave_auto, voice_make_tts, v_join_auto
 from utils.api import igemini_text, gemini_rep, gemini_task
-from utils.status import status_busy_set, status_chat_set
 
 # Xử lý hình ảnh -> text
 async def IMG_read(message):
@@ -31,22 +30,29 @@ async def IMG_read(message):
         
     return all_text
 
+# Lấy channel
+async def get_channel():
+    from utils.bot import bot, val
+
+    channel = None
+    if not val.public:
+        user = await bot.fetch_user(val.owner_uid)
+        if user.dm_channel is None:
+            await user.create_dm()
+        channel_id = user.dm_channel.id
+        channel = bot.get_channel(channel_id)
+    # Tạo channel public nếu là bot public
+    else:
+        channel = bot.get_channel(val.ai_channel)
+
+    return channel
+
 # Reply sau khoảng thời gian với channel id
 async def reply_id(channel=None, rep=False):
-    from utils.bot import bot, val
-    from utils.daily import get_real_time
+    from utils.bot import val
 
     # Tạo channel DM nếu là bot private
-    if not channel:
-        if not val.public:
-            user = await bot.fetch_user(val.owner_uid)
-            if user.dm_channel is None:
-                await user.create_dm()
-            channel_id = user.dm_channel.id
-            channel = bot.get_channel(channel_id)
-        # Tạo channel public nếu là bot public
-        else:
-            channel = bot.get_channel(val.ai_channel)
+    if not channel: channel = await get_channel()
     
     # Nếu channel tồn tại thì chat
     if channel:
@@ -61,6 +67,14 @@ async def reply_id(channel=None, rep=False):
                 if not text: return
                 reply = await gemini_rep(text)
                 if reply: await send_mess(channel, reply, rep)
+
+# Gửi embed
+async def send_embed(embed=None, view=None):
+    channel = await get_channel()
+    if channel:
+        if embed:
+            await channel.send(embed=embed, view=view)
+
 
 # Set tính cách nhân vật dựa vào prompt
 async def char_check():
@@ -112,7 +126,7 @@ async def send_mess(channel, reply, rep = False, inter = False):
         val.set('old_mess_id', val.last_mess_id)
         val.set('last_mess_id', mid)
 
-        await cmd_msg(reply) # Xử lý lệnh từ reply
+        await cmd_msg_bot(reply) # Xử lý lệnh từ reply
         if val.tts_toggle: await voice_make_tts(reply) # Gửi voice
         return
 
@@ -150,7 +164,7 @@ async def voice_send(url, ch):
       print(f"{get_real_time()}> Send voice error: ", e)
 
 # Hàm xử lý lệnh trong tin nhắn
-async def cmd_msg(answ):
+async def cmd_msg_bot(answ):
     from utils.bot import val, bot
 
     chat = val.old_chat
@@ -169,6 +183,37 @@ async def cmd_msg(answ):
             val.set('now_chat', new_chat)
             val.set('CD', 1)
             pass
+    else:
+        val.set('vc_invited', False)
 
     if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'leav|out|rời|khỏi', answ, re.IGNORECASE):
         await v_leave_auto()
+
+async def cmd_msg_user(answ):
+    from utils.bot import val, bot
+    from utils.daily import get_real_time
+    from utils.ui import normal_embed
+    
+    # Avatar change:
+    if re.search(r'đổi|thay|chuyển|set|dùng|change|use', answ, re.IGNORECASE) and re.search(r'ava', answ, re.IGNORECASE):
+        if not val.public:
+            if val.last_uid != val.owner_uid: return
+        if not val.last_img: return
+        try:
+            await bot.user.edit(avatar=val.last_img)
+            avatar_url = str(bot.user.avatar.url)
+            embed, view = await normal_embed(description=f"Avatar mới của {val.ai_name}:", img=avatar_url, color=0xffbf75)
+            await send_embed(embed=embed, view=view)
+
+        except Exception as e:
+            print(f"{get_real_time()}> lỗi khi đổi avatar: ", e)
+            if not val.cavatar:
+                umess = val.set_avatar + str(e)
+                new_chat = val.now_chat
+                new_chat.append(umess)
+                val.set('cavatar', True)
+                val.set('now_chat', new_chat)
+                val.set('CD', 1)
+                pass
+    else:
+        val.set('cavatar', False)
