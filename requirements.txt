@@ -1,4 +1,3 @@
-discord
 google-generativeai
 pillow
 pytz
