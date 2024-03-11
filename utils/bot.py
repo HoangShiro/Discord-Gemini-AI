@@ -11,56 +11,59 @@ from utils.funcs import *
 from utils.ui import *
 from utils.daily import sec_check, h_check, get_real_time
 
-intents = discord.Intents.all()
-bot = commands.Bot(intents=intents, command_prefix="!")
-
 class AllStatus:
     def __init__(self):
         # Keys
-        self.bot_key = ""
-        self.gai_key = ""
-        self.vv_key = ""
+        self.bot_key = ""                   # Discord TOKEN
+        self.gai_key = ""                   # Gemini API
+        self.vv_key = ""                    # VoiceVox API
+
+        # Configs
+        self.public = False                 # Chế độ chat Public/Private(DM)
+        self.owner_uid = 0                  # UID của master
+        self.ai_name = "AI"                 # Bot name
+        self.ai_char = "innocent"           # Tính cách của bot
+        self.ai_guild = 0                   # ID server gần nhất
+        self.ai_channel = 0                 # ID text channel gần nhất
+        self.last_mess_id = 0               # ID tin nhắn gần nhất
+        self.old_mess_id = 0                # ID tin nhắn cũ hơn
+        self.now_chat = []                  # Các chat hiện tại mà bot chưa rep
+        self.old_chat = []                  # Các chat mà bot đã rep gần nhất
+        self.stop_chat = 0                  # Dừng chat nếu phát hiện lỗi API
+        self.CD = 300                       # Thời gian đếm ngược trước khi check tin nhắn
+        self.CD_idle = 0                    # Thời gian đếm tiến trước khi work trở lại
+        self.to_breaktime = 300             # Max của CD
+        self.to_worktime = 301              # Max của CD_idle
+        self.normal_act = "Waking up ☀️"    # Activity ngày thường của bot
+        self.breakday_act = "Chilling 💫"   # Activity ngày nghỉ
+        self.weekend = False                # Check cuối tuần
+        self.chat_speed = 5                 # Thời gian bot nghỉ giữa các lần trả lời chat
+        self.friendliness = 5               # Độ thân thiện
+        self.chat_csl = False               # Log chat ra console
+        self.cmd_csl = False                # Log slash command ra console
+        self.bug_csl = False                # Log bug ra console
+        self.prompt_fix = ""                # Prompt cần fix với /prompts
+        self.now_period = ""                # Buổi hiện tại
+        self.last_uname = "User"            # Username gần nhất
+        self.vv_speaker = 46                # Speaker (voicevox)
+        self.vv_pitch = 0                   # Cao độ (voicevox)
+        self.vv_iscale = 1.5                # Ngữ điệu (voicevox)
+        self.vv_speed = 1                   # Tốc độ (voicevox)
+        self.pr_vch_id = 0                  # Voice channel cuối cùng mà bot kết nối tới
+        self.vc_invited = False             # Thông báo lỗi cho user nếu không tìm thấy họ trong voice
+        self.tts_toggle = False             # Bật/Tắt voice cho bot
+        self.cavatar = False                # Đổi avatar cho bot
 
         # Status
-        self.public = False
-        self.owner_uid = 0
-        self.ai_name = "AI"
-        self.ai_char = "innocent"
-        self.ai_guild = 0
-        self.ai_channel = 0
-        self.total_rep = 0
-        self.total_mess = 0
-        self.last_mess_id = 0
-        self.old_mess_id = 0
-        self.now_chat = []
-        self.old_chat = []
-        self.stop_chat = 0
-        self.CD = 300
-        self.CD_idle = 0
-        self.to_breaktime = 300
-        self.to_worktime = 301
-        self.normal_act = "Waking up ☀️"
-        self.breakday_act = "Chilling 💫"
-        self.weekend = False
-        self.chat_speed = 5
-        self.friendliness = 5
-        self.chat_csl = False
-        self.cmd_csl = False
-        self.bug_csl = False
-        self.prompt_fix = ""
-        self.now_period = ""
-        self.last_uname = "User"
-        self.vv_speaker = 46
-        self.vv_pitch = 0
-        self.vv_iscale = 1.5
-        self.vv_speed = 1
-        self.pr_vch_id = 0
-        self.vc_invited = False
-        self.tts_toggle = False
+        self.total_rep = 0                  # Số tin nhắn đã trả lời
+        self.total_mess = 0                 # Số tin nhắn đã đọc
 
-        # Lời nhắc
+        # Lời nhắc cho bot
         self.dm_chat_next = "(SYSTEM): *hãy tiếp tục trò chuyện một cách sáng tạo*" # Tiếp tục chat trong DM channel
         self.vc_invite = "(SYSTEM): Không tìm thấy người đó trong voice channel nào, hãy hỏi lại." # Voice
+
+        # Lời nhắc cho user
+        self.no_perm = "`Bạn hem có quyền sử dụng lệnh nỳ.`" # Không có quyền sử dụng slash
 
     def update(self, val_name, value):
         if hasattr(self, val_name):
@@ -115,6 +118,10 @@ class AllStatus:
         self.friendliness = data[character]["friendliness"]
 
 val = AllStatus()
+val.load('saves/vals.json')
+
+intents = discord.Intents.all()
+bot = commands.Bot(intents=intents, command_prefix="!")
 
 @bot.event
 async def on_ready():
@@ -228,7 +235,7 @@ async def on_message(message: discord.Message):
 async def keys(interaction: discord.Interaction, gemini: str = None, voicevox: str = None):
     if val.owner_uid != 0:
         if interaction.user.id != val.owner_uid:
-                return await interaction.response.send_message(f"`Bạn hem có quyền sử dụng lệnh nỳ.`", ephemeral=True)
+                return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
     if gemini:
         val.set('gai_key', gemini)
@@ -242,7 +249,7 @@ async def keys(interaction: discord.Interaction, gemini: str = None, voicevox: s
 async def update(interaction: discord.Interaction):
     if not val.public:
         if interaction.user.id != val.owner_uid:
-            return await interaction.response.send_message(f"`Bạn hem có quyền sử dụng lệnh nỳ.`", ephemeral=True)
+            return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
     await interaction.response.send_message(f"`Đang cập nhật...`", ephemeral=True)
     await bot.close()
@@ -252,7 +259,7 @@ async def update(interaction: discord.Interaction):
 async def newchat(interaction: discord.Interaction):
     if not val.public:
         if interaction.user.id != val.owner_uid:
-            return await interaction.response.send_message(f"`Bạn hem có quyền sử dụng lệnh nỳ.`", ephemeral=True)
+            return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
     if not val.public: await edit_last_msg()
     new_prpt = load_prompt("saves/chat.txt")
@@ -278,8 +285,8 @@ async def newchat(interaction: discord.Interaction):
 # Chuyển chế độ chat
 @bot.slash_command(name="chatmode", description=f"Kêu {val.ai_name} chat public/private.")
 async def chat_mode(interaction: discord.Interaction):
-    if interaction.user.id != val.owner_uid:
-        return await interaction.response.send_message(f"`Bạn hem có quyền sử dụng lệnh nỳ.`", ephemeral=True)
+    if val.owner_uid == 0: return await interaction.response.send_message(f"`Bạn cần sở hữu {val.ai_name} trước.`", ephemeral=True)
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
     n = ""
     if val.public:
@@ -296,7 +303,7 @@ async def chat_mode(interaction: discord.Interaction):
 async def voice(interaction: discord.Interaction, speaker: int = None):
     if not val.public:
         if interaction.user.id != val.owner_uid:
-            return await interaction.response.send_message(f"`Bạn hem có quyền sử dụng lệnh nỳ.`", ephemeral=True)
+            return await interaction.response.send_message(val.no_perm, ephemeral=True)
     text = ""
     if val.tts_toggle and not speaker:
         val.set('tts_toggle', False)
@@ -349,7 +356,7 @@ async def prompts(interaction: discord.Interaction, view: discord.Option(
         ],
     ) = "char", fix: bool = False, char_check: bool = False):
     if val.owner_uid != interaction.user.id:
-        return await interaction.response.send_message(f"`Bạn hem có quyền sử dụng lệnh nỳ.`", ephemeral=True)
+        return await interaction.response.send_message(val.no_perm, ephemeral=True)
     if char_check:
         return await interaction.response.send_message(f"`Tính cách hiện tại: {val.ai_char}`", ephemeral=True)
     prompt = ""
@@ -368,6 +375,16 @@ async def prompts(interaction: discord.Interaction, view: discord.Option(
         await interaction.response.send_message(f"> '{view}' Prompt: ", ephemeral=True)
         await send_mess(interaction, prompt, inter=True)
 
+# Đổi avatar
+@bot.slash_command(name="cavatar", description=f"Đổi avatar của {val.ai_name}.")
+async def avatar_c(interaction: discord.Interaction):
+    if val.owner_uid != 0:
+        if interaction.user.id != val.owner_uid:
+            return await interaction.response.send_message(val.no_perm, ephemeral=True)
+
+
+
+# Logs
 @bot.slash_command(name="clogs", description=f"Nhật ký của {val.ai_name}")
 async def cslog(interaction: discord.Interaction, get: discord.Option(
         description="Chọn giá trị muốn kiểm tra:",
@@ -432,7 +449,6 @@ async def cslog(interaction: discord.Interaction, get: discord.Option(
 
 def bot_run():
     try:
-        val.load('saves/vals.json')
         bot.run(val.bot_key)
     except Exception as e:
         print("\n")

@@ -173,6 +173,35 @@ def text_tts_cut(cvb):
     # Trả về chuỗi văn bản đã cắt ngắn.
     return cvb_cn
 
+# Auto join voice channel
+async def v_join_auto():
+    from utils.bot import val, bot
+    from utils.reply import voice_send
+    
+    chat = val.old_chat
+    name = [message.split(":")[0] for message in chat]
+    guild = bot.get_guild(val.ai_guild)
+    voice_channels = guild.voice_channels
+    found = False
+
+    for channel in voice_channels:
+        members = channel.members
+
+        for member in members:
+            if member.display_name in name:
+            # Tham gia kênh thoại nếu user có trong vc
+                await v_leave_auto()
+                vc = await channel.connect()
+                sound = await sob('greeting')
+                if sound:
+                    await voice_send(sound, vc)
+                val.set('pr_vch_id', channel.id)
+                val.set('vc_invited', False)
+                found = True
+                break
+    
+    return found
+
 # Auto leave voice channel
 async def v_leave_auto():
     from utils.bot import bot, val

@@ -2,7 +2,7 @@
 import PIL.Image, asyncio, re, discord
 from io import BytesIO
 from discord import FFmpegPCMAudio
-from utils.funcs import list_to_str, txt_read, v_leave_auto, sob, voice_make_tts
+from utils.funcs import list_to_str, txt_read, v_leave_auto, voice_make_tts, v_join_auto
 from utils.api import igemini_text, gemini_rep, gemini_task
 from utils.status import status_busy_set, status_chat_set
 
@@ -172,26 +172,9 @@ async def cmd_msg(answ):
 
     # Voice
     if re.search(r'vc|voice channel|voice chat', answ, re.IGNORECASE) and re.search(r'joi|jum|vào|nhảy|chui', answ, re.IGNORECASE):
-        guild = bot.get_guild(val.ai_guild)
-        voice_channels = guild.voice_channels
-        found = False
+        found = await v_join_auto()
 
-        for channel in voice_channels:
-            members = channel.members
-
-            for member in members:
-                if member.display_name in name:
-                # Tham gia kênh thoại nếu user có trong vc
-                    await v_leave_auto()
-                    vc = await channel.connect()
-                    sound = await sob('greeting')
-                    if sound:
-                        await voice_send(sound, vc)
-                    val.set('pr_vch_id', channel.id)
-                    val.set('vc_invited', False)
-                    found = True
-                    break
-
+        # Nếu không tìm thấy user trong voice
         if not found and not val.vc_invited:
             umess = val.vc_invite
             new_chat = val.now_chat
