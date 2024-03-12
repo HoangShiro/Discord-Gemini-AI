@@ -228,6 +228,8 @@ async def cmd_msg():
     if (u_voice or ai_voice) and (u_out and ai_out) and ai_ok and not ai_no:
         await v_leave_auto()
 
+    # Chat public or chat riêng
+
 async def cmd_msg_user():
     from utils.bot import val, bot
     from utils.daily import get_real_time

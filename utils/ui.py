@@ -152,3 +152,15 @@ async def normal_embed(title=None, description=None, color=None, au_name=None, a
     if delete: view.add_item(ermv_bt)
 
     return embed, view
+
+# Status embed
+
+async def bot_status():
+    from utils.bot import val, bot
+    view = View(timeout=None)
+    embed=discord.Embed(title=bot.user.display_name, description=bot.description, color=bot.user.color)
+    owner = bot.fetch_user(val.owner_uid)
+    if owner: embed.set_author(name=owner.display_name, url=owner.display_avatar, icon_url=owner.display_avatar)
+
+    view.add_item(ermv_bt)
+    return embed, view

@@ -28,6 +28,7 @@ class AllStatus:
         self.ai_chat = ""                   # Chat gần nhất của bot
         self.last_mess_id = 0               # ID tin nhắn gần nhất
         self.old_mess_id = 0                # ID tin nhắn cũ hơn
+        self.final_mess_id = 0              # ID tin nhắn cuối cùng trước khi update
         self.now_chat = []                  # Các chat hiện tại mà bot chưa rep
         self.old_chat = []                  # Các chat mà bot đã rep gần nhất
         self.stop_chat = 0                  # Dừng chat nếu phát hiện lỗi API
@@ -57,14 +58,26 @@ class AllStatus:
         self.cavatar = False                # Đổi avatar cho bot
         self.last_img = ""                  # URL của ảnh cuối
         
-        # Status
-        self.total_rep = 0                  # Số tin nhắn đã trả lời
-        self.total_mess = 0                 # Số tin nhắn đã đọc
+        # Status total
+        self.total_rep = 0                  # Tổng chat đã trả lời
+        self.total_mess = 0                 # Tổng chat đã đọc
+        self.total_voice = 0                # Tổng số lần nói
+        self.total_join = 0                 # Tổng số lần tham gia voice chat
+        self.total_cmd = 0                  # Tổng số lệnh đã nhận
+        self.total_update = 0               # Tổng số lần update
+        self.total_newchat = 0              # Tổng số lần newchat
+
+        # Status on one conversation
+        self.one_rep = 0                    # Số chat đã rep
+        self.one_mess = 0                   # Số chat đã đọc
+        self.one_voice = 0                  # Số lần nói
+        self.one_join = 0                   # Số lần tham gia voice chat
+        self.one_cmd = 0                    # Số lệnh đã nhận
 
         # Lời nhắc cho bot
         self.dm_chat_next = "(SYSTEM): *hãy tiếp tục trò chuyện một cách sáng tạo*" # Tiếp tục chat trong DM channel
         self.vc_invite = "(SYSTEM): Không tìm thấy người đó trong voice channel nào, hãy hỏi lại." # Voice
-        self.set_avatar = "(SYSTEM): lỗi khi đổi avatar cho bạn - "
+        self.set_avatar = "(SYSTEM): lỗi khi đổi avatar cho bạn - " # Khi đổi avatar bị lỗi
 
         # Lời nhắc cho user
         self.no_perm = "`Bạn hem có quyền sử dụng lệnh nỳ.`" # Không có quyền sử dụng slash
@@ -231,6 +244,16 @@ async def keys(interaction: discord.Interaction, gemini: str = None, voicevox: s
     await interaction.response.send_message(f"`Đã cập nhật key cho {val.ai_name}`", ephemeral=True)
     if gemini: await bot.close()
 
+# Status
+@bot.slash_command(name="status", description=f"Trạng thái của {val.ai_name}.")
+async def showstatus(interaction: discord.Interaction):
+    if not val.public:
+        if interaction.user.id != val.owner_uid:
+            return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    embed, view = await bot_status()
+    await interaction.response.send_message(embed=embed, view=view)
+
 # Cập nhật
 @bot.slash_command(name="update", description=f"Cập nhật {val.ai_name}.")
 async def update(interaction: discord.Interaction):
@@ -239,6 +262,8 @@ async def update(interaction: discord.Interaction):
             return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
     await interaction.response.send_message(f"`Đang cập nhật...`", ephemeral=True)
+    asyncio.sleep(1)
+    await interaction.delete_original_response()
     await bot.close()
 
 # Cuộc trò chuyện mới
