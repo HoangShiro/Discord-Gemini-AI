@@ -51,7 +51,7 @@ async def rc_atv(interaction):
     from utils.funcs import list_to_str
 
     await byB(interaction)
-    last = chat.history[-4:]
+    last = chat.history[-2:]
     print(last)
     chat.rewind()
     try:
