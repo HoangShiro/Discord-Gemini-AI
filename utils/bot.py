@@ -52,7 +52,8 @@ class AllStatus:
         self.vv_pitch = 0                   # Cao độ (voicevox)
         self.vv_iscale = 1.5                # Ngữ điệu (voicevox)
         self.vv_speed = 1                   # Tốc độ (voicevox)
-        self.pr_vch_id = 0                  # Voice channel cuối cùng mà bot kết nối tới
+        self.pr_vch_id = 0                  # ID voice channel cuối cùng mà bot kết nối tới
+        self.pr_vch = None                  # Voice channel cuối cùng
         self.vc_invited = False             # Thông báo lỗi cho user nếu không tìm thấy họ trong voice
         self.tts_toggle = False             # Bật/Tắt voice cho bot
         self.cavatar = False                # Đổi avatar cho bot
@@ -172,7 +173,7 @@ async def on_message(message: discord.Message):
         return
 
     if message.author == bot.user or message.content.startswith((".", "!", ",", "/")): return
-    if len(val.gai_key) < 39: return await message.channel.send("> Xài lệnh `/setkeys` điền Gemini API key trước.")
+    if len(val.gai_key) < 39: return await message.channel.send(f"> Xài lệnh `/setkeys` điền Gemini API key trước, sau đó gõ lệnh `/chatmode` đổi chế độ chat của {val.ai_name}")
     val.update('total_mess', 1)
     
     asyncio.create_task(get_msg_img_url(message)) # Lấy url img nếu có
