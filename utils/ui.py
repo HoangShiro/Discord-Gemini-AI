@@ -161,6 +161,7 @@ async def bot_status():
     embed=discord.Embed(title=bot.user.display_name, description=bot.description, color=bot.user.color)
     owner = await bot.fetch_user(val.owner_uid)
     if owner: embed.set_author(name=owner.display_name, url=owner.display_avatar, icon_url=owner.display_avatar)
+    embed.set_thumbnail(url=bot.user.display_avatar)
 
     view.add_item(ermv_bt)
     return embed, view
