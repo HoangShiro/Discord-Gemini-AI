@@ -192,7 +192,6 @@ async def v_join_auto():
             # Tham gia kênh thoại nếu user có trong vc
                 await v_leave_auto()
                 vc = await channel.connect()
-                val.set('pr_vch', vc)
                 sound = await sob('greeting')
                 if sound:
                     await voice_send(sound, vc)
@@ -209,14 +208,13 @@ async def v_leave_auto():
     from utils.reply import voice_send
 
     guild = bot.get_guild(val.ai_guild)
-    if not guild.voice_client: return
-    vc = val.pr_vch
-    if vc:
-        sound = await sob('bye')
-        if sound:
-            await voice_send(sound, vc)
+    vc = guild.voice_client
+    if not vc: return
+    sound = await sob('bye')
+    if sound:
+        await voice_send(sound, vc)
     asyncio.sleep(5)
-    await guild.voice_client.disconnect()
+    await vc.disconnect()
 
 # Reconnect to voice channel
 async def voice_rcn():
