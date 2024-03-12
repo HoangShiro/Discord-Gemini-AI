@@ -187,8 +187,6 @@ async def on_message(message: discord.Message):
             new_ig = val.ignore_name
             new_ig.append(bot_name)
             val.set('ignore_name', new_ig)
-        #if val.bot_rep_limit == 0: return val.set('bot_rep_limit', val.bot_rep_limit_set)
-        #else: val.update('bot_rep_limit', -1)
 
     asyncio.create_task(get_msg_img_url(message)) # Lấy url img nếu có
 
