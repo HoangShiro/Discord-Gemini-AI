@@ -206,7 +206,7 @@ async def cmd_msg():
     ai_join = re.search(r'joi|jum|vào|nhảy|chui|vô', u_msg, re.IGNORECASE)
     ai_out = re.search(r'leav|out|rời|khỏi|ra|thoát', u_msg, re.IGNORECASE)
 
-    ai_ok = re.search(r'ok|key|hai|dạ|vâng|sẽ|vô|tới|được|đây|xong', ai_msg, re.IGNORECASE)
+    ai_ok = re.search(r'ok|key|hai|dạ|vâng|sẽ|vô|tới|được|đây|xong|rùi', ai_msg, re.IGNORECASE)
     ai_no = re.search(r'no|ko|không|why|tại sao|hem', ai_msg, re.IGNORECASE)
 
     # Voice
