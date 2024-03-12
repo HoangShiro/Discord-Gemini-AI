@@ -261,9 +261,9 @@ async def update(interaction: discord.Interaction):
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
-    await interaction.response.send_message(f"`Đang cập nhật...`", ephemeral=True)
+    mess = await interaction.response.send_message(f"`Đang cập nhật...`", ephemeral=True)
     asyncio.sleep(1)
-    await interaction.delete_original_response()
+    await mess.delete_original_response()
     await bot.close()
 
 # Cuộc trò chuyện mới
