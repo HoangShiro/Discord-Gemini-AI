@@ -55,6 +55,8 @@ async def rc_atv(interaction):
     print(last)
     chat.rewind()
     try:
+        new_chat = val.old_chat
+        val.set('now_chat', new_chat)
         text = list_to_str(val.old_chat)
         print(text)
         rep = await gemini_rep(text)
