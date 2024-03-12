@@ -105,14 +105,18 @@ async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
             print(f"{get_real_time()}> Lỗi ui - edit msg: ", e)
         return
     
-    if not msg:
-        await message.edit(view=view)
-    elif msg:
-        await message.edit(content=msg, view=view)
-    elif embed:
-        await message.edit(embed=embed)
-    elif embed and view:
-        await message.edit(embed=embed, view=view)
+    try:
+        if not msg:
+            await message.edit(view=view)
+        elif msg:
+            await message.edit(content=msg, view=view)
+        elif embed:
+            await message.edit(embed=embed)
+        elif embed and view:
+            await message.edit(embed=embed, view=view)
+    except Exception as e:
+        await message.delete()
+        print(f"{get_real_time()}> Lỗi ui - edit msg: ", e)
 
 # Bypass button:
 async def byB(interaction):
