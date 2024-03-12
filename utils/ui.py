@@ -157,8 +157,22 @@ async def normal_embed(title=None, description=None, color=None, au_name=None, a
 
 async def bot_status():
     from utils.bot import val, bot
+    if val.weekend: des = val.breakday_act
+    else: des = val.normal_act
+
+    ai_stt = bot.status
+    ai_stt = str(ai_stt)
+    if ai_stt == "online":
+        ai_stt = "online     🟢"
+    elif ai_stt == "offline":
+        ai_stt = "offline    ⚫"
+    elif ai_stt == "dnd":
+        ai_stt = "dnd    🔴"
+    elif ai_stt == "idle":
+        ai_stt = "idle   🌙"
+
     view = View(timeout=None)
-    embed=discord.Embed(title=bot.user.display_name, description=bot.description, color=bot.user.color)
+    embed=discord.Embed(title=bot.user.display_name, description=f"{ai_stt} {des}", color=0xffbf75)
     owner = await bot.fetch_user(val.owner_uid)
     if owner: embed.set_author(name=owner.display_name, url=owner.display_avatar, icon_url=owner.display_avatar)
     embed.set_thumbnail(url=bot.user.display_avatar)
