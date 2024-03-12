@@ -1,5 +1,5 @@
 """Các hàm trả lời"""
-import PIL.Image, asyncio, re, discord, aiohttp
+import PIL.Image, asyncio, re, discord, aiohttp, random
 from io import BytesIO
 from discord import FFmpegPCMAudio
 from utils.funcs import list_to_str, txt_read, v_leave_auto, voice_make_tts, v_join_auto
@@ -76,6 +76,13 @@ async def reply_id(channel=None, rep=False):
     # Tạo channel DM nếu là bot private
     if not channel: channel = await get_channel()
     
+    name = [message.split(":")[0] for message in val.now_chat]      # Check xem user có đang bị bot bơ hay không
+    ign_list = set(val.ignore_name)
+    name_list = set(name)
+    normal_user = name_list - ign_list
+    if not normal_user:
+        if random.random() < val.ignore_rep: return    # 70% sẽ không trả lời user trong ignore list
+
     # Nếu channel tồn tại thì chat
     if channel:
         if rep:

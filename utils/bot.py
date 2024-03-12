@@ -58,6 +58,9 @@ class AllStatus:
         self.tts_toggle = False             # Bật/Tắt voice cho bot
         self.cavatar = False                # Đổi avatar cho bot
         self.last_img = ""                  # URL của ảnh cuối
+        self.ignore_name = []               # Danh sách tên mà bot sẽ hạn chế reply
+        self.ignore_rep = 0.7               # Tỷ lệ reply user mà bot ignore
+        self.bot_rep = True                 # Cho phép reply chat của bot khác
         
         # Status total
         self.total_rep = 0                  # Tổng chat đã trả lời
@@ -161,6 +164,7 @@ async def on_ready():
 
 @bot.event
 async def on_message(message: discord.Message):
+
     # Dành cho fix prompt
     if val.prompt_fix and message.author.id == val.owner_uid:
         if len(message.content) >= 50 and message.content.count("\n") > 0:
@@ -176,6 +180,16 @@ async def on_message(message: discord.Message):
     if len(val.gai_key) < 39: return await message.channel.send(f"> Xài lệnh `/setkeys` điền Gemini API key trước, sau đó gõ lệnh `/chatmode` đổi chế độ chat của {val.ai_name}")
     val.update('total_mess', 1)
     
+    # Check xem có phải tin nhắn từ bot khác hay không
+    if message.author.bot:
+        bot_name = message.author.display_name
+        if bot_name not in val.ignore_name:
+            new_ig = val.ignore_name
+            new_ig.append(bot_name)
+            val.set('ignore_name', new_ig)
+        #if val.bot_rep_limit == 0: return val.set('bot_rep_limit', val.bot_rep_limit_set)
+        #else: val.update('bot_rep_limit', -1)
+
     asyncio.create_task(get_msg_img_url(message)) # Lấy url img nếu có
 
     # Check bot public hay bot private

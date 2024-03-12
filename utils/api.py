@@ -44,7 +44,7 @@ async def gemini_rep(mess):
         old_chat = val.now_chat                                     # Lưu chat mới vào chat cũ
         val.set('old_chat', old_chat) # Lưu chat cũ
         val.set('now_chat', [])                                     # Clear chat mới
-        
+
         response = chat.send_message(mess)                          # Gửi với API
 
         if val.to_worktime < 300:                                   # Bot sẽ muốn chat với user lâu hơn
