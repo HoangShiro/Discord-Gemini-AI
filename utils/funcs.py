@@ -215,7 +215,7 @@ async def v_leave_auto():
         sound = await sob('bye')
         if sound:
             await voice_send(sound, vc)
-    asyncio.sleep(3)
+    asyncio.sleep(5)
     await guild.voice_client.disconnect()
 
 # Reconnect to voice channel
