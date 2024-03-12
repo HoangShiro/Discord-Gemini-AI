@@ -210,7 +210,7 @@ async def cmd_msg():
     ai_no = re.search(r'no|ko|không|why|tại sao|hem', ai_msg, re.IGNORECASE)
 
     # Voice
-    if (u_voice or ai_voice) and (u_join or ai_join) and ai_ok and not ai_no:
+    if (u_voice or ai_voice) and (u_join or ai_join) and ai_ok and not ai_no and not (u_out or ai_out):
         found = await v_join_auto()
 
         # Nếu không tìm thấy user trong voice
