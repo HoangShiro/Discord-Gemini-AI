@@ -191,20 +191,26 @@ async def cmd_msg():
     from utils.bot import val
     from utils.api import chat
 
+    if not chat.last: return
     u_msg = list_to_str(val.old_chat)
+    if not u_msg: return
     ai_msg = chat.last.text
 
-    voice = re.search(r'vc|voice channel|voice chat|voice', u_msg, re.IGNORECASE)
-    join = re.search(r'joi|jum|vào|nhảy|chui|vô|đi|nào', u_msg, re.IGNORECASE)
-    out = re.search(r'leav|out|rời|khỏi', u_msg, re.IGNORECASE)
+    # User
+    u_voice = re.search(r'vc|voice channel|voice chat|voice', u_msg, re.IGNORECASE)
+    u_join = re.search(r'joi|jum|vào|nhảy|chui|vô|đi|nào', u_msg, re.IGNORECASE)
+    u_out = re.search(r'leav|out|rời|khỏi', u_msg, re.IGNORECASE)
 
-    
+    # Bot
+    ai_voice = re.search(r'vc|voice channel|voice chat|voice', u_msg, re.IGNORECASE)
+    ai_join = re.search(r'joi|jum|vào|nhảy|chui|vô', u_msg, re.IGNORECASE)
+    ai_out = re.search(r'leav|out|rời|khỏi|ra', u_msg, re.IGNORECASE)
 
-    ok = re.search(r'ok|hai|dạ|vâng|sẽ|vô|vào|joi|theo|out|ra|đi|tới|rời|được', ai_msg, re.IGNORECASE)
-    no = re.search(r'no|ko|không|why|tại sao|hem', ai_msg, re.IGNORECASE)
+    ai_ok = re.search(r'ok|hai|dạ|vâng|sẽ|vô|tới|được', ai_msg, re.IGNORECASE)
+    ai_no = re.search(r'no|ko|không|why|tại sao|hem', ai_msg, re.IGNORECASE)
 
     # Voice
-    if voice and join and ok and not no:
+    if (u_voice or ai_voice) and (u_join or ai_join) and ai_ok and not ai_no:
         found = await v_join_auto()
 
         # Nếu không tìm thấy user trong voice
@@ -219,7 +225,7 @@ async def cmd_msg():
     else:
         val.set('vc_invited', False)
 
-    if voice and out and ok and not no:
+    if (u_voice or ai_voice) and (u_out and ai_out) and ai_ok and not ai_no:
         await v_leave_auto()
 
 async def cmd_msg_user():
