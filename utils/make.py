@@ -390,8 +390,6 @@ def createfile(path, Q, A):
                 file.write(Q + "\n" + A)
         except OSError as e:
             raise OSError(f"An error occurred while creating the file: {e}")
-    else:
-        print(f"File '{path}' already exists. Skipping creation.")
 
 if __name__ == '__main__':
     update_cfg("saves/moods.py", mood_names)
