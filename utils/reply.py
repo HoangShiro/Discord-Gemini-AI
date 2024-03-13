@@ -110,10 +110,14 @@ async def reply_id(channel=None, rep=False):
         if rep:
             async with channel.channel.typing():
                 reply = await gemini_rep(text)
+                if val.now_chat: print("NOW CHAT")
+                if val.ignore_chat: print("IGNORE CHAT")
                 if reply: await send_mess(channel, reply, rep)
         else:
             async with channel.typing():
                 reply = await gemini_rep(text)
+                if val.now_chat: print("NOW CHAT")
+                if val.ignore_chat: print("IGNORE CHAT")
                 if reply: await send_mess(channel, reply, rep)
 
 # Gửi embed
