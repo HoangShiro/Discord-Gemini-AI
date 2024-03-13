@@ -1,4 +1,4 @@
-import discord, PIL.Image, asyncio, json, re
+import discord, PIL.Image, asyncio, json, re, random
 
 from io import BytesIO
 from discord.ext import commands, tasks
@@ -31,6 +31,7 @@ class AllStatus:
         self.final_mess_id = 0              # ID tin nhắn cuối cùng trước khi update
         self.now_chat = []                  # Các chat hiện tại mà bot chưa rep
         self.old_chat = []                  # Các chat mà bot đã rep gần nhất
+        self.ignore_chat = []               # Các chat mà bot sẽ bơ
         self.stop_chat = 0                  # Dừng chat nếu phát hiện lỗi API
         self.CD = 300                       # Thời gian đếm ngược trước khi check tin nhắn
         self.CD_idle = 0                    # Thời gian đếm tiến trước khi work trở lại
@@ -59,7 +60,7 @@ class AllStatus:
         self.cavatar = False                # Đổi avatar cho bot
         self.last_img = ""                  # URL của ảnh cuối
         self.ignore_name = []               # Danh sách tên mà bot sẽ hạn chế reply
-        self.ignore_rep = 0.7               # Tỷ lệ reply user mà bot ignore
+        self.ignore_rep = 0.8               # Tỷ lệ reply user mà bot ignore
         self.bot_rep = True                 # Cho phép reply chat của bot khác
         
         # Status total
@@ -182,6 +183,7 @@ async def on_message(message: discord.Message):
     
     # Check xem có phải tin nhắn từ bot khác hay không
     if message.author.bot:
+        if not val.bot_rep: return
         bot_name = message.author.display_name
         if bot_name not in val.ignore_name:
             new_ig = val.ignore_name
@@ -224,8 +226,17 @@ async def on_message(message: discord.Message):
     if chat:
         if val.chat_csl:
             print(f"{get_real_time()}> {chat}")
-        if not val.now_chat:
-            val.set('now_chat', [chat])
+
+        # Lựa chọn xem có rep chat bị bơ hay không
+        if user_name in val.ignore_name:
+            if random.random() < val.ignore_rep:
+                ign_chat = val.ignore_chat
+                ign_chat.append(chat)
+                val.set('ignore_chat', ign_chat)
+            else:
+                new_chat = val.now_chat
+                new_chat.append(chat)
+                val.set('now_chat', new_chat)
         else:
             new_chat = val.now_chat
             new_chat.append(chat)

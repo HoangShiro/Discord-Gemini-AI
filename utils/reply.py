@@ -83,17 +83,21 @@ async def reply_id(channel=None, rep=False):
     if not normal_user:
         if random.random() < val.ignore_rep: return    # 70% sẽ không trả lời user trong ignore list
 
+    # Đọc chat mới cùng chat đã bị bơ
+    now_chat = val.now_chat
+    ignore_chat = val.ignore_chat
+    rep_chat = ignore_chat + now_chat
+    text = list_to_str(rep_chat)
+    if not text: return
+    
     # Nếu channel tồn tại thì chat
     if channel:
         if rep:
             async with channel.channel.typing():
-                text = list_to_str(val.now_chat)
                 reply = await gemini_rep(text)
                 if reply: await send_mess(channel, reply, rep)
         else:
             async with channel.typing():
-                text = list_to_str(val.now_chat)
-                if not text: return
                 reply = await gemini_rep(text)
                 if reply: await send_mess(channel, reply, rep)
 
