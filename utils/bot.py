@@ -162,9 +162,9 @@ async def on_ready():
     val.load_val_char('saves/char.json', val.ai_char, val.now_period)
 
     await status_busy_set()
-    
+
     print("\n")
-    print(f'{val.ai_name} đã sẵn sàng!')
+    print(f'{get_real_time()}> {val.ai_name} đã sẵn sàng!')
     print("\n")
 
 @bot.event
