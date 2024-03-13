@@ -86,10 +86,10 @@ async def reply_id(channel=None, rep=False):
     # Đọc chat mới cùng chat đã bị bơ
     now_chat = val.now_chat
     ignore_chat = val.ignore_chat
-    rep_chat = ignore_chat + now_chat
+    rep_chat = now_chat + ignore_chat
     text = list_to_str(rep_chat)
     if not text: return
-    
+
     # Nếu channel tồn tại thì chat
     if channel:
         if rep:
