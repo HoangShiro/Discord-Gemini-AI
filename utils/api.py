@@ -22,7 +22,7 @@ except Exception as e:
 
 genai.configure(api_key=gai_key)
 
-model = genai.GenerativeModel('gemini-pro', safety_settings=safety, generation_config=genai.types.GenerationConfig(top_p=0.5, top_k=20, temperature=0.7))
+model = genai.GenerativeModel('gemini-pro', safety_settings=safety, generation_config=genai.types.GenerationConfig(top_p=1, top_k=10, temperature=1))
 igmodel = genai.GenerativeModel('gemini-pro-vision', safety_settings=safety)
 
 prompt = load_prompt("saves/chat.txt")
