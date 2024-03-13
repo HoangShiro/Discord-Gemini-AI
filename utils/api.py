@@ -27,7 +27,9 @@ igmodel = genai.GenerativeModel('gemini-pro-vision', safety_settings=safety)
 
 prompt = load_prompt("saves/chat.txt")
 
-chat = model.start_chat(history=prompt)
+chat = model.start_chat(
+    history=prompt,
+    generation_config=genai.types.GenerationConfig(top_p=0.5, top_k=20, temperature=0.7))
 
 alt_trans = False
 
