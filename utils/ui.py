@@ -163,13 +163,13 @@ async def bot_status():
     ai_stt = bot.status
     ai_stt = str(ai_stt)
     if ai_stt == "online":
-        ai_stt = "online     🟢"
+        ai_stt = "🟢"
     elif ai_stt == "offline":
-        ai_stt = "offline    ⚫"
+        ai_stt = "⚫"
     elif ai_stt == "dnd":
-        ai_stt = "dnd    🔴"
+        ai_stt = "🔴"
     elif ai_stt == "idle":
-        ai_stt = "idle   🌙"
+        ai_stt = "🌙"
 
     view = View(timeout=None)
     embed=discord.Embed(title=f"{bot.user.display_name} ➖ {ai_stt}", description=f"> {des}", color=0xffbf75)
