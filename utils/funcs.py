@@ -323,6 +323,21 @@ async def get_msg_img_url(message: discord.Message):
                 attachment = ref_msg.attachments[0]
                 if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png')): val.set('last_img', attachment.url)
 
+# Xoá tag name mở đầu
+def name_cut(reply):
+    check = reply.split(" ")
+    cut = None
+    for i, word in enumerate(check):
+        if i > 2: break
+        if ":" in word:
+            cut = i
+            break
+    if cut is not None: reply = check[cut + 1:]
+    else: reply = check
+    text = " ".join(reply)
+
+    return text
+
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
   print(p)

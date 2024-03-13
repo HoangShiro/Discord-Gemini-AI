@@ -62,6 +62,7 @@ class AllStatus:
         self.ignore_name = []               # Danh sách tên mà bot sẽ hạn chế reply
         self.ignore_rep = 0.8               # Tỷ lệ reply user mà bot ignore
         self.bot_rep = True                 # Cho phép reply chat của bot khác
+        self.name_filter = True             # Lọc tên
         
         # Status total
         self.total_rep = 0                  # Tổng chat đã trả lời

@@ -3,7 +3,7 @@
 import re, json
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
-from utils.funcs import load_prompt, txt_read
+from utils.funcs import load_prompt, txt_read, name_cut
 
 safety ={
         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.	BLOCK_NONE,
@@ -72,7 +72,9 @@ async def gemini_rep(mess):
             print(chat.history)
             print("\n")
 
-        return response.text
+        reply = response.text
+        if val.name_filter: reply = name_cut(reply)                 # Xoá tag name mở đầu nếu có
+        return reply
     except Exception as e:
         print(f"{get_real_time()}> Lỗi GEMINI API: ", e)
         old_chat = val.old_chat                                     # Khôi phục lại chat của user từ chat cũ nếu API lỗi
