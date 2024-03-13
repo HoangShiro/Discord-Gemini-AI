@@ -235,9 +235,14 @@ async def on_message(message: discord.Message):
         if len(val.now_chat) >= 10:
             val.now_chat.pop(0)
 
-    # Đợi đến lượt trả lời nếu người khác vẫn đang nhắn
+    # Đợi đến lượt trả lời nếu người khác vẫn đang nhắn hoặc ưu tiên trả lời nếu có xuất hiện tên bot
     if val.CD_idle < val.to_worktime:
-        if val.public: val.set('CD', val.chat_speed)
+        bot_name = val.ai_name.split(" ")
+        if bot_name and val.public:
+            for name in bot_name:
+                if name.lower() in chat.lower():
+                    val.set('CD', 3)
+    elif val.public: val.set('CD', val.chat_speed)
 
     # Trả lời tin nhắn ngay nếu nhắc tới bot
     if bot.user in message.mentions:
