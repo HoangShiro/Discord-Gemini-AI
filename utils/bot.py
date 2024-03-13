@@ -305,6 +305,7 @@ async def newchat(interaction: discord.Interaction):
     val.set('CD_idle', 1)
     val.set('now_chat', [])
     val.set('old_chat', [])
+    val.set('ignore_chat', [])
     embed, view = await bot_notice(tt="Đang tạo cuộc trò chuyện mới 💫",
                                    des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...",
                                    au_name=interaction.user.display_name,
