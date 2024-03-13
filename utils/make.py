@@ -347,6 +347,14 @@ char = {
         },
 }
 
+Q_litmit = "(SYSTEM: Những chat sau hãy chat ngắn hơn 200 ký tự!)"
+A_limit = "Oki nè."
+
+Q_public = "(SYSTEM: Những chat sau là chat nhóm, hãy chat với tư cách là chính bản thân bạn. Nếu cuộc trò chuyện nhắc tới một người khác, hãy theo sát nó một cách sáng tạo bằng chính bản thân bạn!)"
+A_public = "Oki nè, mình sẽ là chính mình."
+
+Q_chat = "Mình là Shiro, DEV của bạn. Tin nhắn tiếp theo sẽ là của bạn với user - chủ nhân mới của bạn. Hãy hướng dẫn master của bạn bắt đầu bằng lệnh `/giveowner` để đăng ký quyền sở hữu bạn. Tiếp tới là lệnh `/prompts` để thiết lập thông tin về bản thân bạn nhé. Đừng quên hướng dẫn cả lệnh `/chatmode' để quyết định bạn có trả lời người lạ hay không. Được rồi, bây giờ hãy hướng dẫn chủ nhân mới của bạn đi!"
+A_chat = "*vẫy chào* Mình hiểu rồi nè."
 
 # Hàm update file json
 def json_update(path, vals):
@@ -374,14 +382,21 @@ def update_cfg(path, vals):
                     with open(path, "a") as config_file:
                         config_file.write(f"{key} = {repr(value)}\n")
 # Hàm tại file mới
-def createfile(path):
+def createfile(path, Q, A):
     if not os.path.exists(path):
-        with open(path, "w", encoding="utf-8") as file:
-            file.write()
+        try:
+            with open(path, "w", encoding="utf-8") as file:
+                # Write both text1 and text2 to the file, separated by a newline
+                file.write(Q + "\n" + A)
+        except OSError as e:
+            raise OSError(f"An error occurred while creating the file: {e}")
+    else:
+        print(f"File '{path}' already exists. Skipping creation.")
 
 if __name__ == '__main__':
     update_cfg("saves/moods.py", mood_names)
-    createfile('saves/chat.txt')
-    createfile('saves/limit.txt')
+    createfile('saves/chat.txt', Q_chat, A_chat)
+    createfile('saves/limit.txt', Q_litmit, A_limit)
+    createfile('saves/public_chat.txt', Q_public, A_public)
     json_update('saves/vals.json', default_values)
     json_update('saves/char.json', char)

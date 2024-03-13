@@ -23,8 +23,9 @@ if __name__ == '__main__':
     update_bot()
 
     update_cfg("saves/moods.py", mood_names)
-    createfile('saves/chat.txt')
-    createfile('saves/limit.txt')
+    createfile('saves/chat.txt', Q_chat, A_chat)
+    createfile('saves/limit.txt', Q_litmit, A_limit)
+    createfile('saves/public_chat.txt', Q_public, A_public)
     json_update('saves/vals.json', default_values)
     json_update('saves/char.json', char)
 

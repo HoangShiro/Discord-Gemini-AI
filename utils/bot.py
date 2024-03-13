@@ -300,6 +300,9 @@ async def newchat(interaction: discord.Interaction):
     val.set('now_chat', [])
     val.set('old_chat', [])
     val.set('ignore_chat', [])
+    if val.public:
+        public_remind = load_prompt("saves/chat.txt")
+        chat.history.extend(public_remind)
     embed, view = await bot_notice(tt="Đang tạo cuộc trò chuyện mới 💫",
                                    des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...",
                                    au_name=interaction.user.display_name,
