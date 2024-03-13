@@ -76,18 +76,33 @@ async def reply_id(channel=None, rep=False):
     # Tạo channel DM nếu là bot private
     if not channel: channel = await get_channel()
     
-    name = [message.split(":")[0] for message in val.now_chat]      # Check xem user có đang bị bot bơ hay không
+    """name = [message.split(":")[0] for message in val.now_chat]      # Check xem user có đang bị bot bơ hay không
     ign_list = set(val.ignore_name)
     name_list = set(name)
     normal_user = name_list - ign_list
     if not normal_user:
-        if random.random() < val.ignore_rep: return    # 70% sẽ không trả lời user trong ignore list
+        if random.random() < val.ignore_rep: return    # 70% sẽ không trả lời user trong ignore list"""
 
     # Đọc chat mới cùng chat đã bị bơ
+    name = [message.split(":")[0] for message in val.now_chat]
+
+    if name:
+        last_name = name[-1]
+        if last_name in val.ignore_name:
+            if random.random() < val.ignore_rep:
+                ign_chat = val.now_chat
+                val.set('ignore_chat', ign_chat)
+                val.set('now_chat', [])
+                val.set('CD', val.chat_speed)
+                return
+            
+
     now_chat = val.now_chat
-    ignore_chat = val.ignore_chat
-    rep_chat = now_chat + ignore_chat
-    text = list_to_str(rep_chat)
+    ign_chat = val.ignore_chat
+    val.set('ignore_chat', [])
+    rep_chat = ign_chat + now_chat
+    val.set('now_chat', rep_chat)
+    text = list_to_str(val.now_chat)
     if not text: return
 
     # Nếu channel tồn tại thì chat

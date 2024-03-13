@@ -227,20 +227,9 @@ async def on_message(message: discord.Message):
         if val.chat_csl:
             print(f"{get_real_time()}> {chat}")
 
-        # Lựa chọn xem có rep chat bị bơ hay không
-        if user_name in val.ignore_name:
-            if random.random() < val.ignore_rep:
-                ign_chat = val.ignore_chat
-                ign_chat.append(chat)
-                val.set('ignore_chat', ign_chat)
-            else:
-                new_chat = val.now_chat
-                new_chat.append(chat)
-                val.set('now_chat', new_chat)
-        else:
-            new_chat = val.now_chat
-            new_chat.append(chat)
-            val.set('now_chat', new_chat)
+        new_chat = val.now_chat
+        new_chat.append(chat)
+        val.set('now_chat', new_chat)
             
     if val.now_chat:
         if len(val.now_chat) >= 10:
