@@ -81,7 +81,7 @@ class AllStatus:
         self.one_cmd = 0                    # Số lệnh đã nhận
 
         # Lời nhắc cho bot
-        self.dm_chat_next = "(SYSTEM): *hãy tiếp tục trò chuyện một cách sáng tạo*" # Tiếp tục chat trong DM channel
+        self.dm_chat_next = "*Tiếp tục: *" # Tiếp tục chat trong DM channel
         self.vc_invite = "(SYSTEM): Không tìm thấy người đó trong voice channel nào, hãy hỏi lại." # Voice
         self.set_avatar = "(SYSTEM): lỗi khi đổi avatar cho bạn - " # Khi đổi avatar bị lỗi
 
@@ -389,6 +389,7 @@ async def prompts(interaction: discord.Interaction, view: discord.Option(
         choices=[
             discord.OptionChoice(name="Character", value="chat"),
             discord.OptionChoice(name="Limit", value="limit"),
+            discord.OptionChoice(name="Public", value="public"),
         ],
     ) = "char", fix: bool = False, char_check: bool = False):
     if val.owner_uid != interaction.user.id:
@@ -404,6 +405,10 @@ async def prompts(interaction: discord.Interaction, view: discord.Option(
         if fix:
             val.set('prompt_fix', "limit")
         prompt = txt_read('saves/limit.txt')
+    elif view == "public":
+        if fix:
+            val.set('prompt_fix', "public")
+        prompt = txt_read('saves/public_chat.txt')
     if fix:
         await interaction.response.send_message("> Hãy gửi prompt mới vào chat.", ephemeral=True)
         await send_mess(interaction, prompt, inter=True)

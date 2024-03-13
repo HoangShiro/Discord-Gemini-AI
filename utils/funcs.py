@@ -92,7 +92,7 @@ def list_to_str(list):
         else:
             # Kiểm tra tên của phần tử hiện tại và phần tử trước đó
             if list[i].split(":")[0] == list[i-1].split(":")[0]:
-                # Gộp nội dung của hai phần tử
+                # Gộp nội dung của hai phần tử nếu nằm cạnh nhau
                 new_list[-1] += ". " + list[i].split(":")[1]
             else:
                 new_list.append(list[i])
