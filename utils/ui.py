@@ -35,7 +35,10 @@ async def rmv_bt_atv(interaction):
 
     await interaction.message.delete()
     chat.rewind()
-    if val.last_mess_id == val.old_mess_id: return
+    if val.last_mess_id == val.old_mess_id:
+        val.set('last_mess_id', None)
+        val.set('old_mess_id', None)
+        return
     val.set('last_mess_id', val.old_mess_id)
     await edit_last_msg(view=await DM_button())
 
@@ -87,7 +90,9 @@ async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
     from utils.daily import get_real_time
 
     # Lấy tin nhắn cũ nhất
-    if not message_id: message_id = val.last_mess_id
+    if not message_id:
+        if val.last_mess_id: message_id = val.last_mess_id
+        else: return
 
     # Nếu DM channel
     if not val.public:
