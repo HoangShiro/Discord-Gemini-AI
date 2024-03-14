@@ -9,11 +9,21 @@ from langdetect import detect
 def text_to_prompt(Q, A):
     prompt = []
 
-    prompt.append({'role':'user',
-                 'parts':[Q]})
+    prompt.append({
+      "parts": [
+        {
+          "text": Q
+        }
+      ],
+      "role": "user"})
     
-    prompt.append({'role':'model',
-                 'parts':[A]})
+    prompt.append({
+      "parts": [
+        {
+          "text": A
+        }
+      ],
+      "role": "model"})
 
     return prompt
 
