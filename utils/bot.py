@@ -496,7 +496,8 @@ async def last_msg_edit(interaction: discord.Interaction, text: str):
     if not val.last_mess_id: return await interaction.response.send_message("> Chưa có chat nào để edit.", ephemeral=True)
     if val.public: return await interaction.response.send_message("> Hiện tại chỉ có thể edit chat ở DM channel.", ephemeral=True)
 
-    u_text = val.old_chat
+    u_text = list_to_str(val.old_chat)
+    if not u_text: return await interaction.response.send_message("> Không thể lấy chat gần nhất của bạn.", ephemeral=True)
     prompt = text_to_prompt(u_text, text)
     chat.rewind()
     chat.history.extend(prompt)
