@@ -427,28 +427,19 @@ async def cslog(interaction: discord.Interaction, get: discord.Option(
         description="Chọn giá trị muốn kiểm tra:",
         choices=[
             discord.OptionChoice(name="now_chat"),
+            discord.OptionChoice(name="old_chat"),
+            discord.OptionChoice(name="ignore_chat"),
+            discord.OptionChoice(name="ignore_name"),
             discord.OptionChoice(name="owner_uid"),
-            discord.OptionChoice(name="old_owner_uid"),
-            discord.OptionChoice(name="ai_name"),
-            discord.OptionChoice(name="ai_char"),
-            discord.OptionChoice(name="ai_channel"),
-            discord.OptionChoice(name="total_rep"),
-            discord.OptionChoice(name="total_mess"),
             discord.OptionChoice(name="CD"),
             discord.OptionChoice(name="CD_idle"),
-            discord.OptionChoice(name="chat_csl"),
-            discord.OptionChoice(name="cmd_csl"),
-            discord.OptionChoice(name="bug_csl"),
-            discord.OptionChoice(name="prompt_fix"),
             discord.OptionChoice(name="normal_act"),
             discord.OptionChoice(name="breakday_act"),
             discord.OptionChoice(name="weekend"),
             discord.OptionChoice(name="to_breaktime"),
             discord.OptionChoice(name="to_worktime"),
-            discord.OptionChoice(name="chat_speed"),
-            discord.OptionChoice(name="friendliness"),
             discord.OptionChoice(name="now_period"),
-            discord.OptionChoice(name="last_uname"),
+            discord.OptionChoice(name="dm_chat_next"),
             discord.OptionChoice(name="None"),
         ],
     ) = "None", log: discord.Option(
@@ -483,6 +474,16 @@ async def cslog(interaction: discord.Interaction, get: discord.Option(
         await interaction.response.send_message(f"{n} Chat log: {val.chat_csl}, Command log: {val.cmd_csl}, Status log: {val.bug_csl}.", ephemeral=True)
     else:
         await interaction.response.send_message(f"`Chỉ {val.ai_name} mới có thể xem nhật ký của cô ấy.`", ephemeral=True)
+
+# Thêm lời nhắc nhanh
+@bot.slash_command(name="systemnote", description=f"Thêm note cho {val.ai_name}")
+async def chat_mode(interaction: discord.Interaction, note: str):
+    if val.owner_uid == 0: return await interaction.response.send_message(f"`Bạn cần sở hữu {val.ai_name} trước.`", ephemeral=True)
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+
+    now_chat = val.now_chat
+    now_chat.append(note)
+    await interaction.response.send_message(f"> Đã thêm lời nhắc: {note}", ephemeral=True)
 
 def bot_run():
     try:
