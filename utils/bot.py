@@ -286,6 +286,8 @@ async def update(interaction: discord.Interaction):
             return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
     mess = await interaction.response.send_message(f"`Đang cập nhật...`", ephemeral=True)
+    val.set('last_mess_id', None)
+    val.set('old_mess_id', None)
     asyncio.sleep(1)
     await mess.delete_original_response()
     await bot.close()
@@ -490,7 +492,7 @@ async def systemnote(interaction: discord.Interaction, note: str):
 @bot.slash_command(name="editmsg", description=f"Sửa chat gần nhất của {val.ai_name}")
 async def last_msg_edit(interaction: discord.Interaction, text: str):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
-    if not chat.last or not val.last_mess_id: return await interaction.response.send_message("> Chưa có chat nào để edit.", ephemeral=True)
+    if not val.last_mess_id: return await interaction.response.send_message("> Chưa có chat nào để edit.", ephemeral=True)
 
     last = chat.history[-2:]
     u_text = last[0]["parts"][0]["text"]
