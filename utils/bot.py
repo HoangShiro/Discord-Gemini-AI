@@ -288,6 +288,7 @@ async def update(interaction: discord.Interaction):
     mess = await interaction.response.send_message(f"`Đang cập nhật...`", ephemeral=True)
     val.set('last_mess_id', None)
     val.set('old_mess_id', None)
+    await edit_last_msg()
     asyncio.sleep(1)
     await mess.delete_original_response()
     await bot.close()
