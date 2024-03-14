@@ -56,6 +56,7 @@ async def rc_atv(interaction):
     try:
         new_chat = val.old_chat
         val.set('now_chat', new_chat)
+        val.set('CD', 3)
         text = list_to_str(val.old_chat)
         rep = await gemini_rep(text)
         await interaction.message.edit(content=rep)
