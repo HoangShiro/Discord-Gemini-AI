@@ -498,7 +498,8 @@ async def last_msg_edit(interaction: discord.Interaction, text: str):
 
     u_text = val.old_chat
     prompt = text_to_prompt(u_text, text)
-    chat.history.extend(prompt)
+    chat.rewind()
+    chat.history = chat.history + prompt
     await edit_last_msg(msg=text)
 
     mess = await interaction.response.send_message(f"> Đã sửa chat.", ephemeral=True)
