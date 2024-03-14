@@ -7,21 +7,22 @@ from langdetect import detect
 
 # Add text to prompt
 def text_to_prompt(Q, A):
-
-    prompt = [
-    {
-        "parts": [
-            {"text": Q}
-        ],
-        "role": "user"
-    },
-    {
-        "parts": [
-            {"text": A}
-        ],
-        "role": "model"
-    },
-    ]
+    prompt = []
+    
+    prompt.append({
+      "parts": [
+        {
+          "text": Q
+        }
+      ],
+      "role": "user",
+      "parts": [
+        {
+          "text": A
+        }
+      ],
+      "role": "model",
+    })
 
     return prompt
 
