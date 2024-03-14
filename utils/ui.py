@@ -59,6 +59,7 @@ async def rc_atv(interaction):
         val.set('CD', 3)
         text = list_to_str(val.old_chat)
         rep = await gemini_rep(text)
+        if not rep: return
         await interaction.message.edit(content=rep)
     except Exception as e:
         chat.history.extend(last)
