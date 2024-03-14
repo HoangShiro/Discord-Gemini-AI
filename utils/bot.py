@@ -493,9 +493,9 @@ async def systemnote(interaction: discord.Interaction, note: str):
 async def last_msg_edit(interaction: discord.Interaction, text: str):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     if not val.last_mess_id: return await interaction.response.send_message("> Chưa có chat nào để edit.", ephemeral=True)
+    if val.public: return await interaction.response.send_message("> Hiện tại chỉ có thể edit chat ở DM channel.", ephemeral=True)
 
-    last = chat.history[-2:]
-    u_text = last[0]["parts"][0]["text"]
+    u_text = val.old_chat
     prompt = text_to_prompt(u_text, text)
     chat.history.extend(prompt)
     await edit_last_msg(msg=text)
