@@ -306,6 +306,8 @@ async def newchat(interaction: discord.Interaction):
     val.set('now_chat', [])
     val.set('old_chat', [])
     val.set('ignore_chat', [])
+    val.set('last_mess_id', None)
+    val.set('old_mess_id', None)
     if val.public:
         public_remind = load_prompt("saves/chat.txt")
         chat.history.extend(public_remind)
@@ -476,14 +478,28 @@ async def cslog(interaction: discord.Interaction, get: discord.Option(
         await interaction.response.send_message(f"`Chỉ {val.ai_name} mới có thể xem nhật ký của cô ấy.`", ephemeral=True)
 
 # Thêm lời nhắc nhanh
-@bot.slash_command(name="systemnote", description=f"Thêm note cho {val.ai_name}")
-async def chat_mode(interaction: discord.Interaction, note: str):
-    if val.owner_uid == 0: return await interaction.response.send_message(f"`Bạn cần sở hữu {val.ai_name} trước.`", ephemeral=True)
+@bot.slash_command(name="sysnote", description=f"Thêm note cho {val.ai_name}")
+async def systemnote(interaction: discord.Interaction, note: str):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
     now_chat = val.now_chat
     now_chat.append(note)
     await interaction.response.send_message(f"> Đã thêm lời nhắc: {note}", ephemeral=True)
+
+# Sửa câu trả lời gần nhất của bot
+@bot.slash_command(name="editmsg", description=f"Sửa chat gần nhất của {val.ai_name}")
+async def last_msg_edit(interaction: discord.Interaction, text: str):
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    if not chat.last or not val.last_mess_id: return await interaction.response.send_message("> Chưa có chat nào để edit.", ephemeral=True)
+
+    last = chat.history[-2:]
+    u_text = last[0]["parts"][0]["text"]
+    prompt = text_to_prompt(u_text, text)
+    chat.history.extend(prompt)
+    await edit_last_msg(msg=text)
+
+    mess = await interaction.response.send_message(f"> Đã sửa chat.", ephemeral=True)
+    await mess.delete_original_response()
 
 def bot_run():
     try:
