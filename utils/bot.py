@@ -163,7 +163,7 @@ async def on_ready():
 
     await status_busy_set()
 
-    if not val.public: await edit_last_msg("""view=await DM_button()""")
+    if not val.public: await edit_last_msg()
 
     print("\n")
     print(f'{get_real_time()}> {val.ai_name} đã sẵn sàng!')
