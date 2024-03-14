@@ -57,12 +57,20 @@ async def rc_atv(interaction):
     last = chat.history[-2:]
     chat.rewind()
     try:
-        new_chat = val.old_chat
-        val.set('now_chat', new_chat)
-        val.set('CD', 3)
+        async def _chat():
+            new_chat = val.old_chat
+            val.set('now_chat', new_chat)
+            val.set('CD', 3)
+
         text = list_to_str(val.old_chat)
+        await _chat()
         rep = await gemini_rep(text)
-        if not rep: return
+        if not rep:
+            await _chat()
+            rep = await gemini_rep(text)
+            if not rep:
+                chat.history.extend(last)
+                return
         await interaction.message.edit(content=rep)
     except Exception as e:
         chat.history.extend(last)
