@@ -500,6 +500,7 @@ async def last_msg_edit(interaction: discord.Interaction, text: str):
     prompt = text_to_prompt(u_text, text)
     chat.rewind()
     chat.history.extend(prompt)
+    print(chat.history)
     await edit_last_msg(msg=text, view=await DM_button())
 
     mess = await interaction.response.send_message(f"> Đã sửa chat.", ephemeral=True)
