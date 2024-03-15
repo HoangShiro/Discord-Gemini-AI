@@ -316,6 +316,7 @@ async def newchat(interaction: discord.Interaction):
     if val.public:
         public_remind = load_prompt("saves/chat.txt")
         chat.history.extend(public_remind)
+        print(chat.history)
     embed, view = await bot_notice(tt="Đang tạo cuộc trò chuyện mới 💫",
                                    des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...",
                                    au_name=interaction.user.display_name,
