@@ -401,14 +401,14 @@ def if_chat_loop(reply: str):
 async def load_plugin():
     from utils.daily import get_real_time
 
-    dr = '/plugins'
+    dr = '\plugins'
     for filename in os.listdir(dr):
       try:
         # Lấy tên file không bao gồm phần mở rộng
         module_name = os.path.splitext(filename)[0]
 
         # Load file py
-        module = importlib.import_module(f"{dr}/{module_name}")
+        module = importlib.import_module(f"{dr}\{module_name}")
 
         # Truy cập các hàm và biến trong file py
         print(f"Module {module_name}:")
