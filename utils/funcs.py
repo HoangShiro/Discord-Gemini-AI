@@ -410,10 +410,6 @@ async def load_plugin():
         # Load file py
         module = importlib.import_module(f"{dr}.{module_name}")
 
-        # Truy cập các hàm và biến trong file py
-        print(f"Module {module_name}:")
-        print(f"    - Hàm: {module.my_function()}")
-        print(f"    - Biến: {module.my_variable}")
       except Exception as e:
         print(f"{get_real_time()}> lỗi load plugin: ", e)
        
