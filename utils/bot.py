@@ -1,4 +1,4 @@
-import discord, PIL.Image, asyncio, json, re, random
+import discord, PIL.Image, asyncio, json, re, random, importlib
 
 from io import BytesIO
 from discord.ext import commands, tasks
@@ -169,7 +169,19 @@ async def on_ready():
 
     if not val.public: await edit_last_msg()
 
-    await load_plugin()
+    #await load_plugin()
+
+    dr = 'plugins'
+    for filename in os.listdir(dr):
+      try:
+        # Lấy tên file không bao gồm phần mở rộng
+        module_name = os.path.splitext(filename)[0]
+
+        # Load file py
+        module = importlib.import_module(f"{dr}.{module_name}")
+
+      except Exception as e:
+        print(f"{get_real_time()}> lỗi load plugin: ", e)
 
     print("\n")
     print(f'{get_real_time()}> {val.ai_name} đã sẵn sàng!')
