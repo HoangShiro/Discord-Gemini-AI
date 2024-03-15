@@ -1,5 +1,5 @@
 """Các hàm chức năng"""
-import json, os, time, datetime, pytz, asyncio, jaconv, re, random, discord
+import json, os, time, datetime, pytz, asyncio, jaconv, re, random, discord, importlib
 
 from translate import Translator
 from mtranslate import translate
@@ -396,7 +396,27 @@ def if_chat_loop(reply: str):
         chat.history.extend(prompt)
         return reply
     else: return reply
-        
+
+# Load các plugin
+async def load_plugin():
+    from utils.daily import get_real_time
+
+    dr = '/plugins'
+    for filename in os.listdir(dr):
+      try:
+        # Lấy tên file không bao gồm phần mở rộng
+        module_name = os.path.splitext(filename)[0]
+
+        # Load file py
+        module = importlib.import_module(f"{dr}.{module_name}")
+
+        # Truy cập các hàm và biến trong file py
+        print(f"Module {module_name}:")
+        print(f"    - Hàm: {module.my_function()}")
+        print(f"    - Biến: {module.my_variable}")
+      except Exception as e:
+        print(f"{get_real_time()}> lỗi load plugin: ", e)
+       
 
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
