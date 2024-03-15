@@ -32,6 +32,8 @@ class AllStatus:
         self.now_chat = []                  # Các chat hiện tại mà bot chưa rep
         self.old_chat = []                  # Các chat mà bot đã rep gần nhất
         self.ignore_chat = []               # Các chat mà bot sẽ bơ
+        self.now_chat_ai = ""               # Chat mới của bot
+        self.old_chat_ai = ""               # chat cũ của bot
         self.stop_chat = 0                  # Dừng chat nếu phát hiện lỗi API
         self.CD = 300                       # Thời gian đếm ngược trước khi check tin nhắn
         self.CD_idle = 0                    # Thời gian đếm tiến trước khi work trở lại
@@ -501,7 +503,6 @@ async def last_msg_edit(interaction: discord.Interaction, text: str):
     prompt = text_to_prompt(u_text, text)
     chat.rewind()
     chat.history.extend(prompt)
-    print(chat.history)
     await edit_last_msg(msg=text, view=await DM_button())
 
     mess = await interaction.response.send_message(f"> Đã sửa chat.", ephemeral=True)

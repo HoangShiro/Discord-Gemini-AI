@@ -346,19 +346,47 @@ async def get_msg_img_url(message: discord.Message):
                 if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png')): val.set('last_img', attachment.url)
 
 # Xoá tag name mở đầu
-def name_cut(reply):
-    check = reply.split(" ")
-    cut = None
-    for i, word in enumerate(check):
-        if i > 2: break
-        if ":" in word:
-            cut = i
-            break
-    if cut is not None: reply = check[cut + 1:]
-    else: reply = check
-    text = " ".join(reply)
+def name_cut(reply: str):
+  from utils.bot import val
+  
+  check = reply.split(" ")
+  name = []
+  cut = None
 
-    return text
+  for i, word in enumerate(check):
+    name.append(word)
+    if i > 2: break
+    if ":" in word:
+      cut = i
+      break
+  
+  if cut is not None:
+    for has in " ".join(name)[:-1].lower().split(" "):
+      if has in val.ai_name.lower().split(" "): return " ".join(check[cut + 1:])
+
+    return None
+  else: return reply
+
+# Kiểm tra tin nhắn liệu có trùng lặp
+def if_chat_loop(reply: str):
+    from utils.bot import val
+    from utils.api import chat
+
+    old_chat = val.old_chat_ai.split(" ")
+    now_chat = reply.split(" ")
+
+    if old_chat[0] == now_chat[0] and old_chat[-1] == now_chat[-1]: return False
+    elif old_chat[0] != now_chat[0] and old_chat[-1] != now_chat[-1]: return reply
+    elif old_chat[0] != now_chat[0] and old_chat[-1] == now_chat[-1]:
+        chat.rewind()
+        now_chat.pop()
+        reply = " ".join(now_chat)
+        u_text = list_to_str(val.old_chat)
+        prompt = text_to_prompt(u_text, reply)
+        chat.history.extend(prompt)
+        return reply
+    else: return reply
+        
 
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
