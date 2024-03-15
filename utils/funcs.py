@@ -401,7 +401,7 @@ def if_chat_loop(reply: str):
 async def load_plugin():
     from utils.daily import get_real_time
 
-    dr = '\plugins'
+    dr = 'plugins'
     for filename in os.listdir(dr):
       try:
         # Lấy tên file không bao gồm phần mở rộng
