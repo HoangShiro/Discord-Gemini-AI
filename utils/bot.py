@@ -535,7 +535,7 @@ async def save_(interaction: discord.Interaction):
     his = chat.history.copy()
 
     await interaction.response.send_message("> OK!", ephemeral=True)
-    await send_mess(interaction, his, inter=True)
+    print(his)
 
 def bot_run():
     try:
