@@ -409,7 +409,7 @@ async def load_plugin():
         module_name = os.path.splitext(filename)[0]
 
         # Load file py
-        bot.load_extension(f"{dr}.{module_name}")
+        await bot.load_extension(f"{dr}.{module_name}")
 
       except Exception as e:
         print(f"{get_real_time()}> lỗi load plugin: ", e)
