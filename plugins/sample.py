@@ -11,5 +11,5 @@ async def user_say(interaction: discord.Interaction, text: str):
     await interaction.response.send_message(text)
 
 # Setup
-async def setup(bot):
+def setup(bot):
     bot.add_command(user_say)
