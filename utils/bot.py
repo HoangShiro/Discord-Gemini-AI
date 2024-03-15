@@ -513,6 +513,20 @@ async def last_msg_edit(interaction: discord.Interaction, text: str):
     mess = await interaction.response.send_message(f"> Đã sửa chat.", ephemeral=True)
     await mess.delete_original_response()
 
+# Lọc tag name
+@bot.slash_command(name="tagfilter", description=f"Bật hoặc tắt bộ lọc tag name cho {val.ai_name}")
+async def tag_remove(interaction: discord.Interaction):
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+
+    n = ""
+    if val.name_filter:
+        n = "không lọc tag name."
+        val.set('name_filter', False)
+    else:
+        n = "lọc tag name."
+        val.set('name_filter', True)
+    await interaction.response.send_message(f"> {val.ai_name} sẽ {n}.", ephemeral=True)
+
 def bot_run():
     try:
         bot.run(val.bot_key)
