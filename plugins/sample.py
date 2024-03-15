@@ -12,4 +12,4 @@ async def user_say(interaction: discord.Interaction, text: str):
 
 # Setup
 def setup(bot):
-    bot.add_command(user_say())
+    bot.add_command(user_say(bot))
