@@ -44,6 +44,13 @@ async def gemini_rep(mess):
         all_chat = old_chat + new_chat
         val.set('now_chat', all_chat)
 
+    async def _error():
+        val.update('stop_chat', 1)                                  # Dừng chat nếu lỗi quá 3 lần, thử lại sau khi bot rảnh trở lại
+        if val.stop_chat == 3:
+            val.set('stop_chat', 0)
+            val.set('CD', val.to_breaktime)
+            await status_busy_set()                                 # Set activity là đang bận
+
     try:
         old_chat = val.now_chat                                     # Lưu chat mới vào chat cũ
         val.set('old_chat', old_chat) # Lưu chat cũ
@@ -83,6 +90,7 @@ async def gemini_rep(mess):
             if not reply:
                 await _chat()
                 chat.rewind()
+                await _error()
                 return None                                         # Nếu sai tên, rep lại
                             
         reply = if_chat_loop(reply)
@@ -91,6 +99,7 @@ async def gemini_rep(mess):
             chat.rewind()
             creative = load_prompt("saves/creative.txt")
             chat.history.extend(creative)
+            await _error()
             return None                                             # Nếu chat lặp lại, rep lại
 
         old_chat_ai = val.now_chat_ai
@@ -101,11 +110,7 @@ async def gemini_rep(mess):
         print(f"{get_real_time()}> Lỗi GEMINI API: ", e)
         await _chat()
 
-        val.update('stop_chat', 1)                                  # Dừng chat nếu lỗi quá 3 lần, thử lại sau khi bot rảnh trở lại
-        if val.stop_chat == 3:
-            val.set('stop_chat', 0)
-            val.set('CD', val.to_breaktime)
-            await status_busy_set()                                 # Set activity là đang bận
+        await _error()
         
         return None
 
