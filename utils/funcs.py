@@ -408,7 +408,7 @@ async def load_plugin():
         module_name = os.path.splitext(filename)[0]
 
         # Load file py
-        module = importlib.import_module(f"{dr}\{module_name}")
+        module = importlib.import_module(f"{dr}\{module_name}.py")
 
         # Truy cập các hàm và biến trong file py
         print(f"Module {module_name}:")
