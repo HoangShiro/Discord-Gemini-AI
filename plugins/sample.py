@@ -14,4 +14,5 @@ class cmds(commands.Cog):
 
         await interaction.response.send_message(text)
 
-bot.add_cog(cmds(bot))
+def setup(bot):
+    bot.add_cog(cmds(bot))
