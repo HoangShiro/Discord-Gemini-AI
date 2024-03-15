@@ -10,5 +10,7 @@ async def user_say(interaction: discord.Interaction, text: str):
 
     await interaction.response.send_message(text)
 
-def test():
-    print("baka")
+def _add():
+    bot.add_command(user_say)
+
+_add()

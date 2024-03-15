@@ -519,7 +519,6 @@ async def loadplugin(interaction: discord.Interaction):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
     await load_plugin()
-    test()
     await interaction.response.send_message("> Đã load các plugin.", ephemeral=True)
 
 
