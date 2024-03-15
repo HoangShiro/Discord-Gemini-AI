@@ -356,7 +356,7 @@ def name_cut(reply: str):
 
   for i, word in enumerate(check):
     name.append(word)
-    if i > 2: break
+    if i > 4: break
     if ":" in word:
       cut = i
       break
@@ -368,9 +368,9 @@ def name_cut(reply: str):
       return True
 
   if cut is not None:
-    for has in " ".join(name)[:-1].lower().split(" "):
+    for has in " ".join(name)[:-1].lower().split(" "):  # Nếu tên của bot có xuất hiện
       if has in val.ai_name.lower().split(" "):
-         if _mul(): return " ".join(check[cut + 1:])
+         if _mul(): return " ".join(check[cut + 1:]) # Nếu không có tên của user khác xuất hiện trước dấu ":"
 
     return None
   else:
