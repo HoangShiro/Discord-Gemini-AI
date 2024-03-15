@@ -348,10 +348,11 @@ async def get_msg_img_url(message: discord.Message):
 # Xoá tag name mở đầu
 def name_cut(reply: str):
   from utils.bot import val
-  
+
   check = reply.split(" ")
   name = []
   cut = None
+
 
   for i, word in enumerate(check):
     name.append(word)
@@ -360,12 +361,21 @@ def name_cut(reply: str):
       cut = i
       break
   
+  def _mul():
+      for anon in val.last_uname.lower().split(" "):
+          if anon + ":" in reply.lower(): return False
+      
+      return True
+
   if cut is not None:
     for has in " ".join(name)[:-1].lower().split(" "):
-      if has in val.ai_name.lower().split(" "): return " ".join(check[cut + 1:])
+      if has in val.ai_name.lower().split(" "):
+         if _mul(): return " ".join(check[cut + 1:])
 
     return None
-  else: return reply
+  else:
+     if _mul(): return reply
+     else: return None
 
 # Kiểm tra tin nhắn liệu có trùng lặp
 def if_chat_loop(reply: str):
