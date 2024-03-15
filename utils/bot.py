@@ -527,6 +527,15 @@ async def tag_remove(interaction: discord.Interaction):
         val.set('name_filter', True)
     await interaction.response.send_message(f"> {val.ai_name} sẽ {n}.", ephemeral=True)
 
+# Lọc tag name
+@bot.slash_command(name="save", description=f"Save lịch sử chat cho {val.ai_name}")
+async def save_(interaction: discord.Interaction):
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+
+    his = chat.history.copy()
+
+    await interaction.response.send_message(f"```{his}```", ephemeral=True)
+
 def bot_run():
     try:
         bot.run(val.bot_key)
