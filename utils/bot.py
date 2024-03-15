@@ -152,6 +152,8 @@ bot = commands.Bot(intents=intents, command_prefix="!")
 async def on_ready():
 
     val.set('ai_name', bot.user.name)
+    
+    if val.owner_uid == 0: val.set('owner_uid', bot.owner_id)
 
     await load_btt()
 
@@ -259,9 +261,7 @@ async def on_message(message: discord.Message):
 # set key
 @bot.slash_command(name="setkeys", description=f"Đổi key cho {val.ai_name}.")
 async def keys(interaction: discord.Interaction, gemini: str = None, voicevox: str = None):
-    if val.owner_uid != 0:
-        if interaction.user.id != val.owner_uid:
-                return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
     if gemini:
         val.set('gai_key', gemini)
@@ -333,7 +333,6 @@ async def newchat(interaction: discord.Interaction):
 # Chuyển chế độ chat
 @bot.slash_command(name="chatmode", description=f"Kêu {val.ai_name} chat public/private.")
 async def chat_mode(interaction: discord.Interaction):
-    if val.owner_uid == 0: return await interaction.response.send_message(f"`Bạn cần sở hữu {val.ai_name} trước.`", ephemeral=True)
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
     n = ""
@@ -352,6 +351,7 @@ async def voice(interaction: discord.Interaction, speaker: int = None):
     if not val.public:
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(val.no_perm, ephemeral=True)
+        
     text = ""
     if val.tts_toggle and not speaker:
         val.set('tts_toggle', False)
@@ -370,30 +370,16 @@ async def voice(interaction: discord.Interaction, speaker: int = None):
 
 # Chuyển master
 @bot.slash_command(name="giveowner", description=f"Tặng {val.ai_name} cho người khác.")
-async def give_bot(interaction: discord.Interaction, uid: str = None):
-    if uid:
-        uid = int(uid)
-    if val.owner_uid == 0:
-        new_uid = interaction.user.id
-        if uid:
-            new_uid = uid
-        user = await bot.fetch_user(new_uid)
-        if not user:
-            return await interaction.response.send_message(f"`User không tồn tại.`", ephemeral=True)
-        val.set('owner_uid', new_uid)
-        return await interaction.response.send_message(f"`{user.display_name} vừa làm master của {val.ai_name}.`", ephemeral=True)
-    elif val.owner_uid != interaction.user.id:
-        user = await bot.fetch_user(val.owner_uid)
-        return await interaction.response.send_message(f"`{user.display_name} hiện đang master của {val.ai_name}.`", ephemeral=True)
-    elif val.owner_uid == interaction.user.id and uid and uid != interaction.user.id:
-        user = await bot.fetch_user(uid)
-        if not user:
-            return await interaction.response.send_message(f"`User không tồn tại.`", ephemeral=True)
-        val.set('owner_uid', uid)
-        await interaction.response.send_message(f"`Bạn vừa tặng {val.ai_name} cho {user.display_name}.`", ephemeral=True)
-    else:
-        await interaction.response.send_message(f"`Bạn đã sở hữu {val.ai_name} rồi.`", ephemeral=True)
+async def give_bot(interaction: discord.Interaction, uid: str):
+    if val.owner_uid != interaction.user.id: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
+    uid = int(uid)
+    if uid == val.owner_uid: return await interaction.response.send_message(f"`Bạn đã sở hữu {val.ai_name} rồi.`", ephemeral=True)
+    user = await bot.fetch_user(uid)
+    if not user: return await interaction.response.send_message(f"`User không tồn tại.`", ephemeral=True)
+    val.set('owner_uid', uid)
+    return await interaction.response.send_message(f"`Bạn vừa tặng {val.ai_name} cho {user.display_name}.`", ephemeral=True)
+        
 # Thao tác với prompt
 @bot.slash_command(name="prompts", description=f"Xem/sửa prompt cho {val.ai_name}.")
 async def prompts(interaction: discord.Interaction, view: discord.Option(
@@ -405,10 +391,10 @@ async def prompts(interaction: discord.Interaction, view: discord.Option(
             discord.OptionChoice(name="Creative", value="creative"),
         ],
     ) = "char", fix: bool = False, char_check: bool = False):
-    if val.owner_uid != interaction.user.id:
-        return await interaction.response.send_message(val.no_perm, ephemeral=True)
-    if char_check:
-        return await interaction.response.send_message(f"`Tính cách hiện tại: {val.ai_char}`", ephemeral=True)
+    if val.owner_uid != interaction.user.id: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+
+    if char_check: return await interaction.response.send_message(f"`Tính cách hiện tại: {val.ai_char}`", ephemeral=True)
+    
     prompt = ""
     if view == "chat":
         prompt = txt_read('saves/chat.txt')
@@ -463,29 +449,27 @@ async def cslog(interaction: discord.Interaction, get: discord.Option(
             discord.OptionChoice(name="None"),
         ],
     ) = "None"):
-    if interaction.user.id == val.owner_uid:
-        n = ""
-        if get != "None":
-            v = val.get(get)
-            n = f"Giá trị của {get} là: {v}."
-        if log == "Chat log":
-            if val.chat_csl:
-                val.set('chat_csl', False)
-            else:
-                val.set('chat_csl', True)
-        elif log == "Command log":
-            if val.cmd_csl:
-                val.set('cmd_csl', False)
-            else:
-                val.set('cmd_csl', True)
-        elif log == "Bug log":
-            if val.bug_csl:
-                val.set('bug_csl', False)
-            else:
-                val.set('bug_csl', True)
-        await interaction.response.send_message(f"{n} Chat log: {val.chat_csl}, Command log: {val.cmd_csl}, Status log: {val.bug_csl}.", ephemeral=True)
-    else:
-        await interaction.response.send_message(f"`Chỉ {val.ai_name} mới có thể xem nhật ký của cô ấy.`", ephemeral=True)
+    if val.owner_uid != interaction.user.id: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    n = ""
+    if get != "None":
+        v = val.get(get)
+        n = f"Giá trị của {get} là: {v}."
+    if log == "Chat log":
+        if val.chat_csl:
+            val.set('chat_csl', False)
+        else:
+            val.set('chat_csl', True)
+    elif log == "Command log":
+        if val.cmd_csl:
+            val.set('cmd_csl', False)
+        else:
+            val.set('cmd_csl', True)
+    elif log == "Bug log":
+        if val.bug_csl:
+            val.set('bug_csl', False)
+        else:
+            val.set('bug_csl', True)
+    await interaction.response.send_message(f"{n} Chat log: {val.chat_csl}, Command log: {val.cmd_csl}, Status log: {val.bug_csl}.", ephemeral=True)
 
 # Thêm lời nhắc nhanh
 @bot.slash_command(name="sysnote", description=f"Thêm note cho {val.ai_name}")
