@@ -3,7 +3,6 @@ import discord, PIL.Image, asyncio, json, re, random
 from io import BytesIO
 from discord.ext import commands, tasks
 from discord.ui import View, button
-import google.ai.generativelanguage as glm
 
 from utils.api import chat
 from utils.status import *
@@ -527,16 +526,6 @@ async def tag_remove(interaction: discord.Interaction):
         n = "lọc tag name."
         val.set('name_filter', True)
     await interaction.response.send_message(f"> {val.ai_name} sẽ {n}.", ephemeral=True)
-
-# Lọc tag name
-@bot.slash_command(name="save", description=f"Save lịch sử chat cho {val.ai_name}")
-async def save_(interaction: discord.Interaction):
-    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
-
-    his = glm.Content.to_json(chat.history)
-
-    await interaction.response.send_message("> OK!", ephemeral=True)
-    print(his)
 
 def bot_run():
     try:
