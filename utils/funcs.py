@@ -400,7 +400,8 @@ def if_chat_loop(reply: str):
 # Load các plugin
 async def load_plugin():
     from utils.daily import get_real_time
-    
+    from utils.bot import bot
+
     dr = 'plugins'
     for filename in os.listdir(dr):
       try:
@@ -408,7 +409,7 @@ async def load_plugin():
         module_name = os.path.splitext(filename)[0]
 
         # Load file py
-        module = importlib.import_module(f"{dr}.{module_name}")
+        bot.load_extension(f"{dr}.{module_name}")
 
       except Exception as e:
         print(f"{get_real_time()}> lỗi load plugin: ", e)
