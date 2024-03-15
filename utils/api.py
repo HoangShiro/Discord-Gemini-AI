@@ -95,7 +95,7 @@ async def gemini_rep(mess):
 
         old_chat_ai = val.now_chat_ai
         val.set('old_chat_ai', old_chat_ai)
-        val.set('new_chat_ai', reply)
+        val.set('now_chat_ai', reply)
         return reply
     except Exception as e:
         print(f"{get_real_time()}> Lỗi GEMINI API: ", e)
