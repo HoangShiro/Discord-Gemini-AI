@@ -402,6 +402,7 @@ async def prompts(interaction: discord.Interaction, view: discord.Option(
             discord.OptionChoice(name="Character", value="chat"),
             discord.OptionChoice(name="Limit", value="limit"),
             discord.OptionChoice(name="Public", value="public"),
+            discord.OptionChoice(name="Creative", value="creative"),
         ],
     ) = "char", fix: bool = False, char_check: bool = False):
     if val.owner_uid != interaction.user.id:
@@ -421,6 +422,10 @@ async def prompts(interaction: discord.Interaction, view: discord.Option(
         if fix:
             val.set('prompt_fix', "public")
         prompt = txt_read('saves/public_chat.txt')
+    elif view == "creative":
+        if fix:
+            val.set('prompt_fix', "creative")
+        prompt = load_prompt("saves/creative.txt")
     if fix:
         await interaction.response.send_message("> Hãy gửi prompt mới vào chat.", ephemeral=True)
         await send_mess(interaction, prompt, inter=True)

@@ -3,7 +3,7 @@
 import re, json
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
-from utils.funcs import load_prompt, txt_read, name_cut
+from utils.funcs import load_prompt, txt_read, name_cut, if_chat_loop
 
 safety ={
         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.	BLOCK_NONE,
@@ -38,6 +38,11 @@ async def gemini_rep(mess):
     from utils.status import status_busy_set, status_chat_set
 
     """ GỬI TIN NHẮN TỚI GEMINI API"""
+    async def _chat():
+        old_chat = val.old_chat                                     # Khôi phục lại chat của user từ chat cũ nếu API lỗi
+        new_chat = val.now_chat
+        all_chat = old_chat + new_chat
+        val.set('now_chat', all_chat)
 
     try:
         old_chat = val.now_chat                                     # Lưu chat mới vào chat cũ
@@ -73,14 +78,28 @@ async def gemini_rep(mess):
             print("\n")
 
         reply = response.text
-        if val.name_filter: reply = name_cut(reply)                 # Xoá tag name mở đầu nếu có
+        if val.name_filter:                                         # Check và xoá tag name mở đầu
+            reply = name_cut(reply)
+            if not reply:
+                await _chat()
+                chat.rewind()
+                return None                                         # Nếu sai tên, rep lại
+                            
+        reply = if_chat_loop(reply)
+        if not reply:
+            await _chat()
+            chat.rewind()
+            creative = load_prompt("saves/creative.txt")
+            chat.history.extend(creative)
+            return None                                             # Nếu chat lặp lại, rep lại
+
+        old_chat_ai = val.now_chat_ai
+        val.set('old_chat_ai', old_chat_ai)
+        val.set('new_chat_ai', reply)
         return reply
     except Exception as e:
         print(f"{get_real_time()}> Lỗi GEMINI API: ", e)
-        old_chat = val.old_chat                                     # Khôi phục lại chat của user từ chat cũ nếu API lỗi
-        new_chat = val.now_chat
-        all_chat = old_chat + new_chat
-        val.set('now_chat', all_chat)
+        await _chat()
 
         val.update('stop_chat', 1)                                  # Dừng chat nếu lỗi quá 3 lần, thử lại sau khi bot rảnh trở lại
         if val.stop_chat == 3:
@@ -92,12 +111,17 @@ async def gemini_rep(mess):
 
 # Gemini Vision
 async def igemini_text(img, text=None):
+    from utils.daily import get_real_time
     rep = "Có lỗi khi phân tích ảnh!"
-    if not text:
-        rep = await igmodel.generate_content_async(img)
-    else:
-        rep = await igmodel.generate_content_async([text, img])
-    return rep.text
+    try:
+        if not text:
+            rep = await igmodel.generate_content_async(img)
+        else:
+            rep = await igmodel.generate_content_async([text, img])
+        return rep.text
+    except Exception as e:
+        print(f"{get_real_time()}> Lỗi GEMINI VISION API: ", e)
+        return "'Không dọc được do hình ảnh quá nặng.'"
 
 # Gemini task
 async def gemini_task(mess):

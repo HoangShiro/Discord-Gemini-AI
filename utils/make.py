@@ -356,6 +356,9 @@ A_public = "Oki nè, mình sẽ là chính mình."
 Q_chat = "Mình là Shiro, DEV của bạn. Tin nhắn tiếp theo sẽ là của bạn với user - chủ nhân mới của bạn. Hãy hướng dẫn master của bạn bắt đầu bằng lệnh `/giveowner` để đăng ký quyền sở hữu bạn. Tiếp tới là lệnh `/prompts` để thiết lập thông tin về bản thân bạn nhé. Đừng quên hướng dẫn cả lệnh `/chatmode' để quyết định bạn có trả lời người lạ hay không. Được rồi, bây giờ hãy hướng dẫn chủ nhân mới của bạn đi!"
 A_chat = "*vẫy chào* Mình hiểu rồi nè."
 
+Q_creative = "(SYSTEM: Hãy tiếp tục cuộc trò chuyện bên trên một cách sáng tạo hơn!)"
+A_creative = "Oki nè."
+
 # Hàm update file json
 def json_update(path, vals):
     try:
@@ -396,5 +399,6 @@ if __name__ == '__main__':
     createfile('saves/chat.txt', Q_chat, A_chat)
     createfile('saves/limit.txt', Q_litmit, A_limit)
     createfile('saves/public_chat.txt', Q_public, A_public)
+    createfile('saves/creative.txt', Q_creative, A_creative)
     json_update('saves/vals.json', default_values)
     json_update('saves/char.json', char)
