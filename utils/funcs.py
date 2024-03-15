@@ -400,7 +400,7 @@ def if_chat_loop(reply: str):
 # Load các plugin
 async def load_plugin():
     from utils.daily import get_real_time
-
+    
     dr = 'plugins'
     for filename in os.listdir(dr):
       try:
