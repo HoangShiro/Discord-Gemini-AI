@@ -10,4 +10,5 @@ async def user_say(interaction: discord.Interaction, text: str):
 
     await interaction.response.send_message(text)
 
-print("Đã load thành công sample.py")
+def test():
+    print("baka")
