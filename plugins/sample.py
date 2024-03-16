@@ -1,6 +1,6 @@
 """ Mẫu plugin """
 
-import discord
+import discord, asyncio
 from discord.ext import commands, tasks
 from utils.bot import bot, val, var
 
@@ -21,4 +21,7 @@ async def sec_loop():
         embed, view = await bot_status()
         await msg.channel.send(embed=embed, view=view)
         var.set('message', None)
+
+asyncio.create_task(sec_loop())
+sec_loop.start()
 
