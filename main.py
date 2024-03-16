@@ -1,6 +1,8 @@
 import subprocess
 import asyncio
 from utils.make import *
+from plugins import *
+import utils.bot as bot
 
 def update_bot():
     try:
@@ -14,7 +16,6 @@ def update_bot():
         print(f"Lỗi khi cập nhật bot từ GitHub: {e}")
 
 def start():
-    import utils.bot as bot
     loop = asyncio.get_event_loop()
     loop.create_task(bot.bot_run())
     loop.run_forever()

@@ -2,7 +2,7 @@
 
 import discord
 from discord.ext import commands
-
+from utils.bot import bot, val
 
 # Say
 @bot.slash_command(name="say", description=f"Để {val.ai_name} nói thay bạn.")

@@ -8,7 +8,6 @@ from utils.reply import *
 from utils.funcs import *
 from utils.ui import *
 from utils.daily import sec_check, h_check, get_real_time
-from plugins import *
 
 class AllStatus:
     def __init__(self):
