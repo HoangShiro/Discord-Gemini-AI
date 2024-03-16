@@ -1,8 +1,8 @@
 """ Mẫu plugin """
 
 import discord
-from discord.ext import commands
-from utils.bot import bot, val
+from discord.ext import commands, tasks
+from utils.bot import bot, val, var
 
 # Say
 @bot.slash_command(name="say", description=f"Để {val.ai_name} nói thay bạn.")
@@ -11,8 +11,14 @@ async def user_say(interaction: discord.Interaction, text: str):
 
     await interaction.response.send_message(text)
 
-def test():
-    print("Baka")
+# Secs tasks
+@tasks.loop(seconds=1)
+async def sec_loop():
+    from utils.ui import bot_status
+    msg: discord.Message = var.message
+    
+    if msg.content.startswith("^"):
+        embed, view = await bot_status()
+        await msg.channel.send(embed=embed, view=view)
+        var.set('message', None)
 
-if __name__ == '__main__':
-    test()
