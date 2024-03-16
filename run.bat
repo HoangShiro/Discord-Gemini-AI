@@ -17,4 +17,7 @@ echo ----------------------
 
 REM Kiểm tra trạng thái trả về của lệnh py main.py
 
+GOTO start_ai
+:exit
+echo Bot run error above.
 PAUSE
