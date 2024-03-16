@@ -564,30 +564,6 @@ async def reloadplugin(interaction: discord.Interaction, name: str):
     
     await interaction.response.send_message(no, ephemeral=True)
 
-# Run funcs
-@bot.slash_command(name="run", description=f"Chạy một hàm nào đấy.")
-async def runex(interaction: discord.Interaction, run: str):
-    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
-
-    no = "> Hàm đã được chạy."
-    try:
-        # Lấy hàm từ bot bằng cách sử dụng getattr
-        func = getattr(bot, run)
-    except AttributeError:
-        # Hàm không tồn tại
-        await interaction.response.send_message(f"Hàm `{run}` không tồn tại.", ephemeral=True)
-        return
-
-    # Kiểm tra xem có phải là hàm hay không
-    if not callable(func):
-        await interaction.response.send_message(f"`{run}` không phải là một hàm.", ephemeral=True)
-        return
-
-    # Chạy hàm
-    await func(interaction)
-
-    await interaction.response.send_message(no, ephemeral=True)
-
 def bot_run():
     try:
         bot.run(val.bot_key)
