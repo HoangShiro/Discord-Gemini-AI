@@ -286,7 +286,8 @@ async def on_message(message: discord.Message):
 # set key
 @bot.slash_command(name="setkeys", description=f"Đổi key cho {val.ai_name}.")
 async def keys(interaction: discord.Interaction, gemini: str = None, voicevox: str = None):
-    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    if val.owner_uid:
+        if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
     if gemini:
         val.set('gai_key', gemini)
