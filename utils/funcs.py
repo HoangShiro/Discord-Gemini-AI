@@ -398,9 +398,8 @@ def if_chat_loop(reply: str):
     else: return reply
 
 # Load các plugin
-async def load_plugin():
+async def load_all_plugin():
     from utils.daily import get_real_time
-    from utils.bot import bot
 
     dr = 'plugins'
     for filename in os.listdir(dr):
@@ -413,6 +412,17 @@ async def load_plugin():
 
       except Exception as e:
         print(f"{get_real_time()}> lỗi load plugin: ", e)
+
+async def load_plugin(name):
+    from utils.daily import get_real_time
+
+    dr = 'plugins'
+    try:
+      module = importlib.import_module(f"{dr}.{name}")
+      return module
+    except Exception as e:
+      print(f"{get_real_time()}> lỗi load plugin: ", e)
+      return None
        
 
 if __name__ == '__main__':

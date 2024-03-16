@@ -9,6 +9,8 @@ from utils.funcs import *
 from utils.ui import *
 from utils.daily import sec_check, h_check, get_real_time
 
+from plugins import *
+
 class AllStatus:
     def __init__(self):
         # Keys
@@ -538,10 +540,19 @@ async def tag_remove(interaction: discord.Interaction):
 
 # Load plugin
 @bot.slash_command(name="loadplug", description=f"Load các plugin cho {val.ai_name}")
-async def loadplugin(interaction: discord.Interaction):
+async def loadplugin(interaction: discord.Interaction, name: str = None):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
-    bot.add_cog(sample.MyCog(bot))
+    no = "> Đã load plugin."
+    if name:
+        ok = await load_plugin(name)
+        if not ok: no = "> Có lỗi khi load plugin."
+    else:
+        await load_all_plugin()
+        no = "> Đã thử load các plugin."
+    
+    await interaction.response.send_message(no, ephemeral=True)
+
 
 # Run funcs
 @bot.slash_command(name="run", description=f"Chạy một hàm nào đấy.")
