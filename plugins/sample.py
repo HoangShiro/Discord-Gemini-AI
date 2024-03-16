@@ -13,3 +13,6 @@ async def user_say(interaction: discord.Interaction, text: str):
 
 def test():
     print("Baka")
+
+if __name__ == '__main__':
+    test()
