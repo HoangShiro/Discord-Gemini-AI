@@ -8,6 +8,7 @@ from utils.reply import *
 from utils.funcs import *
 from utils.ui import *
 from utils.daily import sec_check, h_check, get_real_time
+from plugins import *
 
 class AllStatus:
     def __init__(self):
@@ -541,19 +542,7 @@ async def tag_remove(interaction: discord.Interaction):
 async def loadplugin(interaction: discord.Interaction):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
-    #await load_plugin()
-    dr = 'plugins'
-    for filename in os.listdir(dr):
-        try:
-            # Lấy tên file không bao gồm phần mở rộng
-            module_name = os.path.splitext(filename)[0]
-
-            # Load file py
-            module = importlib.import_module(f"{dr}.{module_name}")
-
-        except Exception as e:
-            print(f"{get_real_time()}> lỗi load plugin: ", e)
-    await interaction.response.send_message("> Đã load các plugin.", ephemeral=True)
+    bot.add_cog(sample.MyCog(bot))
 
 # Run funcs
 @bot.slash_command(name="run", description=f"Chạy một hàm nào đấy.")
@@ -562,16 +551,16 @@ async def runex(interaction: discord.Interaction, run: str):
 
     no = "> Hàm đã được chạy."
     try:
-    # Lấy hàm từ biến globals()
-        func = globals().get(run)
-    except KeyError:
+        # Lấy hàm từ bot bằng cách sử dụng getattr
+        func = getattr(bot, run)
+    except AttributeError:
         # Hàm không tồn tại
-        await interaction.response.send_message(f"Hàm `{run}` không tồn tại.")
+        await interaction.response.send_message(f"Hàm `{run}` không tồn tại.", ephemeral=True)
         return
 
     # Kiểm tra xem có phải là hàm hay không
     if not callable(func):
-        await interaction.response.send_message(f"`{run}` không phải là một hàm.")
+        await interaction.response.send_message(f"`{run}` không phải là một hàm.", ephemeral=True)
         return
 
     # Chạy hàm
