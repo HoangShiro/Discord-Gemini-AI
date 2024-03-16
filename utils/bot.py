@@ -318,7 +318,7 @@ async def update(interaction: discord.Interaction):
     await edit_last_msg()
     val.set('last_mess_id', None)
     val.set('old_mess_id', None)
-    asyncio.sleep(1)
+    await asyncio.sleep(1)
     await mess.delete_original_response()
     await bot.close()
 
