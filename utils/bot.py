@@ -167,8 +167,6 @@ async def on_ready():
 
     if not val.public: await edit_last_msg()
 
-    await load_plugin()
-
     print("\n")
     print(f'{get_real_time()}> {val.ai_name} đã sẵn sàng!')
     print("\n")
