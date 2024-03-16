@@ -429,7 +429,7 @@ async def reload_plugin(name):
 
     dr = 'plugins'
     try:
-      module = importlib.reload(f"{name}")
+      module = importlib.reload(name)
       return module
     except Exception as e:
       print(f"{get_real_time()}> lỗi reload plugin: ", e)
