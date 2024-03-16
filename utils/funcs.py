@@ -409,7 +409,7 @@ async def load_all_plugin():
 
         # Load file py
         module = importlib.import_module(f"{dr}.{module_name}")
-
+        
       except Exception as e:
         print(f"{get_real_time()}> lỗi load plugin: ", e)
 
@@ -424,6 +424,32 @@ async def load_plugin(name):
       print(f"{get_real_time()}> lỗi load plugin: ", e)
       return None
        
+# Reload các plugin
+async def reload_all_plugin():
+    from utils.daily import get_real_time
+
+    dr = 'plugins'
+    for filename in os.listdir(dr):
+      try:
+        # Lấy tên file không bao gồm phần mở rộng
+        module_name = os.path.splitext(filename)[0]
+
+        # reload file py
+        module = importlib.reload(f"{dr}.{module_name}")
+        
+      except Exception as e:
+        print(f"{get_real_time()}> lỗi reload plugin: ", e)
+
+async def reload_plugin(name):
+    from utils.daily import get_real_time
+
+    dr = 'plugins'
+    try:
+      module = importlib.reload(f"{dr}.{name}")
+      return module
+    except Exception as e:
+      print(f"{get_real_time()}> lỗi reload plugin: ", e)
+      return None
 
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')

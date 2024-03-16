@@ -553,6 +553,20 @@ async def loadplugin(interaction: discord.Interaction, name: str = None):
     
     await interaction.response.send_message(no, ephemeral=True)
 
+# Load plugin
+@bot.slash_command(name="reloadplug", description=f"Reload các plugin cho {val.ai_name}")
+async def reloadplugin(interaction: discord.Interaction, name: str = None):
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+
+    no = "> Đã reload plugin."
+    if name:
+        ok = await reload_plugin(name)
+        if not ok: no = "> Có lỗi khi reload plugin."
+    else:
+        await reload_all_plugin()
+        no = "> Đã thử reload các plugin."
+    
+    await interaction.response.send_message(no, ephemeral=True)
 
 # Run funcs
 @bot.slash_command(name="run", description=f"Chạy một hàm nào đấy.")
