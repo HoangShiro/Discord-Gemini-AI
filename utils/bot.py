@@ -562,16 +562,16 @@ async def runex(interaction: discord.Interaction, run: str):
 
     no = "> Hàm đã được chạy."
     try:
-        # Lấy hàm từ bot bằng cách sử dụng getattr
-        func = getattr(bot, run)
-    except AttributeError:
+    # Lấy hàm từ biến globals()
+        func = globals().get(run)
+    except KeyError:
         # Hàm không tồn tại
-        await interaction.response.send_message(f"Hàm `{run}` không tồn tại.", ephemeral=True)
+        await interaction.response.send_message(f"Hàm `{run}` không tồn tại.")
         return
 
     # Kiểm tra xem có phải là hàm hay không
     if not callable(func):
-        await interaction.response.send_message(f"`{run}` không phải là một hàm.", ephemeral=True)
+        await interaction.response.send_message(f"`{run}` không phải là một hàm.")
         return
 
     # Chạy hàm
