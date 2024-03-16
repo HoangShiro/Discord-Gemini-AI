@@ -14,10 +14,8 @@ def update_bot():
         print(f"Lỗi khi cập nhật bot từ GitHub: {e}")
 
 def start():
-    import utils.bot as bot
-    loop = asyncio.get_event_loop()
-    loop.create_task(bot.bot_run())
-    loop.run_forever()
+    from utils.bot import bot_run
+    bot_run()
 
 if __name__ == '__main__':
     update_bot()
