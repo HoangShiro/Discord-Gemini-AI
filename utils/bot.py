@@ -20,7 +20,7 @@ class AllStatus:
 
         # Configs
         self.public = False                 # Chế độ chat Public/Private(DM)
-        self.owner_uid = 0                  # UID của master
+        self.owner_uid = None               # UID của master
         self.ai_name = "AI"                 # Bot name
         self.ai_char = "innocent"           # Tính cách của bot
         self.ai_guild = 0                   # ID server gần nhất
@@ -178,7 +178,7 @@ async def on_ready():
 
     val.set('ai_name', bot.user.name)
     
-    if val.owner_uid == 0: val.set('owner_uid', bot.owner_ids)
+    if not val.owner_uid: val.set('owner_uid', bot.owner_id)
 
     await load_btt()
 
