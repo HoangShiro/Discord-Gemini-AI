@@ -143,6 +143,31 @@ class AllStatus:
 val = AllStatus()
 val.load('saves/vals.json')
 
+class VarTemp():
+    def __init__(self):
+        self.message = None
+
+
+    def update(self, val_name, value):
+        if hasattr(self, val_name):
+            current_value = getattr(self, val_name)
+            setattr(self, val_name, current_value + value)
+        else:
+            print(f"Error: Variable '{val_name}' not found.")
+    
+    def set(self, val_name, value):
+        if hasattr(self, val_name):
+            setattr(self, val_name, value)
+        else:
+            print(f"Error: Variable '{val_name}' not found.")
+    
+    def get(self, val_name):
+        if hasattr(self, val_name):
+            value = getattr(self, val_name)
+        return value
+
+var = VarTemp()
+
 intents = discord.Intents.all()
 bot = commands.Bot(intents=intents, command_prefix="/")
 
@@ -173,6 +198,8 @@ async def on_ready():
 
 @bot.event
 async def on_message(message: discord.Message):
+
+    var.set('message', message)
 
     # Dành cho fix prompt
     if val.prompt_fix and message.author.id == val.owner_uid:
@@ -511,12 +538,31 @@ async def tag_remove(interaction: discord.Interaction):
 
 # Load plugin
 @bot.slash_command(name="loadplug", description=f"Load các plugin cho {val.ai_name}")
-async def loadplugin(interaction: discord.Interaction):
+async def loadplugin(interaction: discord.Interaction, run: str):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
     await load_plugin()
     await interaction.response.send_message("> Đã load các plugin.", ephemeral=True)
 
+# Load plugin
+@bot.slash_command(name="run", description=f"Chạy một hàm nào đấy.")
+async def runex(interaction: discord.Interaction, run: str):
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+
+    no = "> Hàm đã được chạy."
+    try:
+        run()
+    except Exception as e:
+        print(f"{get_real_time()}> Error khi run hảm: ", e)
+        no = e
+        try:
+            await run()
+        except Exception as e:
+            print(f"{get_real_time()}> Error khi run hảm: ", e)
+            no = e
+            pass
+
+    await interaction.response.send_message(no, ephemeral=True)
 
 def bot_run():
     try:

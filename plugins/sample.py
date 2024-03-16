@@ -1,7 +1,7 @@
 """ Mẫu plugin """
 
 import discord
-from utils.bot import bot, val
+from utils.bot import bot, val, var
 
 # Say
 @bot.slash_command(name="say", description=f"Để {val.ai_name} nói thay bạn.")
@@ -10,8 +10,5 @@ async def user_say(interaction: discord.Interaction, text: str):
 
     await interaction.response.send_message(text)
 
-@bot.event
-async def on_message(message: discord.Message):
-    if message.author == bot.user: return
-    if message.content.startswith("^"):
-        await message.channel.send("Okay~!")
+def test():
+    print("Baka")
