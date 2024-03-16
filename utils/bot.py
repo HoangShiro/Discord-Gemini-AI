@@ -178,7 +178,7 @@ async def on_ready():
 
     val.set('ai_name', bot.user.name)
     
-    if val.owner_uid == 0: val.set('owner_uid', bot.owner_id)
+    if val.owner_uid == 0: val.set('owner_uid', bot.owner_ids)
 
     await load_btt()
 
