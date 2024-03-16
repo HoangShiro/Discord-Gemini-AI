@@ -17,10 +17,11 @@ async def sec_loop():
     from utils.ui import bot_status
     msg: discord.Message = var.message
     
-    if msg.content.startswith("^"):
-        embed, view = await bot_status()
-        await msg.channel.send(embed=embed, view=view)
-        var.set('message', None)
+    if msg:
+        if msg.content.startswith("^"):
+            embed, view = await bot_status()
+            await msg.channel.send(embed=embed, view=view)
+            var.set('message', None)
 
 asyncio.create_task(sec_loop())
 sec_loop.start()
