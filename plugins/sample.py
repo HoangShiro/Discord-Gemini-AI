@@ -9,3 +9,9 @@ async def user_say(interaction: discord.Interaction, text: str):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
     await interaction.response.send_message(text)
+
+@bot.event
+async def on_message(message: discord.Message):
+    if message.author == bot.user: return
+    if message.content.startswith("^"):
+        await message.channel.send("Okay~!")
