@@ -541,7 +541,18 @@ async def tag_remove(interaction: discord.Interaction):
 async def loadplugin(interaction: discord.Interaction):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
-    await load_plugin()
+    #await load_plugin()
+    dr = 'plugins'
+    for filename in os.listdir(dr):
+        try:
+            # Lấy tên file không bao gồm phần mở rộng
+            module_name = os.path.splitext(filename)[0]
+
+            # Load file py
+            module = importlib.import_module(f"{dr}.{module_name}")
+
+        except Exception as e:
+            print(f"{get_real_time()}> lỗi load plugin: ", e)
     await interaction.response.send_message("> Đã load các plugin.", ephemeral=True)
 
 # Run funcs
