@@ -178,7 +178,9 @@ async def on_ready():
 
     val.set('ai_name', bot.user.name)
     
-    if not val.owner_uid: val.set('owner_uid', await bot.get_user(bot.owner_id))
+    if not val.owner_uid:
+        ouid = bot.owner_id
+        val.set('owner_uid', ouid)
 
     await load_btt()
 
