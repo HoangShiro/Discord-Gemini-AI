@@ -1,4 +1,4 @@
-import discord, asyncio, json
+import discord, asyncio, json, importlib
 
 from discord.ext import commands
 
@@ -538,29 +538,33 @@ async def tag_remove(interaction: discord.Interaction):
 
 # Load plugin
 @bot.slash_command(name="loadplug", description=f"Load các plugin cho {val.ai_name}")
-async def loadplugin(interaction: discord.Interaction, run: str):
+async def loadplugin(interaction: discord.Interaction):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
     await load_plugin()
     await interaction.response.send_message("> Đã load các plugin.", ephemeral=True)
 
-# Load plugin
+# Run funcs
 @bot.slash_command(name="run", description=f"Chạy một hàm nào đấy.")
 async def runex(interaction: discord.Interaction, run: str):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
     no = "> Hàm đã được chạy."
     try:
-        run()
-    except Exception as e:
-        print(f"{get_real_time()}> Error khi run hảm: ", e)
-        no = e
-        try:
-            await run()
-        except Exception as e:
-            print(f"{get_real_time()}> Error khi run hảm: ", e)
-            no = e
-            pass
+        # Lấy hàm từ bot bằng cách sử dụng getattr
+        func = getattr(bot, run)
+    except AttributeError:
+        # Hàm không tồn tại
+        await interaction.response.send_message(f"Hàm `{run}` không tồn tại.", ephemeral=True)
+        return
+
+    # Kiểm tra xem có phải là hàm hay không
+    if not callable(func):
+        await interaction.response.send_message(f"`{run}` không phải là một hàm.", ephemeral=True)
+        return
+
+    # Chạy hàm
+    await func(interaction)
 
     await interaction.response.send_message(no, ephemeral=True)
 
