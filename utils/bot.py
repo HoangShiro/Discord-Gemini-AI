@@ -176,6 +176,8 @@ bot = commands.Bot(intents=intents, command_prefix="/")
 @bot.event
 async def on_ready():
 
+    bot.application_info()
+    
     val.set('ai_name', bot.user.name)
     
     if not val.owner_uid:
