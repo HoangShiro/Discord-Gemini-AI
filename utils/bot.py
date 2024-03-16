@@ -167,6 +167,8 @@ async def on_ready():
 
     if not val.public: await edit_last_msg()
 
+    await load_plugin()
+
     print("\n")
     print(f'{get_real_time()}> {val.ai_name} đã sẵn sàng!')
     print("\n")
@@ -514,7 +516,7 @@ async def tag_remove(interaction: discord.Interaction):
 async def loadplugin(interaction: discord.Interaction):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
-    #await load_plugin()
+    await load_plugin()
     await interaction.response.send_message("> Đã load các plugin.", ephemeral=True)
 
 
