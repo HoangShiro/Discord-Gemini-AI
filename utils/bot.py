@@ -176,13 +176,7 @@ bot = commands.Bot(intents=intents, command_prefix="/")
 @bot.event
 async def on_ready():
 
-    bot.application_info()
-    
     val.set('ai_name', bot.user.name)
-    
-    if not val.owner_uid:
-        ouid = bot.owner_id
-        val.set('owner_uid', ouid)
 
     await load_btt()
 
@@ -400,8 +394,13 @@ async def voice(interaction: discord.Interaction, speaker: int = None):
     await interaction.response.send_message(f"`{text} voice cho {val.ai_name}`", ephemeral=True)
 
 # Chuyển master
-@bot.slash_command(name="giveowner", description=f"Tặng {val.ai_name} cho người khác.")
-async def give_bot(interaction: discord.Interaction, uid: str):
+@bot.slash_command(name="setowner", description=f"Tặng {val.ai_name} cho người khác.")
+async def bot_owner(interaction: discord.Interaction, uid: str):
+    if not val.owner_uid:
+        val.set('owner_uid', interaction.user.id)
+        embed, view = await bot_status()
+        await interaction.response.send_message(embed=embed, view=view)
+        return
     if val.owner_uid != interaction.user.id: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
     uid = int(uid)
