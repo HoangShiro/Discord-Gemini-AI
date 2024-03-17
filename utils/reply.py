@@ -175,7 +175,6 @@ async def send_mess(channel, reply, rep = False, inter = False):
         val.set('last_mess_id', mid)
 
         await cmd_msg() # Xử lý lệnh từ bot
-        await cmd_msg_user() # Xử lý lệnh từ user
         if val.tts_toggle: await voice_make_tts(reply) # Gửi voice
         return
 
@@ -214,23 +213,32 @@ async def voice_send(url, ch):
 
 # Hàm xử lý lệnh trong tin nhắn
 async def cmd_msg():
-    from utils.bot import val
+    from utils.bot import val, bot
     from utils.api import chat
+    from utils.daily import get_real_time
+    from utils.ui import normal_embed
 
     if not chat.last: return
     u_msg = list_to_str(val.old_chat)
     if not u_msg: return
     ai_msg = chat.last.text
+    if not ai_msg: return
 
     # User
     u_voice = re.search(r'vc|voice channel|voice chat|voice', u_msg, re.IGNORECASE)
     u_join = re.search(r'joi|jum|vào|nhảy|chui|vô|đi|nào', u_msg, re.IGNORECASE)
     u_out = re.search(r'leav|out|rời|khỏi|thoát', u_msg, re.IGNORECASE)
 
+    u_avt = re.search(r'ava|avt|hình đại diện|ảnh đại diện', u_msg, re.IGNORECASE)
+    u_avt_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm', u_msg, re.IGNORECASE)
+
     # Bot
-    ai_voice = re.search(r'vc|voice channel|voice chat|voice', u_msg, re.IGNORECASE)
-    ai_join = re.search(r'joi|jum|vào|nhảy|chui|vô', u_msg, re.IGNORECASE)
-    ai_out = re.search(r'leav|out|rời|khỏi|ra|thoát', u_msg, re.IGNORECASE)
+    ai_voice = re.search(r'vc|voice channel|voice chat|voice', ai_msg, re.IGNORECASE)
+    ai_join = re.search(r'joi|jum|vào|nhảy|chui|vô', ai_msg, re.IGNORECASE)
+    ai_out = re.search(r'leav|out|rời|khỏi|ra|thoát', ai_msg, re.IGNORECASE)
+
+    ai_avt = re.search(r'ava|avt|hình đại diện|ảnh đại diện', ai_msg, re.IGNORECASE)
+    ai_avt_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm', ai_msg, re.IGNORECASE)
 
     ai_ok = re.search(r'ok|key|hai|dạ|vâng|sẽ|vô|tới|được|đây|xong|rùi', ai_msg, re.IGNORECASE)
     ai_no = re.search(r'no|ko|không|why|tại sao|hem', ai_msg, re.IGNORECASE)
@@ -254,18 +262,8 @@ async def cmd_msg():
     if (u_voice or ai_voice) and (u_out and ai_out) and ai_ok and not ai_no:
         await v_leave_auto()
 
-    # Chat public or chat riêng
-
-async def cmd_msg_user():
-    from utils.bot import val, bot
-    from utils.daily import get_real_time
-    from utils.ui import normal_embed
-    from utils.funcs import list_to_str
-
-    answ = list_to_str(val.old_chat)
-    if not answ: return
-    # Avatar change:
-    if re.search(r'đổi|thay|chuyển|set|dùng|change|use', answ, re.IGNORECASE) and re.search(r'ava', answ, re.IGNORECASE):
+    # Đổi avatar:
+    if (u_avt or ai_avt) and (u_avt_cg or ai_avt_cg) and ai_ok and not ai_no:
         if not val.public:
             if val.last_uid != val.owner_uid: return
         if not val.last_img: return
@@ -290,3 +288,10 @@ async def cmd_msg_user():
                 pass
     else:
         val.set('cavatar', False)
+
+async def cmd_msg_user():
+    from utils.bot import val, bot
+    from utils.daily import get_real_time
+    from utils.ui import normal_embed
+    from utils.funcs import list_to_str
+    

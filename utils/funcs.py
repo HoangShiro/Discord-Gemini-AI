@@ -323,6 +323,7 @@ def get_img_link(text):
 # Hàm xử lý link ảnh
 async def get_msg_img_url(message: discord.Message):
     from utils.bot import val
+    from utils.daily import get_real_time
 
     # Khi là tin nhắn thường
     if not message.reference:
@@ -336,7 +337,10 @@ async def get_msg_img_url(message: discord.Message):
 
     # Khi là tin nhắn được nhắc tới
     else:
-        ref_msg = await message.channel.fetch_message(message.reference.message_id)
+        try:
+          ref_msg = await message.channel.fetch_message(message.reference.message_id)
+        except Exception as e:
+           print(f"{get_real_time()}> Lỗi khi lấy tin nhắn cũ: ", e)
         if ref_msg:
             if ref_msg.content and not ref_msg.attachments:
                 url = get_img_link(ref_msg.content)
