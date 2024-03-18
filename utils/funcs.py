@@ -1,5 +1,5 @@
 """Các hàm chức năng"""
-import json, os, time, datetime, pytz, asyncio, jaconv, re, random, discord, importlib
+import json, os, time, datetime, pytz, asyncio, jaconv, re, random, discord, importlib, aiohttp, requests
 
 from translate import Translator
 from mtranslate import translate
@@ -438,6 +438,38 @@ async def reload_plugin(name):
     except Exception as e:
       print(f"{get_real_time()}> lỗi reload plugin: ", e)
       return None
+
+async def avatar_change():
+  from utils.bot import val, bot
+  from utils.reply import send_embed
+  from utils.ui import normal_embed
+
+  async with aiohttp.ClientSession() as session:
+    async with session.get(val.last_img) as response:
+      image_data = await response.read()
+  await bot.user.edit(avatar=image_data)
+  avatar_url = bot.user.avatar.url
+  embed, view = await normal_embed(description=f"> Avatar mới của {val.ai_name}:", img=avatar_url, color=0xffbf75, delete=True)
+  await send_embed(embed=embed, view=view)
+
+async def banner_change():
+    from utils.bot import val
+    from utils.daily import get_real_time
+    
+    url = val.last_img
+    response = requests.get(url)
+    image_data = response.content
+
+    image_base64 = discord.utils._bytes_to_base64_data(image_data)
+
+    payload = {'banner': image_base64}
+
+    async with aiohttp.ClientSession() as session:
+        async with session.patch('https://discord.com/api/v9/users/@me', headers={'Authorization': f'Bot {val.bot_key}'}, json=payload) as response:
+            if response.status == 200:
+                print(f'{get_real_time()}> {val.ai_name} đã thay đổi ảnh bìa.')
+            else:
+                print(f'{get_real_time()}> Lỗi khi cập nhật ảnh bìa : {response.status}.')
 
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')

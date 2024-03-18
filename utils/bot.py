@@ -86,6 +86,7 @@ class AllStatus:
         self.dm_chat_next = "*Tiếp tục: *" # Tiếp tục chat trong DM channel
         self.vc_invite = "(SYSTEM): Không tìm thấy người đó trong voice channel nào, hãy hỏi lại." # Voice
         self.set_avatar = "(SYSTEM): lỗi khi đổi avatar cho bạn - " # Khi đổi avatar bị lỗi
+        self.set_banner = "(SYSTEM): lỗi khi đổi banner cho bạn - " # Khi đổi avatar bị lỗi
 
         # Lời nhắc cho user
         self.no_perm = "`Bạn hem có quyền sử dụng lệnh nỳ.`" # Không có quyền sử dụng slash

@@ -123,7 +123,6 @@ async def send_embed(embed=None, view=None):
         if embed:
             await channel.send(embed=embed, view=view)
 
-
 # Set tính cách nhân vật dựa vào prompt
 async def char_check():
     from utils.bot import val
@@ -217,6 +216,7 @@ async def cmd_msg():
     from utils.api import chat
     from utils.daily import get_real_time
     from utils.ui import normal_embed
+    from utils.funcs import avatar_change, banner_change
 
     if not chat.last: return
     u_msg = list_to_str(val.old_chat)
@@ -230,7 +230,8 @@ async def cmd_msg():
     u_out = re.search(r'leav|out|rời|khỏi|thoát', u_msg, re.IGNORECASE)
 
     u_avt = re.search(r'ava|avt|hình đại diện|ảnh đại diện', u_msg, re.IGNORECASE)
-    u_avt_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm', u_msg, re.IGNORECASE)
+    u_banner = re.search(r'banner|cover|biểu ngữ|ảnh bìa', u_msg, re.IGNORECASE)
+    u_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm', u_msg, re.IGNORECASE)
 
     # Bot
     ai_voice = re.search(r'vc|voice channel|voice chat|voice', ai_msg, re.IGNORECASE)
@@ -238,7 +239,8 @@ async def cmd_msg():
     ai_out = re.search(r'leav|out|rời|khỏi|ra|thoát', ai_msg, re.IGNORECASE)
 
     ai_avt = re.search(r'ava|avt|hình đại diện|ảnh đại diện', ai_msg, re.IGNORECASE)
-    ai_avt_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm', ai_msg, re.IGNORECASE)
+    ai_banner = re.search(r'banner|cover|biểu ngữ|ảnh bìa', ai_msg, re.IGNORECASE)
+    ai_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm', ai_msg, re.IGNORECASE)
 
     ai_ok = re.search(r'ok|key|hai|dạ|vâng|sẽ|vô|tới|được|đây|xong|rùi', ai_msg, re.IGNORECASE)
     ai_no = re.search(r'no|ko|không|why|tại sao|hem', ai_msg, re.IGNORECASE)
@@ -263,23 +265,32 @@ async def cmd_msg():
         await v_leave_auto()
 
     # Đổi avatar:
-    if (u_avt or ai_avt) and (u_avt_cg or ai_avt_cg) and ai_ok and not ai_no:
+    if (u_avt or ai_avt) and (u_cg or ai_cg) and ai_ok and not ai_no:
         if not val.public:
             if val.last_uid != val.owner_uid: return
         if not val.last_img: return
         try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(val.last_img) as response:
-                    image_data = await response.read()
-            await bot.user.edit(avatar=image_data)
-            avatar_url = bot.user.avatar.url
-            embed, view = await normal_embed(description=f"> Avatar mới của {val.ai_name}:", img=avatar_url, color=0xffbf75, delete=True)
-            await send_embed(embed=embed, view=view)
-
+            await avatar_change()
         except Exception as e:
             print(f"{get_real_time()}> lỗi khi đổi avatar: ", e)
             if not val.cavatar:
                 umess = val.set_avatar + str(e)
+                new_chat = val.now_chat
+                new_chat.append(umess)
+                val.set('cavatar', True)
+                val.set('now_chat', new_chat)
+                val.set('CD', 1)
+                pass
+    elif (u_banner or ai_banner) and (u_cg or ai_cg) and ai_ok and not ai_no:
+        if not val.public:
+            if val.last_uid != val.owner_uid: return
+        if not val.last_img: return
+        try:
+            await banner_change()
+        except Exception as e:
+            print(f"{get_real_time()}> lỗi khi đổi avatar: ", e)
+            if not val.cavatar:
+                umess = val.set_banner + str(e)
                 new_chat = val.now_chat
                 new_chat.append(umess)
                 val.set('cavatar', True)
