@@ -455,6 +455,8 @@ async def avatar_change():
 async def banner_change():
     from utils.bot import val
     from utils.daily import get_real_time
+    from utils.reply import send_embed
+    from utils.ui import normal_embed
     
     url = val.last_img
     response = requests.get(url)
@@ -468,9 +470,12 @@ async def banner_change():
         async with session.patch('https://discord.com/api/v9/users/@me', headers={'Authorization': f'Bot {val.bot_key}'}, json=payload) as response:
             if response.status == 200:
                 print(f'{get_real_time()}> {val.ai_name} đã thay đổi ảnh bìa.')
+                
+                embed, view = await normal_embed(description=f"> Banner mới của {val.ai_name}:", img=url, color=0xffbf75, delete=True)
+                await send_embed(embed=embed, view=view)
             else:
                 print(f'{get_real_time()}> Lỗi khi cập nhật ảnh bìa : {response.status}.')
-
+    
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
   print(p)
