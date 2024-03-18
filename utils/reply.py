@@ -229,7 +229,7 @@ async def cmd_msg():
     u_join = re.search(r'joi|jum|vào|nhảy|chui|vô|đi|nào', u_msg, re.IGNORECASE)
     u_out = re.search(r'leav|out|rời|khỏi|thoát', u_msg, re.IGNORECASE)
 
-    u_avt = re.search(r'ava|avt|hình đại diện|ảnh đại diện', u_msg, re.IGNORECASE)
+    u_avt = re.search(r'ava|avt|hình đại diện|ảnh đại diện|pfp', u_msg, re.IGNORECASE)
     u_banner = re.search(r'banner|cover|biểu ngữ|bìa', u_msg, re.IGNORECASE)
     u_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm', u_msg, re.IGNORECASE)
 
@@ -238,7 +238,7 @@ async def cmd_msg():
     ai_join = re.search(r'joi|jum|vào|nhảy|chui|vô', ai_msg, re.IGNORECASE)
     ai_out = re.search(r'leav|out|rời|khỏi|ra|thoát', ai_msg, re.IGNORECASE)
 
-    ai_avt = re.search(r'ava|avt|hình đại diện|ảnh đại diện', ai_msg, re.IGNORECASE)
+    ai_avt = re.search(r'ava|avt|hình đại diện|ảnh đại diện|pfp', ai_msg, re.IGNORECASE)
     ai_banner = re.search(r'banner|cover|biểu ngữ|bìa', ai_msg, re.IGNORECASE)
     ai_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm', ai_msg, re.IGNORECASE)
 
