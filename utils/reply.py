@@ -230,7 +230,7 @@ async def cmd_msg():
     u_out = re.search(r'leav|out|rời|khỏi|thoát', u_msg, re.IGNORECASE)
 
     u_avt = re.search(r'ava|avt|hình đại diện|ảnh đại diện', u_msg, re.IGNORECASE)
-    u_banner = re.search(r'banner|cover|biểu ngữ|ảnh bìa', u_msg, re.IGNORECASE)
+    u_banner = re.search(r'banner|cover|biểu ngữ|bìa', u_msg, re.IGNORECASE)
     u_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm', u_msg, re.IGNORECASE)
 
     # Bot
@@ -239,7 +239,7 @@ async def cmd_msg():
     ai_out = re.search(r'leav|out|rời|khỏi|ra|thoát', ai_msg, re.IGNORECASE)
 
     ai_avt = re.search(r'ava|avt|hình đại diện|ảnh đại diện', ai_msg, re.IGNORECASE)
-    ai_banner = re.search(r'banner|cover|biểu ngữ|ảnh bìa', ai_msg, re.IGNORECASE)
+    ai_banner = re.search(r'banner|cover|biểu ngữ|bìa', ai_msg, re.IGNORECASE)
     ai_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm', ai_msg, re.IGNORECASE)
 
     ai_ok = re.search(r'ok|key|hai|dạ|vâng|sẽ|vô|tới|được|đây|xong|rùi', ai_msg, re.IGNORECASE)
