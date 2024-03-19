@@ -79,19 +79,24 @@ def get_current_period(timezone_name="Asia/Bangkok"):
         act = val.breakday_act
 
     if morning_start <= now.time() <= morning_end:
-        remmid_edit(val.now_chat, "Your Phone: ", f"Your Phone: morning - {now.time}. Bạn đang '{act}'.")
+        rmd = remmid_edit(val.ignore_chat, "Your Phone: ", f"Your Phone: morning - {now.time}. Bạn đang '{act}'.")
+        val.set('ignore_chat', rmd)
         return "morning"
     elif noon_start <= now.time() <= noon_end:
-        remmid_edit(val.now_chat, "Your Phone: ", f"Your Phone: noon - {now.time}. Bạn đang '{act}'.")
+        rmd = remmid_edit(val.ignore_chat, "Your Phone: ", f"Your Phone: noon - {now.time}. Bạn đang '{act}'.")
+        val.set('ignore_chat', rmd)
         return "noon"
     elif afternoon_start <= now.time() <= afternoon_end:
-        remmid_edit(val.now_chat, "Your Phone: ", f"Your Phone: afternoon - {now.time}. Bạn đang '{act}'.")
+        rmd = remmid_edit(val.ignore_chat, "Your Phone: ", f"Your Phone: afternoon - {now.time}. Bạn đang '{act}'.")
+        val.set('ignore_chat', rmd)
         return "afternoon"
     elif evening_start <= now.time() <= evening_end:
-        remmid_edit(val.now_chat, "Your Phone: ", f"Your Phone: night - {now.time}. Bạn đang '{act}'.")
+        rmd = remmid_edit(val.ignore_chat, "Your Phone: ", f"Your Phone: night - {now.time}. Bạn đang '{act}'.")
+        val.set('ignore_chat', rmd)
         return "night"
     else:
-        remmid_edit(val.now_chat, "Your Phone: ", f"Your Phone: sleep - {now.time}. Bạn đang '{act}'.")
+        rmd = remmid_edit(val.ignore_chat, "Your Phone: ", f"Your Phone: sleep - {now.time}. Bạn đang '{act}'.")
+        val.set('ignore_chat', rmd)
         return "sleep"
 
 # Ngày nghỉ?  
