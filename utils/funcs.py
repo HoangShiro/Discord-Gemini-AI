@@ -443,7 +443,8 @@ async def avatar_change():
   from utils.bot import val, bot
   from utils.reply import send_embed
   from utils.ui import normal_embed
-
+  from utils.daily import get_real_time
+  
   async with aiohttp.ClientSession() as session:
     async with session.get(val.last_img) as response:
       image_data = await response.read()
@@ -451,6 +452,7 @@ async def avatar_change():
   avatar_url = bot.user.avatar.url
   embed, view = await normal_embed(description=f"> Avatar mới của {val.ai_name}:", img=avatar_url, color=0xffbf75, delete=True)
   await send_embed(embed=embed, view=view)
+  print(f'{get_real_time()}> {val.ai_name} đã thay đổi ảnh đại diện.')
 
 async def banner_change():
     from utils.bot import val
