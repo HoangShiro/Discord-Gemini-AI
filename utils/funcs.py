@@ -218,6 +218,7 @@ async def v_join_auto():
                 if sound:
                     await voice_send(sound, vc)
                 val.set('pr_vch_id', channel.id)
+                val.set('last_vch_id', channel.id)
                 val.set('vc_invited', False)
                 val.update('total_join', 1)
                 val.update('one_join', 1)
@@ -242,10 +243,11 @@ async def v_leave_auto():
     val.set('pr_vch_id', None)
 
 # Reconnect to voice channel
-async def voice_rcn():
+async def voice_rcn(pr_v = None):
     from utils.bot import bot, val
     from utils.reply import voice_send
-    pr_v = val.pr_vch_id
+    
+    if not pr_v: pr_v = val.pr_vch_id
     if pr_v:
         await v_leave_auto()
         vc = await bot.get_channel(pr_v).connect()

@@ -57,6 +57,7 @@ class AllStatus:
         self.vv_speed = 1                   # Tốc độ (voicevox)
         self.pr_vch_id = 0                  # ID voice channel cuối cùng mà bot kết nối tới
         self.pr_vch = None                  # Voice channel cuối cùng
+        self.last_vch_id = None             # Lưu lại voice channel cuối
         self.vc_invited = False             # Thông báo lỗi cho user nếu không tìm thấy họ trong voice
         self.tts_toggle = False             # Bật/Tắt voice cho bot
         self.cavatar = False                # Đổi avatar cho bot

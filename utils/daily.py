@@ -3,7 +3,7 @@ import json, os, time, datetime, asyncio, discord, random, pytz
 from discord.ext import tasks
 from utils.reply import reply_id
 from utils.funcs import remmid_edit
-from utils.status import status_busy_set, status_chat_set
+from utils.status import status_busy_set
 
 # Secs tasks
 @tasks.loop(seconds=1)
@@ -39,6 +39,7 @@ async def sec_check():
 @tasks.loop(seconds=1800)
 async def h_check():
     from utils.bot import bot, val
+    from utils.funcs import v_leave_auto, voice_rcn
     # Có phải là ngày nghỉ?
     wcheck = is_weekend()
     if wcheck:
@@ -47,6 +48,10 @@ async def h_check():
         val.set('weekend', False)
     # Load các biến tương ứng khoảng thời gian
     period = get_current_period()
+    if period == "sleep":
+        await v_leave_auto()
+    elif period == "morning":
+        if val.tts_toggle: await voice_rcn(val.last_vch_id)
     val.set('now_period', period)
     val.load_val_char('saves/char.json', val.ai_char, period)
     if val.CD_idle == val.to_worktime:
