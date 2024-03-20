@@ -237,6 +237,7 @@ async def v_leave_auto():
         await voice_send(sound, vc)
     await asyncio.sleep(3)
     await vc.disconnect()
+    val.set('pr_vch_id', None)
 
 # Reconnect to voice channel
 async def voice_rcn():
@@ -244,6 +245,7 @@ async def voice_rcn():
     from utils.reply import voice_send
     pr_v = val.pr_vch_id
     if pr_v:
+        await v_leave_auto()
         vc = await bot.get_channel(pr_v).connect()
         sound = await sob('greeting')
         if sound:
