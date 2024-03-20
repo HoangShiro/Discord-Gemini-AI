@@ -110,16 +110,42 @@ class AllStatus:
         if hasattr(self, val_name):
             value = getattr(self, val_name)
         return value
-    
-    def load(self, filename):
+
+    def load(self, filename, backup_filename="vals_backup.json"):
         try:
-            with open(filename, 'r') as file:
+            # Load data from the primary file
+            with open(filename, 'r', encoding="utf-8") as file:
                 data = json.load(file)
+
+            # Set object attributes from loaded data
             for variable_name, value in data.items():
                 if hasattr(self, variable_name):
                     setattr(self, variable_name, value)
-        except (FileNotFoundError, json.JSONDecodeError):
-            print(f"Error loading data from {filename}")
+
+            # Create a backup if loading was successful
+            with open(backup_filename, 'w', encoding="utf-8") as backup_file:
+                json.dump(data, backup_file, indent=4)  # Add indentation for readability
+
+            #print(f"Data loaded successfully from {filename}. Backup created at {backup_filename}")
+
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"Error loading data from {filename}: {e}")
+
+            # Attempt to load from the backup file (if it exists)
+            try:
+                with open(backup_filename, 'r', encoding="utf-8") as backup_file:
+                    data = json.load(backup_file)
+                    print(f"Loading data from backup file: {backup_filename}")
+
+                # Set object attributes from backup data
+                for variable_name, value in data.items():
+                    if hasattr(self, variable_name):
+                        setattr(self, variable_name, value)
+
+            except (FileNotFoundError, json.JSONDecodeError) as e:
+                print(f"Error loading data from backup {backup_filename}: {e}")
+                # Handle case where both primary and backup files fail to load
+
 
     def show(self):
         for attr, value in vars(self).items():
