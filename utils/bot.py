@@ -111,7 +111,7 @@ class AllStatus:
             value = getattr(self, val_name)
         return value
 
-    def load(self, filename, backup_filename="vals_backup.json"):
+    def load(self, filename, backup_filename="saves/vals_backup.json"):
         try:
             # Load data from the primary file
             with open(filename, 'r', encoding="utf-8") as file:
