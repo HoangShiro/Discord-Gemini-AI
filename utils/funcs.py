@@ -219,6 +219,8 @@ async def v_join_auto():
                     await voice_send(sound, vc)
                 val.set('pr_vch_id', channel.id)
                 val.set('vc_invited', False)
+                val.update('total_join', 1)
+                val.update('one_join', 1)
                 found = True
                 break
     
@@ -250,6 +252,9 @@ async def voice_rcn():
         sound = await sob('greeting')
         if sound:
           await voice_send(sound, vc)
+        
+        val.update('total_join', 1)
+        val.update('one_join', 1)
 
 # Voice make
 async def voice_make_tts(text):

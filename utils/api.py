@@ -77,7 +77,7 @@ async def gemini_rep(mess):
         if len(response.text) > limit:
             chat.history.extend(remind)
             if val.chat_csl: print(f"{get_real_time()}> ", remind)
-        val.update('total_rep', 1)
+        
         if val.bug_csl:
             print("\n")
             print("===== [CHAT HISTORY] =====")
@@ -105,6 +105,9 @@ async def gemini_rep(mess):
         old_chat_ai = val.now_chat_ai
         val.set('old_chat_ai', old_chat_ai)
         val.set('now_chat_ai', reply)
+        
+        val.update('total_rep', 1)
+        val.update('one_rep', 1)
         return reply
     except Exception as e:
         print(f"{get_real_time()}> Lỗi GEMINI API: ", e)
@@ -169,4 +172,6 @@ async def tts_get(text, speaker, pitch, intonation_scale, speed):
     else:
         print(f"Lỗi khi tạo voice, mã lỗi: {response.status_code}")"""
     
+    val.update('total_voice', 1)
+    val.update('one_voice', 1)
     return url

@@ -217,7 +217,9 @@ async def on_message(message: discord.Message):
 
     if message.author == bot.user or message.content.startswith((".", "!", ",", "/")): return
     if len(val.gai_key) < 39: return await message.channel.send(f"> Xài lệnh `/setkeys` điền Gemini API key trước, sau đó gõ lệnh `/chatmode` đổi chế độ chat của {val.ai_name}")
+    
     val.update('total_mess', 1)
+    val.update('one_mess', 1)
     
     # Check xem có phải tin nhắn từ bot khác hay không
     if message.author.bot:
@@ -292,6 +294,9 @@ async def keys(interaction: discord.Interaction, gemini: str = None, voicevox: s
     if val.owner_uid:
         if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
+    val.update('total_cmd', 1)
+    val.update('one_cmd', 1)
+    
     if gemini:
         val.set('gai_key', gemini)
     if voicevox:
@@ -306,6 +311,9 @@ async def showstatus(interaction: discord.Interaction):
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
+    val.update('total_cmd', 1)
+    val.update('one_cmd', 1)
+    
     embed, view = await bot_status()
     await interaction.response.send_message(embed=embed, view=view)
 
@@ -316,6 +324,10 @@ async def update(interaction: discord.Interaction):
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
+    val.update('total_cmd', 1)
+    val.update('one_cmd', 1)
+    val.update('total_update', 1)
+    
     mess = await interaction.response.send_message(f"`Đang cập nhật...`", ephemeral=True)
     await edit_last_msg()
     val.set('last_mess_id', None)
@@ -331,6 +343,10 @@ async def newchat(interaction: discord.Interaction):
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
+    val.update('total_cmd', 1)
+    val.update('one_cmd', 1)
+    val.update('total_newchat', 1)
+    
     if not val.public: await edit_last_msg()
     new_prpt = load_prompt("saves/chat.txt")
     chat.history.clear()
@@ -342,6 +358,13 @@ async def newchat(interaction: discord.Interaction):
     val.set('ignore_chat', [])
     val.set('last_mess_id', None)
     val.set('old_mess_id', None)
+    
+    val.set('one_rep', 0)
+    val.set('one_mess', 0)
+    val.set('one_voice', 0)
+    val.set('one_join', 0)
+    val.set('one_cmd', 0)
+    
     if val.public:
         public_remind = load_prompt("saves/public_chat.txt")
         chat.history.extend(public_remind)
@@ -364,6 +387,9 @@ async def newchat(interaction: discord.Interaction):
 async def chat_mode(interaction: discord.Interaction):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
+    val.update('total_cmd', 1)
+    val.update('one_cmd', 1)
+    
     n = ""
     if val.public:
         n = "chat riêng tư với bạn."
@@ -380,7 +406,10 @@ async def voice(interaction: discord.Interaction, speaker: int = None):
     if not val.public:
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(val.no_perm, ephemeral=True)
-        
+    
+    val.update('total_cmd', 1)
+    val.update('one_cmd', 1)
+    
     text = ""
     if val.tts_toggle and not speaker:
         val.set('tts_toggle', False)
@@ -407,6 +436,9 @@ async def bot_owner(interaction: discord.Interaction, uid: str):
         return
     if val.owner_uid != interaction.user.id: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
+    val.update('total_cmd', 1)
+    val.update('one_cmd', 1)
+    
     uid = int(uid)
     if uid == val.owner_uid: return await interaction.response.send_message(f"`Bạn đã sở hữu {val.ai_name} rồi.`", ephemeral=True)
     user = await bot.fetch_user(uid)
@@ -427,6 +459,9 @@ async def prompts(interaction: discord.Interaction, view: discord.Option(
     ) = "char", fix: bool = False, char_check: bool = False):
     if val.owner_uid != interaction.user.id: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
+    val.update('total_cmd', 1)
+    val.update('one_cmd', 1)
+    
     if char_check: return await interaction.response.send_message(f"`Tính cách hiện tại: {val.ai_char}`", ephemeral=True)
     
     prompt = ""
@@ -484,6 +519,10 @@ async def cslog(interaction: discord.Interaction, get: discord.Option(
         ],
     ) = "None"):
     if val.owner_uid != interaction.user.id: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    val.update('total_cmd', 1)
+    val.update('one_cmd', 1)
+    
     n = ""
     if get != "None":
         v = val.get(get)
@@ -510,6 +549,9 @@ async def cslog(interaction: discord.Interaction, get: discord.Option(
 async def systemnote(interaction: discord.Interaction, note: str):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
+    val.update('total_cmd', 1)
+    val.update('one_cmd', 1)
+    
     now_chat = val.now_chat
     now_chat.append(note)
     await interaction.response.send_message(f"> Đã thêm lời nhắc: {note}", ephemeral=True)
@@ -521,6 +563,9 @@ async def last_msg_edit(interaction: discord.Interaction, text: str):
     if not val.last_mess_id: return await interaction.response.send_message("> Chưa có chat nào để edit.", ephemeral=True)
     if val.public: return await interaction.response.send_message("> Hiện tại chỉ có thể edit chat ở DM channel.", ephemeral=True)
 
+    val.update('total_cmd', 1)
+    val.update('one_cmd', 1)
+    
     u_text = list_to_str(val.old_chat)
     if not u_text: return await interaction.response.send_message("> Không thể lấy chat gần nhất của bạn.", ephemeral=True)
     prompt = text_to_prompt(u_text, text)
@@ -536,6 +581,9 @@ async def last_msg_edit(interaction: discord.Interaction, text: str):
 async def tag_remove(interaction: discord.Interaction):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
+    val.update('total_cmd', 1)
+    val.update('one_cmd', 1)
+    
     n = ""
     if val.name_filter:
         n = "không lọc tag name."
@@ -550,6 +598,9 @@ async def tag_remove(interaction: discord.Interaction):
 async def loadplugin(interaction: discord.Interaction, name: str = None):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
+    val.update('total_cmd', 1)
+    val.update('one_cmd', 1)
+    
     no = "> Đã load plugin."
     if name:
         ok = await load_plugin(name)
@@ -565,6 +616,9 @@ async def loadplugin(interaction: discord.Interaction, name: str = None):
 async def reloadplugin(interaction: discord.Interaction, name: str):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
+    val.update('total_cmd', 1)
+    val.update('one_cmd', 1)
+    
     no = "> Đã reload plugin."
     ok = await reload_plugin(name)
     if not ok: no = "> Có lỗi khi reload plugin."
