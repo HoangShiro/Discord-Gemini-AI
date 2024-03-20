@@ -146,7 +146,6 @@ class AllStatus:
                 print(f"Error loading data from backup {backup_filename}: {e}")
                 # Handle case where both primary and backup files fail to load
 
-
     def show(self):
         for attr, value in vars(self).items():
             print(f"[vals.json] - {attr}: {value}")
