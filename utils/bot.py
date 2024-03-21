@@ -196,6 +196,13 @@ async def on_ready():
 
     if val.tts_toggle: await voice_rcn()
     
+    try:
+        from plugins.apps import on_start
+        await on_start()
+    except Exception as e:
+        print(f'{get_real_time()}> Lỗi apps.py - on_start(): ', e)
+        pass
+    
     print("\n")
     print(f'{get_real_time()}> {val.ai_name} đã sẵn sàng!')
     print("\n")
@@ -207,7 +214,7 @@ async def on_message(message: discord.Message):
         from plugins.apps import on_msg
         await on_msg(message)
     except Exception as e:
-        print(f'{get_real_time()}> Lỗi plugins: ', e)
+        print(f'{get_real_time()}> Lỗi apps.py - on_msg(): ', e)
         pass
 
     # Dành cho fix prompt
@@ -330,6 +337,13 @@ async def update(interaction: discord.Interaction):
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
+    try:
+        from plugins.apps import on_update
+        await on_update(interaction)
+    except Exception as e:
+        print(f'{get_real_time()}> Lỗi apps.py - on_update(): ', e)
+        pass
+    
     val.update('total_cmd', 1)
     val.update('one_cmd', 1)
     val.update('total_update', 1)
@@ -349,6 +363,13 @@ async def newchat(interaction: discord.Interaction):
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
+    try:
+        from plugins.apps import on_newchat
+        await on_newchat(interaction)
+    except Exception as e:
+        print(f'{get_real_time()}> Lỗi apps.py - on_newchat(): ', e)
+        pass
+    
     val.update('total_cmd', 1)
     val.update('one_cmd', 1)
     val.update('total_newchat', 1)
@@ -612,7 +633,7 @@ async def run_plugins(interaction: discord.Interaction):
         
         await on_run_slash(interaction)
     except Exception as e:
-        print(f'{get_real_time()}> Lỗi run plugins: ', e)
+        print(f'{get_real_time()}> Lỗi apps.py - on_run_slash(): ', e)
         pass
 
 """# Load plugin

@@ -405,16 +405,29 @@ def plugins(path, funcs):
 plugins_para = """
 import discord, asyncio, json, os
 
-
-
-async def on_msg(msg: discord.Message):
+# Khi bot khởi động
+async def on_start():
     from utils.bot import bot, val
-    # Thêm mã xử lý khi có tin nhắn mới
     return
 
+# Khi có tin nhắn mới
+async def on_msg(msg: discord.Message):
+    from utils.bot import bot, val
+    return
+
+# Khi slash 'update' được kích hoạt
+async def on_update(itr: discord.Interaction):
+    from utils.bot import bot, val
+    return
+
+# Khi slash 'newchat' được kích hoạt
+async def on_newchat(itr: discord.Interaction):
+    from utils.bot import bot, val
+    return
+
+# Khi slash 'run' được kích hoạt
 async def on_run_slash(itr: discord.Interaction):
     from utils.bot import bot, val
-    # Thêm mã xử lý khi slash được kích hoạt
     return
 
 """
