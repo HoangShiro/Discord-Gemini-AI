@@ -396,9 +396,10 @@ def createfile(path, Q, A):
 
 # Hàm tạo file plugin
 def plugins(path, funcs):
-    
-  with open(path, "w", encoding="utf-8") as f:
-    f.write(funcs)
+
+    if not os.path.exists(path):
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(funcs)
 
 # Ví dụ sử dụng
 plugins_para = """
