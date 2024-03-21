@@ -172,31 +172,6 @@ class AllStatus:
 val = AllStatus()
 val.load('saves/vals.json')
 
-class VarTemp():
-    def __init__(self):
-        self.message = None
-
-
-    def update(self, val_name, value):
-        if hasattr(self, val_name):
-            current_value = getattr(self, val_name)
-            setattr(self, val_name, current_value + value)
-        else:
-            print(f"Error: Variable '{val_name}' not found.")
-    
-    def set(self, val_name, value):
-        if hasattr(self, val_name):
-            setattr(self, val_name, value)
-        else:
-            print(f"Error: Variable '{val_name}' not found.")
-    
-    def get(self, val_name):
-        if hasattr(self, val_name):
-            value = getattr(self, val_name)
-        return value
-
-var = VarTemp()
-
 intents = discord.Intents.all()
 bot = commands.Bot(intents=intents, command_prefix="/")
 
@@ -227,8 +202,13 @@ async def on_ready():
 
 @bot.event
 async def on_message(message: discord.Message):
-
-    var.set('message', message)
+    
+    try:
+        from plugins.apps import on_msg
+        await on_msg(message)
+    except Exception as e:
+        print(f'{get_real_time()}> Lỗi plugins: ', e)
+        pass
 
     # Dành cho fix prompt
     if val.prompt_fix and message.author.id == val.owner_uid:
@@ -619,7 +599,23 @@ async def tag_remove(interaction: discord.Interaction):
         val.set('name_filter', True)
     await interaction.response.send_message(f"> {val.ai_name} sẽ {n}.", ephemeral=True)
 
-# Load plugin
+# Hàm run plugins
+@bot.slash_command(name="run", description=f"Load các plugin cho {val.ai_name}")
+async def run_plugins(interaction: discord.Interaction):
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    val.update('total_cmd', 1)
+    val.update('one_cmd', 1)
+    
+    try:
+        from plugins.apps import on_run_slash
+        
+        await on_run_slash(interaction)
+    except Exception as e:
+        print(f'{get_real_time()}> Lỗi run plugins: ', e)
+        pass
+
+"""# Load plugin
 @bot.slash_command(name="loadplug", description=f"Load các plugin cho {val.ai_name}")
 async def loadplugin(interaction: discord.Interaction, name: str = None):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
@@ -649,7 +645,7 @@ async def reloadplugin(interaction: discord.Interaction, name: str):
     ok = await reload_plugin(name)
     if not ok: no = "> Có lỗi khi reload plugin."
     
-    await interaction.response.send_message(no, ephemeral=True)
+    await interaction.response.send_message(no, ephemeral=True)"""
 
 def bot_run():
     try:

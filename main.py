@@ -27,5 +27,6 @@ if __name__ == '__main__':
     createfile('saves/creative.txt', Q_creative, A_creative)
     json_update('saves/vals.json', default_values)
     json_update('saves/char.json', char)
-
+    plugins("plugins/apps.py", plugins_para)
+    
     start()

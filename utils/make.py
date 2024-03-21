@@ -394,6 +394,30 @@ def createfile(path, Q, A):
         except OSError as e:
             raise OSError(f"An error occurred while creating the file: {e}")
 
+# Hàm tạo file plugin
+def plugins(path, funcs):
+    
+  with open(path, "w", encoding="utf-8") as f:
+    f.write(funcs)
+
+# Ví dụ sử dụng
+plugins_para = """
+import discord, asyncio, json, os
+
+
+
+async def on_msg(msg: discord.Message):
+    from utils.bot import bot, val
+    # Thêm mã xử lý khi có tin nhắn mới
+    return
+
+async def on_run_slash(itr: discord.Interaction):
+    from utils.bot import bot, val
+    # Thêm mã xử lý khi slash được kích hoạt
+    return
+
+"""
+
 if __name__ == '__main__':
     update_cfg("saves/moods.py", mood_names)
     createfile('saves/chat.txt', Q_chat, A_chat)
@@ -402,3 +426,4 @@ if __name__ == '__main__':
     createfile('saves/creative.txt', Q_creative, A_creative)
     json_update('saves/vals.json', default_values)
     json_update('saves/char.json', char)
+    plugins("plugins/apps.py", plugins_para)
