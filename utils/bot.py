@@ -202,8 +202,6 @@ async def on_ready():
     await status_busy_set()
 
     if not val.public: await edit_last_msg()
-
-    await voice_rcn()
     
     try:
         from plugins.apps import on_start
