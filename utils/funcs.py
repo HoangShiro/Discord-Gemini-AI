@@ -200,6 +200,8 @@ async def v_join_auto():
     from utils.bot import val, bot
     from utils.reply import voice_send
     
+    if not val.tts_toggle: return
+    
     chat = val.old_chat
     name = [message.split(":")[0] for message in chat]
     guild = bot.get_guild(val.ai_guild)
@@ -248,7 +250,7 @@ async def voice_rcn(pr_v = None):
     from utils.reply import voice_send
     
     if not pr_v: pr_v = val.pr_vch_id
-    if pr_v:
+    if pr_v and val.tts_toggle:
         await v_leave_auto()
         vc = await bot.get_channel(pr_v).connect()
         sound = await sob('greeting')
@@ -531,7 +533,24 @@ def mood_change(name):
     elif val.ai_char == "tsundere": val.update('ai_mood', -800)
     elif val.ai_char == "yandere": val.update('ai_mood', -3000)
     else: val.update('ai_mood', -800)
-      
+
+# Leave voice nếu giận?
+def leave_voice():
+    from utils.bot import val
+    
+    per = 1
+    if val.ai_char == "gentle": per = 0.1
+    elif val.ai_char == "cold": per = 1
+    elif val.ai_char == "extrovert": per = 0.05
+    elif val.ai_char == "introvert": per = 0.4
+    elif val.ai_char == "lazy": per = 0.3
+    elif val.ai_char == "tsundere": per = 0.2
+    elif val.ai_char == "yandere": per = 1
+    else: per = 0.2
+    
+    if random.random() > per: return False
+    else: return True
+   
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
   print(p)

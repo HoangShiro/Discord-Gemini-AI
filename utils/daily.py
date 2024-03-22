@@ -10,7 +10,7 @@ noon_check = True
 afternoon_check = True
 night_check = True
 sleep_check = True
-
+voice_leave = True
 
 # Secs tasks
 @tasks.loop(seconds=1)
@@ -104,7 +104,7 @@ async def get_current_period(timezone_name="Asia/Bangkok"):
     if morning_start <= now.time() <= morning_end:
         if morning_check:
             if random.random() < get_ctime(char, "morning", "voice"):
-                if val.tts_toggle: await voice_rcn(val.last_vch_id)
+                await voice_rcn(val.last_vch_id)
             else:
                 await v_leave_auto()
             morning_check = False
@@ -118,7 +118,7 @@ async def get_current_period(timezone_name="Asia/Bangkok"):
     elif noon_start <= now.time() <= noon_end:
         if noon_check:
             if random.random() < get_ctime(char, "noon", "voice"):
-                if val.tts_toggle: await voice_rcn(val.last_vch_id)
+                await voice_rcn(val.last_vch_id)
             else:
                 await v_leave_auto()
             noon_check = False
@@ -132,7 +132,7 @@ async def get_current_period(timezone_name="Asia/Bangkok"):
     elif afternoon_start <= now.time() <= afternoon_end:
         if afternoon_check:
             if random.random() < get_ctime(char, "afternoon", "voice"):
-                if val.tts_toggle: await voice_rcn(val.last_vch_id)
+                await voice_rcn(val.last_vch_id)
             else:
                 await v_leave_auto()
             afternoon_check = False
@@ -146,7 +146,7 @@ async def get_current_period(timezone_name="Asia/Bangkok"):
     elif evening_start <= now.time() <= evening_end:
         if night_check:
             if random.random() < get_ctime(char, "night", "voice"):
-                if val.tts_toggle: await voice_rcn(val.last_vch_id)
+                await voice_rcn(val.last_vch_id)
             else:
                 await v_leave_auto()
             night_check = False
@@ -160,7 +160,7 @@ async def get_current_period(timezone_name="Asia/Bangkok"):
     else:
         if sleep_check:
             if random.random() < get_ctime(char, "sleep", "voice"):
-                if val.tts_toggle: await voice_rcn(val.last_vch_id)
+                await voice_rcn(val.last_vch_id)
             else:
                 await v_leave_auto()
             sleep_check = False
@@ -187,6 +187,7 @@ def get_real_time(timezone_name="Asia/Bangkok"):
 
     return f"{now.hour}:{now.minute}:{now.second}"
 
+# Lấy thời gian dựa theo tính cách
 def get_ctime(char, per, take, t="h"):
     with open('saves/char.json', "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -209,7 +210,8 @@ def get_ctime(char, per, take, t="h"):
     elif take == "voice":
         voice = data[char][per]["voice"]
         return voice
-        
+
+# Cập nhật mood        
 def update_mood():
     from utils.bot import val
     
@@ -248,7 +250,7 @@ def update_mood():
         val.set('now_chat', new_chat)
         val.set('mood_chat', False)
 
-
+# Cập nhật voice
 def update_voice(mood):
     from utils.bot import val
     
@@ -456,4 +458,6 @@ def update_voice(mood):
             val.set('vv_pitch', 0.02)
             val.set('vv_iscale', 1.4)
             val.set('vv_speed', 1.15)
-            
+
+
+    

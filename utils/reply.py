@@ -216,7 +216,7 @@ async def cmd_msg():
     from utils.api import chat
     from utils.daily import get_real_time
     from utils.ui import normal_embed
-    from utils.funcs import avatar_change, banner_change, mood_change
+    from utils.funcs import avatar_change, banner_change, mood_change, leave_voice
 
     if not chat.last: return
     u_msg = list_to_str(val.old_chat)
@@ -279,6 +279,12 @@ async def cmd_msg():
     if (u_voice or ai_voice) and (u_out and ai_out) and not ai_no:
         await v_leave_auto()
 
+    
+    if leave_voice():
+        if val.mood_name == "angry": await v_leave_auto()
+        elif val.mood_name == "excited": await v_join_auto()
+        
+    
     # Đổi avatar:
     if (u_avt or ai_avt) and (u_cg or ai_cg) and ai_ok and not ai_no:
         if not val.public:

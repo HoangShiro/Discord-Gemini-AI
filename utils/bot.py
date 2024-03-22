@@ -55,7 +55,7 @@ class AllStatus:
         self.vv_pitch = 0                   # Cao độ (voicevox)
         self.vv_iscale = 1.5                # Ngữ điệu (voicevox)
         self.vv_speed = 1                   # Tốc độ (voicevox)
-        self.pr_vch_id = 0                  # ID voice channel cuối cùng mà bot kết nối tới
+        self.pr_vch_id = None               # ID voice channel cuối cùng mà bot kết nối tới
         self.pr_vch = None                  # Voice channel cuối cùng
         self.last_vch_id = None             # Lưu lại voice channel cuối
         self.vc_invited = False             # Thông báo lỗi cho user nếu không tìm thấy họ trong voice
@@ -203,7 +203,7 @@ async def on_ready():
 
     if not val.public: await edit_last_msg()
 
-    if val.tts_toggle: await voice_rcn()
+    await voice_rcn()
     
     try:
         from plugins.apps import on_start
