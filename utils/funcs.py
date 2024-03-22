@@ -215,6 +215,7 @@ async def v_join_auto():
             if member.display_name in name:
             # Tham gia kênh thoại nếu user có trong vc
                 await v_leave_auto()
+                await asyncio.sleep(1)
                 vc = await channel.connect()
                 sound = await sob('greeting')
                 if sound:
@@ -252,6 +253,7 @@ async def voice_rcn(pr_v = None):
     if not pr_v: pr_v = val.pr_vch_id
     if pr_v and val.tts_toggle:
         await v_leave_auto()
+        await asyncio.sleep(1)
         vc = await bot.get_channel(pr_v).connect()
         sound = await sob('greeting')
         if sound:
