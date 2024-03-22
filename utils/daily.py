@@ -28,7 +28,9 @@ async def sec_check():
     # Đếm ngược tới thời gian work trở lại
     if val.CD_idle < val.to_worktime:
         val.update('CD_idle', 1)
-
+    elif val.CD_idle > val.to_worktime:
+        val.set('CD_idle', val.to_worktime)
+    
     # Work trở lại
     if val.CD_idle == (val.to_worktime - 1):
         val.set('CD', val.to_breaktime)
