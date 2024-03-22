@@ -38,11 +38,26 @@ async def atv_change():
 # Set status khi không chat
 async def status_busy_set():
     from utils.bot import bot, val
+    from saves.moods import angry, sad, normal, happy, excited
+    
     atype, stt = await atv_change()
-    act = val.normal_act
+    
+    mood = ""
+    if val.mood_name == "angry":
+        mood = angry
+    elif val.mood_name == "sad":
+        mood = sad
+    elif val.mood_name == "normal":
+        mood = normal
+    elif val.mood_name == "happy":
+        mood = happy
+    elif val.mood_name == "excited":
+        mood = excited
+    
+    act = f"{val.normal_act} {mood}"
 
     if val.weekend:
-        act = val.breakday_act
+        act = f"{val.breakday_act} {mood}"
 
     now_act = discord.Activity(
         type=atype,

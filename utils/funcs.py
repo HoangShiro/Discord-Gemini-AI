@@ -448,6 +448,7 @@ async def reload_plugin(name):
       print(f"{get_real_time()}> lỗi reload plugin: ", e)
       return None
 
+# Đổi avatar
 async def avatar_change():
   from utils.bot import val, bot
   from utils.reply import send_embed
@@ -463,6 +464,7 @@ async def avatar_change():
   await send_embed(embed=embed, view=view)
   print(f'{get_real_time()}> {val.ai_name} đã thay đổi ảnh đại diện.')
 
+# Đổi banner
 async def banner_change():
     from utils.bot import val
     from utils.daily import get_real_time
@@ -486,7 +488,50 @@ async def banner_change():
                 await send_embed(embed=embed, view=view)
             else:
                 print(f'{get_real_time()}> Lỗi khi cập nhật ảnh bìa : {response.status}.')
-    
+
+# Thay đổi mood
+def mood_change(name):
+  from utils.bot import val
+  if name == "fun":
+    if val.ai_char == "gentle": val.update('ai_mood', 400)
+    elif val.char == "cold": val.update('ai_mood', 100)
+    elif val.char == "extrovert": val.update('ai_mood', 500)
+    elif val.char == "introvert": val.update('ai_mood', 200)
+    elif val.char == "lazy": val.update('ai_mood', 400)
+    elif val.char == "tsundere": val.update('ai_mood', 500)
+    elif val.char == "yandere": val.update('ai_mood', 200)
+    else: val.update('ai_mood', 300)
+      
+  elif name == "like":
+    if val.ai_char == "gentle": val.update('ai_mood', 700)
+    elif val.char == "cold": val.update('ai_mood', 200)
+    elif val.char == "extrovert": val.update('ai_mood', 800)
+    elif val.char == "introvert": val.update('ai_mood', 300)
+    elif val.char == "lazy": val.update('ai_mood', 600)
+    elif val.char == "tsundere": val.update('ai_mood', 900)
+    elif val.char == "yandere": val.update('ai_mood', 2000)
+    else: val.update('ai_mood', 500)
+      
+  elif name == "unhappy":
+    if val.ai_char == "gentle": val.update('ai_mood', -400)
+    elif val.char == "cold": val.update('ai_mood', -100)
+    elif val.char == "extrovert": val.update('ai_mood', -200)
+    elif val.char == "introvert": val.update('ai_mood', -500)
+    elif val.char == "lazy": val.update('ai_mood', -350)
+    elif val.char == "tsundere": val.update('ai_mood', -400)
+    elif val.char == "yandere": val.update('ai_mood', -800)
+    else: val.update('ai_mood', -300)
+      
+  elif name == "unlike":
+    if val.ai_char == "gentle": val.update('ai_mood', -1000)
+    elif val.char == "cold": val.update('ai_mood', -300)
+    elif val.char == "extrovert": val.update('ai_mood', -500)
+    elif val.char == "introvert": val.update('ai_mood', -1500)
+    elif val.char == "lazy": val.update('ai_mood', -600)
+    elif val.char == "tsundere": val.update('ai_mood', -800)
+    elif val.char == "yandere": val.update('ai_mood', -3000)
+    else: val.update('ai_mood', -800)
+      
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
   print(p)

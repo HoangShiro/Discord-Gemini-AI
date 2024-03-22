@@ -216,7 +216,7 @@ async def cmd_msg():
     from utils.api import chat
     from utils.daily import get_real_time
     from utils.ui import normal_embed
-    from utils.funcs import avatar_change, banner_change
+    from utils.funcs import avatar_change, banner_change, mood_change
 
     if not chat.last: return
     u_msg = list_to_str(val.old_chat)
@@ -243,10 +243,25 @@ async def cmd_msg():
     ai_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm', ai_msg, re.IGNORECASE)
 
     ai_ok = re.search(r'ok|key|hai|dạ|vâng|sẽ|vô|tới|được|đây|xong|rùi', ai_msg, re.IGNORECASE)
-    ai_no = re.search(r'no|ko|không|why|tại sao|hem', ai_msg, re.IGNORECASE)
+    ai_no = re.search(r'no|ko|không|why|tại sao|hem|gì|là như nào|là sao|what|where', ai_msg, re.IGNORECASE)
 
+    ai_mood_up1 = re.search(r'woa|wa|hihi|hehe|haha|hoho|owo|uwu|<3|xd|cười|smile|:d|:p|:))', ai_msg, re.IGNORECASE)
+    ai_mood_up2 = re.search(r'tuyệt|great|perfect|yêu|thích|love|like|sướng|phê', ai_msg, re.IGNORECASE)
+    ai_mood_dn1 = re.search(r'xin|lỗi|gomenasai|sorry|cúi đầu|:(|:<| tt|buồn', ai_msg, re.IGNORECASE)
+    ai_mood_dn2 = re.search(r'baka|cay|giận|tức|điên|cút|hãy rời đi|ngốc|angry|depress|go away', ai_msg, re.IGNORECASE)
+    
+    # Mood
+    if ai_mood_up1 and not ai_mood_dn1 and not ai_mood_dn2:
+        mood_change("fun")
+    elif ai_mood_up2 and not ai_mood_dn1 and not ai_mood_dn2:
+        mood_change("like")
+    elif ai_mood_dn1 and not ai_mood_up1 and not ai_mood_up2:
+        mood_change("unhappy")
+    elif ai_mood_dn2 and not ai_mood_up1 and not ai_mood_up2:
+        mood_change("unlike")
+        
     # Voice
-    if (u_voice or ai_voice) and (u_join or ai_join) and ai_ok and not ai_no and not (u_out or ai_out):
+    if (u_voice or ai_voice) and (u_join or ai_join) and not ai_no and not (u_out or ai_out):
         found = await v_join_auto()
 
         # Nếu không tìm thấy user trong voice
@@ -261,7 +276,7 @@ async def cmd_msg():
     else:
         val.set('vc_invited', False)
 
-    if (u_voice or ai_voice) and (u_out and ai_out) and ai_ok and not ai_no:
+    if (u_voice or ai_voice) and (u_out and ai_out) and not ai_no:
         await v_leave_auto()
 
     # Đổi avatar:

@@ -77,6 +77,11 @@ class AllStatus:
         self.total_newchat = 0              # Tổng số lần newchat
 
         # Status on one conversation
+        self.ai_mood = 0                    # Mood hiện tại của bot
+        self.mood_name = "normal"           # Tên mood hiện tại của bot
+        self.mood_chat = True               # Chat khi mood được thay đổi
+        self.intimacy = 0                   # Độ thân thiết
+        
         self.one_rep = 0                    # Số chat đã rep
         self.one_mess = 0                   # Số chat đã đọc
         self.one_voice = 0                  # Số lần nói
@@ -88,6 +93,10 @@ class AllStatus:
         self.vc_invite = "(SYSTEM): Không tìm thấy người đó trong voice channel nào, hãy hỏi lại." # Voice
         self.set_avatar = "(SYSTEM): lỗi khi đổi avatar cho bạn - " # Khi đổi avatar bị lỗi
         self.set_banner = "(SYSTEM): lỗi khi đổi banner cho bạn - " # Khi đổi avatar bị lỗi
+        self.mood_angry = "*tiếp tục cuộc trò chuyện với cảm xúc tức giận*" # Chat khi bot giận
+        self.mood_sad = "*tiếp tục cuộc trò chuyện với cảm xúc buồn bã*" # Chat khi bot buồn
+        self.mood_happy = "*tiếp tục cuộc trò chuyện với cảm xúc vui vẻ*" # Chat khi bot vui
+        self.mood_excited = "*tiếp tục cuộc trò chuyện với cảm xúc rất vui vẻ*" # Chat khi bot yêu đời
 
         # Lời nhắc cho user
         self.no_perm = "`Bạn hem có quyền sử dụng lệnh nỳ.`" # Không có quyền sử dụng slash
@@ -202,6 +211,10 @@ async def on_ready():
     except Exception as e:
         print(f'{get_real_time()}> Lỗi apps.py - on_start(): ', e)
         pass
+    
+    from utils.make import char
+    with open('saves/char.json', 'w', encoding="utf-8") as file:
+        json.dump(char, file)
     
     print("\n")
     print(f'{get_real_time()}> {val.ai_name} đã sẵn sàng!')
@@ -378,6 +391,7 @@ async def newchat(interaction: discord.Interaction):
     new_prpt = load_prompt("saves/chat.txt")
     chat.history.clear()
     chat.history.extend(new_prpt)
+    
     val.set('CD', 1)
     val.set('CD_idle', 1)
     val.set('now_chat', [])
@@ -385,6 +399,10 @@ async def newchat(interaction: discord.Interaction):
     val.set('ignore_chat', [])
     val.set('last_mess_id', None)
     val.set('old_mess_id', None)
+    
+    val.set('ai_mood', 0)
+    val.set('mood_name', "normal")
+    val.set('mood_chat', True)
     
     val.set('one_rep', 0)
     val.set('one_mess', 0)
