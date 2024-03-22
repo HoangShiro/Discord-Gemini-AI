@@ -245,9 +245,9 @@ async def cmd_msg():
     ai_ok = re.search(r'ok|key|hai|dạ|vâng|sẽ|vô|tới|được|đây|xong|rùi', ai_msg, re.IGNORECASE)
     ai_no = re.search(r'no|ko|không|why|tại sao|hem|gì|là như nào|là sao|what|where', ai_msg, re.IGNORECASE)
 
-    ai_mood_up1 = re.search(r'woa|wa|hihi|hehe|haha|hoho|owo|uwu|<3|xd|cười|smile|:d|:p|:))', ai_msg, re.IGNORECASE)
+    ai_mood_up1 = re.search(r'woa|wa|hihi|hehe|haha|hoho|owo|uwu|<3|xd|cười|smile|:d|:p', ai_msg, re.IGNORECASE)
     ai_mood_up2 = re.search(r'tuyệt|great|perfect|yêu|thích|love|like|sướng|phê', ai_msg, re.IGNORECASE)
-    ai_mood_dn1 = re.search(r'xin|lỗi|gomenasai|sorry|cúi đầu|:(|:<| tt|buồn', ai_msg, re.IGNORECASE)
+    ai_mood_dn1 = re.search(r'xin|lỗi|gomenasai|sorry|cúi đầu|:<| tt|buồn|sad', ai_msg, re.IGNORECASE)
     ai_mood_dn2 = re.search(r'baka|cay|giận|tức|điên|cút|hãy rời đi|ngốc|angry|depress|go away', ai_msg, re.IGNORECASE)
     
     # Mood

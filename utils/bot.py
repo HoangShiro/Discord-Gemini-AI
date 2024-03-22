@@ -212,10 +212,6 @@ async def on_ready():
         print(f'{get_real_time()}> Lỗi apps.py - on_start(): ', e)
         pass
     
-    from utils.make import char
-    with open('saves/char.json', 'w', encoding="utf-8") as file:
-        json.dump(char, file)
-    
     print("\n")
     print(f'{get_real_time()}> {val.ai_name} đã sẵn sàng!')
     print("\n")
