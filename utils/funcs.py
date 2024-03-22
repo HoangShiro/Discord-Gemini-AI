@@ -534,6 +534,29 @@ def mood_change(name):
     elif val.ai_char == "yandere": val.update('ai_mood', -3000)
     else: val.update('ai_mood', -800)
 
+# Phục hồi lại mood
+def mood_restore():
+  from utils.bot import val
+  
+  if val.ai_mood < 0:
+    if val.ai_char == "gentle": val.update('ai_mood', 1)
+    elif val.ai_char == "cold": val.update('ai_mood', 1)
+    elif val.ai_char == "extrovert": val.update('ai_mood', 2)
+    elif val.ai_char == "introvert": val.update('ai_mood', 1)
+    elif val.ai_char == "lazy": val.update('ai_mood', 1)
+    elif val.ai_char == "tsundere": val.update('ai_mood', 1)
+    elif val.ai_char == "yandere": val.update('ai_mood', 2)
+    else: val.update('ai_mood', 1)
+  elif val.ai_mood > 0:
+    if val.ai_char == "gentle": val.update('ai_mood', -1)
+    elif val.ai_char == "cold": val.update('ai_mood', -1)
+    elif val.ai_char == "extrovert": val.update('ai_mood', -1)
+    elif val.ai_char == "introvert": val.update('ai_mood', -2)
+    elif val.ai_char == "lazy": val.update('ai_mood', -1)
+    elif val.ai_char == "tsundere": val.update('ai_mood', -1)
+    elif val.ai_char == "yandere": val.update('ai_mood', -3)
+    else: val.update('ai_mood', -1)
+
 # Leave voice nếu giận?
 def leave_voice():
     from utils.bot import val
@@ -550,7 +573,23 @@ def leave_voice():
     
     if random.random() > per: return False
     else: return True
-   
+
+# Cập nhật tỷ lệ bơ tin nhắn
+def update_ignore():
+    from utils.bot import val 
+    
+    per = 0.8
+    if val.ai_char == "gentle": per = 0.7
+    elif val.ai_char == "cold": per = 0.98
+    elif val.ai_char == "extrovert": per = 0.6
+    elif val.ai_char == "introvert": per = 0.85
+    elif val.ai_char == "lazy": per = 0.9
+    elif val.ai_char == "tsundere": per = 0.75
+    elif val.ai_char == "yandere": per = 0.99
+    else: per = 0.8
+    
+    val.set('ignore_rep', per)
+
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
   print(p)

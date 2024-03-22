@@ -16,6 +16,7 @@ voice_leave = True
 @tasks.loop(seconds=1)
 async def sec_check():
     from utils.bot import bot, val
+    from utils.funcs import update_ignore
     
     # Rep khi bot rảnh
     if val.CD == 0 and val.now_chat:
@@ -46,6 +47,7 @@ async def sec_check():
         # Chat khi đổi mood
         val.set('mood_chat', True)
 
+    update_ignore()
     update_mood()
     update_voice(val.mood_name)
     
@@ -214,14 +216,12 @@ def get_ctime(char, per, take, t="h"):
 # Cập nhật mood        
 def update_mood():
     from utils.bot import val
+    from utils.funcs import mood_restore
     
     chat = None
     
     # Quản lý mood cho bot
-    if val.ai_mood < 0:
-        val.update('ai_mood', 1)
-    elif val.ai_mood > 0:
-        val.update('ai_mood', -1)
+    mood_restore()
         
     # Lấy tên mood cho bot
     if -2000 < val.ai_mood < -1000:
