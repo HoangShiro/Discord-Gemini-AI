@@ -236,7 +236,7 @@ async def cmd_msg():
 
     u_avt = re.search(r'ava|avt|hình đại diện|ảnh đại diện|pfp', u_msg, re.IGNORECASE)
     u_banner = re.search(r'banner|cover|biểu ngữ|bìa', u_msg, re.IGNORECASE)
-    u_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm', u_msg, re.IGNORECASE)
+    u_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm|add', u_msg, re.IGNORECASE)
 
     # Bot
     ai_voice = re.search(r'vc|voice channel|voice chat|voice', ai_msg, re.IGNORECASE)
@@ -245,7 +245,7 @@ async def cmd_msg():
 
     ai_avt = re.search(r'ava|avt|hình đại diện|ảnh đại diện|pfp', ai_msg, re.IGNORECASE)
     ai_banner = re.search(r'banner|cover|biểu ngữ|bìa', ai_msg, re.IGNORECASE)
-    ai_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm', ai_msg, re.IGNORECASE)
+    ai_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm|add', ai_msg, re.IGNORECASE)
 
     ai_ok = re.search(r'ok|key|hai|dạ|vâng|sẽ|vô|tới|được|đây|xong|rùi|bây giờ|now|sure|understood', ai_msg, re.IGNORECASE)
     ai_no = re.search(r'no|ko|không|why|tại sao|hem|gì|là như nào|là sao|what|where', ai_msg, re.IGNORECASE)
