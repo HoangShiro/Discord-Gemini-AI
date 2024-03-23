@@ -745,6 +745,7 @@ async def p_cchannel(interaction: discord.Interaction, public_channel_id: str = 
     
     if not public_channel_id:
         val.set('ai_pchat_channel', None)
+        await interaction.response.send_message(f"> {val.ai_name} sẽ chat tại tất cả các public channel.", ephemeral=True)
     else:
         guild = bot.get_guild(val.ai_guild)
         channel = await guild.fetch_channel(public_channel_id)
