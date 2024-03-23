@@ -287,7 +287,6 @@ async def cmd_msg():
         val.set('vc_invited', False)
 
     if (u_voice or ai_voice or voice_follow) and (u_out or ai_out) and not ai_no:
-        if voice_follow: voice_follow = False
         await v_leave_auto()
 
     
