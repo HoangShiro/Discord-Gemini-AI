@@ -485,7 +485,7 @@ def json_update(path, vals):
     try:
         with open(path, 'r', encoding="utf-8") as file:
             json.load(file)
-    except FileNotFoundError:
+    except Exception:
         with open(path, 'w', encoding="utf-8") as file:
             json.dump(vals, file)
 
