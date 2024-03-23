@@ -653,7 +653,7 @@ async def run_plugins(interaction: discord.Interaction):
         pass
 
 # Đổi tên cho bot
-@bot.slash_command(name="name", description=f"Thêm note cho {val.ai_name}")
+@bot.slash_command(name="name", description=f"Đổi tên cho {val.ai_name}")
 async def name_change(interaction: discord.Interaction, name: str):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
