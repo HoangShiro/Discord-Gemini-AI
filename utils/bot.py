@@ -28,6 +28,7 @@ class AllStatus:
         self.ai_avt_url = None              # Avatar hiện tại của bot
         self.ai_banner_url = None           # Banner hiện tại của bot
         self.ai_chat = ""                   # Chat gần nhất của bot
+        self.ai_pchat_channel = None        # Channel duy nhất mà bot sẽ chat
         self.last_mess_id = 0               # ID tin nhắn gần nhất
         self.old_mess_id = 0                # ID tin nhắn cũ hơn
         self.final_mess_id = 0              # ID tin nhắn cuối cùng trước khi update
@@ -251,7 +252,9 @@ async def on_message(message: discord.Message):
             await message.channel.send('`Prompt phải dài hơn 50 ký tự và tối thiểu 2 dòng.`')
         val.set('prompt_fix', False)
         return
-
+    
+    if val.ai_pchat_channel:
+        if message.channel.id != val.ai_pchat_channel: return
     if message.author == bot.user or message.content.startswith((".", "!", ",", "/")): return
     if len(val.gai_key) < 39: return await message.channel.send(f"> Xài lệnh `/setkeys` điền Gemini API key trước, sau đó gõ lệnh `/chatmode` đổi chế độ chat của {val.ai_name}")
     
@@ -734,6 +737,20 @@ async def preset_change(interaction: discord.Interaction, name: str = None):
             await mess.edit_original_response(embed=embed)
         else: return await interaction.response.send_message(f"> Có lỗi khi load preset cho {name}.", ephemeral=True)
     else: await interaction.response.send_message(f"> Đã lưu preset cho {val.ai_name}.", ephemeral=True)
+
+# Set public chat channel
+@bot.slash_command(name="chat_channel", description=f"Channel public duy nhất mà {val.ai_name} sẽ chat.")
+async def p_cchannel(interaction: discord.Interaction, public_channel_id: str = None):
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    if not public_channel_id:
+        val.set('ai_pchat_channel', None)
+    else:
+        guild = bot.get_guild(val.ai_guild)
+        channel = await guild.fetch_channel(public_channel_id)
+        if not channel: return await interaction.response.send_message("> Channel không tồn tại.", ephemeral=True)
+        else: await interaction.response.send_message(f"> {val.ai_name} sẽ chỉ chat tại `{channel.name}`.", ephemeral=True)
+        val.set('ai_pchat_channel', public_channel_id)
     
 """# Load plugin
 @bot.slash_command(name="loadplug", description=f"Load các plugin cho {val.ai_name}")
