@@ -44,7 +44,6 @@ async def sec_check():
         val.set('CD', val.to_breaktime)
         # Set lại status
         await status_busy_set()
-        # Chat khi đổi mood
 
     # Đổi tên countdown
     if val.name_ctime > 0:

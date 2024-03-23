@@ -5,6 +5,10 @@ from discord import FFmpegPCMAudio
 from utils.funcs import list_to_str, txt_read, v_leave_auto, voice_make_tts, v_join_auto
 from utils.api import igemini_text, gemini_rep, gemini_task
 
+voice_follow = False
+avatar_follow = False
+banner_follow = False
+
 # Xử lý hình ảnh -> text
 async def IMG_read(message):
     """Hàm xử lý hình ảnh"""
@@ -212,6 +216,9 @@ async def voice_send(url, ch):
 
 # Hàm xử lý lệnh trong tin nhắn
 async def cmd_msg():
+    global voice_follow, avatar_follow, banner_follow
+    
+    
     from utils.bot import val, bot
     from utils.api import chat
     from utils.daily import get_real_time
@@ -261,7 +268,10 @@ async def cmd_msg():
         mood_change("unlike")
         
     # Voice
-    if (u_voice or ai_voice) and (u_join or ai_join) and not ai_no and not (u_out or ai_out):
+    if (u_voice or ai_voice or voice_follow) and (u_join or ai_join) and not ai_no and not (u_out or ai_out):
+        if not voice_follow: voice_follow = True
+        else: voice_follow = False
+        
         found = await v_join_auto()
 
         # Nếu không tìm thấy user trong voice
@@ -276,7 +286,8 @@ async def cmd_msg():
     else:
         val.set('vc_invited', False)
 
-    if (u_voice or ai_voice) and (u_out or ai_out) and not ai_no:
+    if (u_voice or ai_voice or voice_follow) and (u_out or ai_out) and not ai_no:
+        if voice_follow: voice_follow = False
         await v_leave_auto()
 
     
@@ -286,7 +297,10 @@ async def cmd_msg():
         
     
     # Đổi avatar:
-    if (u_avt or ai_avt) and (u_cg or ai_cg) and ai_ok and not ai_no:
+    if (u_avt or ai_avt or avatar_follow) and (u_cg or ai_cg) and ai_ok and not ai_no:
+        if not avatar_follow: avatar_follow = True
+        else: avatar_follow = False
+        
         if not val.public:
             if val.last_uid != val.owner_uid: return
         if not val.last_img: return
@@ -302,7 +316,10 @@ async def cmd_msg():
                 val.set('now_chat', new_chat)
                 val.set('CD', 1)
                 pass
-    elif (u_banner or ai_banner) and (u_cg or ai_cg) and ai_ok and not ai_no:
+    elif (u_banner or ai_banner or banner_follow) and (u_cg or ai_cg) and ai_ok and not ai_no:
+        if not banner_follow: banner_follow = True
+        else: banner_follow = False
+        
         if not val.public:
             if val.last_uid != val.owner_uid: return
         if not val.last_img: return
