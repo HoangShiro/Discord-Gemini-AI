@@ -667,7 +667,8 @@ async def name_change(interaction: discord.Interaction, name: str):
         try:
             await bot.user.edit(username=name)
             val.set('name_ctime', 1800)
-            embed, view = await bot_notice(au_name=interaction.user.display_name,
+            embed, view = await bot_notice(tt=name, ava_link=bot.user.display_avatar,
+                                   au_name=interaction.user.display_name,
                                    au_avatar=interaction.user.display_avatar,
                                    au_link=interaction.user.display_avatar,
                                    color=0xff8a8a)
