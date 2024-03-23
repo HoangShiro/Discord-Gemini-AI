@@ -1,5 +1,5 @@
 """Các hàm chức năng"""
-import json, os, time, datetime, pytz, asyncio, jaconv, re, random, discord, importlib, aiohttp, requests
+import json, os, shutil, asyncio, jaconv, re, random, discord, importlib, aiohttp, requests
 
 from translate import Translator
 from mtranslate import translate
@@ -453,14 +453,18 @@ async def reload_plugin(name):
       return None
 
 # Đổi avatar
-async def avatar_change():
+async def avatar_change(img_url=None):
   from utils.bot import val, bot
   from utils.reply import send_embed
   from utils.ui import normal_embed
   from utils.daily import get_real_time
   
+  if not img_url: url = val.last_img
+  else: url = img_url
+  if not url: return
+  
   async with aiohttp.ClientSession() as session:
-    async with session.get(val.last_img) as response:
+    async with session.get(url) as response:
       image_data = await response.read()
   await bot.user.edit(avatar=image_data)
   avatar_url = bot.user.avatar.url
@@ -469,13 +473,16 @@ async def avatar_change():
   print(f'{get_real_time()}> {val.ai_name} đã thay đổi ảnh đại diện.')
 
 # Đổi banner
-async def banner_change():
+async def banner_change(img_url=None):
     from utils.bot import val
     from utils.daily import get_real_time
     from utils.reply import send_embed
     from utils.ui import normal_embed
     
-    url = val.last_img
+    if not img_url: url = val.last_img
+    else: url = img_url
+    if not url: return
+    
     response = requests.get(url)
     image_data = response.content
 
@@ -490,6 +497,8 @@ async def banner_change():
                 
                 embed, view = await normal_embed(description=f"> Banner mới của {val.ai_name}:", img=url, color=0xffbf75, delete=True)
                 await send_embed(embed=embed, view=view)
+                
+                val.set('ai_banner_url', url)
             else:
                 print(f'{get_real_time()}> Lỗi khi cập nhật ảnh bìa : {response.status}.')
 
@@ -592,6 +601,46 @@ def update_ignore():
     
     val.set('ignore_rep', per)
 
+# Lưu pfp hiện tại của bot
+def save_pfp():
+  from utils.bot import val, bot
+  from utils.daily import get_real_time
+  
+  path = f"character list/{val.ai_name.lower()}"
+  
+  if not os.path.exists("character list"): os.mkdir("character list")
+  else:
+    if not os.path.exists(path): os.mkdir(path)
+    else:
+      try:
+        shutil.copytree(src="plugins", dst=path, dirs_exist_ok=True)
+        shutil.copytree(src="saves", dst=path, dirs_exist_ok=True)
+        shutil.copytree(src="sound", dst=path, dirs_exist_ok=True)
+        return True
+      except Exception as e:
+        print(f'{get_real_time()}> Lỗi khi save pfp: ', e)
+        return False
+
+# Load pfp
+def load_pfp(name):
+  from utils.bot import val, bot
+  from utils.daily import get_real_time
+  
+  path = f"character list/{name.lower()}"
+  if os.path.exists(path):
+    try:
+      shutil.copytree(src=f"{path}/plugins", dst="plugins", dirs_exist_ok=True)
+      shutil.copytree(src=f"{path}/saves", dst="saves", dirs_exist_ok=True)
+      shutil.copytree(src=f"{path}/sound", dst="sound", dirs_exist_ok=True)
+      return True
+    except Exception as e:
+      print(f'{get_real_time()}> Lỗi khi load pfp: ', e)
+      return False
+  else:
+    print(f'{get_real_time()}> Lỗi khi load pfp: Thư mục ({path}) không tồn tại.')
+    return False
+      
+      
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
   print(p)

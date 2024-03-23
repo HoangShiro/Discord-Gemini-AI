@@ -72,7 +72,6 @@ async def h_check():
     if val.CD_idle == val.to_worktime:
         await status_busy_set()
         
-
 # Lấy khoảng thời gian và xử lý các tác vụ
 async def get_current_period(timezone_name="Asia/Bangkok"):
     global morning_check, noon_check, afternoon_check, night_check, sleep_check

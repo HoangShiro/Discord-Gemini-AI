@@ -25,6 +25,8 @@ class AllStatus:
         self.ai_char = "innocent"           # Tính cách của bot
         self.ai_guild = 0                   # ID server gần nhất
         self.ai_channel = 0                 # ID text channel gần nhất
+        self.ai_avt_url = None              # Avatar hiện tại của bot
+        self.ai_banner_url = None           # Banner hiện tại của bot
         self.ai_chat = ""                   # Chat gần nhất của bot
         self.last_mess_id = 0               # ID tin nhắn gần nhất
         self.old_mess_id = 0                # ID tin nhắn cũ hơn
@@ -194,22 +196,31 @@ async def on_ready():
     with open('saves/char.json', 'w', encoding="utf-8") as file:
         json.dump(char, file)
     
+    # Lưu bot name và avatar
     val.set('ai_name', bot.user.name)
-
+    val.set('ai_avt_url', bot.user.display_avatar)
+    
+    # Load các button
     await load_btt()
 
+    # Tạo vòng lặp giây
     asyncio.create_task(sec_check())
     sec_check.start()
 
+    # Tạo vòng lặp phút
     asyncio.create_task(h_check())
     h_check.start()
 
+    # Load nhân cách hiện tại
     val.load_val_char('saves/char.json', val.ai_char, val.now_period)
 
+    # Set trạng thái hoạt động
     await status_busy_set()
 
+    # Load lại các button cuối nếu là DM chat
     if not val.public: await edit_last_msg()
     
+    # Load các plugin khởi động
     try:
         from plugins.apps import on_start
         await on_start()
@@ -687,7 +698,27 @@ async def name_change(interaction: discord.Interaction, name: str):
         except Exception as e:
             print(f'{get_real_time()}> Lỗi khi đổi tên cho bot: ', e)
             return await interaction.response.send_message(f"> Lỗi khi đổi tên cho bot: {e}", ephemeral=True)
-        
+
+# Load preset
+@bot.slash_command(name="preset", description=f"Xem hoặc đổi list preset")
+async def preset_change(interaction: discord.Interaction, name: str = None):
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    if not save_pfp(): return await interaction.response.send_message(f"> Có lỗi khi lưu preset cho {val.ai_name}.", ephemeral=True)
+    
+    if name:
+        old_cname = val.name_ctime
+        if load_pfp(name):
+            val.load('saves/vals.json')
+            val.set('name_ctime', old_cname)
+            if val.ai_avt_url: await avatar_change(val.ai_avt_url)
+            if val.ai_banner_url: await banner_change(val.ai_banner_url)
+            if val.name_ctime == 0: await bot.user.edit(username=val.ai_name)
+            
+            return await interaction.response.send_message(f"> Đã load preset: {val.ai_name}.", ephemeral=True)
+        else: return await interaction.response.send_message(f"> Có lỗi khi load preset cho {name}.", ephemeral=True)
+    else: await interaction.response.send_message(f"> Đã lưu preset cho {val.ai_name}.", ephemeral=True)
+    
 """# Load plugin
 @bot.slash_command(name="loadplug", description=f"Load các plugin cho {val.ai_name}")
 async def loadplugin(interaction: discord.Interaction, name: str = None):
