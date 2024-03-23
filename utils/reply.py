@@ -228,7 +228,7 @@ async def cmd_msg():
     if not chat.last: return
     u_msg = list_to_str(val.old_chat)
     if not u_msg: return
-    ai_msg = chat.last.text
+    ai_msg = val.now_chat_ai
     if not ai_msg: return
 
     # User
