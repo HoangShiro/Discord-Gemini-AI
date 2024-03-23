@@ -609,17 +609,15 @@ def save_pfp():
   path = f"character list/{val.ai_name.lower()}"
   
   if not os.path.exists("character list"): os.mkdir("character list")
-  else:
-    if not os.path.exists(path): os.mkdir(path)
-    else:
-      try:
-        shutil.copytree(src="plugins", dst=path, dirs_exist_ok=True)
-        shutil.copytree(src="saves", dst=path, dirs_exist_ok=True)
-        shutil.copytree(src="sound", dst=path, dirs_exist_ok=True)
-        return True
-      except Exception as e:
-        print(f'{get_real_time()}> Lỗi khi save pfp: ', e)
-        return False
+  if not os.path.exists(path): os.mkdir(path)
+  try:
+    shutil.copytree(src="plugins", dst=f'{path}/plugins', dirs_exist_ok=True)
+    shutil.copytree(src="saves", dst=f'{path}/saves', dirs_exist_ok=True)
+    shutil.copytree(src="sound", dst=f'{path}/sound', dirs_exist_ok=True)
+    return True
+  except Exception as e:
+    print(f'{get_real_time()}> Lỗi khi save pfp: ', e)
+    return False
 
 # Load pfp
 def load_pfp(name):
