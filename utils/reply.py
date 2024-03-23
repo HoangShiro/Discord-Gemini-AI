@@ -6,8 +6,6 @@ from utils.funcs import list_to_str, txt_read, v_leave_auto, voice_make_tts, v_j
 from utils.api import igemini_text, gemini_rep, gemini_task
 
 voice_follow = False
-avatar_follow = False
-banner_follow = False
 
 # Xử lý hình ảnh -> text
 async def IMG_read(message):
@@ -216,7 +214,7 @@ async def voice_send(url, ch):
 
 # Hàm xử lý lệnh trong tin nhắn
 async def cmd_msg():
-    global voice_follow, avatar_follow, banner_follow
+    global voice_follow
     
     
     from utils.bot import val, bot
@@ -296,9 +294,7 @@ async def cmd_msg():
         
     
     # Đổi avatar:
-    if (u_avt or ai_avt or avatar_follow) and (u_cg or ai_cg) and ai_ok and not ai_no:
-        if not avatar_follow: avatar_follow = True
-        else: avatar_follow = False
+    if (u_avt or ai_avt) and (u_cg or ai_cg) and ai_ok and not ai_no:
         
         if not val.public:
             if val.last_uid != val.owner_uid: return
@@ -315,9 +311,7 @@ async def cmd_msg():
                 val.set('now_chat', new_chat)
                 val.set('CD', 1)
                 pass
-    elif (u_banner or ai_banner or banner_follow) and (u_cg or ai_cg) and ai_ok and not ai_no:
-        if not banner_follow: banner_follow = True
-        else: banner_follow = False
+    elif (u_banner or ai_banner) and (u_cg or ai_cg) and ai_ok and not ai_no:
         
         if not val.public:
             if val.last_uid != val.owner_uid: return
