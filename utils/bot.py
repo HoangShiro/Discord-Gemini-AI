@@ -76,7 +76,8 @@ class AllStatus:
         self.total_cmd = 0                  # Tổng số lệnh đã nhận
         self.total_update = 0               # Tổng số lần update
         self.total_newchat = 0              # Tổng số lần newchat
-
+        self.ai_money = 0                   # Money của bot
+        
         # Status on one conversation
         self.ai_mood = 0                    # Mood hiện tại của bot
         self.mood_name = "normal"           # Tên mood hiện tại của bot

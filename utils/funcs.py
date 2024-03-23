@@ -346,7 +346,7 @@ async def get_msg_img_url(message: discord.Message):
 
         if message.attachments:
             attachment = message.attachments[0]
-            if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png')): val.set('last_img', attachment.url)
+            if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')): val.set('last_img', attachment.url)
 
     # Khi là tin nhắn được nhắc tới
     else:
@@ -360,7 +360,7 @@ async def get_msg_img_url(message: discord.Message):
                 if url: val.set('last_img', url)
             elif ref_msg.attachments:
                 attachment = ref_msg.attachments[0]
-                if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png')): val.set('last_img', attachment.url)
+                if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')): val.set('last_img', attachment.url)
 
 # Xoá tag name mở đầu
 def name_cut(reply: str):
