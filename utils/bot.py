@@ -66,6 +66,7 @@ class AllStatus:
         self.ignore_rep = 0.8               # Tỷ lệ ignore user mà bot ignore
         self.bot_rep = True                 # Cho phép reply chat của bot khác
         self.name_filter = True             # Lọc tên
+        self.name_ctime = 0                 # Thời gian chờ đổi tên cho bot
         
         # Status total
         self.total_rep = 0                  # Tổng chat đã trả lời
@@ -441,13 +442,16 @@ async def chat_mode(interaction: discord.Interaction):
 
 # Bật hoặc tắt voice
 @bot.slash_command(name="voice", description=f"Bật hoặc tắt voice của {val.ai_name}.")
-async def voice(interaction: discord.Interaction, speaker: int = None):
+async def voice(interaction: discord.Interaction, speaker: int = None, pick: bool = False):
     if not val.public:
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
     val.update('total_cmd', 1)
     val.update('one_cmd', 1)
+    
+    if pick:
+        pass
     
     text = ""
     if val.tts_toggle and not speaker:
@@ -648,6 +652,31 @@ async def run_plugins(interaction: discord.Interaction):
         print(f'{get_real_time()}> Lỗi apps.py - on_run_slash(): ', e)
         pass
 
+# Đổi tên cho bot
+@bot.slash_command(name="name", description=f"Thêm note cho {val.ai_name}")
+async def name_change(interaction: discord.Interaction, name: str):
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+
+    if len(name) > 32: return await interaction.response.send_message("> Độ dài tối đa tên mới là 32 ký tự.", ephemeral=True)
+    
+    if val.name_ctime > 0:
+        m = val.name_ctime // 60
+        s = val.name_ctime % 60
+        return await interaction.response.send_message(f"> Đợi {m} phút, {s} giây nữa để đổi tên.", ephemeral=True)
+    else:
+        try:
+            await bot.user.edit(username=name)
+            val.set('name_ctime', 1800)
+            embed, view = await bot_notice(tt=name,
+                                   au_name=interaction.user.display_name,
+                                   au_avatar=interaction.user.display_avatar,
+                                   au_link=interaction.user.display_avatar,
+                                   color=0xff8a8a)
+            await interaction.response.send_message(embed=embed, view=view)
+        except Exception as e:
+            print(f'{get_real_time()}> Lỗi khi đổi tên cho bot: ', e)
+            return await interaction.response.send_message(f"> Lỗi khi đổi tên cho bot: {e}", ephemeral=True)
+        
 """# Load plugin
 @bot.slash_command(name="loadplug", description=f"Load các plugin cho {val.ai_name}")
 async def loadplugin(interaction: discord.Interaction, name: str = None):
