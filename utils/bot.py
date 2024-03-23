@@ -707,15 +707,31 @@ async def preset_change(interaction: discord.Interaction, name: str = None):
     if not save_pfp(): return await interaction.response.send_message(f"> Có lỗi khi lưu preset cho {val.ai_name}.", ephemeral=True)
     
     if name:
+        old_name = val.ai_name
         old_cname = val.name_ctime
         if load_pfp(name):
+            embed, view = await bot_notice(tt="Đang load pfp mới 💫",
+                                        des=f"Đang load các thông tin của {name}...",
+                                        au_name=interaction.user.display_name,
+                                        au_avatar=interaction.user.display_avatar,
+                                        au_link=interaction.user.display_avatar)
+            mess = await interaction.response.send_message(embed=embed, view=view)
+            
             val.load('saves/vals.json')
             val.set('name_ctime', old_cname)
             if val.ai_avt_url: await avatar_change(val.ai_avt_url)
             if val.ai_banner_url: await banner_change(val.ai_banner_url)
-            if val.name_ctime == 0: await bot.user.edit(username=val.ai_name)
+            if val.name_ctime == 0:
+                await bot.user.edit(username=val.ai_name)
+                val.set('name_ctime', 1800)
+                print(f'{get_real_time()}> Tên của {old_name} đã được đổi thành: ', val.ai_name)
             
-            return await interaction.response.send_message(f"> Đã load preset: {val.ai_name}.", ephemeral=True)
+            embed, view = await bot_notice(
+                                        au_name=interaction.user.display_name,
+                                        au_avatar=interaction.user.display_avatar,
+                                        au_link=interaction.user.display_avatar,
+                                        color=0xff8a8a)
+            await mess.edit_original_response(embed=embed)
         else: return await interaction.response.send_message(f"> Có lỗi khi load preset cho {name}.", ephemeral=True)
     else: await interaction.response.send_message(f"> Đã lưu preset cho {val.ai_name}.", ephemeral=True)
     

@@ -468,8 +468,9 @@ async def avatar_change(img_url=None):
       image_data = await response.read()
   await bot.user.edit(avatar=image_data)
   avatar_url = bot.user.avatar.url
-  embed, view = await normal_embed(description=f"> Avatar mới của {val.ai_name}:", img=avatar_url, color=0xffbf75, delete=True)
-  await send_embed(embed=embed, view=view)
+  if not img_url:
+    embed, view = await normal_embed(description=f"> Avatar mới của {val.ai_name}:", img=avatar_url, color=0xffbf75, delete=True)
+    await send_embed(embed=embed, view=view)
   print(f'{get_real_time()}> {val.ai_name} đã thay đổi ảnh đại diện.')
 
 # Đổi banner
@@ -495,8 +496,9 @@ async def banner_change(img_url=None):
             if response.status == 200:
                 print(f'{get_real_time()}> {val.ai_name} đã thay đổi ảnh bìa.')
                 
-                embed, view = await normal_embed(description=f"> Banner mới của {val.ai_name}:", img=url, color=0xffbf75, delete=True)
-                await send_embed(embed=embed, view=view)
+                if not img_url:
+                  embed, view = await normal_embed(description=f"> Banner mới của {val.ai_name}:", img=url, color=0xffbf75, delete=True)
+                  await send_embed(embed=embed, view=view)
                 
                 val.set('ai_banner_url', url)
             else:
