@@ -544,7 +544,7 @@ async def prompts(interaction: discord.Interaction, view: discord.Option(
     elif view == "creative":
         if fix:
             val.set('prompt_fix', "creative")
-        prompt = load_prompt("saves/creative.txt")
+        prompt = txt_read("saves/creative.txt")
     if fix:
         await interaction.response.send_message("> Hãy gửi prompt mới vào chat.", ephemeral=True)
         await send_mess(interaction, prompt, inter=True)
