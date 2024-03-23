@@ -236,6 +236,7 @@ async def v_leave_auto():
     from utils.reply import voice_send
 
     guild = bot.get_guild(val.ai_guild)
+    if not guild: return
     vc = guild.voice_client
     if not vc: return
     sound = await sob('bye')
