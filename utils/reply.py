@@ -276,7 +276,7 @@ async def cmd_msg():
     else:
         val.set('vc_invited', False)
 
-    if (u_voice or ai_voice) and (u_out and ai_out) and not ai_no:
+    if (u_voice or ai_voice) and (u_out or ai_out) and not ai_no:
         await v_leave_auto()
 
     
