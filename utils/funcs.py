@@ -468,6 +468,7 @@ async def avatar_change(img_url=None):
       image_data = await response.read()
   await bot.user.edit(avatar=image_data)
   avatar_url = bot.user.avatar.url
+  val.set('ai_avt_url', url)
   if not img_url:
     embed, view = await normal_embed(description=f"> Avatar mới của {val.ai_name}:", img=avatar_url, color=0xffbf75, delete=True)
     await send_embed(embed=embed, view=view)

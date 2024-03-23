@@ -198,7 +198,6 @@ async def on_ready():
     
     # Lưu bot name và avatar
     val.set('ai_name', bot.user.name)
-    val.set('ai_avt_url', bot.user.display_avatar.url)
     
     # Load các button
     await load_btt()
