@@ -249,7 +249,7 @@ async def cmd_msg():
     ai_banner = re.search(r'banner|cover|biểu ngữ|bìa', ai_msg, re.IGNORECASE)
     ai_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm', ai_msg, re.IGNORECASE)
 
-    ai_ok = re.search(r'ok|key|hai|dạ|vâng|sẽ|vô|tới|được|đây|xong|rùi|bây giờ|now|sure', ai_msg, re.IGNORECASE)
+    ai_ok = re.search(r'ok|key|hai|dạ|vâng|sẽ|vô|tới|được|đây|xong|rùi|bây giờ|now|sure|understood', ai_msg, re.IGNORECASE)
     ai_no = re.search(r'no|ko|không|why|tại sao|hem|gì|là như nào|là sao|what|where', ai_msg, re.IGNORECASE)
 
     ai_mood_up1 = re.search(r'woa|wa|hihi|hehe|haha|hoho|owo|uwu|<3|xd|cười|smile|:d|:p|vui', ai_msg, re.IGNORECASE)
