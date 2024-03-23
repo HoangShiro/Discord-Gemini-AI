@@ -46,6 +46,10 @@ async def sec_check():
         await status_busy_set()
         # Chat khi đổi mood
 
+    # Đổi tên countdown
+    if val.name_ctime > 0:
+        val.update('name_ctime', -1)
+    
     update_ignore()
     update_mood()
     update_voice(val.mood_name)
