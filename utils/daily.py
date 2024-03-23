@@ -45,7 +45,6 @@ async def sec_check():
         # Set lại status
         await status_busy_set()
         # Chat khi đổi mood
-        val.set('mood_chat', True)
 
     update_ignore()
     update_mood()
@@ -230,15 +229,17 @@ def update_mood():
         
     elif -1000 < val.ai_mood < -500:
         val.set('mood_name', "sad")
-        chat = val.mood_sad
+        #chat = val.mood_sad
+        val.set('mood_chat', True)
         
     elif -500 < val.ai_mood < 1000:
         val.set('mood_name', "normal")
-        
+        val.set('mood_chat', True)
         
     elif 1000 < val.ai_mood < 2000:
         val.set('mood_name', "happy")
-        chat = val.mood_happy
+        #chat = val.mood_happy
+        val.set('mood_chat', True)
         
     elif 2000 < val.ai_mood < 4000:
         val.set('mood_name', "excited")
