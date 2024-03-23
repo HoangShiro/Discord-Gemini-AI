@@ -188,7 +188,12 @@ bot = commands.Bot(intents=intents, command_prefix="/")
 
 @bot.event
 async def on_ready():
-
+    
+    # Reload char
+    from utils.make import char
+    with open('saves/char.json', 'w', encoding="utf-8") as file:
+        json.dump(char, file)
+    
     val.set('ai_name', bot.user.name)
 
     await load_btt()
