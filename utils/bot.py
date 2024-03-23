@@ -662,7 +662,7 @@ async def name_change(interaction: discord.Interaction, name: str):
     if val.name_ctime > 0:
         m = val.name_ctime // 60
         s = val.name_ctime % 60
-        return await interaction.response.send_message(f"> Đợi {m} phút, {s} giây nữa để đổi tên.", ephemeral=True)
+        return await interaction.response.send_message(f"> Đợi `{m} phút`, `{s} giây` nữa để đổi tên.", ephemeral=True)
     else:
         try:
             old_name = val.ai_name
