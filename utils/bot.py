@@ -240,6 +240,8 @@ async def on_message(message: discord.Message):
     if message.author == bot.user or message.content.startswith((".", "!", ",", "/")): return
     if len(val.gai_key) < 39: return await message.channel.send(f"> Xài lệnh `/setkeys` điền Gemini API key trước, sau đó gõ lệnh `/chatmode` đổi chế độ chat của {val.ai_name}")
     
+    
+    
     val.update('total_mess', 1)
     val.update('one_mess', 1)
     
@@ -286,8 +288,8 @@ async def on_message(message: discord.Message):
 
     # Nhớ tin nhắn
     if chat:
-        if val.chat_csl:
-            print(f"{get_real_time()}> {chat}")
+        if f"<@{bot.user.id}>" in chat: chat = chat.replace(f"<@{bot.user.id}>", val.ai_name)
+        if val.chat_csl: print(f"{get_real_time()}> {chat}")
 
         new_chat = val.now_chat
         new_chat.append(chat)
