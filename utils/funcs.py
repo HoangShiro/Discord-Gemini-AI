@@ -754,10 +754,11 @@ async def share_pfp(interaction: discord.Interaction, name):
               zip.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), path))
   
   embed = discord.Embed(title=f"Preset của {name}", color=0xffbf75)
-  embed.set_image(url=f"attachment://{zip_name}")
+  #embed.set_image(url=f"attachment://{zip_name}")
 
   # Gửi file zip và embed
-  await interaction.response.send_message(zip_name, embed=embed)
+  await interaction.response.send_message(embed=embed, file=f"attachment://{zip_name}")
+  return True
   
 # New chat
 async def new_chat():
