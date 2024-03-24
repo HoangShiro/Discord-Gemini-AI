@@ -642,21 +642,38 @@ def update_ignore():
 
 # Lưu pfp hiện tại của bot
 def save_pfp(name=None):
-  from utils.bot import val, bot
+  from utils.bot import val
   from utils.daily import get_real_time
   
   if not name: name = val.ai_name
+  
+  bot_key = val.bot_key
+  chat_key = val.gai_key
+  voice_key = val.vv_key
+  
+  def return_key():
+    val.set('bot_key', bot_key)
+    val.set('gai_key', chat_key)
+    val.set('vv_key', voice_key)
   
   path = f"character list/{name.lower()}"
   
   if not os.path.exists("character list"): os.mkdir("character list")
   if not os.path.exists(path): os.mkdir(path)
   try:
+    val.set('bot_key', "")
+    val.set('gai_key', "")
+    val.set('vv_key', "")
+    
     shutil.copytree(src="plugins", dst=f'{path}/plugins', dirs_exist_ok=True)
     shutil.copytree(src="saves", dst=f'{path}/saves', dirs_exist_ok=True)
     shutil.copytree(src="sound", dst=f'{path}/sound', dirs_exist_ok=True)
+    
+    return_key()
+    
     return True
   except Exception as e:
+    return_key()
     print(f'{get_real_time()}> Lỗi khi save pfp: ', e)
     return False
 
@@ -665,14 +682,26 @@ def load_pfp(name):
   from utils.bot import val, bot
   from utils.daily import get_real_time
   
+  bot_key = val.bot_key
+  chat_key = val.gai_key
+  voice_key = val.vv_key
+  
+  def return_key():
+    val.set('bot_key', bot_key)
+    val.set('gai_key', chat_key)
+    val.set('vv_key', voice_key)
+  
   path = f"character list/{name.lower()}"
   if os.path.exists(path):
     try:
       shutil.copytree(src=f"{path}/plugins", dst="plugins", dirs_exist_ok=True)
       shutil.copytree(src=f"{path}/saves", dst="saves", dirs_exist_ok=True)
       shutil.copytree(src=f"{path}/sound", dst="sound", dirs_exist_ok=True)
+      
+      return_key()
       return True
     except Exception as e:
+      return_key()
       print(f'{get_real_time()}> Lỗi khi load pfp: ', e)
       return False
   else:
