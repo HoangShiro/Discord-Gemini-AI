@@ -747,8 +747,8 @@ async def preset_get(interaction: discord.Interaction):
     if not val.get_preset: return await interaction.response.send_message("> Không có preset nào gần đây.", ephemeral=True)
     
     mess = await interaction.response.send_message(f"> Đang tải preset `{val.get_preset_name}`...", ephemeral=True)
-    if not await get_pfp():return await mess.edit_original_response(f"> Tải preset `{val.get_preset_name}` thất bại, check console để biết thêm chi tiết.")
-    else: await mess.edit_original_response(f"> Đã tải preset `{val.get_preset_name}`.")
+    if not await get_pfp():return await mess.edit_original_response(content=f"> Tải preset `{val.get_preset_name}` thất bại, check console để biết thêm chi tiết.")
+    else: await mess.edit_original_response(content=f"> Đã tải preset `{val.get_preset_name}`.")
 
 # Share preset
 @bot.slash_command(name="share_preset", description=f"Share preset cho bot khác")
