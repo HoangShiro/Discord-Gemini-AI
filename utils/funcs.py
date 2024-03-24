@@ -745,7 +745,7 @@ async def share_pfp(interaction: discord.Interaction, name):
   if not os.path.exists(path): return False
   
   # Tạo tên file zip
-  zip_name = f"{name}@preset.zip"
+  zip_name = f"{name}-preset.zip"
 
   # Nén thư mục
   with ZipFile(zip_name, "w") as zip:
@@ -757,7 +757,7 @@ async def share_pfp(interaction: discord.Interaction, name):
   #embed.set_image(url=f"attachment://{zip_name}")
 
   # Gửi file zip và embed
-  await interaction.response.send_message(file=discord.File(zip_name), embed=embed)
+  await interaction.response.send_message(embed=embed, file=discord.File(zip_name))
   
   os.remove(zip_name)
   

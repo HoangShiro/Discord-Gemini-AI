@@ -270,7 +270,7 @@ async def on_message(message: discord.Message):
         
         if message.attachments:
             atm = message.attachments[0]
-            if atm.filename.lower().endswith("@preset.zip"):
+            if atm.filename.lower().endswith("-preset.zip"):
                 val.set('get_preset', atm.url)
                 val.set('get_preset_name', atm.filename)
                 
