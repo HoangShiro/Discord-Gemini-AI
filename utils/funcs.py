@@ -671,6 +671,9 @@ def save_pfp(name=None):
     shutil.copytree(src="plugins", dst=f'{path}/plugins', dirs_exist_ok=True)
     shutil.copytree(src="saves", dst=f'{path}/saves', dirs_exist_ok=True)
     shutil.copytree(src="sound", dst=f'{path}/sound', dirs_exist_ok=True)
+
+    if os.path.exists(f"{path}/saves/vals_backup.json"):
+        os.remove(f"{path}/saves/vals_backup.json")
     
     return_key()
     
