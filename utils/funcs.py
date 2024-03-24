@@ -4,6 +4,7 @@ import json, os, shutil, asyncio, jaconv, re, random, discord, importlib, aiohtt
 from translate import Translator
 from mtranslate import translate
 from langdetect import detect
+from zipfile import ZipFile
 
 # Add text to prompt
 def text_to_prompt(Q, A):
@@ -711,7 +712,53 @@ def load_pfp(name):
   else:
     print(f'{get_real_time()}> Lỗi khi load pfp: Thư mục ({path}) không tồn tại.')
     return False
+
+# get pfp
+async def get_pfp(url=None):
+  from utils.bot import val
+  from utils.daily import get_real_time
+  if not url: url = val.get_preset
+  
+  path = "character list"
+  
+  async with aiohttp.ClientSession() as session:
+    async with session.get(url) as response:
+      if response.status != 200:
+        print(f"{get_real_time()}> Lỗi tải preset: {response.status}")
+        return False
       
+      with open("temp.zip", "wb") as f:
+        f.write(await response.read())
+  
+  with ZipFile("temp.zip", "r") as zip_ref:
+    zip_ref.extractall(path)
+  
+  os.remove("temp.zip")
+  
+  return True
+
+# share pfp
+async def share_pfp(interaction: discord.Interaction, name):
+  from utils.bot import val
+  
+  path = f"character list/{name.lower()}"
+  if not os.path.exists(path): return False
+  
+  # Tạo tên file zip
+  zip_name = f"{name}@preset.zip"
+
+  # Nén thư mục
+  with ZipFile(zip_name, "w") as zip:
+      for root, dirs, files in os.walk(path):
+          for file in files:
+              zip.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), path))
+  
+  embed = discord.Embed(title=f"Preset của {name}", color=0xffbf75)
+  embed.set_image(url=f"attachment://{zip_name}")
+
+  # Gửi file zip và embed
+  await interaction.response.send_file(zip_name, embed=embed)
+  
 # New chat
 async def new_chat():
   from utils.bot import val 

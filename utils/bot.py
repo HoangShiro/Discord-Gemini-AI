@@ -70,6 +70,8 @@ class AllStatus:
         self.bot_rep = True                 # Cho phép reply chat của bot khác
         self.name_filter = True             # Lọc tên
         self.name_ctime = 0                 # Thời gian chờ đổi tên cho bot
+        self.get_preset = None              # Lưu link preset mà bot khác gửi
+        self.get_preset_name = None         # Lưu tên preset mà bot khác gửi
         
         # Status total
         self.total_rep = 0                  # Tổng chat đã trả lời
@@ -265,6 +267,13 @@ async def on_message(message: discord.Message):
     
     # Check xem có phải tin nhắn từ bot khác hay không
     if message.author.bot:
+        
+        if message.attachments:
+            atm = message.attachments[0]
+            if atm.filename.lower().endswith("@preset.zip"):
+                val.set('get_preset', atm.url)
+                val.set('get_preset_name', atm.filename)
+                
         if not val.bot_rep: return
         bot_name = message.author.display_name
         if bot_name not in val.ignore_name:
@@ -727,6 +736,22 @@ async def preset_change(interaction: discord.Interaction, save: str = None, load
         else: return await interaction.response.send_message(f"> Có lỗi khi load preset cho {load}.", ephemeral=True)
     else: await interaction.response.send_message(f"> Đã lưu preset cho {val.ai_name}.", ephemeral=True)
 
+# Get preset
+@bot.slash_command(name="get_preset", description=f"Nhận preset gần nhất")
+async def preset_get(interaction: discord.Interaction):
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    if not val.get_preset: return await interaction.response.send_message("> Không có preset nào gần đây.", ephemeral=True)
+
+    if not await get_pfp(): return await interaction.response.send_message(f"> Tải preset `{val.get_preset_name}` thất bại, check console để biết thêm chi tiết.", ephemeral=True)
+    else: await interaction.response.send_message(f"> Đã tải preset `{val.get_preset_name}`.", ephemeral=True)
+
+# Share preset
+@bot.slash_command(name="share_preset", description=f"Share preset cho bot khác")
+async def preset_share(interaction: discord.Interaction, name: str):
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    if not await share_pfp(interaction, name): return await interaction.response.send_message("> Có lỗi khi gửi preset.", ephemeral=True)
+    
 # Set public chat channel
 @bot.slash_command(name="chat_channel", description=f"Channel public duy nhất mà {val.ai_name} sẽ chat.")
 async def p_cchannel(interaction: discord.Interaction, public_channel_id: str = None):
