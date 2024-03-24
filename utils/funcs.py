@@ -758,6 +758,9 @@ async def share_pfp(interaction: discord.Interaction, name):
 
   # Gửi file zip và embed
   await interaction.response.send_message(embed=embed, file=f"attachment://{zip_name}")
+  
+  os.remove(zip_name)
+  
   return True
   
 # New chat
