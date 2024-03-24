@@ -650,12 +650,14 @@ def save_pfp(name=None):
   bot_key = val.bot_key
   chat_key = val.gai_key
   voice_key = val.vv_key
+  owner_id = val.owner_uid
   
   def return_key():
     val.set('bot_key', bot_key)
     val.set('gai_key', chat_key)
     val.set('vv_key', voice_key)
-  
+    val.set('owner_uid', owner_id)
+    
   path = f"character list/{name.lower()}"
   
   if not os.path.exists("character list"): os.mkdir("character list")
@@ -685,12 +687,14 @@ def load_pfp(name):
   bot_key = val.bot_key
   chat_key = val.gai_key
   voice_key = val.vv_key
+  owner_id = val.owner_uid
   
   def return_key():
     val.set('bot_key', bot_key)
     val.set('gai_key', chat_key)
     val.set('vv_key', voice_key)
-  
+    val.set('owner_uid', owner_id)
+    
   path = f"character list/{name.lower()}"
   if os.path.exists(path):
     try:
