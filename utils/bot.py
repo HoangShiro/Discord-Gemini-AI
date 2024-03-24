@@ -273,7 +273,8 @@ async def on_message(message: discord.Message):
             if atm.filename.lower().endswith("-preset.zip"):
                 val.set('get_preset', atm.url)
                 val.set('get_preset_name', atm.filename.replace("-preset.zip", ""))
-                
+                return
+            
         if not val.bot_rep: return
         bot_name = message.author.display_name
         if bot_name not in val.ignore_name:
