@@ -272,7 +272,9 @@ async def on_message(message: discord.Message):
             atm = message.attachments[0]
             if atm.filename.lower().endswith("-preset.zip"):
                 val.set('get_preset', atm.url)
-                val.set('get_preset_name', atm.filename.replace("-preset.zip", ""))
+                fpname = atm.filename.replace("-preset.zip", "")
+                fpname = fpname.replace("_", " ").strip()
+                val.set('get_preset_name', fpname)
                 return
             
         if not val.bot_rep: return
