@@ -717,6 +717,7 @@ def load_pfp(name):
 async def get_pfp(url=None):
   from utils.bot import val
   from utils.daily import get_real_time
+  
   if not url: url = val.get_preset
   
   path = f"character list/{val.get_preset_name}"
@@ -740,6 +741,8 @@ async def get_pfp(url=None):
 # share pfp
 async def share_pfp(interaction: discord.Interaction, name):
   from utils.bot import val
+  from utils.ui import bot_notice
+  from utils.daily import get_real_time
   
   path = f"character list/{name.lower()}"
   if not os.path.exists(path): return False
@@ -748,20 +751,42 @@ async def share_pfp(interaction: discord.Interaction, name):
   zip_name = f"{name}-preset.zip"
 
   # Nén thư mục
-  with ZipFile(zip_name, "w") as zip:
-      for root, dirs, files in os.walk(path):
-          for file in files:
-              zip.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), path))
-  
-  embed = discord.Embed(title=f"Preset của {name}", color=0xffbf75)
-  #embed.set_image(url=f"attachment://{zip_name}")
+  try:
+    with ZipFile(zip_name, "w") as zip:
+        for root, dirs, files in os.walk(path):
+            for file in files:
+                zip.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), path))
+    
+    with open(f'{path}/saves/vals.json', 'r', encoding="utf-8") as file:
+        data = json.load(file)
+        
+    pname = data["ai_name"]
+    
+    pchar = "Unknown"
+    pavt = None
+    try:
+      pavt = data["ai_avt_url"]
+      pchar = data["ai_char"]
+    except Exception as e:
+      print(f"{get_real_time()}> Lỗi khi share preset: {e}")
+      pass
+    
+    embed, view = await bot_notice(tt=pname,
+                                          des=f"Tính cách: **{pchar}**", ava_link=pavt, footer= "Sử dụng `/get_preset` để lưu, thận trọng khi tải file.",
+                                          au_name=interaction.user.display_name,
+                                          au_avatar=interaction.user.display_avatar,
+                                          au_link=interaction.user.display_avatar)
+    #embed.set_image(url=f"attachment://{zip_name}")
 
-  # Gửi file zip và embed
-  await interaction.response.send_message(embed=embed, file=discord.File(zip_name))
-  
-  os.remove(zip_name)
-  
-  return True
+    # Gửi file zip và embed
+    await interaction.response.send_message(embed=embed, file=discord.File(zip_name))
+    
+    os.remove(zip_name)
+    
+    return True
+  except Exception as e:
+    print(f"{get_real_time()}> Lỗi khi share preset: {e}")
+    return False
   
 # New chat
 async def new_chat():
