@@ -776,9 +776,32 @@ async def share_pfp(interaction: discord.Interaction, name: str):
   from utils.daily import get_real_time
   
   path = f"character list/{name.lower()}"
-  if name.lower() == val.ai_name.lower(): save_pfp()
+  if name.lower() == val.ai_name.lower():
+    if not os.path.exists(path): save_pfp()
     
   if not os.path.exists(path): return False
+  
+  with open(f'{path}/saves/vals.json', 'r', encoding="utf-8") as file:
+        data = json.load(file)
+        
+  pname = data["ai_name"]
+  
+  pchar = "Unknown"
+  pavt = None
+  try:
+    pavt = data["ai_avt_url"]
+    pchar = data["ai_char"]
+  except Exception as e:
+    print(f"{get_real_time()}> Lỗi khi share preset: {e}")
+    pass
+  
+  embed, view = await bot_notice(tt=pname,
+                                        des=f"> Tính cách: **{pchar}**", ava_link=pavt, footer="File đang được nén và upload...",
+                                        au_name=interaction.user.display_name,
+                                        au_avatar=interaction.user.display_avatar,
+                                        au_link=interaction.user.display_avatar)
+
+  mess = await interaction.response.send_message(embed=embed)
   
   # Tạo tên file zip
   zip_name = f"{name}-preset.zip"
@@ -790,29 +813,13 @@ async def share_pfp(interaction: discord.Interaction, name: str):
             for file in files:
                 zip.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), path))
     
-    with open(f'{path}/saves/vals.json', 'r', encoding="utf-8") as file:
-        data = json.load(file)
-        
-    pname = data["ai_name"]
-    
-    pchar = "Unknown"
-    pavt = None
-    try:
-      pavt = data["ai_avt_url"]
-      pchar = data["ai_char"]
-    except Exception as e:
-      print(f"{get_real_time()}> Lỗi khi share preset: {e}")
-      pass
-    
     embed, view = await bot_notice(tt=pname,
-                                          des=f"> Tính cách: **{pchar}**", ava_link=pavt, footer="Sử dụng /get_preset để lưu, thận trọng khi tải file.",
-                                          au_name=interaction.user.display_name,
-                                          au_avatar=interaction.user.display_avatar,
-                                          au_link=interaction.user.display_avatar)
-    #embed.set_image(url=f"attachment://{zip_name}")
-
-    # Gửi file zip và embed
-    await interaction.response.send_message(embed=embed, file=discord.File(zip_name))
+                                        des=f"> Tính cách: **{pchar}**", ava_link=pavt, footer="Sử dụng /get_preset để lưu, thận trọng khi tải file.",
+                                        au_name=interaction.user.display_name,
+                                        au_avatar=interaction.user.display_avatar,
+                                        au_link=interaction.user.display_avatar)
+    
+    await mess.edit_original_response(embed=embed, view=view, file=discord.File(zip_name))
     
     os.remove(zip_name)
     
