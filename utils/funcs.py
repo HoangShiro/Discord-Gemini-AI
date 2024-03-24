@@ -772,7 +772,7 @@ async def share_pfp(interaction: discord.Interaction, name):
       pass
     
     embed, view = await bot_notice(tt=pname,
-                                          des=f"Tính cách: **{pchar}**", ava_link=pavt, footer="Sử dụng `/get_preset` để lưu, thận trọng khi tải file.",
+                                          des=f"> Tính cách: **{pchar}**", ava_link=pavt, footer="Sử dụng /get_preset để lưu, thận trọng khi tải file.",
                                           au_name=interaction.user.display_name,
                                           au_avatar=interaction.user.display_avatar,
                                           au_link=interaction.user.display_avatar)
