@@ -819,7 +819,9 @@ async def share_pfp(interaction: discord.Interaction, name: str):
                                         au_avatar=interaction.user.display_avatar,
                                         au_link=interaction.user.display_avatar)
     
-    await mess.edit_original_response(embed=embed, view=view, file=discord.File(zip_name))
+    await mess.edit_original_response(embed=embed)
+    
+    await mess.channel.send(file=discord.File(zip_name))
     
     os.remove(zip_name)
     
