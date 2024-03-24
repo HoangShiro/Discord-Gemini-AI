@@ -813,6 +813,8 @@ async def share_pfp(interaction: discord.Interaction, name: str):
             for file in files:
                 zip.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), path))
     
+    await mess.channel.send(file=discord.File(zip_name))
+    
     embed, view = await bot_notice(tt=pname,
                                         des=f"> Tính cách: **{pchar}**", ava_link=pavt, footer="Sử dụng /get_preset để lưu, thận trọng khi tải file.",
                                         au_name=interaction.user.display_name,
@@ -820,8 +822,6 @@ async def share_pfp(interaction: discord.Interaction, name: str):
                                         au_link=interaction.user.display_avatar)
     
     await mess.edit_original_response(embed=embed)
-    
-    await mess.channel.send(file=discord.File(zip_name))
     
     os.remove(zip_name)
     
