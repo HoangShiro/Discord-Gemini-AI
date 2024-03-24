@@ -739,12 +739,14 @@ async def get_pfp(url=None):
   return True
 
 # share pfp
-async def share_pfp(interaction: discord.Interaction, name):
+async def share_pfp(interaction: discord.Interaction, name: str):
   from utils.bot import val
   from utils.ui import bot_notice
   from utils.daily import get_real_time
   
   path = f"character list/{name.lower()}"
+  if name.lower() == val.ai_name.lower(): save_pfp()
+    
   if not os.path.exists(path): return False
   
   # Tạo tên file zip

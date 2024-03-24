@@ -152,7 +152,7 @@ async def bot_notice(tt=None, des=None, ava_link=None, au_name=None, au_link=Non
     embed.set_thumbnail(url=ava_link)
     if au_name: embed.set_author(name=au_name, url=au_link, icon_url=au_avatar)
     if footer: embed.set_footer(text=footer)
-    
+
     view = View(timeout=None)
     view.add_item(ermv_bt)
 

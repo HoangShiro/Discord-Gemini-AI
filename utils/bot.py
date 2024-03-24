@@ -725,7 +725,7 @@ async def preset_change(interaction: discord.Interaction, save: str = None, load
                                         au_name=uanme,
                                         au_avatar=interaction.user.display_avatar,
                                         au_link=interaction.user.display_avatar)
-            mess.edit_original_response(embed=embed)
+            await mess.edit_original_response(embed=embed)
             
             await char_check()
             
