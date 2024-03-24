@@ -641,6 +641,9 @@ def update_ignore():
     
     val.set('ignore_rep', per)
 
+# load lại các val
+
+
 # Lưu pfp hiện tại của bot
 def save_pfp(name=None):
   from utils.bot import val
@@ -653,11 +656,27 @@ def save_pfp(name=None):
   voice_key = val.vv_key
   owner_id = val.owner_uid
   
+  ai_chat = val.ai_chat
+  now_chat = val.now_chat
+  old_chat = val.old_chat
+  ignore_chat = val.ignore_chat
+  now_chat_ai = val.now_chat_ai
+  old_chat_ai = val.old_chat_ai
+  ignore_name = val.ignore_name
+  
   def return_key():
     val.set('bot_key', bot_key)
     val.set('gai_key', chat_key)
     val.set('vv_key', voice_key)
     val.set('owner_uid', owner_id)
+    
+    val.set('ai_chat', ai_chat)
+    val.set('now_chat', now_chat)
+    val.set('old_chat', old_chat)
+    val.set('ignore_chat', ignore_chat)
+    val.set('now_chat_ai', now_chat_ai)
+    val.set('old_chat_ai', old_chat_ai)
+    val.set('ignore_name', ignore_name)
     
   path = f"character list/{name.lower()}"
   
@@ -667,6 +686,15 @@ def save_pfp(name=None):
     val.set('bot_key', "")
     val.set('gai_key', "")
     val.set('vv_key', "")
+    val.set('owner_uid', None)
+    
+    val.set('ai_chat', "")
+    val.set('now_chat', [])
+    val.set('old_chat', [])
+    val.set('ignore_chat', [])
+    val.set('now_chat_ai', "")
+    val.set('old_chat_ai', "")
+    val.set('ignore_name', [])
     
     shutil.copytree(src="plugins", dst=f'{path}/plugins', dirs_exist_ok=True)
     shutil.copytree(src="saves", dst=f'{path}/saves', dirs_exist_ok=True)
