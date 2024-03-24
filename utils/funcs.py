@@ -719,7 +719,7 @@ async def get_pfp(url=None):
   from utils.daily import get_real_time
   if not url: url = val.get_preset
   
-  path = "character list"
+  path = f"character list/{val.get_preset_name}"
   
   async with aiohttp.ClientSession() as session:
     async with session.get(url) as response:
