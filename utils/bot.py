@@ -714,11 +714,12 @@ async def preset_change(interaction: discord.Interaction, save: str = None, load
             val.set('name_ctime', old_cname)
             if val.ai_avt_url: await avatar_change(val.ai_avt_url)
             if val.ai_banner_url: await banner_change(val.ai_banner_url)
-            if val.name_ctime == 0:
-                await bot.user.edit(username=val.ai_name)
-                val.set('name_ctime', 1800)
-                print(f'{get_real_time()}> Tên của {old_name} đã được đổi thành: ', val.ai_name)
-            else: uanme = f"Không thể đổi tên cho {val.ai_name} vì mới được đổi gần đây."
+            if not old_name == val.ai_name:
+                if val.name_ctime == 0:
+                    await bot.user.edit(username=val.ai_name)
+                    val.set('name_ctime', 1800)
+                    print(f'{get_real_time()}> Tên của {old_name} đã được đổi thành: ', val.ai_name)
+                else: uanme = f"Không thể đổi tên cho {val.ai_name} vì mới được đổi gần đây."
             
             await new_chat()
         
