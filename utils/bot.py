@@ -291,6 +291,7 @@ async def on_message(message: discord.Message):
         if message.author.id != val.owner_uid: return
     else:
         if message.content:
+            if isinstance(message.channel, discord.DMChannel): return
             val.set('ai_guild', message.guild.id)
             val.set('ai_channel', message.channel.id)
 
