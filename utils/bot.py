@@ -700,7 +700,7 @@ async def preset_change(interaction: discord.Interaction, save: str = None, load
         old_name = val.ai_name
         old_cname = val.name_ctime
         if load_pfp(load):
-            uanme = interaction.user.display_name
+            uanme = None
             embed, view = await bot_notice(tt="Đang load pfp mới 💫",
                                         des=f"Đang load các thông tin của {load}...",
                                         au_name=interaction.user.display_name,
@@ -721,16 +721,16 @@ async def preset_change(interaction: discord.Interaction, save: str = None, load
             await new_chat()
         
             embed, view = await bot_notice(tt="Đang tạo cuộc trò chuyện mới 💫",
-                                        des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...",
-                                        au_name=uanme,
+                                        des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...", footer=uanme,
+                                        au_name=interaction.user.display_name,
                                         au_avatar=interaction.user.display_avatar,
                                         au_link=interaction.user.display_avatar)
             await mess.edit_original_response(embed=embed)
             
             await char_check()
             
-            embed, view = await bot_notice(
-                                        au_name=uanme,
+            embed, view = await bot_notice(footer=uanme,
+                                        au_name=interaction.user.display_name,
                                         au_avatar=interaction.user.display_avatar,
                                         au_link=interaction.user.display_avatar,
                                         color=0xff8a8a)
