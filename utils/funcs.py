@@ -415,6 +415,41 @@ def if_chat_loop(reply: str):
         return reply
     else: return reply
 
+# Làm sạch đầu vào của chat
+async def clean_msg(chat):
+  from utils.bot import bot, val
+  
+  if f"<@{bot.user.id}>" in chat: chat = chat.replace(f"<@{bot.user.id}>", val.ai_name)
+        
+  uid = None
+  utag = None
+  find = re.search(r"<@(.*?)>", chat)
+  if find:
+      try:
+          utag = await bot.fetch_user(int(find[0]))
+          if utag: chat = chat.replace(f"<@{uid}>", f"@{utag.display_name}")
+      except Exception as e:
+          pass
+        
+  return chat
+  
+# Làm sạch đầu ra của bot
+def clean_chat(reply):
+    from utils.bot import val
+    from utils.api import chat
+    
+    ctrl = re.search(r'<ctrl', reply, re.IGNORECASE)
+    
+    if ctrl: reply = re.sub(r"<ctrl.+?>", "", reply) # Lọc "<ctrl...>"
+
+    # Thêm câu trả lời đã lọc vào lịch sử chat
+    chat.rewind()
+    u_text = list_to_str(val.old_chat)
+    prompt = text_to_prompt(u_text, reply)
+    chat.history.extend(prompt)
+    
+    return reply
+    
 # Load các plugin
 async def load_all_plugin():
     from utils.daily import get_real_time
@@ -606,11 +641,13 @@ def update_ignore():
     val.set('ignore_rep', per)
 
 # Lưu pfp hiện tại của bot
-def save_pfp():
+def save_pfp(name=None):
   from utils.bot import val, bot
   from utils.daily import get_real_time
   
-  path = f"character list/{val.ai_name.lower()}"
+  if not name: name = val.ai_name
+  
+  path = f"character list/{name.lower()}"
   
   if not os.path.exists("character list"): os.mkdir("character list")
   if not os.path.exists(path): os.mkdir(path)
@@ -642,6 +679,38 @@ def load_pfp(name):
     print(f'{get_real_time()}> Lỗi khi load pfp: Thư mục ({path}) không tồn tại.')
     return False
       
+# New chat
+async def new_chat():
+  from utils.bot import val 
+  from utils.api import chat
+  from utils.ui import edit_last_msg
+  
+  if not val.public: await edit_last_msg()
+  new_prpt = load_prompt("saves/chat.txt")
+  chat.history.clear()
+  chat.history.extend(new_prpt)
+  
+  val.set('CD', 1)
+  val.set('CD_idle', 1)
+  val.set('now_chat', [])
+  val.set('old_chat', [])
+  val.set('ignore_chat', [])
+  val.set('last_mess_id', None)
+  val.set('old_mess_id', None)
+  
+  val.set('ai_mood', 0)
+  val.set('mood_name', "normal")
+  val.set('mood_chat', True)
+  
+  val.set('one_rep', 0)
+  val.set('one_mess', 0)
+  val.set('one_voice', 0)
+  val.set('one_join', 0)
+  val.set('one_cmd', 0)
+  
+  if val.public:
+      public_remind = load_prompt("saves/public_chat.txt")
+      chat.history.extend(public_remind)
       
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')

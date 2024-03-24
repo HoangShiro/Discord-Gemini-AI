@@ -3,7 +3,7 @@
 import re, json
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
-from utils.funcs import load_prompt, txt_read, name_cut, if_chat_loop
+from utils.funcs import load_prompt, txt_read, name_cut, if_chat_loop, clean_chat
 
 safety ={
         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.	BLOCK_NONE,
@@ -85,6 +85,9 @@ async def gemini_rep(mess):
             print("\n")
 
         reply = response.text
+        
+        reply = clean_chat(reply)                                   # Check và lọc những từ không mong muốn
+        
         if val.name_filter:                                         # Check và xoá tag name mở đầu
             reply = name_cut(reply)
             if not reply:

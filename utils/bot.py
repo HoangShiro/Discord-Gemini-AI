@@ -306,9 +306,10 @@ async def on_message(message: discord.Message):
 
     # Nhớ tin nhắn
     if chat:
-        if f"<@{bot.user.id}>" in chat: chat = chat.replace(f"<@{bot.user.id}>", val.ai_name)
+        chat = await clean_msg(chat)
+        
         if val.chat_csl: print(f"{get_real_time()}> {chat}")
-
+        
         new_chat = val.now_chat
         new_chat.append(chat)
         val.set('now_chat', new_chat)
@@ -403,32 +404,8 @@ async def newchat(interaction: discord.Interaction):
     val.update('one_cmd', 1)
     val.update('total_newchat', 1)
     
-    if not val.public: await edit_last_msg()
-    new_prpt = load_prompt("saves/chat.txt")
-    chat.history.clear()
-    chat.history.extend(new_prpt)
-    
-    val.set('CD', 1)
-    val.set('CD_idle', 1)
-    val.set('now_chat', [])
-    val.set('old_chat', [])
-    val.set('ignore_chat', [])
-    val.set('last_mess_id', None)
-    val.set('old_mess_id', None)
-    
-    val.set('ai_mood', 0)
-    val.set('mood_name', "normal")
-    val.set('mood_chat', True)
-    
-    val.set('one_rep', 0)
-    val.set('one_mess', 0)
-    val.set('one_voice', 0)
-    val.set('one_join', 0)
-    val.set('one_cmd', 0)
-    
-    if val.public:
-        public_remind = load_prompt("saves/public_chat.txt")
-        chat.history.extend(public_remind)
+    await new_chat()
+        
     embed, view = await bot_notice(tt="Đang tạo cuộc trò chuyện mới 💫",
                                    des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...",
                                    au_name=interaction.user.display_name,
@@ -702,23 +679,23 @@ async def name_change(interaction: discord.Interaction, name: str):
             return await interaction.response.send_message(f"> Lỗi khi đổi tên cho bot: {e}", ephemeral=True)
 
 # Load preset
-@bot.slash_command(name="preset", description=f"Xem hoặc đổi list preset")
-async def preset_change(interaction: discord.Interaction, name: str = None):
+@bot.slash_command(name="preset", description=f"Lưu hoặc đổi preset")
+async def preset_change(interaction: discord.Interaction, save: str = None, load: str = None):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
-    if not save_pfp(): return await interaction.response.send_message(f"> Có lỗi khi lưu preset cho {val.ai_name}.", ephemeral=True)
+    if not save_pfp(save): return await interaction.response.send_message(f"> Có lỗi khi lưu preset cho {val.ai_name}.", ephemeral=True)
     
-    if name:
+    if load:
         old_name = val.ai_name
         old_cname = val.name_ctime
-        if load_pfp(name):
+        if load_pfp(load):
             uanme = interaction.user.display_name
             embed, view = await bot_notice(tt="Đang load pfp mới 💫",
-                                        des=f"Đang load các thông tin của {name}...",
+                                        des=f"Đang load các thông tin của {load}...",
                                         au_name=interaction.user.display_name,
                                         au_avatar=interaction.user.display_avatar,
                                         au_link=interaction.user.display_avatar)
-            mess = await interaction.response.send_message(embed=embed, view=view)
+            mess = await interaction.response.send_message(embed=embed)
             
             val.load('saves/vals.json')
             val.set('name_ctime', old_cname)
@@ -729,13 +706,25 @@ async def preset_change(interaction: discord.Interaction, name: str = None):
                 val.set('name_ctime', 1800)
                 print(f'{get_real_time()}> Tên của {old_name} đã được đổi thành: ', val.ai_name)
             else: uanme = f"Không thể đổi tên cho {val.ai_name} vì mới được đổi gần đây."
+            
+            await new_chat()
+        
+            embed, view = await bot_notice(tt="Đang tạo cuộc trò chuyện mới 💫",
+                                        des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...",
+                                        au_name=uanme,
+                                        au_avatar=interaction.user.display_avatar,
+                                        au_link=interaction.user.display_avatar)
+            mess.edit_original_response(embed=embed)
+            
+            await char_check()
+            
             embed, view = await bot_notice(
                                         au_name=uanme,
                                         au_avatar=interaction.user.display_avatar,
                                         au_link=interaction.user.display_avatar,
                                         color=0xff8a8a)
-            await mess.edit_original_response(embed=embed)
-        else: return await interaction.response.send_message(f"> Có lỗi khi load preset cho {name}.", ephemeral=True)
+            await mess.edit_original_response(embed=embed, view=view)
+        else: return await interaction.response.send_message(f"> Có lỗi khi load preset cho {load}.", ephemeral=True)
     else: await interaction.response.send_message(f"> Đã lưu preset cho {val.ai_name}.", ephemeral=True)
 
 # Set public chat channel
