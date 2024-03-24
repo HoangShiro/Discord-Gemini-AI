@@ -223,7 +223,6 @@ async def cmd_msg():
     from utils.ui import normal_embed
     from utils.funcs import avatar_change, banner_change, mood_change, leave_voice
 
-    if not chat.last: return
     u_msg = list_to_str(val.old_chat)
     if not u_msg: return
     ai_msg = val.now_chat_ai

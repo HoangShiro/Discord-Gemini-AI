@@ -213,7 +213,7 @@ async def v_join_auto():
         members = channel.members
 
         for member in members:
-            if member.display_name in name:
+            if (member.display_name or member.name) in name:
             # Tham gia kênh thoại nếu user có trong vc
                 await v_leave_auto()
                 await asyncio.sleep(1)
