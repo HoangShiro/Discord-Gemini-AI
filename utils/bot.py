@@ -109,7 +109,11 @@ class AllStatus:
 
         # Lời nhắc cho user
         self.no_perm = "`Bạn hem có quyền sử dụng lệnh nỳ.`" # Không có quyền sử dụng slash
-
+        
+        # Preset viewer
+        self.preset_list = []
+        self.preset_now = 0
+        
     def update(self, val_name, value):
         if hasattr(self, val_name):
             current_value = getattr(self, val_name)
@@ -730,61 +734,17 @@ async def name_change(interaction: discord.Interaction, name: str):
 
 # Load preset
 @bot.slash_command(name="preset", description=f"Lưu hoặc đổi preset")
-async def preset_change(interaction: discord.Interaction, save: str = None, load: str = None):
+async def preset_change(interaction: discord.Interaction, save: str = None, load: str = None, show: str = None):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
     if not save_pfp(save): return await interaction.response.send_message(f"> Có lỗi khi lưu preset cho {val.ai_name}.", ephemeral=True)
     
-    if load:
-        old_name = val.ai_name
-        old_cname = val.name_ctime
-        if load_pfp(load):
-            uanme = None
-            embed, view = await bot_notice(
-                tt="Đang load pfp mới 💫",
-                des=f"Đang load các thông tin của {load}...",
-                au_name=interaction.user.display_name,
-                au_avatar=interaction.user.display_avatar,
-                au_link=interaction.user.display_avatar
-                )
-            mess = await interaction.response.send_message(embed=embed)
-            
-            val.load('saves/vals.json')
-            val.set('name_ctime', old_cname)
-            if val.ai_avt_url: await avatar_change(val.ai_avt_url)
-            if val.ai_banner_url: await banner_change(val.ai_banner_url)
-            if not old_name == val.ai_name:
-                if val.name_ctime == 0:
-                    await bot.user.edit(username=val.ai_name)
-                    val.set('name_ctime', 1800)
-                    print(f'{get_real_time()}> Tên của {old_name} đã được đổi thành: ', val.ai_name)
-                else: uanme = f"Không thể đổi tên cho {val.ai_name} vì mới được đổi gần đây."
-            
-            await new_chat()
-        
-            embed, view = await bot_notice(
-                tt="Đang tạo cuộc trò chuyện mới 💫",
-                des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...", footer=uanme,
-                au_name=interaction.user.display_name,
-                au_avatar=interaction.user.display_avatar,
-                au_link=interaction.user.display_avatar
-                )
-            await mess.edit_original_response(embed=embed)
-            
-            await char_check()
-            await des_check()
-            await color_check()
-            
-            if not uname: uname = val.ai_des
-            
-            embed, view = await bot_notice(
-                footer=uanme,
-                au_name=interaction.user.display_name,
-                au_avatar=interaction.user.display_avatar,
-                au_link=interaction.user.display_avatar,
-                )
-            await mess.edit_original_response(embed=embed, view=view)
-        else: return await interaction.response.send_message(f"> Có lỗi khi load preset cho {load}.", ephemeral=True)
+    if show:
+        load_folders(show)
+        await show_preset(interaction)
+        return
+    
+    if load: await set_pfp(interaction, load)
     else: await interaction.response.send_message(f"> Đã lưu preset cho {val.ai_name}.", ephemeral=True)
 
 # Get preset

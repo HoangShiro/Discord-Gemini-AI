@@ -147,6 +147,7 @@ async def char_check():
     
     val.set('ai_char', txt)
 
+# Tóm tắt nhân vật dựa vào prompt
 async def des_check():
     from utils.bot import val
     from utils.daily import get_real_time
@@ -162,6 +163,7 @@ async def des_check():
     
     val.set('ai_des', des)
 
+# Phân tích màu nhân vật dựa vào avatar
 async def color_check():
     from utils.bot import val, bot
     from utils.daily import get_real_time
@@ -185,8 +187,7 @@ async def color_check():
         
     except Exception as e:
         print(f"{get_real_time()}> Lỗi khi phân tích màu nhân vật: ", e)
-    
-    
+      
 # Xử lý và gửi tin nhắn
 async def send_mess(channel, reply, rep = False, inter = False):
     from utils.bot import val

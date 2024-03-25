@@ -649,13 +649,14 @@ def hex_to_rgb(hex_code):
   r, g, b = tuple(int(hex_code[i:i+2], 16) for i in range(0, 6, 2))
   return r, g, b
 
-
 # Lưu pfp hiện tại của bot
 def save_pfp(name=None):
   from utils.bot import val
   from utils.daily import get_real_time
   
   if not name: name = val.ai_name
+  
+  name = name.lower()
   
   bot_key = val.bot_key
   chat_key = val.gai_key
@@ -684,7 +685,7 @@ def save_pfp(name=None):
     val.set('old_chat_ai', old_chat_ai)
     val.set('ignore_name', ignore_name)
     
-  path = f"character list/{name.lower()}"
+  path = f"character list/{name}"
   
   if not os.path.exists("character list"): os.mkdir("character list")
   if not os.path.exists(path): os.mkdir(path)
@@ -750,6 +751,64 @@ def load_pfp(name):
     print(f'{get_real_time()}> Lỗi khi load pfp: Thư mục ({path}) không tồn tại.')
     return False
 
+# set pfp
+async def set_pfp(interaction: discord.Interaction, name: str):
+  from utils.bot import bot, val
+  from utils.daily import get_real_time
+  from utils.ui import bot_notice
+  from utils.reply import char_check, des_check, color_check
+  
+  old_name = val.ai_name
+  old_cname = val.name_ctime
+  
+  if load_pfp(name):
+    uanme = None
+    embed, view = await bot_notice(
+        tt="Đang load pfp mới 💫",
+        des=f"Đang load các thông tin của {name}...",
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar
+        )
+    mess = await interaction.response.send_message(embed=embed)
+
+    val.load('saves/vals.json')
+    val.set('name_ctime', old_cname)
+    if val.ai_avt_url: await avatar_change(val.ai_avt_url)
+    if val.ai_banner_url: await banner_change(val.ai_banner_url)
+    if not old_name == val.ai_name:
+        if val.name_ctime == 0:
+            await bot.user.edit(username=val.ai_name)
+            val.set('name_ctime', 1800)
+            print(f'{get_real_time()}> Tên của {old_name} đã được đổi thành: ', val.ai_name)
+        else: uanme = f"Không thể đổi tên cho {val.ai_name} vì mới được đổi gần đây."
+
+    await new_chat()
+
+    embed, view = await bot_notice(
+        tt="Đang tạo cuộc trò chuyện mới 💫",
+        des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...", footer=uanme,
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar
+        )
+    await mess.edit_original_response(embed=embed)
+
+    await char_check()
+    await des_check()
+    await color_check()
+
+    if not uname: uname = val.ai_des
+
+    embed, view = await bot_notice(
+        footer=uanme,
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar,
+        )
+    await mess.edit_original_response(embed=embed, view=view)
+  else: return await interaction.response.send_message(f"> Có lỗi khi load preset cho {name}.", ephemeral=True)
+
 # get pfp
 async def get_pfp(url=None):
   from utils.bot import val
@@ -801,12 +860,15 @@ async def share_pfp(interaction: discord.Interaction, name: str):
     print(f"{get_real_time()}> Lỗi khi share preset: {e}")
     pass
   
-  embed, view = await bot_notice(tt=pname,
-                                        des=f"> Tính cách: **{pchar}**", ava_link=pavt, footer="File đang được nén và upload...",
-                                        au_name=interaction.user.display_name,
-                                        au_avatar=interaction.user.display_avatar,
-                                        au_link=interaction.user.display_avatar)
-
+  embed, view = await bot_notice(
+    tt=pname,
+    des=f"> Tính cách: **{pchar}**",
+    ava_link=pavt,
+    footer="File đang được nén và upload...",
+    au_name=interaction.user.display_name,
+    au_avatar=interaction.user.display_avatar,
+    au_link=interaction.user.display_avatar
+    )
   mess = await interaction.response.send_message(embed=embed)
   
   # Tạo tên file zip
@@ -835,6 +897,44 @@ async def share_pfp(interaction: discord.Interaction, name: str):
   except Exception as e:
     print(f"{get_real_time()}> Lỗi khi share preset: {e}")
     return False
+
+# load preset list
+def load_folders(name: str =None):
+    from utils.bot import val
+    
+    path = "character list"
+
+    folders = []
+    
+    for entry in os.listdir(path):
+        if os.path.isdir(os.path.join(path, entry)):
+            folders.append(entry)
+
+    val.set('preset_list', folders)
+    val.set('preset_now', 0)
+    if name:
+        name = name.lower()
+        fpath = f"character list/{name}"
+        if os.path.exists(fpath):
+          preset_now = folders.index(name)
+          val.set('preset_now', preset_now)
+
+# control view preset
+def view_preset(dirt=None):
+  from utils.bot import val
+  
+  now = val.preset_now
+  plist = val.preset_list
+  
+  if not dirt: now = now
+  elif dirt == "-":
+      if now > 0:
+          now -= 1
+  elif dirt == "+":
+      if now < len(plist) - 1:
+          now += 1
+    
+  return plist[now]
   
 # New chat
 async def new_chat():
