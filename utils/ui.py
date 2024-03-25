@@ -146,17 +146,6 @@ async def newchat_atv(interaction: discord.Interaction):
     await new_chat()
     
     embed, view = await bot_notice(
-        tt="Đang tạo cuộc trò chuyện mới 💫",
-        des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...",
-        au_name=interaction.user.display_name,
-        au_avatar=interaction.user.display_avatar,
-        au_link=interaction.user.display_avatar
-        )
-    mess = await interaction.response.edit_message(embed=embed, view=view)
-    
-    await char_check()
-    
-    embed, view = await bot_notice(
         tt="Đã làm mới cuộc trò chuyện 🌟",
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
@@ -164,7 +153,8 @@ async def newchat_atv(interaction: discord.Interaction):
         color=0xff8a8a
         )
     
-    await mess.edit_original_response(embed=embed, view=view)
+    await interaction.response.edit_message(embed=embed, view=view)
+    
     
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
