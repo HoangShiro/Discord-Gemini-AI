@@ -291,33 +291,37 @@ async def on_message(message: discord.Message):
     if not val.public:
         if message.author.id != val.owner_uid: return
         if message.guild:
-            if (val.ai_name.lower() or f"<@{bot.user.id}>") in message.content.lower:
-                embed, view = await bot_notice(
-                    tt="Chat mode: Private",
-                    des=f"> Bật Public chat mode?",
-                    footer=f"Bạn và mọi người có thể chat với {val.ai_name} ở Public chat mode.",
-                    au_name=message.author.display_name,
-                    au_avatar=message.author.display_avatar,
-                    au_link=message.author.display_avatar,
-                    public_btt=True,
-                    )
-                return await message.channel.send(embed=embed, view=view)
-            return
+            bot_name = val.ai_name.split(" ")
+            for name in bot_name:
+                if (name.lower() or f"<@{bot.user.id}>") in message.content.lower():
+                    embed, view = await bot_notice(
+                        tt="Chat mode: Private",
+                        des=f"> Bật Public chat mode?",
+                        footer=f"Bạn và mọi người có thể chat với {val.ai_name} ở Public chat mode.",
+                        au_name=message.author.display_name,
+                        au_avatar=message.author.display_avatar,
+                        au_link=message.author.display_avatar,
+                        public_btt=True,
+                        )
+                    return await message.channel.send(embed=embed, view=view)
+                return
     else:
         if isinstance(message.channel, discord.DMChannel):
             if message.author.id == val.owner_uid:
-                if (val.ai_name.lower() or f"<@{bot.user.id}>") in message.content:
-                    embed, view = await bot_notice(
-                    tt="Chat mode: Public",
-                    des=f"> Bật Private chat mode?",
-                    footer=f"Chỉ bạn mới có thể chat với {val.ai_name} ở Private chat mode.",
-                    au_name=message.author.display_name,
-                    au_avatar=message.author.display_avatar,
-                    au_link=message.author.display_avatar,
-                    private_btt=True,
-                    )
-                    return await message.channel.send(embed=embed, view=view)
-            return
+                bot_name = val.ai_name.split(" ")
+                for name in bot_name:
+                    if (name.lower() or f"<@{bot.user.id}>") in message.content.lower():
+                        embed, view = await bot_notice(
+                            tt="Chat mode: Public",
+                            des=f"> Bật Private chat mode?",
+                            footer=f"Chỉ bạn mới có thể chat với {val.ai_name} ở Private chat mode.",
+                            au_name=message.author.display_name,
+                            au_avatar=message.author.display_avatar,
+                            au_link=message.author.display_avatar,
+                            private_btt=True,
+                            )
+                        return await message.channel.send(embed=embed, view=view)
+                return
         if message.content:
             val.set('ai_guild', message.guild.id)
             val.set('ai_channel', message.channel.id)
