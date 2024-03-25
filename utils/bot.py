@@ -461,7 +461,7 @@ async def newchat(interaction: discord.Interaction):
     await des_check()
     embed, view = await bot_notice(
         tt="Đã làm mới cuộc trò chuyện 🌟",
-        footer=val.ai_des
+        footer=val.ai_des,
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
