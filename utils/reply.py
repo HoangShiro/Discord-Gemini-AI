@@ -177,6 +177,8 @@ async def color_check():
 
         color = await igemini_text(image, prompt)
         
+        color = color.strip()
+        
         if len(color) == 7: val.set('ai_color', color)
         
         print(f"{get_real_time()}> Màu của nhân vật: ", color)
