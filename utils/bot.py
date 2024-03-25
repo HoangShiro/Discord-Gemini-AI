@@ -293,7 +293,7 @@ async def on_message(message: discord.Message):
         if message.guild:
             bot_name = val.ai_name.split(" ")
             for name in bot_name:
-                if (name.lower() or bot.user.id) in message.content.lower():
+                if (name.lower() in message.content.lower()) or (bot.user in message.mentions):
                     embed, view = await bot_notice(
                         tt="Chat mode: Private",
                         des=f"> Bật Public chat mode?",
@@ -310,7 +310,7 @@ async def on_message(message: discord.Message):
             if message.author.id == val.owner_uid:
                 bot_name = val.ai_name.split(" ")
                 for name in bot_name:
-                    if (name.lower() or bot.user.id) in message.content.lower():
+                    if (name.lower() in message.content.lower()) or (bot.user in message.mentions):
                         embed, view = await bot_notice(
                             tt="Chat mode: Public",
                             des=f"> Bật Private chat mode?",
