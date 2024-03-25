@@ -228,7 +228,8 @@ async def allpreset_atv(interaction: discord.Interaction):
     preset_now = preset_list[val.preset_now]
     for preset in preset_list:
         if preset == preset_now: icon = viewing
-        if preset == val.ai_name.lower(): icon = now
+        elif preset == val.ai_name.lower(): icon = now
+        else: icon = normal
         all_list = all_list + f"{icon} {preset}\n"
     
     embed, view = await bot_notice(
