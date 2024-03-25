@@ -429,7 +429,7 @@ async def show_preset(interaction: discord.Interaction, edit=None):
     notice = "Ấn [✨ set] để load"
     preset_now = preset_list[val.preset_now]
     if preset_now == val.ai_name.lower():
-        notice = "Đang sử dụng preset này"
+        notice = "Đang sử dụng preset này 🌟"
         allow_set = False
     
     embed, view = await bot_notice(
