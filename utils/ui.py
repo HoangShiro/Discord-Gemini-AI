@@ -13,7 +13,7 @@ newc_bt = discord.ui.Button(label="New chat 🔆", custom_id="newchat", style=di
 # Preset
 pnext_bt = discord.ui.Button(label="🔆 next", custom_id="preset_next", style=discord.ButtonStyle.green)
 pback_bt = discord.ui.Button(label="🔅 back", custom_id="preset_back", style=discord.ButtonStyle.green)
-pprompt_bt = discord.ui.Button(label="Prompt", custom_id="preset_prompt", style=discord.ButtonStyle.grey)
+pprompt_bt = discord.ui.Button(label="⚜️ detail", custom_id="preset_prompt", style=discord.ButtonStyle.grey)
 setpreset_bt = discord.ui.Button(label="✨ set", custom_id="newchat", style=discord.ButtonStyle.blurple)
 
 allpreset_bt = discord.ui.Button(label="🪐 all", custom_id="all_preset", style=discord.ButtonStyle.grey)
@@ -313,6 +313,20 @@ async def bot_notice(
     au_link=None,
     au_avatar=None,
     footer=None,
+    
+    f1a="",
+    f1b="",
+    f1i=False,
+    f2a="",
+    f2b="",
+    f2i=False,
+    f3a="",
+    f3b="",
+    f3i=False,
+    f4a="",
+    f4b="",
+    f4i=False,
+    
     public_btt=None,
     private_btt=None,
     newchat_btt=None,
@@ -336,8 +350,14 @@ async def bot_notice(
     if not tt: tt = val.ai_name
     if not des: des = f"Personality: **{val.ai_char}**."
     embed=discord.Embed(title=tt, description=des, color=color)
-    if ava_link: embed.set_thumbnail(url=ava_link)
     if au_name: embed.set_author(name=au_name, url=au_link, icon_url=au_avatar)
+    if ava_link: embed.set_thumbnail(url=ava_link)
+    
+    if f1a or f1b: embed.add_field(name=f1a, value=f1b, inline=f1i)
+    if f2a or f2b: embed.add_field(name=f2a, value=f2b, inline=f2i)
+    if f3a or f3b: embed.add_field(name=f3a, value=f3b, inline=f3i)
+    if f4a or f4b: embed.add_field(name=f4a, value=f4b, inline=f4i)
+    
     if footer: embed.set_footer(text=footer)
 
     view = View(timeout=None)
@@ -416,6 +436,7 @@ async def show_preset(interaction: discord.Interaction, edit=None):
     pchar = "Unknown"
     pavt = None
     pdes = "Unknown"
+
     try:
         pavt = data["ai_avt_url"]
         pchar = data["ai_char"]
@@ -425,12 +446,10 @@ async def show_preset(interaction: discord.Interaction, edit=None):
         pass
     
     if not pavt: pavt = bot.user.display_avatar
-    allow_set = True
-    notice = "Ấn set để load ✨"
+    notice = "View detail để load ✨"
     preset_now = preset_list[val.preset_now]
     if preset_now == val.ai_name.lower():
         notice = "Đang sử dụng preset này 🌟"
-        allow_set = False
     
     embed, view = await bot_notice(
         tt=pname,
@@ -443,7 +462,6 @@ async def show_preset(interaction: discord.Interaction, edit=None):
         allp_btt=True,
         pback_btt=True,
         pnext_btt=True,
-        pset_btt=allow_set,
         pprompt_btt=True,
         )
     
@@ -491,15 +509,22 @@ async def preset_prompt(interaction: discord.Interaction):
     
     if alldes: decr = alldes[0]
     
+    allow_set = True
+    notice = "Ấn set để load ✨"
+    preset_now = preset_list[val.preset_now]
+    if preset_now == val.ai_name.lower():
+        notice = "Đang sử dụng preset này 🌟"
+        allow_set = False
+    
     embed, view = await bot_notice(
         tt="Character prompt:",
         des=decr,
         footer="Chỉ hiển thị dưới 2000 ký tự, sử dụng /prompts để xem đầy đủ.",
-        au_name=pname,
+        au_name=f"{pname} ➖ {notice}",
         au_avatar=pavt,
         au_link=pavt,
         allp_btt=True,
-        pset_btt=True,
+        pset_btt=allow_set,
         preset_btt=True,
         )
     
