@@ -495,8 +495,8 @@ async def preset_prompt(interaction: discord.Interaction):
     f3a = "💬 Chatmode"
     f3b = ""
     f3i = True
-    f4a = ""
-    f4b = ""
+    f4a = "🔊 Voice"
+    f4b = "> 46"
     f4i = True
     
     try:
@@ -507,6 +507,7 @@ async def preset_prompt(interaction: discord.Interaction):
         mode = data["public"]
         if mode: f3b = "> Public"
         else: f3b = "> Private"
+        f4b = data["vv_speaker"]
     except Exception as e:
         if val.bug_csl: print(f"{get_real_time()}> Lỗi khi show prompt của preset: {e}")
         pass
@@ -549,6 +550,9 @@ async def preset_prompt(interaction: discord.Interaction):
         f3a=f3a,
         f3b=f3b,
         f3i=f3i,
+        f4a=f4a,
+        f4b=f4b,
+        f4i=f4i,
         
         allp_btt=True,
         pset_btt=allow_set,
