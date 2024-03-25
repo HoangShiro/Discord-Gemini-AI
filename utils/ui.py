@@ -543,7 +543,6 @@ async def preset_prompt(interaction: discord.Interaction):
         au_link=pavt,
         f1a=f1a,
         f1b=f1b,
-        f1i=f1i,
         f2a=f2a,
         f2b=f2b,
         f2i=f2i,
