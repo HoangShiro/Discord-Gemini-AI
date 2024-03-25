@@ -210,7 +210,9 @@ async def bot_notice(tt=None, des=None, ava_link=None, au_name=None, au_link=Non
     from utils.bot import bot, val
     from utils.funcs import hex_to_rgb
     
-    if not color: color = discord.Colour.from_rgb(hex_to_rgb(val.ai_color))
+    if not color: 
+        r, g, b = hex_to_rgb(val.ai_color)
+        color = discord.Colour.from_rgb(r, g, b)
     
     if not tt: tt = val.ai_name
     if not des: des = f"Personality: **{val.ai_char}**."
