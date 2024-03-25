@@ -641,7 +641,13 @@ def update_ignore():
     
     val.set('ignore_rep', per)
 
-# load lại các val
+# Hex -> r,g,b
+def hex_to_rgb(hex_code):
+  hex_code = hex_code.lstrip('#')
+  if len(hex_code) != 6:
+    raise ValueError('Mã màu hex không hợp lệ.')
+  r, g, b = tuple(int(hex_code[i:i+2], 16) for i in range(0, 6, 2))
+  return r, g, b
 
 
 # Lưu pfp hiện tại của bot

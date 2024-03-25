@@ -161,6 +161,27 @@ async def des_check():
             print(f"{get_real_time()}> Lỗi khi tóm tắt nhân vật: ", e)
     
     val.set('ai_des', des)
+
+async def color_check():
+    from utils.bot import val, bot
+    from utils.daily import get_real_time
+    
+    prompt = "Analyze the character's hair or eye color, prioritize bright colors, output is hex color code only."
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(bot.user.display_avatar.url) as response:
+                image_data = await response.read()
+        file_obj = BytesIO(image_data)
+        image = PIL.Image.open(file_obj)
+
+        color = await igemini_text(image, prompt)
+        
+        if len(color) == 7: val.set('ai_color', color)
+        
+        print(f"{get_real_time()}> Màu của nhân vật: ", color)
+    except Exception as e:
+        print(f"{get_real_time()}> Lỗi khi phân tích màu nhân vật: ", e)
     
     
 # Xử lý và gửi tin nhắn

@@ -24,6 +24,7 @@ class AllStatus:
         self.ai_name = "AI"                 # Bot name
         self.ai_char = "innocent"           # Tính cách của bot
         self.ai_des = ""                    # Tóm tắt nhân vật
+        self.ai_color = "#ffbf75"            # Màu hex của nhân vật
         self.ai_guild = 0                   # ID server gần nhất
         self.ai_channel = 0                 # ID text channel gần nhất
         self.ai_avt_url = None              # Avatar hiện tại của bot
@@ -459,13 +460,13 @@ async def newchat(interaction: discord.Interaction):
     mess = await interaction.response.send_message(embed=embed, view=view)
     await char_check()
     await des_check()
+    await color_check()
     embed, view = await bot_notice(
         tt="Đã làm mới cuộc trò chuyện 🌟",
         footer=val.ai_des,
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
-        color=0xff8a8a
         )
     await mess.edit_original_response(embed=embed)
 
@@ -739,11 +740,13 @@ async def preset_change(interaction: discord.Interaction, save: str = None, load
         old_cname = val.name_ctime
         if load_pfp(load):
             uanme = None
-            embed, view = await bot_notice(tt="Đang load pfp mới 💫",
-                                        des=f"Đang load các thông tin của {load}...",
-                                        au_name=interaction.user.display_name,
-                                        au_avatar=interaction.user.display_avatar,
-                                        au_link=interaction.user.display_avatar)
+            embed, view = await bot_notice(
+                tt="Đang load pfp mới 💫",
+                des=f"Đang load các thông tin của {load}...",
+                au_name=interaction.user.display_name,
+                au_avatar=interaction.user.display_avatar,
+                au_link=interaction.user.display_avatar
+                )
             mess = await interaction.response.send_message(embed=embed)
             
             val.load('saves/vals.json')
@@ -759,20 +762,27 @@ async def preset_change(interaction: discord.Interaction, save: str = None, load
             
             await new_chat()
         
-            embed, view = await bot_notice(tt="Đang tạo cuộc trò chuyện mới 💫",
-                                        des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...", footer=uanme,
-                                        au_name=interaction.user.display_name,
-                                        au_avatar=interaction.user.display_avatar,
-                                        au_link=interaction.user.display_avatar)
+            embed, view = await bot_notice(
+                tt="Đang tạo cuộc trò chuyện mới 💫",
+                des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...", footer=uanme,
+                au_name=interaction.user.display_name,
+                au_avatar=interaction.user.display_avatar,
+                au_link=interaction.user.display_avatar
+                )
             await mess.edit_original_response(embed=embed)
             
             await char_check()
+            await des_check()
+            await color_check()
             
-            embed, view = await bot_notice(footer=uanme,
-                                        au_name=interaction.user.display_name,
-                                        au_avatar=interaction.user.display_avatar,
-                                        au_link=interaction.user.display_avatar,
-                                        color=0xff8a8a)
+            if not uname: uname = val.ai_des
+            
+            embed, view = await bot_notice(
+                footer=uanme,
+                au_name=interaction.user.display_name,
+                au_avatar=interaction.user.display_avatar,
+                au_link=interaction.user.display_avatar,
+                )
             await mess.edit_original_response(embed=embed, view=view)
         else: return await interaction.response.send_message(f"> Có lỗi khi load preset cho {load}.", ephemeral=True)
     else: await interaction.response.send_message(f"> Đã lưu preset cho {val.ai_name}.", ephemeral=True)
