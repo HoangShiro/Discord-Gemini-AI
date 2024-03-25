@@ -375,9 +375,10 @@ async def show_preset(interaction: discord.Interaction, edit=None):
         pchar = data["ai_char"]
         pdes = data["ai_des"]
     except Exception as e:
-        pavt = bot.user.display_avatar
         if val.bug_csl: print(f"{get_real_time()}> Lỗi khi show preset: {e}")
         pass
+    
+    if not pavt: pavt = bot.user.display_avatar
     
     embed, view = await bot_notice(
         tt=pname,
@@ -419,9 +420,10 @@ async def preset_prompt(interaction: discord.Interaction):
         pavt = data["ai_avt_url"]
         text = txt_read(f"{path}/saves/chat.txt")
     except Exception as e:
-        pavt = bot.user.display_avatar
         if val.bug_csl: print(f"{get_real_time()}> Lỗi khi show prompt của preset: {e}")
         pass
+    
+    if not pavt: pavt = bot.user.display_avatar
     
     if text:
         while len(text) > 0:

@@ -860,9 +860,10 @@ async def share_pfp(interaction: discord.Interaction, name: str):
     pavt = data["ai_avt_url"]
     pchar = data["ai_char"]
   except Exception as e:
-    pavt = bot.user.display_avatar
     if val.bug_csl: print(f"{get_real_time()}> Lỗi khi share preset: {e}")
     pass
+  
+  if not pavt: pavt = bot.user.display_avatar
   
   embed, view = await bot_notice(
     tt=pname,

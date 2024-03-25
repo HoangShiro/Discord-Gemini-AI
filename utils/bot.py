@@ -746,13 +746,10 @@ async def preset_change(interaction: discord.Interaction, save: str = None, load
     
     if not save_pfp(save): return await interaction.response.send_message(f"> Có lỗi khi lưu preset cho {val.ai_name}.", ephemeral=True)
     
-    if show:
+    if load: await set_pfp(interaction, load)
+    else:
         load_folders(show)
         await show_preset(interaction)
-        return
-    
-    if load: await set_pfp(interaction, load)
-    else: await interaction.response.send_message(f"> Đã lưu preset cho {val.ai_name}.", ephemeral=True)
 
 # Get preset
 @bot.slash_command(name="get_preset", description=f"Nhận preset gần nhất")
