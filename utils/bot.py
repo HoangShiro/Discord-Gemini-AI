@@ -23,6 +23,7 @@ class AllStatus:
         self.owner_uid = None               # UID của master
         self.ai_name = "AI"                 # Bot name
         self.ai_char = "innocent"           # Tính cách của bot
+        self.ai_des = ""                    # Tóm tắt nhân vật
         self.ai_guild = 0                   # ID server gần nhất
         self.ai_channel = 0                 # ID text channel gần nhất
         self.ai_avt_url = None              # Avatar hiện tại của bot
@@ -448,18 +449,24 @@ async def newchat(interaction: discord.Interaction):
     
     await new_chat()
         
-    embed, view = await bot_notice(tt="Đang tạo cuộc trò chuyện mới 💫",
-                                   des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...",
-                                   au_name=interaction.user.display_name,
-                                   au_avatar=interaction.user.display_avatar,
-                                   au_link=interaction.user.display_avatar)
+    embed, view = await bot_notice(
+        tt="Đang tạo cuộc trò chuyện mới 💫",
+        des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...",
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar
+        )
     mess = await interaction.response.send_message(embed=embed, view=view)
     await char_check()
-    embed, view = await bot_notice(tt="Đã làm mới cuộc trò chuyện 🌟",
-                                   au_name=interaction.user.display_name,
-                                   au_avatar=interaction.user.display_avatar,
-                                   au_link=interaction.user.display_avatar,
-                                   color=0xff8a8a)
+    await des_check()
+    embed, view = await bot_notice(
+        tt="Đã làm mới cuộc trò chuyện 🌟",
+        footer=val.ai_des
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar,
+        color=0xff8a8a
+        )
     await mess.edit_original_response(embed=embed)
 
 # Chuyển chế độ chat

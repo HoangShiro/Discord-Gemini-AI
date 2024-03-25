@@ -138,7 +138,7 @@ async def char_check():
     try:
         char = await gemini_task(all_prpt)
         if char.lower() in char_list:
-            print(f"tính cách của {val.ai_name}: ", char)
+            print(f"{get_real_time()}> tính cách của {val.ai_name}: ", char)
             txt = char.lower()
         else:
             print(f"tính cách '{char}' không hợp lệ.")
@@ -147,6 +147,22 @@ async def char_check():
     
     val.set('ai_char', txt)
 
+async def des_check():
+    from utils.bot import val
+    from utils.daily import get_real_time
+
+    chat = txt_read('saves/chat.txt')
+    des = "Không có thông tin nhân vật."
+    prompt = f"Tóm tắt ngắn gọn thông tin nhân vật của {val.ai_name} trên cùng một dòng, dựa trên prompt bên dưới. Cho phép NSFW nếu prompt có NSFW:\n{chat}"
+    try:
+        des = await gemini_task(prompt)
+        print(f"{get_real_time()}> tóm tắt {val.ai_name}: ", des)
+    except Exception as e:
+            print(f"{get_real_time()}> Lỗi khi tóm tắt nhân vật: ", e)
+    
+    val.set('ai_des', des)
+    
+    
 # Xử lý và gửi tin nhắn
 async def send_mess(channel, reply, rep = False, inter = False):
     from utils.bot import val
