@@ -15,6 +15,7 @@ pnext_bt = discord.ui.Button(label="🔆 next", custom_id="preset_next", style=d
 pback_bt = discord.ui.Button(label="🔅 back", custom_id="preset_back", style=discord.ButtonStyle.green)
 pprompt_bt = discord.ui.Button(label="Prompt", custom_id="preset_prompt", style=discord.ButtonStyle.grey)
 setpreset_bt = discord.ui.Button(label="✨ set", custom_id="newchat", style=discord.ButtonStyle.blurple)
+setpreset_bt = discord.ui.Button(label="✨ set", custom_id="newchat", style=discord.ButtonStyle.blurple)
 
 """ BUTTON """
 
@@ -374,7 +375,7 @@ async def show_preset(interaction: discord.Interaction, edit=None):
         pchar = data["ai_char"]
         pdes = data["ai_des"]
     except Exception as e:
-        print(f"{get_real_time()}> Lỗi khi show preset: {e}")
+        if val.bug_csl: print(f"{get_real_time()}> Lỗi khi show preset: {e}")
         pass
     
     embed, view = await bot_notice(
@@ -418,7 +419,7 @@ async def preset_prompt(interaction: discord.Interaction):
         text = txt_read(f"{path}/saves/chat.txt")
     except Exception as e:
         pavt = bot.user.display_avatar
-        print(f"{get_real_time()}> Lỗi khi show prompt của preset: {e}")
+        if val.bug_csl: print(f"{get_real_time()}> Lỗi khi show prompt của preset: {e}")
         pass
     
     if text:
@@ -435,9 +436,8 @@ async def preset_prompt(interaction: discord.Interaction):
     if alldes: decr = alldes[0]
     
     embed, view = await bot_notice(
-        tt="Prompt:",
+        tt="Character prompt:",
         des=decr,
-        ava_link=pavt,
         footer="Chỉ hiển thị dưới 2000 ký tự, sử dụng /prompts để xem đầy đủ.",
         au_name=pname,
         au_avatar=pavt,
