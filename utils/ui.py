@@ -16,6 +16,8 @@ pback_bt = discord.ui.Button(label="🔅 back", custom_id="preset_back", style=d
 pprompt_bt = discord.ui.Button(label="Prompt", custom_id="preset_prompt", style=discord.ButtonStyle.grey)
 setpreset_bt = discord.ui.Button(label="✨ set", custom_id="newchat", style=discord.ButtonStyle.blurple)
 
+
+
 """ BUTTON """
 
 # Button call
@@ -178,7 +180,6 @@ async def pnext_atv(interaction: discord.Interaction):
         
     view_preset("+")
     await show_preset(interaction, edit=True)
-    
     
 # preset back
 async def pback_atv(interaction: discord.Interaction):
@@ -351,7 +352,7 @@ async def bot_status():
 
 # Show preset
 async def show_preset(interaction: discord.Interaction, edit=None):
-    from utils.bot import val 
+    from utils.bot import val, bot
     from utils.ui import bot_notice
     from utils.daily import get_real_time
     from utils.funcs import load_folders, view_preset
@@ -374,6 +375,7 @@ async def show_preset(interaction: discord.Interaction, edit=None):
         pchar = data["ai_char"]
         pdes = data["ai_des"]
     except Exception as e:
+        pavt = bot.user.display_avatar
         if val.bug_csl: print(f"{get_real_time()}> Lỗi khi show preset: {e}")
         pass
     
