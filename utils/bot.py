@@ -748,6 +748,7 @@ async def preset_change(interaction: discord.Interaction, save: str = None, load
     
     if load: await set_pfp(interaction, load)
     else:
+        if save: show = save
         load_folders(show)
         await show_preset(interaction)
 
