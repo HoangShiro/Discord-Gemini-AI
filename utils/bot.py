@@ -304,7 +304,7 @@ async def on_message(message: discord.Message):
                         public_btt=True,
                         )
                     return await message.channel.send(embed=embed, view=view)
-                return
+            return
     else:
         if isinstance(message.channel, discord.DMChannel):
             if message.author.id == val.owner_uid:
