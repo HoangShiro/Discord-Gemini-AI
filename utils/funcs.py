@@ -766,6 +766,7 @@ async def set_pfp(interaction: discord.Interaction, name: str):
     embed, view = await bot_notice(
         tt="Đang load pfp mới 💫",
         des=f"Đang load các thông tin của {name}...",
+        ava_link=bot.user.display_avatar,
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar
@@ -788,6 +789,7 @@ async def set_pfp(interaction: discord.Interaction, name: str):
     embed, view = await bot_notice(
         tt="Đang tạo cuộc trò chuyện mới 💫",
         des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...", footer=uanme,
+        ava_link=bot.user.display_avatar,
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar
@@ -802,6 +804,7 @@ async def set_pfp(interaction: discord.Interaction, name: str):
 
     embed, view = await bot_notice(
         footer=uanme,
+        ava_link=bot.user.display_avatar,
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
@@ -836,7 +839,7 @@ async def get_pfp(url=None):
 
 # share pfp
 async def share_pfp(interaction: discord.Interaction, name: str):
-  from utils.bot import val
+  from utils.bot import val, bot
   from utils.ui import bot_notice
   from utils.daily import get_real_time
   
@@ -857,6 +860,7 @@ async def share_pfp(interaction: discord.Interaction, name: str):
     pavt = data["ai_avt_url"]
     pchar = data["ai_char"]
   except Exception as e:
+    pavt = bot.user.display_avatar
     print(f"{get_real_time()}> Lỗi khi share preset: {e}")
     pass
   
@@ -883,11 +887,14 @@ async def share_pfp(interaction: discord.Interaction, name: str):
     
     await mess.channel.send(file=discord.File(zip_name))
     
-    embed, view = await bot_notice(tt=pname,
-                                        des=f"> Tính cách: **{pchar}**", ava_link=pavt, footer="Sử dụng /get_preset để lưu, thận trọng khi tải file.",
-                                        au_name=interaction.user.display_name,
-                                        au_avatar=interaction.user.display_avatar,
-                                        au_link=interaction.user.display_avatar)
+    embed, view = await bot_notice(
+      tt=pname,
+      des=f"> Tính cách: **{pchar}**",
+      ava_link=pavt,
+      footer="Sử dụng /get_preset để lưu, thận trọng khi tải file.",
+      au_name=interaction.user.display_name,
+      au_avatar=interaction.user.display_avatar,
+      au_link=interaction.user.display_avatar)
     
     await mess.edit_original_response(embed=embed)
     
@@ -933,7 +940,8 @@ def view_preset(dirt=None):
   elif dirt == "+":
       if now < len(plist) - 1:
           now += 1
-    
+  
+  val.set('preset_now', now)
   return plist[now]
   
 # New chat

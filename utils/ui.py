@@ -117,7 +117,7 @@ async def ctn_atv(interaction):
 
 # Enable public mode
 async def public_atv(interaction: discord.Interaction):
-    from utils.bot import val
+    from utils.bot import val, bot
     if not val.public:
         if interaction.user.id != val.owner_uid: return await byB(interaction)
     
@@ -126,6 +126,7 @@ async def public_atv(interaction: discord.Interaction):
         tt="Chat mode: Public",
         des="Đã đổi chế độ chat.",
         footer=f"Bạn và mọi người có thể chat với {val.ai_name} ở Public chat mode.",
+        ava_link=bot.user.display_avatar,
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
@@ -135,13 +136,14 @@ async def public_atv(interaction: discord.Interaction):
 
 # Enable private mode
 async def private_atv(interaction: discord.Interaction):
-    from utils.bot import val
+    from utils.bot import val, bot
     
     val.set('public', False)
     embed, view = await bot_notice(
         tt="Chat mode: Private",
         des="Đã đổi chế độ chat.",
         footer=f"Bạn hiện đã có thể chat riêng với {val.ai_name}.",
+        ava_link=bot.user.display_avatar,
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
@@ -151,7 +153,7 @@ async def private_atv(interaction: discord.Interaction):
  
 # Newchat
 async def newchat_atv(interaction: discord.Interaction):
-    from utils.bot import val
+    from utils.bot import val, bot
     from utils.funcs import new_chat
     from utils.reply import char_check
     
@@ -159,6 +161,7 @@ async def newchat_atv(interaction: discord.Interaction):
     
     embed, view = await bot_notice(
         tt="Đã làm mới cuộc trò chuyện 🌟",
+        ava_link=bot.user.display_avatar,
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
@@ -287,9 +290,8 @@ async def bot_notice(
     
     if not tt: tt = val.ai_name
     if not des: des = f"Personality: **{val.ai_char}**."
-    if not ava_link: ava_link = bot.user.display_avatar
     embed=discord.Embed(title=tt, description=des, color=color)
-    embed.set_thumbnail(url=ava_link)
+    if ava_link: embed.set_thumbnail(url=ava_link)
     if au_name: embed.set_author(name=au_name, url=au_link, icon_url=au_avatar)
     if footer: embed.set_footer(text=footer)
 
@@ -393,7 +395,7 @@ async def show_preset(interaction: discord.Interaction, edit=None):
     else: await interaction.response.edit_message(embed=embed, view=view)
 
 async def preset_prompt(interaction: discord.Interaction):
-    from utils.bot import val 
+    from utils.bot import val, bot
     from utils.ui import bot_notice
     from utils.daily import get_real_time
     from utils.funcs import txt_read
@@ -415,6 +417,7 @@ async def preset_prompt(interaction: discord.Interaction):
         pavt = data["ai_avt_url"]
         text = txt_read(f"{path}/saves/chat.txt")
     except Exception as e:
+        pavt = bot.user.display_avatar
         print(f"{get_real_time()}> Lỗi khi show prompt của preset: {e}")
         pass
     
@@ -432,13 +435,13 @@ async def preset_prompt(interaction: discord.Interaction):
     if alldes: decr = alldes[0]
     
     embed, view = await bot_notice(
-        tt=pname,
+        tt="Prompt:",
         des=decr,
         ava_link=pavt,
         footer="Chỉ hiển thị dưới 2000 ký tự, sử dụng /prompts để xem đầy đủ.",
-        au_name=interaction.user.display_name,
-        au_avatar=interaction.user.display_avatar,
-        au_link=interaction.user.display_avatar,
+        au_name=pname,
+        au_avatar=pavt,
+        au_link=pavt,
         pback_btt=True,
         pnext_btt=True,
         pset_btt=True,

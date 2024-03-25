@@ -457,6 +457,7 @@ async def newchat(interaction: discord.Interaction):
     embed, view = await bot_notice(
         tt="Đang tạo cuộc trò chuyện mới 💫",
         des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...",
+        ava_link=bot.user.display_avatar,
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar
@@ -468,6 +469,7 @@ async def newchat(interaction: discord.Interaction):
     embed, view = await bot_notice(
         tt="Đã làm mới cuộc trò chuyện 🌟",
         footer=val.ai_des,
+        ava_link=bot.user.display_avatar,
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
@@ -720,11 +722,14 @@ async def name_change(interaction: discord.Interaction, name: str):
             old_name = val.ai_name
             await bot.user.edit(username=name)
             val.set('name_ctime', 1800)
-            embed, view = await bot_notice(tt=name, ava_link=bot.user.display_avatar,
-                                   au_name=interaction.user.display_name,
-                                   au_avatar=interaction.user.display_avatar,
-                                   au_link=interaction.user.display_avatar,
-                                   color=0xff8a8a)
+            embed, view = await bot_notice(
+                tt=name,
+                ava_link=bot.user.display_avatar,
+                au_name=interaction.user.display_name,
+                au_avatar=interaction.user.display_avatar,
+                au_link=interaction.user.display_avatar,
+                )
+            
             await interaction.response.send_message(embed=embed, view=view)
             print(f'{get_real_time()}> Tên của {old_name} đã được đổi thành: ', name)
             val.set('ai_name', name)
