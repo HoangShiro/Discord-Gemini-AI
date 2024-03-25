@@ -152,7 +152,7 @@ async def newchat_atv(interaction: discord.Interaction):
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar
         )
-    await interaction.response.edit_message(embed=embed, view=view)
+    mess = await interaction.response.edit_message(embed=embed, view=view)
     
     await char_check()
     
@@ -164,7 +164,7 @@ async def newchat_atv(interaction: discord.Interaction):
         color=0xff8a8a
         )
     
-    await interaction.response.edit_message(embed=embed, view=view)
+    await mess.edit_original_response(embed=embed, view=view)
     
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
