@@ -944,6 +944,22 @@ def view_preset(dirt=None):
   
   val.set('preset_now', now)
   return plist[now]
+
+# remove preset
+def remove_preset(name: str):
+  from utils.bot import val
+  from utils.daily import get_real_time
+  
+  path = f"character list/{name.lower()}"
+  if os.path.exists(path):
+    try:
+      shutil.rmtree(path)
+      load_folders()
+      return f"> Đã xoá thành công preset `{name}`"
+    except Exception as e:
+      print(f'{get_real_time()}> Lỗi khi xoá preset: ', e)
+      return f"> Lỗi khi xoá preset: {e}"
+  else: return f"> Preset `{name}` không tồn tại." 
   
 # New chat
 async def new_chat():

@@ -741,8 +741,12 @@ async def name_change(interaction: discord.Interaction, name: str):
 
 # Load preset
 @bot.slash_command(name="preset", description=f"Lưu hoặc đổi preset")
-async def preset_change(interaction: discord.Interaction, save: str = None, load: str = None, show: str = None):
+async def preset_change(interaction: discord.Interaction, save: str = None, load: str = None, show: str = None, remove: str = None):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    if remove:
+        noti = remove_preset(remove)
+        return await interaction.response.send_message(noti, ephemeral=True)
     
     if not save_pfp(save): return await interaction.response.send_message(f"> Có lỗi khi lưu preset cho {val.ai_name}.", ephemeral=True)
     
