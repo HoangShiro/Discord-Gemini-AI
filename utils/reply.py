@@ -153,7 +153,7 @@ async def des_check():
 
     chat = txt_read('saves/chat.txt')
     des = "Không có thông tin nhân vật."
-    prompt = f"Tóm tắt ngắn gọn thông tin nhân vật của {val.ai_name} trên cùng một dòng, dựa trên prompt bên dưới. Cho phép NSFW nếu prompt có NSFW:\n{chat}"
+    prompt = f"Tóm tắt ngắn gọn thông tin nhân vật của {val.ai_name} trên cùng một dòng, dựa trên prompt bên dưới. Cho phép NSFW nếu prompt có NSFW:\n\n{chat}"
     try:
         des = await gemini_task(prompt)
         print(f"{get_real_time()}> tóm tắt {val.ai_name}: ", des)
