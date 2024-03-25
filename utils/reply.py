@@ -156,7 +156,7 @@ async def des_check():
     prompt = f"Tóm tắt ngắn gọn thông tin nhân vật của {val.ai_name} trên cùng một dòng, dựa trên prompt bên dưới. Cho phép NSFW nếu prompt có NSFW:\n\n{chat}"
     try:
         des = await gemini_task(prompt)
-        print(f"{get_real_time()}> tóm tắt {val.ai_name}: ", des)
+        print(f"{get_real_time()}> tóm tắt của {val.ai_name} được tạo thành công.")
     except Exception as e:
             print(f"{get_real_time()}> Lỗi khi tóm tắt nhân vật: ", e)
     
