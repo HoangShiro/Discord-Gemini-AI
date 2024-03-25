@@ -425,6 +425,10 @@ async def show_preset(interaction: discord.Interaction, edit=None):
         pass
     
     if not pavt: pavt = bot.user.display_avatar
+    allow_set = True
+    
+    preset_now = preset_list[val.preset_now]
+    if preset_now == val.ai_name.lower(): allow_set = False
     
     embed, view = await bot_notice(
         tt=pname,
@@ -437,7 +441,7 @@ async def show_preset(interaction: discord.Interaction, edit=None):
         allp_btt=True,
         pback_btt=True,
         pnext_btt=True,
-        pset_btt=True,
+        pset_btt=allow_set,
         pprompt_btt=True,
         )
     
