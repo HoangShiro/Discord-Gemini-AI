@@ -6,7 +6,9 @@ rmv_bt = discord.ui.Button(label="➖", custom_id="remove", style=discord.Button
 ermv_bt = discord.ui.Button(label="➖", custom_id="remove", style=discord.ButtonStyle.grey)
 rc_bt = discord.ui.Button(label="💫 re chat", custom_id="rc", style=discord.ButtonStyle.grey)
 continue_bt = discord.ui.Button(label="✨ continue", custom_id="continue", style=discord.ButtonStyle.grey)
-
+public_bt = discord.ui.Button(label="Enable Public", custom_id="public", style=discord.ButtonStyle.green)
+private_bt = discord.ui.Button(label="Enable Private", custom_id="private", style=discord.ButtonStyle.green)
+newc_bt = discord.ui.Button(label="New chat 🔆", custom_id="newchat", style=discord.ButtonStyle.blurple)
 
 """ BUTTON """
 
@@ -16,6 +18,11 @@ async def load_btt():
     rmv_bt.callback = rmv_bt_atv
     rc_bt.callback = rc_atv
     continue_bt.callback = ctn_atv
+    
+    # Notice
+    public_bt.callback = public_atv
+    private_bt.callback = private_atv
+    newc_bt.callback = newchat_atv
     
     # UI
     ermv_bt.callback = ermv_bt_atv
@@ -43,7 +50,11 @@ async def rmv_bt_atv(interaction):
     await edit_last_msg(view=await DM_button())
 
 # Remove embed
-async def ermv_bt_atv(interaction):    
+async def ermv_bt_atv(interaction: discord.Interaction):
+    from utils.bot import val
+    if not val.public:
+        if interaction.user.id != val.owner_uid: return await byB(interaction)
+            
     await interaction.message.delete()
 
 # Rechat
@@ -92,6 +103,69 @@ async def ctn_atv(interaction):
     val.set('now_chat', msg)
     val.set('CD', 0)
 
+# Enable public mode
+async def public_atv(interaction: discord.Interaction):
+    from utils.bot import val
+    if not val.public:
+        if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
+    val.set('public', True)
+    embed, view = await bot_notice(
+        tt="Chat mode: Public",
+        des="Đã đổi chế độ chat.",
+        footer=f"Bạn và mọi người có thể chat với {val.ai_name} ở Public chat mode.",
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar,
+        newchat_bt=True,
+    )
+    await interaction.response.edit_message(embed=embed, view=view)
+
+# Enable private mode
+async def private_atv(interaction: discord.Interaction):
+    from utils.bot import val
+    
+    val.set('public', False)
+    embed, view = await bot_notice(
+        tt="Chat mode: Private",
+        des="Đã đổi chế độ chat.",
+        footer=f"Bạn hiện đã có thể chat riêng với {val.ai_name}.",
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar,
+        newchat_bt=True,
+    )
+    await interaction.response.edit_message(embed=embed, view=view)
+ 
+# Newchat
+async def newchat_atv(interaction: discord.Interaction):
+    from utils.bot import val
+    from utils.funcs import new_chat
+    from utils.reply import char_check
+    
+    await new_chat()
+    
+    embed, view = await bot_notice(
+        tt="Đang tạo cuộc trò chuyện mới 💫",
+        des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...",
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar
+        )
+    await interaction.response.edit_message(embed=embed, view=view)
+    
+    await char_check()
+    
+    embed, view = await bot_notice(
+        tt="Đã làm mới cuộc trò chuyện 🌟",
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar,
+        color=0xff8a8a
+        )
+    
+    await interaction.response.edit_message(embed=embed, view=view)
+    
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
     from utils.bot import bot, val
@@ -143,7 +217,7 @@ async def byB(interaction):
 """ EMBED """
 
 # Embed mặc định
-async def bot_notice(tt=None, des=None, ava_link=None, au_name=None, au_link=None, au_avatar=None, footer=None, color=0xffbf75):
+async def bot_notice(tt=None, des=None, ava_link=None, au_name=None, au_link=None, au_avatar=None, footer=None, public_btt=None, private_btt=None, newchat_btt=None, color=0xffbf75):
     from utils.bot import bot, val
     if not tt: tt = val.ai_name
     if not des: des = f"Personality: **{val.ai_char}**."
@@ -154,6 +228,9 @@ async def bot_notice(tt=None, des=None, ava_link=None, au_name=None, au_link=Non
     if footer: embed.set_footer(text=footer)
 
     view = View(timeout=None)
+    if public_btt: view.add_item(public_bt)
+    if private_btt: view.add_item(private_bt)
+    if newchat_btt: view.add_item(newc_bt)
     view.add_item(ermv_bt)
 
     return embed, view
