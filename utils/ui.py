@@ -11,8 +11,8 @@ private_bt = discord.ui.Button(label="Enable Private", custom_id="private", styl
 newc_bt = discord.ui.Button(label="New chat 🔆", custom_id="newchat", style=discord.ButtonStyle.blurple)
 
 # Preset
-pnext_bt = discord.ui.Button(label="🔆 next", custom_id="preset_next", style=discord.ButtonStyle.green)
-pback_bt = discord.ui.Button(label="🔅 back", custom_id="preset_back", style=discord.ButtonStyle.green)
+pnext_bt = discord.ui.Button(label="🔻", custom_id="preset_next", style=discord.ButtonStyle.green)
+pback_bt = discord.ui.Button(label="🔺", custom_id="preset_back", style=discord.ButtonStyle.green)
 pprompt_bt = discord.ui.Button(label="Prompt", custom_id="preset_prompt", style=discord.ButtonStyle.grey)
 setpreset_bt = discord.ui.Button(label="✨ set", custom_id="newchat", style=discord.ButtonStyle.blurple)
 
