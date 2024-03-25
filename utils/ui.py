@@ -436,7 +436,6 @@ async def show_preset(interaction: discord.Interaction, edit=None):
     pchar = "Unknown"
     pavt = None
     pdes = "Unknown"
-
     try:
         pavt = data["ai_avt_url"]
         pchar = data["ai_char"]
@@ -487,9 +486,26 @@ async def preset_prompt(interaction: discord.Interaction):
     text = None
     alldes = []
     
+    f1a = "\n"
+    f1b = ""
+    f1i = True
+    f2a = "⚜️ Personality"
+    f2b = ""
+    f2i = True
+    f3a = "💬 Chatmode"
+    f3b = ""
+    f3i = True
+    f4a = ""
+    f4b = ""
+    f4i = True
+    
     try:
         pavt = data["ai_avt_url"]
         text = txt_read(f"{path}/saves/chat.txt")
+        f2b = f"> {data["ai_char"]}"
+        mode = data["public"]
+        if mode: f3b = "> Public"
+        else: f3b = "> Private"
     except Exception as e:
         if val.bug_csl: print(f"{get_real_time()}> Lỗi khi show prompt của preset: {e}")
         pass
@@ -523,6 +539,16 @@ async def preset_prompt(interaction: discord.Interaction):
         au_name=f"{pname} ➖ {notice}",
         au_avatar=pavt,
         au_link=pavt,
+        f1a=f1a,
+        f1b=f1b,
+        f1i=f1i,
+        f2a=f2a,
+        f2b=f2b,
+        f2i=f2i,
+        f3a=f3a,
+        f3b=f3b,
+        f3i=f3i,
+        
         allp_btt=True,
         pset_btt=allow_set,
         preset_btt=True,
