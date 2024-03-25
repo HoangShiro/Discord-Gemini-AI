@@ -502,7 +502,8 @@ async def preset_prompt(interaction: discord.Interaction):
     try:
         pavt = data["ai_avt_url"]
         text = txt_read(f"{path}/saves/chat.txt")
-        f2b = f"> {data["ai_char"]}"
+        ai_char = data["ai_char"]
+        f2b = f"> {ai_char}"
         mode = data["public"]
         if mode: f3b = "> Public"
         else: f3b = "> Private"
