@@ -16,7 +16,8 @@ pback_bt = discord.ui.Button(label="🔅 back", custom_id="preset_back", style=d
 pprompt_bt = discord.ui.Button(label="Prompt", custom_id="preset_prompt", style=discord.ButtonStyle.grey)
 setpreset_bt = discord.ui.Button(label="✨ set", custom_id="newchat", style=discord.ButtonStyle.blurple)
 
-allpreset_bt = discord.ui.Button(label="🪐", custom_id="all_preset", style=discord.ButtonStyle.red)
+allpreset_bt = discord.ui.Button(label="🪐", custom_id="all_preset", style=discord.ButtonStyle.grey)
+preset_bt = discord.ui.Button(label="💠", custom_id="preset", style=discord.ButtonStyle.green)
 
 """ BUTTON """
 
@@ -36,6 +37,7 @@ async def load_btt():
     ermv_bt.callback = ermv_bt_atv
     
     # Preset
+    preset_bt.callback = preset_atv
     pnext_bt.callback = pnext_atv
     pback_bt.callback = pback_atv
     pprompt_bt.callback = pprompt_atv
@@ -214,7 +216,7 @@ async def setpreset_atv(interaction: discord.Interaction):
     await set_pfp(interaction, name)
 
 # Show all preset
-async def allpreset_atv(interaction: discord.Interaction):
+async def allpreset_atv(interaction: discord.Interaction, send=None):
     from utils.bot import val
     
     if interaction.user.id != val.owner_uid: return await byB(interaction)
@@ -228,9 +230,10 @@ async def allpreset_atv(interaction: discord.Interaction):
     preset_now = preset_list[val.preset_now]
     for preset in preset_list:
         if preset == preset_now: icon = viewing
-        elif preset == val.ai_name.lower(): icon = now
         else: icon = normal
-        all_list = all_list + f"{icon} {preset}\n"
+        if preset == val.ai_name.lower(): now = "🌟"
+        else: now = ""
+        all_list = all_list + f"{icon} {preset} {now}\n"
     
     embed, view = await bot_notice(
         tt="Danh sách preset:",
@@ -239,14 +242,19 @@ async def allpreset_atv(interaction: discord.Interaction):
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
-        pback_btt=True,
-        pnext_btt=True,
         pset_btt=True,
         pprompt_btt=True,
         )
+    if send: await interaction.response.send_message(embed=embed, view=view)
+    else: await interaction.response.edit_message(embed=embed, view=view)
+
+async def preset_atv(interaction: discord.Interaction):
+    from utils.bot import val
     
-    await interaction.response.edit_message(embed=embed, view=view)
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
     
+    await show_preset(interaction, edit=True)
+
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
     from utils.bot import bot, val
@@ -314,6 +322,7 @@ async def bot_notice(
     pprompt_btt=None,
     pset_btt=None,
     allp_btt=None,
+    preset_btt=None,
     color=None,
     ):
     
@@ -337,11 +346,12 @@ async def bot_notice(
     if private_btt: view.add_item(private_bt)
     if newchat_btt: view.add_item(newc_bt)
     
-    if allp_btt: view.add_item(allpreset_bt)
+    if preset_btt: view.add_item(preset_bt)
     if pback_btt: view.add_item(pback_bt)
     if pnext_btt: view.add_item(pnext_bt)
     if pset_btt: view.add_item(setpreset_bt)
     if pprompt_btt: view.add_item(pprompt_bt)
+    if allp_btt: view.add_item(allpreset_bt)
     
     view.add_item(ermv_bt)
 
@@ -484,10 +494,8 @@ async def preset_prompt(interaction: discord.Interaction):
         au_avatar=pavt,
         au_link=pavt,
         allp_btt=True,
-        pback_btt=True,
-        pnext_btt=True,
         pset_btt=True,
-        pprompt_btt=True,
+        preset_btt=True,
         )
     
     await interaction.response.edit_message(embed=embed, view=view)
