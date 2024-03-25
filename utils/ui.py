@@ -117,7 +117,7 @@ async def public_atv(interaction: discord.Interaction):
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
-        newchat_bt=True,
+        newchat_btt=True,
     )
     await interaction.response.edit_message(embed=embed, view=view)
 
@@ -133,7 +133,7 @@ async def private_atv(interaction: discord.Interaction):
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
-        newchat_bt=True,
+        newchat_btt=True,
     )
     await interaction.response.edit_message(embed=embed, view=view)
  
