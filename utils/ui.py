@@ -426,16 +426,18 @@ async def show_preset(interaction: discord.Interaction, edit=None):
     
     if not pavt: pavt = bot.user.display_avatar
     allow_set = True
-    
+    notice = "Ấn `✨ set` để load"
     preset_now = preset_list[val.preset_now]
-    if preset_now == val.ai_name.lower(): allow_set = False
+    if preset_now == val.ai_name.lower():
+        notice = "Đang sử dụng preset này"
+        allow_set = False
     
     embed, view = await bot_notice(
         tt=pname,
         des=f"> Tính cách: **{pchar}**",
         ava_link=pavt,
         footer=pdes,
-        au_name=interaction.user.display_name,
+        au_name=notice,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
         allp_btt=True,
