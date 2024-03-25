@@ -16,8 +16,8 @@ pback_bt = discord.ui.Button(label="🔅 back", custom_id="preset_back", style=d
 pprompt_bt = discord.ui.Button(label="Prompt", custom_id="preset_prompt", style=discord.ButtonStyle.grey)
 setpreset_bt = discord.ui.Button(label="✨ set", custom_id="newchat", style=discord.ButtonStyle.blurple)
 
-allpreset_bt = discord.ui.Button(label="🪐", custom_id="all_preset", style=discord.ButtonStyle.grey)
-preset_bt = discord.ui.Button(label="💠", custom_id="preset", style=discord.ButtonStyle.green)
+allpreset_bt = discord.ui.Button(label="🪐 all", custom_id="all_preset", style=discord.ButtonStyle.grey)
+preset_bt = discord.ui.Button(label="💠 preset", custom_id="preset", style=discord.ButtonStyle.green)
 
 """ BUTTON """
 
@@ -242,8 +242,7 @@ async def allpreset_atv(interaction: discord.Interaction, send=None):
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
-        pset_btt=True,
-        pprompt_btt=True,
+        preset_btt=True,
         )
     if send: await interaction.response.send_message(embed=embed, view=view)
     else: await interaction.response.edit_message(embed=embed, view=view)
@@ -346,10 +345,10 @@ async def bot_notice(
     if private_btt: view.add_item(private_bt)
     if newchat_btt: view.add_item(newc_bt)
     
-    if preset_btt: view.add_item(preset_bt)
     if pback_btt: view.add_item(pback_bt)
     if pnext_btt: view.add_item(pnext_bt)
     if pset_btt: view.add_item(setpreset_bt)
+    if preset_btt: view.add_item(preset_bt)
     if pprompt_btt: view.add_item(pprompt_bt)
     if allp_btt: view.add_item(allpreset_bt)
     
