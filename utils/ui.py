@@ -16,7 +16,7 @@ pback_bt = discord.ui.Button(label="🔅 back", custom_id="preset_back", style=d
 pprompt_bt = discord.ui.Button(label="Prompt", custom_id="preset_prompt", style=discord.ButtonStyle.grey)
 setpreset_bt = discord.ui.Button(label="✨ set", custom_id="newchat", style=discord.ButtonStyle.blurple)
 
-
+allpreset_bt = discord.ui.Button(label="🪐", custom_id="all_preset", style=discord.ButtonStyle.red)
 
 """ BUTTON """
 
@@ -40,6 +40,7 @@ async def load_btt():
     pback_bt.callback = pback_atv
     pprompt_bt.callback = pprompt_atv
     setpreset_bt.callback = setpreset_atv
+    allpreset_bt.callback = allpreset_atv
     
 # Button add
 async def DM_button():
@@ -211,6 +212,39 @@ async def setpreset_atv(interaction: discord.Interaction):
     name = preset_list[val.preset_now]
     
     await set_pfp(interaction, name)
+
+# Show all preset
+async def allpreset_atv(interaction: discord.Interaction):
+    from utils.bot import val
+    
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
+    all_list = ""
+    normal = "🔹"
+    viewing = "💠"
+    now = "🌟"
+    icon = normal
+    preset_list = val.preset_list
+    preset_now = preset_list[val.preset_now]
+    for preset in preset_list:
+        if preset == preset_now: icon = viewing
+        if preset == val.ai_name.lower(): icon = now
+        all_list = all_list + f"{icon} {preset}\n"
+    
+    embed, view = await bot_notice(
+        tt="Danh sách preset:",
+        des=all_list,
+        footer="|🔹 Preset |💠 Preset đang xem |🌟 Preset đang dùng |",
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar,
+        pback_btt=True,
+        pnext_btt=True,
+        pset_btt=True,
+        pprompt_btt=True,
+        )
+    
+    await interaction.response.edit_message(embed=embed, view=view)
     
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
@@ -278,6 +312,7 @@ async def bot_notice(
     pback_btt=None,
     pprompt_btt=None,
     pset_btt=None,
+    allp_btt=None,
     color=None,
     ):
     
@@ -301,6 +336,7 @@ async def bot_notice(
     if private_btt: view.add_item(private_bt)
     if newchat_btt: view.add_item(newc_bt)
     
+    if allp_btt: view.add_item(allpreset_bt)
     if pback_btt: view.add_item(pback_bt)
     if pnext_btt: view.add_item(pnext_bt)
     if pset_btt: view.add_item(setpreset_bt)
@@ -388,6 +424,7 @@ async def show_preset(interaction: discord.Interaction, edit=None):
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
+        allp_btt=True,
         pback_btt=True,
         pnext_btt=True,
         pset_btt=True,
@@ -445,6 +482,7 @@ async def preset_prompt(interaction: discord.Interaction):
         au_name=pname,
         au_avatar=pavt,
         au_link=pavt,
+        allp_btt=True,
         pback_btt=True,
         pnext_btt=True,
         pset_btt=True,
