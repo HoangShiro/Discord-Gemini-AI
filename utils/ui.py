@@ -490,10 +490,10 @@ async def preset_prompt(interaction: discord.Interaction):
     f1b = ""
     f1i = True
     f2a = "⚜️ Personality"
-    f2b = ""
+    f2b = "> Unknown"
     f2i = True
     f3a = "💬 Chatmode"
-    f3b = ""
+    f3b = "> Unknown"
     f3i = True
     f4a = "🔊 Voice"
     f4b = "> Off"
