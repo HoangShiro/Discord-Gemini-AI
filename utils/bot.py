@@ -291,7 +291,7 @@ async def on_message(message: discord.Message):
     if not val.public:
         if message.author.id != val.owner_uid: return
         if message.guild:
-            if (val.ai_name.lower() or f"<@{bot.user.id}>") in message.content:
+            if (val.ai_name.lower() or f"<@{bot.user.id}>") in message.content.lower:
                 embed, view = await bot_notice(
                     tt="Chat mode: Private",
                     des=f"> Bật Public chat mode?",
@@ -302,6 +302,7 @@ async def on_message(message: discord.Message):
                     public_btt=True,
                     )
                 return await message.channel.send(embed=embed, view=view)
+            return
     else:
         if isinstance(message.channel, discord.DMChannel):
             if message.author.id == val.owner_uid:
