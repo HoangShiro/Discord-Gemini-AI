@@ -496,7 +496,7 @@ async def preset_prompt(interaction: discord.Interaction):
     f3b = ""
     f3i = True
     f4a = "🔊 Voice"
-    f4b = "> 46"
+    f4b = "> Off"
     f4i = True
     
     try:
