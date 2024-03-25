@@ -508,7 +508,7 @@ async def preset_prompt(interaction: discord.Interaction):
         if mode: f3b = "> Public"
         else: f3b = "> Private"
         speaker = data["vv_speaker"]
-        f4b = f"> {speaker}"
+        f4b = f"> VoiceVox - {speaker}"
     except Exception as e:
         if val.bug_csl: print(f"{get_real_time()}> Lỗi khi show prompt của preset: {e}")
         pass
