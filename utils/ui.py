@@ -358,6 +358,13 @@ async def test_speaker_atv(interaction: discord.Interaction):
     name = val.ai_name
     kname = romaji_to_katakana(name)
     
+    old_char = val.ai_char
+    old_speaker = val.vv_speaker
+    
+    char = next(cycle_iterator)
+    val.set('ai_char', char)
+    now_speaker = sk.style_id
+    val.set('vv_speaker', now_speaker)
     
     text = f"私は{kname}です"
     if val.ai_char == "gentle": text = f"{kname}だよ"
@@ -385,12 +392,10 @@ async def test_speaker_atv(interaction: discord.Interaction):
         for member in members:
             if member.display_name in name:
                 try:
-                    old_char = val.ai_char
-                    char = next(cycle_iterator)
-                    val.set('ai_char', char)
                     url = tts_get_url(text)
                     await voice_send(url, guild.voice_client)
                     val.set('ai_char', old_char)
+                    val.set('vv_speaker', old_speaker)
                 except Exception as e:
                     print(f"{get_real_time()}> lỗi tts: ", e)
     
