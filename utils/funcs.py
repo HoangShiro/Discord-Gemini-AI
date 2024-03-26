@@ -760,9 +760,9 @@ async def set_pfp(interaction: discord.Interaction, name: str):
   
   old_name = val.ai_name
   old_cname = val.name_ctime
+  uname = None
   
   if load_pfp(name):
-    uanme = None
     embed, view = await bot_notice(
         tt="Đang load pfp mới 💫",
         des=f"Đang load các thông tin của {name}...",
@@ -782,7 +782,7 @@ async def set_pfp(interaction: discord.Interaction, name: str):
             await bot.user.edit(username=val.ai_name)
             val.set('name_ctime', 1800)
             print(f'{get_real_time()}> Tên của {old_name} đã được đổi thành: ', val.ai_name)
-        else: uanme = f"Không thể đổi tên cho {val.ai_name} vì mới được đổi gần đây."
+        else: uname = f"Không thể đổi tên cho {val.ai_name} vì mới được đổi gần đây."
 
     await new_chat()
 
@@ -803,7 +803,7 @@ async def set_pfp(interaction: discord.Interaction, name: str):
     if not uname: uname = val.ai_des
 
     embed, view = await bot_notice(
-        footer=uanme,
+        footer=uname,
         ava_link=bot.user.display_avatar,
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
