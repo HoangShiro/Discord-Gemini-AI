@@ -197,6 +197,7 @@ val.load('saves/vals.json')
 sk = AllSpeaker()
 sk.get_data()
 
+
 intents = discord.Intents.all()
 bot = commands.Bot(intents=intents, command_prefix="/")
 

@@ -1043,9 +1043,16 @@ class AllSpeaker:
 
     def get_data(self):
         from utils.bot import val
-        url = f"https://deprecatedapis.tts.quest/v2/voicevox/speakers/?key={val.vv_key}"
+        from utils.daily import get_real_time
+        
+        if len(val.vv_key) == 15:
+          url = f"https://deprecatedapis.tts.quest/v2/voicevox/speakers/?key={val.vv_key}"
 
-        response = requests.get(url)
+          response = requests.get(url)
+          if response.status_code != 200:
+            print(f"{get_real_time()}> Lỗi khi load voice: VoiceVox API key không hợp lệ.")
+            return
+        else: return
         
         with open("utils/speaker.json", 'w', encoding="utf-8") as file:
             json.dump(response.json(), file, ensure_ascii=False, indent=4)
