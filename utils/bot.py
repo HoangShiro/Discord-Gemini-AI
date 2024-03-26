@@ -787,6 +787,22 @@ async def p_cchannel(interaction: discord.Interaction, public_channel_id: str = 
         if not channel: return await interaction.response.send_message("> Channel không tồn tại.", ephemeral=True)
         else: await interaction.response.send_message(f"> {val.ai_name} sẽ chỉ chat tại `{channel.name}`.", ephemeral=True)
         val.set('ai_pchat_channel', public_channel_id)
+
+# Create invite link
+@bot.slash_command(name="invite", description=f"Tạo link mời {val.ai_name} vào server")
+async def create_invite(interaction: discord.Interaction):
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    embed, view = await bot_notice(
+        ava_link=bot.user.display_avatar,
+        des=f"> [Mời {val.ai_name} vào server của bạn](https://discord.com/oauth2/authorize?client_id={bot.user.id}&permissions=0&scope=bot)",
+        footer=f"Nếu bạn không có quyền, hãy thử hỏi người sở hữu thực sự để mời.",
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar,
+        )
+    
+    await interaction.response.send_message(embed=embed, view=view)
     
 """# Load plugin
 @bot.slash_command(name="loadplug", description=f"Load các plugin cho {val.ai_name}")
