@@ -174,7 +174,7 @@ class AllStatus:
             print(f"[vals.json] - {attr}: {value}")
 
     def load_val_char(self, filename, character, time):
-        with open(filename, "r") as f:
+        with open(filename, "r", encoding="utf-8") as f:
             data = json.load(f)
 
         # Kiểm tra tính hợp lệ của tên tính cách và thời gian
