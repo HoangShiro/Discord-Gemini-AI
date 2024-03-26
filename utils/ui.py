@@ -293,7 +293,9 @@ async def style_speaker_atv(interaction: discord.Interaction):
     
 async def set_speaker_atv(interaction: discord.Interaction):
     from utils.bot import val, sk, bot
-
+    
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
     speaker = sk.style_id
     val.set('vv_speaker', speaker)
     val.set('tts_toggle', True)
@@ -301,7 +303,7 @@ async def set_speaker_atv(interaction: discord.Interaction):
     embed, view = await bot_notice(
         tt=sk.speaker_name,
         des=sk.speaker_style_name,
-        ava_link=bot.user.default_avatar,
+        ava_link=bot.user.display_avatar,
         footer=f"Đã set speaker này! 🌟",
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
@@ -468,10 +470,10 @@ async def bot_notice(
     
     # Speaker
     if setspeaker_btt: view.add_item(setspeaker_bt)
-    if snext_btt: view.add_item(snext_bt)
     if sback_btt: view.add_item(sback_bt)
-    if ssnext_btt: view.add_item(ssnext_bt)
+    if snext_btt: view.add_item(snext_bt)
     if ssback_btt: view.add_item(ssback_bt)
+    if ssnext_btt: view.add_item(ssnext_bt)
     if speaker_btt: view.add_item(speaker_bt)
     if sspeaker_btt: view.add_item(sspeaker_bt)
     
@@ -671,7 +673,7 @@ async def show_speaker(interaction: discord.Interaction, edit=None):
     embed, view = await bot_notice(
         tt=sk.speaker_name,
         des=sk.speaker_style_name,
-        ava_link=bot.user.default_avatar,
+        ava_link=bot.user.display_avatar,
         footer=f"Ấn view style để xem hoặc chọn speaker này ✨",
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
@@ -712,7 +714,7 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None):
     embed, view = await bot_notice(
         tt=sk.speaker_name,
         des=all_style,
-        ava_link=bot.user.default_avatar,
+        ava_link=bot.user.display_avatar,
         footer="|🔹 Style |💠 Style đang xem |🌟 Style đang dùng |",
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
