@@ -115,8 +115,8 @@ class AllStatus:
         self.preset_now = 0
         
         # Speaker
-        self.speaker_index = 0
-        self.style_index = 0
+        self.speaker_index = None
+        self.style_index = None
         
     def update(self, val_name, value):
         if hasattr(self, val_name):

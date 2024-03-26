@@ -1061,10 +1061,11 @@ class AllSpeaker:
         with open("utils/speaker.json", 'r', encoding="utf-8") as file:
             self.data = json.load(file)
 
+        self.load()
+        
         if not self.speaker_index or self.style_index:
             self.get_speaker(speaker_index=0, style_index=0)
-        
-        self.load()
+        else: self.get_speaker()
         
     def next_style(self, direction):
         """
