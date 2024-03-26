@@ -249,9 +249,9 @@ async def voice_send(url, ch):
     audio_source = FFmpegPCMAudio(url)
     await asyncio.sleep(0.5)
     try:
-      ch.play(audio_source, after=lambda e: print('Player error: %s' % e) if e else None)
+        ch.play(audio_source, after=lambda e: print('Player error: %s' % e) if e else None)
     except Exception as e:
-      print(f"{get_real_time()}> Send voice error: ", e)
+        print(f"{get_real_time()}> Send voice error: ", e)
 
 # Hàm xử lý lệnh trong tin nhắn
 async def cmd_msg():

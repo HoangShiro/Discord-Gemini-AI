@@ -514,7 +514,9 @@ async def voice(interaction: discord.Interaction, off: bool = False):
     val.update('total_cmd', 1)
     val.update('one_cmd', 1)
     
-    if len(val.vv_key) < 15: return await interaction.response.send_message("> Xài lệnh `/setkeys` điền VoiceVox API key trước.")
+    if len(val.vv_key) < 15: return await interaction.response.send_message("> Xài lệnh `/setkeys` điền VoiceVox API key từ https://voicevox.su-shiki.com/su-shikiapis/")
+    
+    val.set('tts_toggle', True)
     
     await show_speaker(interaction)    
     
