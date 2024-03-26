@@ -693,23 +693,19 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None):
     all_style = ""
     normal = "🔹"
     viewing = "💠"
-    now = ""
+    now = "🌟"
     icon = normal
     for style in sk.style_list:
         if style == sk.speaker_style_name:
             icon = viewing
             style = f"**{style}**"
-            
-            if sk.style_id == val.vv_speaker: now = "🌟"
-            else: now = ""
         else:
             style = style
             icon = normal
             
-            if sk.style_id == val.vv_speaker: now = "🌟"
-            else: now = ""
-        
-        all_style = all_style + f"{icon} {style} {now}\n"
+        if sk.style_id == val.vv_speaker: all_style = all_style + f"{icon} {style} {now}\n"
+        else: all_style = all_style + f"{icon} {style}\n"
+
     
     set_sp = True
     if sk.style_id == val.vv_speaker: set_sp = False
