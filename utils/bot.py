@@ -108,7 +108,7 @@ class AllStatus:
         self.mood_excited = "*tiếp tục cuộc trò chuyện với cảm xúc rất vui vẻ*" # Chat khi bot yêu đời
 
         # Lời nhắc cho user
-        self.no_perm = "`Bạn hem có quyền sử dụng lệnh nỳ.`" # Không có quyền sử dụng slash
+        self.no_perm = "> Bạn hem có quyền sử dụng lệnh nỳ." # Không có quyền sử dụng slash
         
         # Preset viewer
         self.preset_list = []
@@ -147,7 +147,7 @@ class AllStatus:
 
             # Create a backup if loading was successful
             with open(backup_filename, 'w', encoding="utf-8") as backup_file:
-                json.dump(data, backup_file, indent=4)  # Add indentation for readability
+                json.dump(data, backup_file, ensure_ascii=False, indent=4)  # Add indentation for readability
 
             #print(f"Data loaded successfully from {filename}. Backup created at {backup_filename}")
 
@@ -203,7 +203,7 @@ async def on_ready():
     # Reload char
     from utils.make import char
     with open('saves/char.json', 'w', encoding="utf-8") as file:
-        json.dump(char, file)
+        json.dump(char, file, ensure_ascii=False, indent=4)
     
     # Lưu bot name và avatar
     val.set('ai_name', bot.user.name)

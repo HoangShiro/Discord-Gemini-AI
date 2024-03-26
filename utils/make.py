@@ -487,7 +487,7 @@ def json_update(path, vals):
             json.load(file)
     except Exception:
         with open(path, 'w', encoding="utf-8") as file:
-            json.dump(vals, file)
+            json.dump(vals, file, ensure_ascii=False, indent=4)
 
 # Hàm update file .py
 def update_cfg(path, vals):
