@@ -469,11 +469,11 @@ async def bot_notice(
     if allp_btt: view.add_item(allpreset_bt)
     
     # Speaker
-    if setspeaker_btt: view.add_item(setspeaker_bt)
     if sback_btt: view.add_item(sback_bt)
     if snext_btt: view.add_item(snext_bt)
     if ssback_btt: view.add_item(ssback_bt)
     if ssnext_btt: view.add_item(ssnext_bt)
+    if setspeaker_btt: view.add_item(setspeaker_bt)
     if speaker_btt: view.add_item(speaker_bt)
     if sspeaker_btt: view.add_item(sspeaker_bt)
     
@@ -699,12 +699,15 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None):
         if style == sk.speaker_style_name:
             icon = viewing
             style = f"**{style}**"
+            
+            if sk.style_id == val.vv_speaker: now = "🌟"
+            else: now = ""
         else:
             style = style
             icon = normal
             
-        if sk.style_id == val.vv_speaker: now = "🌟"
-        else: now = ""
+            if sk.style_id == val.vv_speaker: now = "🌟"
+            else: now = ""
         
         all_style = all_style + f"{icon} {style} {now}\n"
     
