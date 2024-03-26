@@ -741,8 +741,12 @@ async def name_change(interaction: discord.Interaction, name: str):
 
 # Load preset
 @bot.slash_command(name="preset", description=f"Lưu hoặc đổi preset")
-async def preset_change(interaction: discord.Interaction, save: str = None, load: str = None, show: str = None, remove: str = None):
+async def preset_change(interaction: discord.Interaction, save: str = None, load: str = None, show: str = None, share: str = None, remove: str = None):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    if share:
+        if not await share_pfp(interaction, share): return await interaction.response.send_message("> Có lỗi khi gửi preset.", ephemeral=True)
+        return
     
     if remove:
         noti = remove_preset(remove)
@@ -765,13 +769,6 @@ async def preset_get(interaction: discord.Interaction):
     mess = await interaction.response.send_message(f"> Đang tải preset `{val.get_preset_name}`...", ephemeral=True)
     if not await get_pfp():return await mess.edit_original_response(content=f"> Tải preset `{val.get_preset_name}` thất bại, check console để biết thêm chi tiết.")
     else: await mess.edit_original_response(content=f"> Đã tải preset `{val.get_preset_name}`.")
-
-# Share preset
-@bot.slash_command(name="share_preset", description=f"Share preset cho bot khác")
-async def preset_share(interaction: discord.Interaction, name: str):
-    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
-    
-    if not await share_pfp(interaction, name): return await interaction.response.send_message("> Có lỗi khi gửi preset.", ephemeral=True)
     
 # Set public chat channel
 @bot.slash_command(name="chat_channel", description=f"Channel public duy nhất mà {val.ai_name} sẽ chat.")
