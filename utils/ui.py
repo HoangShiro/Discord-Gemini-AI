@@ -388,7 +388,7 @@ async def test_speaker_atv(interaction: discord.Interaction):
                     old_char = val.ai_char
                     char = next(cycle_iterator)
                     val.set('ai_char', char)
-                    url = await tts_get_url(text)
+                    url = tts_get_url(text)
                     await voice_send(url, guild.voice_client)
                     val.set('ai_char', old_char)
                 except Exception as e:
