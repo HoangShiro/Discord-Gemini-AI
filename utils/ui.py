@@ -672,13 +672,16 @@ async def show_speaker(interaction: discord.Interaction, edit=None):
     
     jnormal = "ノーマル"
     enormal = "Normal"
+    now = ""
+    
+    if sk.style_id == val.vv_speaker: now = "🌟"
     
     des = sk.speaker_style_name
     
     if sk.speaker_style_name == jnormal: des = enormal
     
     embed, view = await bot_notice(
-        tt=f"{sk.speaker_index} ➖ {sk.speaker_name}",
+        tt=f"{sk.speaker_index} ➖ {sk.speaker_name} {now}",
         des=des,
         ava_link=bot.user.display_avatar,
         footer=f"Ấn view style để xem hoặc chọn speaker này ✨",
@@ -700,7 +703,7 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None):
     all_style = ""
     normal = "🔹"
     viewing = "💠"
-    now = "🌟"
+    now = ""
     icon = normal
     
     en_styleL = []
@@ -750,7 +753,8 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None):
         elif jstyle == jcry: en_styleL.append(ecry)
         elif jstyle == jqueen: en_styleL.append(equeen)
         else: en_styleL.append(jstyle)
-        
+    
+    
     for style in en_styleL:
         if style == jspeaker_style_name:
             icon = viewing
@@ -758,11 +762,13 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None):
         else:
             style = style
             icon = normal
-            
-        if sk.style_id == val.vv_speaker: all_style = all_style + f"{icon} {style} {now}\n"
-        else: all_style = all_style + f"{icon} {style}\n"
 
-    
+        if sk.style_id == val.vv_speaker:
+            if style == sk.speaker_style_name: now = "🌟"
+        else: now = ""
+            
+        all_style = all_style + f"{icon} {style} {now}\n"
+
     set_sp = True
     if sk.style_id == val.vv_speaker: set_sp = False
     
