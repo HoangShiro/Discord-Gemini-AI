@@ -671,7 +671,7 @@ async def show_speaker(interaction: discord.Interaction, edit=None):
     from utils.bot import val, sk, bot
     
     embed, view = await bot_notice(
-        tt=sk.speaker_name,
+        tt=f"{sk.speaker_index} ➖ {sk.speaker_name}",
         des=sk.speaker_style_name,
         ava_link=bot.user.display_avatar,
         footer=f"Ấn view style để xem hoặc chọn speaker này ✨",
