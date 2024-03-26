@@ -242,6 +242,7 @@ async def allpreset_atv(interaction: discord.Interaction, send=None):
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
+        pprompt_btt=True,
         preset_btt=True,
         )
     if send: await interaction.response.send_message(embed=embed, view=view)
