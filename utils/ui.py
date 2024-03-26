@@ -758,7 +758,7 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None):
     for style in en_styleL:
         if style == jspeaker_style_name:
             icon = viewing
-            style = f"**{style}**"
+            style = f"**{style} {sk.style_id}**"
         else:
             style = style
             icon = normal
