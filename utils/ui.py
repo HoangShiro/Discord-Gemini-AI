@@ -670,9 +670,16 @@ async def preset_prompt(interaction: discord.Interaction):
 async def show_speaker(interaction: discord.Interaction, edit=None):
     from utils.bot import val, sk, bot
     
+    jnormal = "ノーマル"
+    enormal = "Normal"
+    
+    des = sk.speaker_style_name
+    
+    if sk.speaker_style_name == jnormal: des = enormal
+    
     embed, view = await bot_notice(
         tt=f"{sk.speaker_index} ➖ {sk.speaker_name}",
-        des=sk.speaker_style_name,
+        des=des,
         ava_link=bot.user.display_avatar,
         footer=f"Ấn view style để xem hoặc chọn speaker này ✨",
         au_name=interaction.user.display_name,
@@ -706,6 +713,7 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None):
     jsoft = "ヒソヒソ"
     jtired = "ヘロヘロ"
     jcry = "なみだめ"
+    jqueen = "クイーン"
     
     enormal = "Normal"
     esweet = "Sweet"
@@ -715,6 +723,7 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None):
     esoft = "Soft"
     etired = "Tired"
     ecry = "Cry"
+    equeen = "Queen"
     
     jspeaker_style_name = sk.speaker_style_name
     
@@ -727,7 +736,8 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None):
     elif sk.speaker_style_name == jsoft: jspeaker_style_name = esoft
     elif sk.speaker_style_name == jtired: jspeaker_style_name = etired
     elif sk.speaker_style_name == jcry: jspeaker_style_name = ecry
-    else: en_styleL.append(jstyle)
+    elif sk.speaker_style_name == jqueen: jspeaker_style_name = equeen
+    else: jspeaker_style_name = sk.speaker_style_name
     
     for jstyle in sk.style_list:
         if jstyle == jnormal: en_styleL.append(enormal)
@@ -738,6 +748,7 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None):
         elif jstyle == jsoft: en_styleL.append(esoft)
         elif jstyle == jtired: en_styleL.append(etired)
         elif jstyle == jcry: en_styleL.append(ecry)
+        elif jstyle == jqueen: en_styleL.append(equeen)
         else: en_styleL.append(jstyle)
         
     for style in en_styleL:
