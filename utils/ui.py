@@ -764,7 +764,7 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None):
             icon = normal
 
         if sk.style_id == val.vv_speaker:
-            if style == sk.speaker_style_name: now = "🌟"
+            if style == jspeaker_style_name: now = "🌟"
         else: now = ""
             
         all_style = all_style + f"{icon} {style} {now}\n"
