@@ -695,8 +695,53 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None):
     viewing = "💠"
     now = "🌟"
     icon = normal
-    for style in sk.style_list:
-        if style == sk.speaker_style_name:
+    
+    en_styleL = []
+    
+    jnormal = "ノーマル"
+    jsweet = "あまあま"
+    jangry = "ツンツン"
+    jsexy = "セクシー"
+    jwhisper = "ささやき"
+    jsoft = "ヒソヒソ"
+    jtired = "ヘロヘロ"
+    jcry = "なみだめ"
+    
+    enormal = "Normal"
+    esweet = "Sweet"
+    eangry = "Angry"
+    esexy = "Sexy"
+    ewhisper = "Whisper"
+    esoft = "Soft"
+    etired = "Tired"
+    ecry = "Cry"
+    
+    jspeaker_style_name = sk.speaker_style_name
+    
+    
+    if sk.speaker_style_name == jnormal: jspeaker_style_name = enormal
+    elif sk.speaker_style_name == jsweet: jspeaker_style_name = esweet
+    elif sk.speaker_style_name == jangry: jspeaker_style_name = eangry
+    elif sk.speaker_style_name == jsexy: jspeaker_style_name = esexy
+    elif sk.speaker_style_name == jwhisper: jspeaker_style_name = ewhisper
+    elif sk.speaker_style_name == jsoft: jspeaker_style_name = esoft
+    elif sk.speaker_style_name == jtired: jspeaker_style_name = etired
+    elif sk.speaker_style_name == jcry: jspeaker_style_name = ecry
+    else: en_styleL.append(jstyle)
+    
+    for jstyle in sk.style_list:
+        if jstyle == jnormal: en_styleL.append(enormal)
+        elif jstyle == jsweet: en_styleL.append(esweet)
+        elif jstyle == jangry: en_styleL.append(eangry)
+        elif jstyle == jsexy: en_styleL.append(esexy)
+        elif jstyle == jwhisper: en_styleL.append(ewhisper)
+        elif jstyle == jsoft: en_styleL.append(esoft)
+        elif jstyle == jtired: en_styleL.append(etired)
+        elif jstyle == jcry: en_styleL.append(ecry)
+        else: en_styleL.append(jstyle)
+        
+    for style in en_styleL:
+        if style == jspeaker_style_name:
             icon = viewing
             style = f"**{style}**"
         else:
