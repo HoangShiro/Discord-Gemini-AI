@@ -14,7 +14,7 @@ safety ={
 
 gai_key = ""
 try:
-    with open("saves/vals.json", "r") as f:
+    with open("saves/vals.json", "r", encoding="utf-8") as f:
         data = json.load(f)
     gai_key = data["gai_key"]
 except Exception as e:
