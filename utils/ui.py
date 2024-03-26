@@ -389,10 +389,10 @@ async def test_speaker_atv(interaction: discord.Interaction):
                     char = next(cycle_iterator)
                     val.set('ai_char', char)
                     url = await tts_get_url(text)
+                    await voice_send(url, guild.voice_client)
                     val.set('ai_char', old_char)
                 except Exception as e:
                     print(f"{get_real_time()}> lỗi tts: ", e)
-                await voice_send(url, guild.voice_client)
     
     
 # Edit message with mess id
