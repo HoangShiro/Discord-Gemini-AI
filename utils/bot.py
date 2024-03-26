@@ -114,6 +114,10 @@ class AllStatus:
         self.preset_list = []
         self.preset_now = 0
         
+        # Speaker
+        self.speaker_index = 0
+        self.style_index = 0
+        
     def update(self, val_name, value):
         if hasattr(self, val_name):
             current_value = getattr(self, val_name)
