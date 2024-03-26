@@ -788,7 +788,7 @@ async def set_pfp(interaction: discord.Interaction, name: str):
 
     embed, view = await bot_notice(
         tt="Đang tạo cuộc trò chuyện mới 💫",
-        des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...", footer=uanme,
+        des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...", footer=uname,
         ava_link=bot.user.display_avatar,
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
