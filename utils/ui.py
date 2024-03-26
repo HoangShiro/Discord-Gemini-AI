@@ -19,6 +19,18 @@ setpreset_bt = discord.ui.Button(label="✨ set", custom_id="newchat", style=dis
 allpreset_bt = discord.ui.Button(label="🪐 all", custom_id="all_preset", style=discord.ButtonStyle.grey)
 preset_bt = discord.ui.Button(label="💠 preset", custom_id="preset", style=discord.ButtonStyle.green)
 
+# Speaker
+snext_bt = discord.ui.Button(label="🔆 next", custom_id="speaker_next", style=discord.ButtonStyle.green)
+sback_bt = discord.ui.Button(label="🔅 back", custom_id="speaker_back", style=discord.ButtonStyle.green)
+
+ssnext_bt = discord.ui.Button(label="🔆 next", custom_id="speaker_style_next", style=discord.ButtonStyle.green)
+ssback_bt = discord.ui.Button(label="🔅 back", custom_id="speaker_style_back", style=discord.ButtonStyle.green)
+
+speaker_bt = discord.ui.Button(label="🪐 speaker", custom_id="speaker", style=discord.ButtonStyle.grey)
+sspeaker_bt = discord.ui.Button(label="🪐 styles", custom_id="speaker_style", style=discord.ButtonStyle.grey)
+
+setspeaker_bt = discord.ui.Button(label="✨ set", custom_id="set_speaker", style=discord.ButtonStyle.blurple)
+
 """ BUTTON """
 
 # Button call
@@ -43,6 +55,18 @@ async def load_btt():
     pprompt_bt.callback = pprompt_atv
     setpreset_bt.callback = setpreset_atv
     allpreset_bt.callback = allpreset_atv
+    
+    # speaker
+    snext_bt.callback = next_speaker_atv
+    sback_bt.callback = back_speaker_atv
+    
+    ssnext_bt.callback = next_sspeaker_atv
+    ssback_bt.callback = back_sspeaker_atv
+    
+    speaker_bt.callback = speaker_atv
+    sspeaker_bt.callback = style_speaker_atv
+    
+    setspeaker_bt.callback = set_speaker_atv
     
 # Button add
 async def DM_button():
@@ -248,6 +272,7 @@ async def allpreset_atv(interaction: discord.Interaction, send=None):
     if send: await interaction.response.send_message(embed=embed, view=view)
     else: await interaction.response.edit_message(embed=embed, view=view)
 
+# Show preset
 async def preset_atv(interaction: discord.Interaction):
     from utils.bot import val
     
@@ -255,6 +280,63 @@ async def preset_atv(interaction: discord.Interaction):
     
     await show_preset(interaction, edit=True)
 
+# Show speaker
+async def speaker_atv(interaction: discord.Interaction):
+    from utils.bot import val, sk, bot
+
+    await show_speaker(interaction, True)
+
+async def style_speaker_atv(interaction: discord.Interaction):
+    from utils.bot import val, sk, bot
+
+    await show_speaker_style(interaction, True)
+    
+async def set_speaker_atv(interaction: discord.Interaction):
+    from utils.bot import val, sk, bot
+
+    speaker = sk.style_id
+    val.set('vv_speaker', speaker)
+    val.set('tts_toggle', True)
+    
+    embed, view = await bot_notice(
+        tt=sk.speaker_name,
+        des=sk.speaker_style_name,
+        ava_link=bot.user.default_avatar,
+        footer=f"Đã set speaker này! 🌟",
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar,
+        ssnext_btt=True,
+        ssback_btt=True,
+        speaker_btt=True,
+        )
+    
+    await interaction.response.edit_message(embed=embed, view=view)
+    
+async def next_speaker_atv(interaction: discord.Interaction):
+    from utils.bot import val, sk, bot
+
+    sk.next_speaker("+")
+    await show_speaker(interaction, True)
+    
+async def back_speaker_atv(interaction: discord.Interaction):
+    from utils.bot import val, sk, bot    
+
+    sk.next_speaker("-")
+    await show_speaker(interaction, True)
+    
+async def next_sspeaker_atv(interaction: discord.Interaction):
+    from utils.bot import val, sk, bot
+
+    sk.next_style("+")
+    await show_speaker_style(interaction, True)
+    
+async def back_sspeaker_atv(interaction: discord.Interaction):
+    from utils.bot import val, sk, bot  
+
+    sk.next_style("-")
+    await show_speaker_style(interaction, True)
+    
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
     from utils.bot import bot, val
@@ -328,6 +410,14 @@ async def bot_notice(
     f4b="",
     f4i=False,
     
+    snext_btt=None,
+    sback_btt=None,
+    ssnext_btt=None,
+    ssback_btt=None,
+    speaker_btt=None,
+    sspeaker_btt=None,
+    setspeaker_btt=None,
+    
     public_btt=None,
     private_btt=None,
     newchat_btt=None,
@@ -362,16 +452,28 @@ async def bot_notice(
     if footer: embed.set_footer(text=footer)
 
     view = View(timeout=None)
+    
+    # Notice
     if public_btt: view.add_item(public_bt)
     if private_btt: view.add_item(private_bt)
     if newchat_btt: view.add_item(newc_bt)
     
+    # Preset
     if pback_btt: view.add_item(pback_bt)
     if pnext_btt: view.add_item(pnext_bt)
     if pset_btt: view.add_item(setpreset_bt)
     if preset_btt: view.add_item(preset_bt)
     if pprompt_btt: view.add_item(pprompt_bt)
     if allp_btt: view.add_item(allpreset_bt)
+    
+    # Speaker
+    if setspeaker_btt: view.add_item(setspeaker_bt)
+    if snext_btt: view.add_item(snext_bt)
+    if sback_btt: view.add_item(sback_bt)
+    if ssnext_btt: view.add_item(ssnext_bt)
+    if ssback_btt: view.add_item(ssback_bt)
+    if speaker_btt: view.add_item(speaker_bt)
+    if sspeaker_btt: view.add_item(sspeaker_bt)
     
     view.add_item(ermv_bt)
 
@@ -561,3 +663,65 @@ async def preset_prompt(interaction: discord.Interaction):
         )
     
     await interaction.response.edit_message(embed=embed, view=view)
+    
+# Show speaker
+async def show_speaker(interaction: discord.Interaction, edit=None):
+    from utils.bot import val, sk, bot
+    
+    embed, view = await bot_notice(
+        tt=sk.speaker_name,
+        des=sk.speaker_style_name,
+        ava_link=bot.user.default_avatar,
+        footer=f"Ấn view style để xem hoặc chọn speaker này ✨",
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar,
+        snext_btt=True,
+        sback_btt=True,
+        sspeaker_btt=True,
+        )
+    
+    if not edit: await interaction.response.send_message(embed=embed, view=view)
+    else: await interaction.response.edit_message(embed=embed, view=view)
+
+# Show speaker style
+async def show_speaker_style(interaction: discord.Interaction, edit=None):
+    from utils.bot import val, sk, bot
+    
+    all_style = ""
+    normal = "🔹"
+    viewing = "💠"
+    now = ""
+    icon = normal
+    for style in sk.style_list:
+        if style == sk.speaker_style_name:
+            icon = viewing
+            style = f"**{style}**"
+        else:
+            style = style
+            icon = normal
+            
+        if sk.style_id == val.vv_speaker: now = "🌟"
+        else: now = ""
+        
+        all_style = all_style + f"{icon} {style} {now}\n"
+    
+    set_sp = True
+    if sk.style_id == val.vv_speaker: set_sp = False
+    
+    embed, view = await bot_notice(
+        tt=sk.speaker_name,
+        des=all_style,
+        ava_link=bot.user.default_avatar,
+        footer="|🔹 Style |💠 Style đang xem |🌟 Style đang dùng |",
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar,
+        ssnext_btt=True,
+        ssback_btt=True,
+        speaker_btt=True,
+        setspeaker_btt=set_sp,
+        )
+    
+    if not edit: await interaction.response.send_message(embed=embed, view=view)
+    else: await interaction.response.edit_message(embed=embed, view=view)

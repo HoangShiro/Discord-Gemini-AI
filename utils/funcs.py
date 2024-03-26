@@ -993,7 +993,123 @@ async def new_chat():
   if val.public:
       public_remind = load_prompt("saves/public_chat.txt")
       chat.history.extend(public_remind)
-      
+
+# Speaker loader
+class AllSpeaker:
+    def __init__(self):
+        self.data = None
+        self.speaker_index = None
+        self.style_index = None
+
+        # Initialize attributes with default values
+        self.speaker_name = None
+        self.speaker_style_name = None
+        self.style_id = None
+        self.max_speaker_index = None
+        self.max_style_index_of_speaker = None
+        self.style_list = None
+        
+    def get_speaker(self, speaker_index=None, style_index=None):
+        """
+        Queries speaker data and stores results in class attributes.
+        """
+
+        if speaker_index is not None:
+            self.speaker_index = speaker_index
+        if style_index is not None:
+            self.style_index = style_index
+
+        max_speaker_index = len(self.data) - 1
+
+        if 0 <= self.speaker_index <= max_speaker_index:
+            speaker = self.data[self.speaker_index]
+            max_style_index_of_speaker = len(speaker["styles"]) - 1
+
+            if 0 <= self.style_index <= max_style_index_of_speaker:
+                style = speaker["styles"][self.style_index]
+
+                # Store results in class attributes
+                self.speaker_name = speaker["name"]
+                self.speaker_style_name = style["name"]
+                self.style_id = style["id"]
+                self.max_speaker_index = max_speaker_index
+                self.max_style_index_of_speaker = max_style_index_of_speaker
+
+                # Create and return style list
+                self.style_list = [style["name"] for style in speaker["styles"]]
+                return True  # Return list of style names
+
+        return False  # Invalid index
+
+    def get_data(self):
+        from utils.bot import val
+        url = f"https://deprecatedapis.tts.quest/v2/voicevox/speakers/?key={val.vv_key}"
+
+        response = requests.get(url)
+        
+        with open("utils/speaker.json", 'w', encoding="utf-8") as file:
+            json.dump(response.json(), file, ensure_ascii=False, indent=4)
+            
+        with open("utils/speaker.json", 'r', encoding="utf-8") as file:
+            self.data = json.load(file)
+            
+        if not self.speaker_index or self.style_index:
+            self.get_speaker(speaker_index=0, style_index=0)
+        
+    def next_style(self, direction):
+        """
+        Navigates through styles based on the direction provided.
+        """
+
+        if direction == "+":
+            self.style_index += 1
+            if self.style_index > self.max_style_index_of_speaker:  # Use stored attribute
+                self.speaker_index += 1
+                self.style_index = 0
+        elif direction == "-":
+            self.style_index -= 1
+            if self.style_index < 0:
+                self.speaker_index -= 1
+                if self.speaker_index >= 0:
+                    self.style_index = self.max_style_index_of_speaker  # Use stored attribute
+        else:
+            raise ValueError("Invalid direction. Use '+' or '-'.")
+
+        # Handle potential out-of-bounds speaker index
+        if self.speaker_index < 0:
+            self.speaker_index = 0
+        elif self.speaker_index > self.max_speaker_index:
+            self.speaker_index = self.max_speaker_index
+
+        self.get_speaker()
+        
+    def next_speaker(self, direction):
+        """
+        Skips to the next or previous speaker.
+
+        Args:
+            direction: A string, either "+" for forward or "-" for backward skip.
+        """
+
+        if direction == "+":
+            self.speaker_index += 1
+        elif direction == "-":
+            self.speaker_index -= 1
+        else:
+            raise ValueError("Invalid direction. Use '+' or '-'.")
+
+        # Handle potential out-of-bounds speaker index
+        if self.speaker_index < 0:
+            self.speaker_index = 0
+        elif self.speaker_index > self.max_speaker_index:
+            self.speaker_index = self.max_speaker_index
+
+        self.style_index = 0  # Reset style index when skipping speakers
+
+        self.get_speaker()
+
+
+     
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
   print(p)

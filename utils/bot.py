@@ -194,6 +194,9 @@ class AllStatus:
 val = AllStatus()
 val.load('saves/vals.json')
 
+sk = AllSpeaker()
+sk.get_data()
+
 intents = discord.Intents.all()
 bot = commands.Bot(intents=intents, command_prefix="/")
 
@@ -498,7 +501,7 @@ async def chat_mode(interaction: discord.Interaction):
 
 # Bật hoặc tắt voice
 @bot.slash_command(name="voice", description=f"Bật hoặc tắt voice của {val.ai_name}.")
-async def voice(interaction: discord.Interaction, speaker: int = None, pick: bool = False):
+async def voice(interaction: discord.Interaction, off: bool = False):
     if not val.public:
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(val.no_perm, ephemeral=True)
@@ -506,24 +509,16 @@ async def voice(interaction: discord.Interaction, speaker: int = None, pick: boo
     val.update('total_cmd', 1)
     val.update('one_cmd', 1)
     
-    if pick:
-        pass
+    if len(val.vv_key) < 15: return await interaction.response.send_message("> Xài lệnh `/setkeys` điền VoiceVox API key trước.")
+    
+    await show_speaker(interaction)    
     
     text = ""
-    if val.tts_toggle and not speaker:
+    if off:
         val.set('tts_toggle', False)
         text = "Đã tắt"
-    elif speaker:
-        if speaker > 75: return await interaction.response.send_message("`Voice Japanese không tồn tại, chọn voice từ 0 -> 75.`", ephemeral=True)
-        if len(val.vv_key) < 15: return await interaction.response.send_message("> Xài lệnh `/setkeys` điền VoiceVox API key trước.")
-        val.set('vv_speaker', speaker)
-        val.set('tts_toggle', True)
-        text = "Đã bật"
-    else:
-        if len(val.vv_key) < 15: return await interaction.response.send_message("> Xài lệnh `/setkeys` điền VoiceVox API key trước.")
-        val.set('tts_toggle', True)
-        text = "Đã bật"
-    await interaction.response.send_message(f"`{text} voice cho {val.ai_name}`", ephemeral=True)
+        await interaction.response.send_message(f"> {text} voice cho {val.ai_name}", ephemeral=True)
+    
 
 # Chuyển master
 @bot.slash_command(name="setowner", description=f"Tặng {val.ai_name} cho người khác.")
