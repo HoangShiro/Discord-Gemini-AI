@@ -140,12 +140,11 @@ async def gemini_task(mess):
     return task.text
 
 # TTS - VoiceVox
-async def tts_get(text, speaker, pitch, intonation_scale, speed):
+async def tts_get(text):
     from utils.funcs import remove_act, romaji_to_katakana, text_translate, text_translate2, text_tts_cut
     from utils.bot import val
     global alt_trans
 
-    vv_key = val.vv_key
     translated = None
     if not alt_trans:
         translated = text_translate(text, "ja")
@@ -162,7 +161,7 @@ async def tts_get(text, speaker, pitch, intonation_scale, speed):
     cnv_text = romaji_to_katakana(text_fill)
     if len(cnv_text) > 210: cnv_text = text_tts_cut(cnv_text)
 
-    url = f"https://deprecatedapis.tts.quest/v2/voicevox/audio/?key={vv_key}&text={cnv_text}&speaker={speaker}&pitch={pitch}&intonationScale={intonation_scale}&speed={speed}"
+    url = tts_get_url(cnv_text)
     
     """response = requests.get(url)
     st_log = await vals_load('user_files/vals.json', 'st_log')
@@ -177,4 +176,17 @@ async def tts_get(text, speaker, pitch, intonation_scale, speed):
     
     val.update('total_voice', 1)
     val.update('one_voice', 1)
+    return url
+
+def tts_get_url(text):
+    from utils.bot import val
+    
+    vv_key = val.vv_key
+    speaker = val.vv_speaker
+    pitch = val.vv_pitch
+    intonation_scale = val.vv_iscale
+    speed = val.vv_speed
+    
+    url = f"https://deprecatedapis.tts.quest/v2/voicevox/audio/?key={vv_key}&text={text}&speaker={speaker}&pitch={pitch}&intonationScale={intonation_scale}&speed={speed}"
+    
     return url

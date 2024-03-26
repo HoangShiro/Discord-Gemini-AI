@@ -1,6 +1,10 @@
 """GIAO DIỆN"""
 import discord, datetime, pytz, asyncio, json, os
 from discord.ui import View
+from itertools import cycle
+
+chars_list = ['innocent', 'gentle', 'cold', 'extrovert', 'introvert', 'lazy', 'tsundere', 'yandere']
+cycle_iterator = cycle(chars_list)
 
 rmv_bt = discord.ui.Button(label="➖", custom_id="remove", style=discord.ButtonStyle.grey)
 ermv_bt = discord.ui.Button(label="➖", custom_id="remove", style=discord.ButtonStyle.grey)
@@ -27,9 +31,11 @@ ssnext_bt = discord.ui.Button(label="🔆 next", custom_id="speaker_style_next",
 ssback_bt = discord.ui.Button(label="🔅 back", custom_id="speaker_style_back", style=discord.ButtonStyle.green)
 
 speaker_bt = discord.ui.Button(label="🪐 speaker", custom_id="speaker", style=discord.ButtonStyle.grey)
-sspeaker_bt = discord.ui.Button(label="🪐 styles", custom_id="speaker_style", style=discord.ButtonStyle.grey)
+sspeaker_bt = discord.ui.Button(label="🎵 styles", custom_id="speaker_style", style=discord.ButtonStyle.grey)
 
 setspeaker_bt = discord.ui.Button(label="✨ set", custom_id="set_speaker", style=discord.ButtonStyle.blurple)
+
+testspeaker_bt = discord.ui.Button(label="🔊 hear", custom_id="test_speaker", style=discord.ButtonStyle.red)
 
 """ BUTTON """
 
@@ -67,6 +73,7 @@ async def load_btt():
     sspeaker_bt.callback = style_speaker_atv
     
     setspeaker_bt.callback = set_speaker_atv
+    testspeaker_bt.callback = test_speaker_atv
     
 # Button add
 async def DM_button():
@@ -338,6 +345,55 @@ async def back_sspeaker_atv(interaction: discord.Interaction):
 
     sk.next_style("-")
     await show_speaker_style(interaction, True)
+
+async def test_speaker_atv(interaction: discord.Interaction):
+    from utils.bot import val, sk, bot   
+    from utils.reply import voice_send
+    from utils.api import tts_get_url
+    from utils.funcs import romaji_to_katakana
+    from utils.daily import get_real_time
+    
+    await byB(interaction)
+    
+    name = val.ai_name
+    kname = romaji_to_katakana(name)
+    
+    
+    text = f"私は{kname}です"
+    if val.ai_char == "gentle": text = f"{kname}だよ"
+    elif val.ai_char == "cold": text = f"{kname}である"
+    elif val.ai_char == "extrovert": text = f"{kname}だぜ!"
+    elif val.ai_char == "introvert": text = f"えーっと... {kname}です"
+    elif val.ai_char == "lazy": text = f"{kname}... でいいよ"
+    elif val.ai_char == "tsundere": text = f"{kname}だもん!"
+    elif val.ai_char == "yandere": text = f"{kname}...のものよ！"
+    else: text = f"わたくしは{kname}であります"
+    
+    
+    guild = bot.get_guild(val.ai_guild)
+    # Huỷ nếu không trong voice
+    if not guild.voice_client: return
+
+    voice_channels = guild.voice_channels
+
+    chat = val.old_chat
+    name = [message.split(":")[0] for message in chat]
+
+    # Chỉ gửi voice chat nếu user đang trong voice
+    for channel in voice_channels:
+        members = channel.members
+        for member in members:
+            if member.display_name in name:
+                try:
+                    old_char = val.ai_char
+                    char = next(cycle_iterator)
+                    val.set('ai_char', char)
+                    url = await tts_get_url(text)
+                    val.set('ai_char', old_char)
+                except Exception as e:
+                    print(f"{get_real_time()}> lỗi tts: ", e)
+                await voice_send(url, guild.voice_client)
+    
     
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
@@ -419,6 +475,7 @@ async def bot_notice(
     speaker_btt=None,
     sspeaker_btt=None,
     setspeaker_btt=None,
+    testspeaker_btt=None,
     
     public_btt=None,
     private_btt=None,
@@ -473,6 +530,7 @@ async def bot_notice(
     if snext_btt: view.add_item(snext_bt)
     if ssback_btt: view.add_item(ssback_bt)
     if ssnext_btt: view.add_item(ssnext_bt)
+    if testspeaker_btt: view.add_item(testspeaker_bt)
     if setspeaker_btt: view.add_item(setspeaker_bt)
     if speaker_btt: view.add_item(speaker_bt)
     if sspeaker_btt: view.add_item(sspeaker_bt)
@@ -691,6 +749,7 @@ async def show_speaker(interaction: discord.Interaction, edit=None):
         snext_btt=True,
         sback_btt=True,
         sspeaker_btt=True,
+        testspeaker_btt=True,
         )
     
     if not edit: await interaction.response.send_message(embed=embed, view=view)
@@ -763,8 +822,7 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None):
             style = style
             icon = normal
 
-        if sk.style_id == val.vv_speaker:
-            if style == jspeaker_style_name: now = "🌟"
+        if sk.style_id == val.vv_speaker: now = "🌟"
         else: now = ""
             
         all_style = all_style + f"{icon} {style} {now}\n"
@@ -784,6 +842,7 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None):
         ssback_btt=True,
         speaker_btt=True,
         setspeaker_btt=set_sp,
+        testspeaker_btt=True,
         )
     
     if not edit: await interaction.response.send_message(embed=embed, view=view)

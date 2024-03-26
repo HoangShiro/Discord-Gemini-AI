@@ -286,7 +286,7 @@ async def voice_make_tts(text):
         for member in members:
             if member.display_name in name:
                 try:
-                    url = await tts_get(text, val.vv_speaker, val.vv_pitch, val.vv_iscale, val.vv_speed)
+                    url = await tts_get(text)
                 except Exception as e:
                     print(f"{get_real_time()}> lỗi tts: ", e)
                 await voice_send(url, guild.voice_client)
