@@ -1132,8 +1132,11 @@ class AllSpeaker:
     def load(self):
       from utils.bot import val
       
-      self.speaker_index = val.speaker_index
-      self.style_index = val.style_index
+      speaker_index = val.speaker_index
+      style_index = val.style_index
+      
+      self.speaker_index = speaker_index
+      self.style_index = style_index
      
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
