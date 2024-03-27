@@ -208,10 +208,10 @@ bot = commands.Bot(intents=intents, command_prefix="/")
 @bot.event
 async def on_ready():
     
-    # Reload char
+    """# Reload char
     from utils.make import char
     with open('saves/char.json', 'w', encoding="utf-8") as file:
-        json.dump(char, file, ensure_ascii=False, indent=4)
+        json.dump(char, file, ensure_ascii=False, indent=4)"""
     
     # Lưu bot name và avatar
     val.set('ai_name', bot.user.name)
@@ -248,6 +248,8 @@ async def on_ready():
     print(f'{get_real_time()}> {val.ai_name} đã sẵn sàng!')
     print("\n")
 
+    if not val.owner_uid: print(f"> Click để mời {val.ai_name} vào server của bạn: https://discord.com/oauth2/authorize?client_id={bot.user.id}&permissions=0&scope=bot")
+    
 @bot.event
 async def on_message(message: discord.Message):
     
@@ -293,7 +295,7 @@ async def on_message(message: discord.Message):
     if len(val.gai_key) < 39:
         embed, view = await bot_notice(
             tt=f"Cần set Gemini API key",
-            des=f"Bot chỉ có thể chat với {message.author.display_name} khi có API key. Bạn có thể lấy nó free tại link dưới đây:\n> 💬 [Get Gemini API key](https://aistudio.google.com/app/apikey)\n> 🔊 [Get VoiceVox API key](https://voicevox.su-shiki.com/su-shikiapis/)",
+            des=f"{val.ai_name} chỉ có thể chat với {message.author.display_name} khi có API key. Bạn có thể lấy nó free tại link dưới đây:\n> 💬 [Get Gemini API key](https://aistudio.google.com/app/apikey)\n> 🔊 [Get VoiceVox API key](https://voicevox.su-shiki.com/su-shikiapis/)",
             footer=f"Sau đó gõ /setkeys để điền các API key.",
             ava_link=bot.user.display_avatar,
             au_name=message.author.display_name,
@@ -302,7 +304,6 @@ async def on_message(message: discord.Message):
             )
         return await message.channel.send(embed=embed, view=view)   
         
-        return await message.channel.send(f"> Xài lệnh `/setkeys` điền Gemini API key trước, sau đó gõ lệnh `/chatmode` đổi chế độ chat của {val.ai_name}")
     val.update('total_mess', 1)
     val.update('one_mess', 1)
     
@@ -419,6 +420,9 @@ async def on_message(message: discord.Message):
 # set key
 @bot.slash_command(name="setkeys", description=f"Đổi key cho {val.ai_name}.")
 async def keys(interaction: discord.Interaction, gemini: str = None, voicevox: str = None):
+    if not val.owner_uid:
+        val.set('owner_uid', interaction.user.id)
+        
     if val.owner_uid:
         if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
@@ -430,7 +434,7 @@ async def keys(interaction: discord.Interaction, gemini: str = None, voicevox: s
     if voicevox:
         val.set('vv_key', voicevox)
     await interaction.response.send_message(f"`Đã cập nhật key cho {val.ai_name}`", ephemeral=True)
-    if gemini: await bot.close()
+    await bot.close()
 
 # Status
 @bot.slash_command(name="status", description=f"Trạng thái của {val.ai_name}.")
@@ -541,7 +545,7 @@ async def voice(interaction: discord.Interaction, off: bool = False):
     val.update('total_cmd', 1)
     val.update('one_cmd', 1)
     
-    if len(val.vv_key) < 15: return await interaction.response.send_message("> Xài lệnh `/setkeys` điền VoiceVox API key từ https://voicevox.su-shiki.com/su-shikiapis/")
+    if len(val.vv_key) < 15: return await interaction.response.send_message("> Xài lệnh `/setkeys` điền VoiceVox API key từ https://voicevox.su-shiki.com/su-shikiapis/", ephemeral=True)
     
     val.set('tts_toggle', True)
     
@@ -869,6 +873,6 @@ def bot_run():
     except Exception as e:
         print("\n")
         print("https://discord.com/developers/applications")
-        print("Lấy Discord bot Token ở link trên và nhập Token hợp lệ vào đây: ")
+        print("Truy cập link trên, bật 3 quyền 'Privileged Gateway Intents', lấy discord bot TOKEN và nhập Token hợp lệ vào đây: ")
         key = input()
         val.set('bot_key', key)
