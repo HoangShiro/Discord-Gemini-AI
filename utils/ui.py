@@ -851,7 +851,7 @@ async def play_speaker(interaction: discord.Interaction, speaker=True):
     elif val.ai_char == "extrovert": text = f"{kname}だぜ!"
     elif val.ai_char == "introvert": text = f"えーっと... {kname}です"
     elif val.ai_char == "lazy": text = f"{kname}... でいいよ"
-    elif val.ai_char == "tsundere": text = f"{kname}だもん!"
+    elif val.ai_char == "tsundere": text = f"{kname}ですわ!"
     elif val.ai_char == "yandere": text = f"{kname}...のものよ！"
     else: text = f"わたくしは{kname}であります"
     
