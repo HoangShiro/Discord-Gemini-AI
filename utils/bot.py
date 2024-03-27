@@ -774,7 +774,8 @@ async def preset_change(interaction: discord.Interaction, save: str = None, load
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
     if share:
-        if not await share_pfp(interaction, share): return await interaction.response.edit_message("> Có lỗi khi gửi preset.", ephemeral=True)
+        await share_pfp(interaction, share)   
+        #return await interaction.response.send_message("> Có lỗi khi gửi preset.", ephemeral=True)
         return
     
     if remove:
