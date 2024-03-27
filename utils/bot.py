@@ -297,7 +297,7 @@ async def on_message(message: discord.Message):
     if len(val.gai_key) < 39:
         embed, view = await bot_notice(
             tt=f"Cần set Gemini API key",
-            des=f"{val.ai_name} chỉ có thể chat với {message.author.display_name} khi có API key. Bạn có thể lấy nó free tại link dưới đây:\n> 💬 [Get Gemini API key](https://aistudio.google.com/app/apikey)\n> 🔊 [Get VoiceVox API key](https://voicevox.su-shiki.com/su-shikiapis/)",
+            des=f"{val.ai_name} chỉ có thể chat với {message.author.display_name} khi có API key. Bạn có thể lấy nó free tại link dưới đây:\n> 💬 [Get Gemini API key](https://aistudio.google.com/app/apikey)\n> 🔊 [Get VoiceVox API key](https://voicevox.su-shiki.com/su-shikiapis/)\n",
             footer=f"Sau đó gõ /setkeys để điền các API key.",
             ava_link=bot.user.display_avatar,
             au_name=message.author.display_name,

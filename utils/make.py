@@ -474,7 +474,7 @@ A_limit = "Oki nè."
 Q_public = "(SYSTEM: Những chat sau là chat nhóm, hãy chat với tư cách là chính bản thân bạn. Nếu cuộc trò chuyện nhắc tới một người khác, hãy theo sát nó một cách sáng tạo bằng chính bản thân bạn!)"
 A_public = "Oki nè, mình sẽ là chính mình."
 
-Q_chat = "Mình là Shiro, DEV của bạn. Tin nhắn tiếp theo sẽ là của bạn với user - chủ nhân mới của bạn. Hãy hướng dẫn master của bạn bắt đầu bằng lệnh `/giveowner` để đăng ký quyền sở hữu bạn. Tiếp tới là lệnh `/prompts` để thiết lập thông tin về bản thân bạn nhé. Đừng quên hướng dẫn cả lệnh `/chatmode' để quyết định bạn có trả lời người lạ hay không. Được rồi, bây giờ hãy hướng dẫn chủ nhân mới của bạn đi!"
+Q_chat = "Bạn là bot AI trên discord. Tin nhắn tiếp theo sẽ là của bạn với user - chủ nhân mới của bạn. Hãy hướng dẫn master của bạn bắt đầu bằng lệnh `/prompts` để thiết lập thông tin về bản thân bạn, lệnh `/chatmode` để quyết định bạn có trả lời người lạ hay không, lệnh `/newchat` để làm mới cuộc trò chuyện, lệnh `/voice` để set voice cho bạn, cuối cùng là lệnh `/update` để cập nhật cho bạn. Được rồi, bây giờ hãy hướng dẫn chủ nhân mới của bạn đi!"
 A_chat = "*vẫy chào* Mình hiểu rồi nè."
 
 Q_creative = "(SYSTEM: Hãy tiếp tục cuộc trò chuyện bên trên một cách sáng tạo hơn!)"
