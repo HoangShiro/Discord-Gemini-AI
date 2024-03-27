@@ -270,12 +270,39 @@ async def on_message(message: discord.Message):
         return
     
     if val.ai_pchat_channel:
-        if message.channel.id != val.ai_pchat_channel: return
+        if message.channel.id != val.ai_pchat_channel:
+            if message.author.id != val.owner_uid: return
+            bot_name = val.ai_name.split(" ")
+            for name in bot_name:
+                if (name.lower() in message.content.lower()) or (bot.user in message.mentions):
+                    guild = bot.get_guild(val.ai_guild)
+                    channel = guild.get_channel(val.ai_pchat_channel)
+                    embed, view = await bot_notice(
+                        tt=f"Chat mode: One channel only",
+                        des=f"> Server: **{guild.name}** - Channel: **{channel.name}**",
+                        footer=f"Cho phép {val.ai_name} chat tại tất cả các channel có quyền?",
+                        ava_link=bot.user.display_avatar,
+                        au_name=message.author.display_name,
+                        au_avatar=message.author.display_avatar,
+                        au_link=message.author.display_avatar,
+                        public_btt=True,
+                        )
+                    return await message.channel.send(embed=embed, view=view)    
+            return
     if message.author == bot.user or message.content.startswith((".", "!", ",", "/")): return
-    if len(val.gai_key) < 39: return await message.channel.send(f"> Xài lệnh `/setkeys` điền Gemini API key trước, sau đó gõ lệnh `/chatmode` đổi chế độ chat của {val.ai_name}")
-    
-    
-    
+    if len(val.gai_key) < 39:
+        embed, view = await bot_notice(
+            tt=f"Cần set Gemini API key",
+            des=f"Bot chỉ có thể chat với {message.author.display_name} khi có API key. Bạn có thể lấy nó free tại link dưới đây:\n> 💬 [Get Gemini API key](https://aistudio.google.com/app/apikey)\n> 🔊 [Get VoiceVox API key](https://voicevox.su-shiki.com/su-shikiapis/)",
+            footer=f"Sau đó gõ /setkeys để điền các API key.",
+            ava_link=bot.user.display_avatar,
+            au_name=message.author.display_name,
+            au_avatar=message.author.display_avatar,
+            au_link=message.author.display_avatar,
+            )
+        return await message.channel.send(embed=embed, view=view)   
+        
+        return await message.channel.send(f"> Xài lệnh `/setkeys` điền Gemini API key trước, sau đó gõ lệnh `/chatmode` đổi chế độ chat của {val.ai_name}")
     val.update('total_mess', 1)
     val.update('one_mess', 1)
     
@@ -322,22 +349,22 @@ async def on_message(message: discord.Message):
             return
     else:
         if isinstance(message.channel, discord.DMChannel):
-            if message.author.id == val.owner_uid:
-                bot_name = val.ai_name.split(" ")
-                for name in bot_name:
-                    if (name.lower() in message.content.lower()) or (bot.user in message.mentions):
-                        embed, view = await bot_notice(
-                            tt="Chat mode: Public",
-                            des=f"> Bật Private chat mode?",
-                            footer=f"Chỉ bạn mới có thể chat với {val.ai_name} ở Private chat mode.",
-                            ava_link=bot.user.display_avatar,
-                            au_name=message.author.display_name,
-                            au_avatar=message.author.display_avatar,
-                            au_link=message.author.display_avatar,
-                            private_btt=True,
-                            )
-                        return await message.channel.send(embed=embed, view=view)
-                return
+            if message.author.id != val.owner_uid: return
+            bot_name = val.ai_name.split(" ")
+            for name in bot_name:
+                if (name.lower() in message.content.lower()) or (bot.user in message.mentions):
+                    embed, view = await bot_notice(
+                        tt="Chat mode: Public",
+                        des=f"> Bật Private chat mode?",
+                        footer=f"Chỉ bạn mới có thể chat với {val.ai_name} ở Private chat mode.",
+                        ava_link=bot.user.display_avatar,
+                        au_name=message.author.display_name,
+                        au_avatar=message.author.display_avatar,
+                        au_link=message.author.display_avatar,
+                        private_btt=True,
+                        )
+                    return await message.channel.send(embed=embed, view=view)
+            return
         if message.content:
             val.set('ai_guild', message.guild.id)
             val.set('ai_channel', message.channel.id)

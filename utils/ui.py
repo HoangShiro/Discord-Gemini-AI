@@ -158,6 +158,7 @@ async def public_atv(interaction: discord.Interaction):
         if interaction.user.id != val.owner_uid: return await byB(interaction)
     
     val.set('public', True)
+    val.set('ai_pchat_channel', None)
     embed, view = await bot_notice(
         tt="Chat mode: Public",
         des="Đã đổi chế độ chat.",
