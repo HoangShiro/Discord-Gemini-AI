@@ -176,6 +176,7 @@ async def private_atv(interaction: discord.Interaction):
     from utils.bot import val, bot
     
     val.set('public', False)
+    val.set('ai_pchat_channel', None)
     embed, view = await bot_notice(
         tt="Chat mode: Private",
         des="Đã đổi chế độ chat.",
