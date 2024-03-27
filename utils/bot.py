@@ -284,17 +284,16 @@ async def on_message(message: discord.Message):
             bot_name = val.ai_name.split(" ")
             for name in bot_name:
                 if (name.lower() in message.content.lower()) or (bot.user in message.mentions):
-                    guild = bot.get_guild(val.ai_guild)
-                    channel = guild.get_channel(val.ai_pchat_channel)
                     embed, view = await bot_notice(
                         tt=f"Chat mode: One channel only",
-                        des=f"> Server: **{guild.name}** - Channel: **{channel.name}**",
-                        footer=f"Cho phép {val.ai_name} chat tại tất cả các channel có quyền?",
+                        des=f"> Bạn muốn đổi mode chat của {val.ai_name}?",
+                        footer=f"{val.ai_name} có thể chat cùng mọi người với Public mode, chỉ có thể chat với mình bạn với Private mode.",
                         ava_link=bot.user.display_avatar,
                         au_name=message.author.display_name,
                         au_avatar=message.author.display_avatar,
                         au_link=message.author.display_avatar,
                         public_btt=True,
+                        private_btt=True,
                         )
                     return await message.channel.send(embed=embed, view=view)    
             return
