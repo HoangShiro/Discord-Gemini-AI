@@ -841,6 +841,58 @@ async def create_invite(interaction: discord.Interaction):
         )
     
     await interaction.response.send_message(embed=embed, view=view)
+
+# Gửi custom embed
+@bot.slash_command(name="embed", description=f"Gửi custom embed")
+async def embed_send(
+    interaction: discord.Interaction,
+    author_avt:str=None,
+    author_name:str=None,
+    author_link:str=None,
+    title:str=None,
+    description:str=None,
+    thumb:str=None,
+    footer:str=None,
+    f1a:str=None,
+    f1b:str=None,
+    f1i:str=False,
+    f2a:str=None,
+    f2b:str=None,
+    f2i:str=False,
+    f3a:str=None,
+    f3b:str=None,
+    f3i:str=False,
+    f4a:str=None,
+    f4b:str=None,
+    f4i:str=False,
+    ):
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    
+    embed, view = await bot_notice(
+        au_avatar=author_avt,
+        au_name=author_name,
+        au_link=author_link,
+        tt=title,
+        des=description,
+        ava_link=thumb,
+        footer=footer,
+        f1a=f1a,
+        f1b=f1b,
+        f1i=f1i,
+        f2a=f2a,
+        f2b=f2b,
+        f2i=f2i,
+        f3a=f3a,
+        f3b=f3b,
+        f3i=f3i,
+        f4a=f4a,
+        f4b=f4b,
+        f4i=f4i,
+    )
+    
+    await interaction.response.send_message(embed=embed, view=view)
+    
     
 """# Load plugin
 @bot.slash_command(name="loadplug", description=f"Load các plugin cho {val.ai_name}")
