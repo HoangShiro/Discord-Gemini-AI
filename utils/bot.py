@@ -875,6 +875,6 @@ def bot_run():
     except Exception as e:
         print("\n")
         print("https://discord.com/developers/applications")
-        print("Truy cập link trên, bật 3 quyền 'Privileged Gateway Intents', lấy discord bot TOKEN và nhập Token hợp lệ vào đây: ")
+        print("Truy cập link trên và tạo bot nếu chưa có. Trong mục 'Bot', bật 3 quyền 'Privileged Gateway Intents', lấy discord bot TOKEN hợp lệ và nhập vào đây: ")
         key = input()
         val.set('bot_key', key)
