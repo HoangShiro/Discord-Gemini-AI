@@ -425,6 +425,7 @@ async def bot_notice(
     tt=None,
     des=None,
     ava_link=None,
+    img=None,
     au_name=None,
     au_link=None,
     au_avatar=None,
@@ -480,6 +481,7 @@ async def bot_notice(
     embed=discord.Embed(title=tt, description=des, color=color)
     if au_name: embed.set_author(name=au_name, url=au_link, icon_url=au_avatar)
     if ava_link: embed.set_thumbnail(url=ava_link)
+    if img: embed.set_image(url=img)
     
     if f1a or f1b: embed.add_field(name=f1a, value=f1b, inline=f1i)
     if f2a or f2b: embed.add_field(name=f2a, value=f2b, inline=f2i)
