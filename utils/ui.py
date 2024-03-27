@@ -263,7 +263,9 @@ async def allpreset_atv(interaction: discord.Interaction, send=None):
     preset_list = val.preset_list
     preset_now = preset_list[val.preset_now]
     for preset in preset_list:
-        if preset == preset_now: icon = viewing
+        if preset == preset_now:
+            icon = viewing
+            preset = f"**{preset}**"
         else: icon = normal
         if preset == val.ai_name.lower(): now = "🌟"
         else: now = ""
