@@ -850,7 +850,7 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None, char=N
         des=all_style,
         ava_link=bot.user.display_avatar,
         footer="|🔹 Style |💠 Style đang xem |🌟 Style đang dùng |",
-        au_name=char
+        au_name=char,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
         ssnext_btt=True,
