@@ -35,7 +35,7 @@ sspeaker_bt = discord.ui.Button(label="🎵 styles", custom_id="speaker_style", 
 
 setspeaker_bt = discord.ui.Button(label="✨ set", custom_id="set_speaker", style=discord.ButtonStyle.blurple)
 
-testspeaker_bt = discord.ui.Button(label="🔊 hear", custom_id="test_speaker", style=discord.ButtonStyle.red)
+testspeaker_bt = discord.ui.Button(label="🔊 hear", custom_id="test_speaker", style=discord.ButtonStyle.green)
 
 """ BUTTON """
 
@@ -317,9 +317,8 @@ async def set_speaker_atv(interaction: discord.Interaction):
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
-        ssnext_btt=True,
-        ssback_btt=True,
         speaker_btt=True,
+        sspeaker_btt=True,
         )
     
     await interaction.response.edit_message(embed=embed, view=view)
