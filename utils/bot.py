@@ -867,6 +867,7 @@ def bot_run():
         bot.run(val.bot_key)
     except Exception as e:
         print("\n")
-        print("Nhập Discord bot Token hợp lệ: ")
+        print("https://discord.com/developers/applications")
+        print("Lấy Discord bot Token ở link trên và nhập Token hợp lệ: ")
         key = input()
         val.set('bot_key', key)
