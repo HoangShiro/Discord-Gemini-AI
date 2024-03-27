@@ -329,28 +329,33 @@ async def next_speaker_atv(interaction: discord.Interaction):
     from utils.bot import val, sk, bot
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    sk.next_speaker("+")
+    if sk.speaker_index == sk.max_speaker_index: sk.set('speaker_index', 0)
+    else: sk.next_speaker("+")
+    
     await show_speaker(interaction, True)
     
 async def back_speaker_atv(interaction: discord.Interaction):
     from utils.bot import val, sk, bot    
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    sk.next_speaker("-")
+    if sk.speaker_index == 0: sk.set('speaker_index', sk.max_speaker_index)
+    else: sk.next_speaker("-")
     await show_speaker(interaction, True)
     
 async def next_sspeaker_atv(interaction: discord.Interaction):
     from utils.bot import val, sk, bot
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    sk.next_style("+")
+    if sk.style_index == sk.max_style_index_of_speaker: sk.set('style_index', 0)
+    else: sk.next_style("+")
     await show_speaker_style(interaction, True)
     
 async def back_sspeaker_atv(interaction: discord.Interaction):
     from utils.bot import val, sk, bot  
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    sk.next_style("-")
+    if sk.style_index == 0: sk.set('style_index', sk.max_style_index_of_speaker)
+    else: sk.next_style("-")
     await show_speaker_style(interaction, True)
 
 async def test_speaker_atv(interaction: discord.Interaction):
@@ -713,6 +718,9 @@ async def show_speaker(interaction: discord.Interaction, edit=None, char=None):
     
     if sk.speaker_style_name == jnormal: des = enormal
     
+    next = True
+    back = True
+    
     embed, view = await bot_notice(
         tt=f"{sk.speaker_index} ➖ {sk.speaker_name} {now}",
         des=des,
@@ -721,8 +729,8 @@ async def show_speaker(interaction: discord.Interaction, edit=None, char=None):
         au_name=char,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
-        snext_btt=True,
-        sback_btt=True,
+        snext_btt=next,
+        sback_btt=back,
         sspeaker_btt=True,
         testspeaker_btt=True,
         )

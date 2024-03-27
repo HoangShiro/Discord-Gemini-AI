@@ -1120,7 +1120,13 @@ class AllSpeaker:
 
         self.get_speaker()
         self.save()
-        
+    
+    def set(self, val_name, value):
+        if hasattr(self, val_name):
+            setattr(self, val_name, value)
+        else:
+            print(f"Error: Variable '{val_name}' not found.")
+    
     def save(self):
       from utils.bot import val
       
