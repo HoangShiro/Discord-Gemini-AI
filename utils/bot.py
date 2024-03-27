@@ -248,7 +248,9 @@ async def on_ready():
     print(f'{get_real_time()}> {val.ai_name} đã sẵn sàng!')
     print("\n")
 
-    if not val.owner_uid: print(f"> Click để mời {val.ai_name} vào server của bạn: https://discord.com/oauth2/authorize?client_id={bot.user.id}&permissions=0&scope=bot")
+    if not val.owner_uid:
+        print(f"> Tạo discord server nếu chưa có, sau đó copy link dưới đây vào discord để mời {val.ai_name} vào server của bạn:")
+        print(f"https://discord.com/oauth2/authorize?client_id={bot.user.id}&permissions=0&scope=bot")
     
 @bot.event
 async def on_message(message: discord.Message):
