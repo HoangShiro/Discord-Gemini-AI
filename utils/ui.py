@@ -154,8 +154,7 @@ async def ctn_atv(interaction):
 # Enable public mode
 async def public_atv(interaction: discord.Interaction):
     from utils.bot import val, bot
-    if not val.public:
-        if interaction.user.id != val.owner_uid: return await byB(interaction)
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
     
     val.set('public', True)
     val.set('ai_pchat_channel', None)
@@ -292,17 +291,18 @@ async def preset_atv(interaction: discord.Interaction):
 # Show speaker
 async def speaker_atv(interaction: discord.Interaction):
     from utils.bot import val, sk, bot
-
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
     await show_speaker(interaction, True)
 
 async def style_speaker_atv(interaction: discord.Interaction):
     from utils.bot import val, sk, bot
-
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
     await show_speaker_style(interaction, True)
     
 async def set_speaker_atv(interaction: discord.Interaction):
     from utils.bot import val, sk, bot
-    
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
     speaker = sk.style_id
@@ -326,25 +326,29 @@ async def set_speaker_atv(interaction: discord.Interaction):
     
 async def next_speaker_atv(interaction: discord.Interaction):
     from utils.bot import val, sk, bot
-
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
     sk.next_speaker("+")
     await show_speaker(interaction, True)
     
 async def back_speaker_atv(interaction: discord.Interaction):
     from utils.bot import val, sk, bot    
-
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
     sk.next_speaker("-")
     await show_speaker(interaction, True)
     
 async def next_sspeaker_atv(interaction: discord.Interaction):
     from utils.bot import val, sk, bot
-
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
     sk.next_style("+")
     await show_speaker_style(interaction, True)
     
 async def back_sspeaker_atv(interaction: discord.Interaction):
     from utils.bot import val, sk, bot  
-
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
     sk.next_style("-")
     await show_speaker_style(interaction, True)
 
@@ -354,6 +358,7 @@ async def test_speaker_atv(interaction: discord.Interaction):
     from utils.api import tts_get_url
     from utils.funcs import romaji_to_katakana
     from utils.daily import get_real_time
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
     
     await byB(interaction)
     
@@ -396,6 +401,7 @@ async def test_speaker_atv(interaction: discord.Interaction):
                 try:
                     url = tts_get_url(text)
                     await voice_send(url, guild.voice_client)
+                    await show_speaker_style(interaction, edit=True, char=val.ai_char)
                     val.set('ai_char', old_char)
                     val.set('vv_speaker', old_speaker)
                 except Exception as e:
@@ -763,8 +769,11 @@ async def show_speaker(interaction: discord.Interaction, edit=None):
     else: await interaction.response.edit_message(embed=embed, view=view)
 
 # Show speaker style
-async def show_speaker_style(interaction: discord.Interaction, edit=None):
+async def show_speaker_style(interaction: discord.Interaction, edit=None, char=None):
     from utils.bot import val, sk, bot
+    
+    if not char: char = f"Tính cách: {val.ai_char}"
+    else: char = f"Tính cách: {char}"
     
     all_style = ""
     normal = "🔹"
@@ -842,7 +851,7 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None):
         des=all_style,
         ava_link=bot.user.display_avatar,
         footer="|🔹 Style |💠 Style đang xem |🌟 Style đang dùng |",
-        au_name=interaction.user.display_name,
+        au_name=char
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
         ssnext_btt=True,
