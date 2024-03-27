@@ -535,10 +535,12 @@ async def chat_mode(interaction: discord.Interaction):
     if val.public:
         n = "chat riêng tư với bạn."
         val.set('public', False)
+        val.set('ai_pchat_channel', None)
     else:
         await edit_last_msg()
         n = "chat cùng mọi người trong channel."
         val.set('public', True)
+        val.set('ai_pchat_channel', None)
     await interaction.response.send_message(f"`{val.ai_name} sẽ {n}.`", ephemeral=True)
 
 # Bật hoặc tắt voice
