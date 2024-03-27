@@ -774,7 +774,7 @@ async def preset_change(interaction: discord.Interaction, save: str = None, load
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
     if share:
-        if not await share_pfp(interaction, share): return await interaction.response.send_message("> Có lỗi khi gửi preset.", ephemeral=True)
+        if not await share_pfp(interaction, share): return await interaction.response.edit_message("> Có lỗi khi gửi preset.", ephemeral=True)
         return
     
     if remove:
@@ -868,6 +868,6 @@ def bot_run():
     except Exception as e:
         print("\n")
         print("https://discord.com/developers/applications")
-        print("Lấy Discord bot Token ở link trên và nhập Token hợp lệ: ")
+        print("Lấy Discord bot Token ở link trên và nhập Token hợp lệ vào đây: ")
         key = input()
         val.set('bot_key', key)
