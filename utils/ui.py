@@ -359,8 +359,6 @@ async def test_speaker_atv(interaction: discord.Interaction):
     from utils.daily import get_real_time
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    await byB(interaction)
-    
     name = val.ai_name
     kname = romaji_to_katakana(name)
     
