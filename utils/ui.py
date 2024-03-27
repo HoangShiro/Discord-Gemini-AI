@@ -446,6 +446,7 @@ async def bot_notice(
     sspeaker_btt=None,
     setspeaker_btt=None,
     testspeaker_btt=None,
+    testsspeaker_btt=None,
     
     public_btt=None,
     private_btt=None,
@@ -501,6 +502,7 @@ async def bot_notice(
     if ssback_btt: view.add_item(ssback_bt)
     if ssnext_btt: view.add_item(ssnext_bt)
     if testspeaker_btt: view.add_item(testspeaker_bt)
+    if testsspeaker_btt: view.add_item(testsspeaker_bt)
     if setspeaker_btt: view.add_item(setspeaker_bt)
     if speaker_btt: view.add_item(speaker_bt)
     if sspeaker_btt: view.add_item(sspeaker_bt)
@@ -818,7 +820,7 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None, char=N
         ssback_btt=True,
         speaker_btt=True,
         setspeaker_btt=set_sp,
-        testspeaker_btt=True,
+        testsspeaker_btt=True,
         )
     
     if not edit: await interaction.response.send_message(embed=embed, view=view)
