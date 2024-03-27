@@ -36,6 +36,7 @@ sspeaker_bt = discord.ui.Button(label="🎵 styles", custom_id="speaker_style", 
 setspeaker_bt = discord.ui.Button(label="✨ set", custom_id="set_speaker", style=discord.ButtonStyle.blurple)
 
 testspeaker_bt = discord.ui.Button(label="🔊 hear", custom_id="test_speaker", style=discord.ButtonStyle.green)
+testsspeaker_bt = discord.ui.Button(label="🔊 hear", custom_id="test_sspeaker", style=discord.ButtonStyle.green)
 
 """ BUTTON """
 
@@ -74,6 +75,7 @@ async def load_btt():
     
     setspeaker_bt.callback = set_speaker_atv
     testspeaker_bt.callback = test_speaker_atv
+    testsspeaker_bt.callback = test_sspeaker_atv
     
 # Button add
 async def DM_button():
@@ -352,58 +354,16 @@ async def back_sspeaker_atv(interaction: discord.Interaction):
     await show_speaker_style(interaction, True)
 
 async def test_speaker_atv(interaction: discord.Interaction):
-    from utils.bot import val, sk, bot   
-    from utils.reply import voice_send
-    from utils.api import tts_get_url
-    from utils.funcs import romaji_to_katakana
-    from utils.daily import get_real_time
+    from utils.bot import val
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    name = val.ai_name
-    kname = romaji_to_katakana(name)
-    
-    old_char = val.ai_char
-    old_speaker = val.vv_speaker
-    
-    char = next(cycle_iterator)
-    val.set('ai_char', char)
-    now_speaker = sk.style_id
-    val.set('vv_speaker', now_speaker)
-    
-    text = f"私は{kname}です"
-    if val.ai_char == "gentle": text = f"{kname}だよ"
-    elif val.ai_char == "cold": text = f"{kname}である"
-    elif val.ai_char == "extrovert": text = f"{kname}だぜ!"
-    elif val.ai_char == "introvert": text = f"えーっと... {kname}です"
-    elif val.ai_char == "lazy": text = f"{kname}... でいいよ"
-    elif val.ai_char == "tsundere": text = f"{kname}だもん!"
-    elif val.ai_char == "yandere": text = f"{kname}...のものよ！"
-    else: text = f"わたくしは{kname}であります"
-    
-    
-    guild = bot.get_guild(val.ai_guild)
-    # Huỷ nếu không trong voice
-    if not guild.voice_client: return
+    await play_speaker(interaction)
 
-    voice_channels = guild.voice_channels
-
-    chat = val.old_chat
-    name = [message.split(":")[0] for message in chat]
-
-    # Chỉ gửi voice chat nếu user đang trong voice
-    for channel in voice_channels:
-        members = channel.members
-        for member in members:
-            if member.display_name in name:
-                try:
-                    url = tts_get_url(text)
-                    await voice_send(url, guild.voice_client)
-                    await show_speaker_style(interaction, edit=True, char=val.ai_char)
-                    val.set('ai_char', old_char)
-                    val.set('vv_speaker', old_speaker)
-                except Exception as e:
-                    print(f"{get_real_time()}> lỗi tts: ", e)
+async def test_sspeaker_atv(interaction: discord.Interaction):
+    from utils.bot import val
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
     
+    await play_speaker(interaction, False)   
     
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
@@ -735,8 +695,11 @@ async def preset_prompt(interaction: discord.Interaction):
     await interaction.response.edit_message(embed=embed, view=view)
     
 # Show speaker
-async def show_speaker(interaction: discord.Interaction, edit=None):
+async def show_speaker(interaction: discord.Interaction, edit=None, char=None):
     from utils.bot import val, sk, bot
+    
+    if not char: char = f"Tính cách: {val.ai_char}"
+    else: char = f"Tính cách: {char}"
     
     jnormal = "ノーマル"
     enormal = "Normal"
@@ -753,7 +716,7 @@ async def show_speaker(interaction: discord.Interaction, edit=None):
         des=des,
         ava_link=bot.user.display_avatar,
         footer=f"Ấn view style để xem hoặc chọn speaker này ✨",
-        au_name=interaction.user.display_name,
+        au_name=char,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
         snext_btt=True,
@@ -860,3 +823,57 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None, char=N
     
     if not edit: await interaction.response.send_message(embed=embed, view=view)
     else: await interaction.response.edit_message(embed=embed, view=view)
+
+# Test speaker
+async def play_speaker(interaction: discord.Interaction, speaker=True):
+    from utils.bot import val, sk, bot   
+    from utils.reply import voice_send
+    from utils.api import tts_get_url
+    from utils.funcs import romaji_to_katakana
+    from utils.daily import get_real_time
+    
+    name = val.ai_name
+    kname = romaji_to_katakana(name)
+    
+    old_char = val.ai_char
+    old_speaker = val.vv_speaker
+    
+    char = next(cycle_iterator)
+    val.set('ai_char', char)
+    now_speaker = sk.style_id
+    val.set('vv_speaker', now_speaker)
+    
+    text = f"私は{kname}です"
+    if val.ai_char == "gentle": text = f"{kname}だよ"
+    elif val.ai_char == "cold": text = f"{kname}である"
+    elif val.ai_char == "extrovert": text = f"{kname}だぜ!"
+    elif val.ai_char == "introvert": text = f"えーっと... {kname}です"
+    elif val.ai_char == "lazy": text = f"{kname}... でいいよ"
+    elif val.ai_char == "tsundere": text = f"{kname}だもん!"
+    elif val.ai_char == "yandere": text = f"{kname}...のものよ！"
+    else: text = f"わたくしは{kname}であります"
+    
+    
+    guild = bot.get_guild(val.ai_guild)
+    # Huỷ nếu không trong voice
+    if not guild.voice_client: return
+
+    voice_channels = guild.voice_channels
+
+    chat = val.old_chat
+    name = [message.split(":")[0] for message in chat]
+
+    # Chỉ gửi voice chat nếu user đang trong voice
+    for channel in voice_channels:
+        members = channel.members
+        for member in members:
+            if member.display_name in name:
+                try:
+                    url = tts_get_url(text)
+                    await voice_send(url, guild.voice_client)
+                    if not speaker: await show_speaker_style(interaction, edit=True, char=val.ai_char)
+                    else: await show_speaker(interaction, edit=True, char=val.ai_char)
+                    val.set('ai_char', old_char)
+                    val.set('vv_speaker', old_speaker)
+                except Exception as e:
+                    print(f"{get_real_time()}> lỗi tts: ", e)
