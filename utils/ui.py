@@ -346,16 +346,14 @@ async def next_sspeaker_atv(interaction: discord.Interaction):
     from utils.bot import val, sk, bot
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    if sk.style_index == sk.max_style_index_of_speaker: sk.set('style_index', 0)
-    else: sk.next_style("+")
+    sk.next_style("+")
     await show_speaker_style(interaction, True)
     
 async def back_sspeaker_atv(interaction: discord.Interaction):
     from utils.bot import val, sk, bot  
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    if sk.style_index == 0: sk.set('style_index', sk.max_style_index_of_speaker)
-    else: sk.next_style("-")
+    sk.next_style("-")
     await show_speaker_style(interaction, True)
 
 async def test_speaker_atv(interaction: discord.Interaction):
