@@ -460,6 +460,8 @@ async def bot_notice(
     pset_btt=None,
     allp_btt=None,
     preset_btt=None,
+    
+    remove_btt=True,
     color=None,
     ):
     
@@ -510,7 +512,7 @@ async def bot_notice(
     if speaker_btt: view.add_item(speaker_bt)
     if sspeaker_btt: view.add_item(sspeaker_bt)
     
-    view.add_item(ermv_bt)
+    if remove_btt: view.add_item(ermv_bt)
 
     return embed, view
 
@@ -809,13 +811,13 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None, char=N
         if sk.style_id == val.vv_speaker: now = "🌟"
         else: now = ""
             
-        all_style = all_style + f"{icon} {style} {now}\n"
+        all_style = all_style + f"{icon} {style}"
 
     set_sp = True
     if sk.style_id == val.vv_speaker: set_sp = False
     
     embed, view = await bot_notice(
-        tt=sk.speaker_name,
+        tt=f"{sk.speaker_name} {now}",
         des=all_style,
         ava_link=bot.user.display_avatar,
         footer="|🔹 Style |💠 Style đang xem |🌟 Style đang dùng |",
@@ -827,6 +829,7 @@ async def show_speaker_style(interaction: discord.Interaction, edit=None, char=N
         speaker_btt=True,
         setspeaker_btt=set_sp,
         testsspeaker_btt=True,
+        remove_btt=False,
         )
     
     if not edit: await interaction.response.send_message(embed=embed, view=view)
