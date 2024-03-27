@@ -24,8 +24,8 @@ class AllStatus:
         self.ai_name = "AI"                 # Bot name
         self.ai_char = "innocent"           # Tính cách của bot
         self.ai_des = ""                    # Tóm tắt nhân vật
-        self.ai_color = "#ffbf75"            # Màu hex của nhân vật
-        self.ai_guild = 0                   # ID server gần nhất
+        self.ai_color = "#ffbf75"           # Màu hex của nhân vật
+        self.ai_guild = None                # ID server gần nhất
         self.ai_channel = 0                 # ID text channel gần nhất
         self.ai_avt_url = None              # Avatar hiện tại của bot
         self.ai_banner_url = None           # Banner hiện tại của bot
@@ -251,6 +251,11 @@ async def on_ready():
     if not val.owner_uid:
         print(f"> Tạo discord server nếu chưa có, sau đó copy link dưới đây vào discord để mời {val.ai_name} vào server của bạn:")
         print(f"https://discord.com/oauth2/authorize?client_id={bot.user.id}&permissions=0&scope=bot")
+
+@bot.event
+async def on_guild_join(guild: discord.Guild):
+    val.set("ai_guild", guild.id)
+    print(f"{get_real_time()}> {val.ai_name} vừa join guild {guild.name} ({guild.id})")
     
 @bot.event
 async def on_message(message: discord.Message):
@@ -559,7 +564,6 @@ async def voice(interaction: discord.Interaction, off: bool = False):
         text = "Đã tắt"
         await interaction.response.send_message(f"> {text} voice cho {val.ai_name}", ephemeral=True)
     
-
 # Chuyển master
 @bot.slash_command(name="setowner", description=f"Tặng {val.ai_name} cho người khác.")
 async def bot_owner(interaction: discord.Interaction, uid: str):
