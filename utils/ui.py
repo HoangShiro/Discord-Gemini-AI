@@ -873,9 +873,10 @@ async def play_speaker(interaction: discord.Interaction, speaker=True):
                 try:
                     url = tts_get_url(text)
                     await voice_send(url, guild.voice_client)
-                    if not speaker: await show_speaker_style(interaction, edit=True, char=val.ai_char)
-                    else: await show_speaker(interaction, edit=True, char=val.ai_char)
                     val.set('ai_char', old_char)
                     val.set('vv_speaker', old_speaker)
+                    
+                    if not speaker: await show_speaker_style(interaction, edit=True, char=char)
+                    else: await show_speaker(interaction, edit=True, char=char)
                 except Exception as e:
                     print(f"{get_real_time()}> lỗi tts: ", e)
