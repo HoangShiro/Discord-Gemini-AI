@@ -893,3 +893,5 @@ async def play_speaker(interaction: discord.Interaction, speaker=True):
                     else: await show_speaker(interaction, edit=True, char=char)
                 except Exception as e:
                     print(f"{get_real_time()}> lỗi tts: ", e)
+                    
+    await byB(interaction)
