@@ -280,7 +280,7 @@ async def cmd_msg():
     u_update = re.search(r'cập nhật|update|restart|khởi động lại', u_msg, re.IGNORECASE)
     
     u_remind = re.search(r'hẹn|nhắc|nhớ|remember|remind|kêu|gọi|call', u_msg, re.IGNORECASE)
-    u_tremind = re.search(r'sau|vào|lúc|ngày|giờ|phút|at|on|in', u_msg, re.IGNORECASE)
+    u_tremind = re.search(r'sau|vào|lúc|ngày|giờ|phút|at|on|in|hour|minute', u_msg, re.IGNORECASE)
     u_dayLremind = re.search(r'hàng ngày|mỗi|every day|mọi ngày|daily', u_msg, re.IGNORECASE)
     u_ndayLremind = re.search(r'ngày thường|weekday|working day|ngày làm|ngày trong tuần', u_msg, re.IGNORECASE)
     u_bdayLremind = re.search(r'ngày nghỉ|weekend|cuối tuần|break day', u_msg, re.IGNORECASE)
