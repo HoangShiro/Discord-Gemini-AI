@@ -23,6 +23,7 @@ except Exception as e:
 genai.configure(api_key=gai_key)
 
 model = genai.GenerativeModel('gemini-pro', safety_settings=safety, generation_config=genai.types.GenerationConfig(top_p=1, top_k=10, temperature=1))
+cmodel = genai.GenerativeModel('gemini-pro', safety_settings=safety, generation_config=genai.types.GenerationConfig(top_p=0, top_k=1, temperature=0))
 igmodel = genai.GenerativeModel('gemini-pro-vision', safety_settings=safety)
 
 prompt = load_prompt("saves/chat.txt")
@@ -138,6 +139,10 @@ async def igemini_text(img, text=None):
 async def gemini_task(mess):
     task = await model.generate_content_async(mess)
     return task.text
+
+async def gemini_cmd(cmd):
+    cmd = await cmodel.generate_content_async(cmd)
+    return cmd.text
 
 # TTS - VoiceVox
 async def tts_get(text):

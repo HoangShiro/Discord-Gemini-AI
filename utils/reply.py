@@ -3,7 +3,7 @@ import PIL.Image, asyncio, re, discord, aiohttp, random
 from io import BytesIO
 from discord import FFmpegPCMAudio
 from utils.funcs import list_to_str, txt_read, v_leave_auto, voice_make_tts, v_join_auto
-from utils.api import igemini_text, gemini_rep, gemini_task
+from utils.api import igemini_text, gemini_rep, gemini_task, gemini_cmd
 
 voice_follow = False
 
@@ -388,8 +388,9 @@ async def cmd_msg():
         async def create_remind():
             try:
                 new_remind = []
-                remind = await gemini_task(text)
+                remind = await gemini_cmd(text)
                 if val.chat_csl: print(f"{get_real_time()}> lời nhắc: ", {remind})
+                if ":" in remind: remind = remind.split(":")[1]
                 remind = remind.split("|")
                 if len(remind) == 6:
                     for elm in remind:
