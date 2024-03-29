@@ -322,7 +322,7 @@ async def cmd_msg():
         mood_change("unlike")
         
     # Voice
-    if (u_voice or ai_voice or voice_follow) and (u_join or ai_join) and not ai_no and not (u_out or ai_out):
+    if (u_voice or ai_voice or voice_follow) and (u_join or ai_join) and not ai_no and not (u_out or ai_out or u_remind):
         if not voice_follow: voice_follow = True
         else: voice_follow = False
         
@@ -340,7 +340,7 @@ async def cmd_msg():
     else:
         val.set('vc_invited', False)
 
-    if (u_voice or ai_voice or voice_follow) and (u_out or ai_out) and not ai_no:
+    if (u_voice or ai_voice or voice_follow) and (u_out or ai_out) and not ai_no and not u_remind:
         await v_leave_auto()
 
     
@@ -350,7 +350,7 @@ async def cmd_msg():
         
     
     # Đổi avatar:
-    if (u_avt or ai_avt) and (u_cg or ai_cg) and ai_ok and not ai_no:
+    if (u_avt or ai_avt) and (u_cg or ai_cg) and ai_ok and not ai_no and not u_remind:
         
         if not val.public:
             if val.last_uid != val.owner_uid: return
@@ -367,7 +367,7 @@ async def cmd_msg():
                 val.set('now_chat', new_chat)
                 val.set('CD', 1)
                 pass
-    elif (u_banner or ai_banner) and (u_cg or ai_cg) and ai_ok and not ai_no:
+    elif (u_banner or ai_banner) and (u_cg or ai_cg) and ai_ok and not ai_no and not u_remind:
         
         if not val.public:
             if val.last_uid != val.owner_uid: return
