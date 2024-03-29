@@ -1177,7 +1177,7 @@ class Remind:
         from utils.daily import get_real_time
         from utils.bot import val, bot
         from utils.ui import bot_notice, edit_last_msg
-        from utils.reply import get_channel
+        from utils.reply import get_channel, send_embed
         
         if not now: now = get_real_time(raw=True)
         
@@ -1221,8 +1221,6 @@ class Remind:
                       elif mode == "newchat":
                           await new_chat()
                           user = await bot.fetch_user(val.owner_uid)
-                          channel = await get_channel()
-                          if not channel: return
                           
                           embed, view = await bot_notice(
                               tt="Đã làm mới cuộc trò chuyện 🌟",
@@ -1232,7 +1230,7 @@ class Remind:
                               au_link=user.display_avatar,
                               )
                           
-                          await channel.send(embed=embed, view=view)
+                          await send_embed(embed=embed, view=view)
                       elif mode == "update":
                           await edit_last_msg()
                           val.set('last_mess_id', None)

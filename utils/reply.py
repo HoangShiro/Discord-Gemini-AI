@@ -259,7 +259,7 @@ async def cmd_msg():
     
     from utils.bot import val, bot, rm
     from utils.daily import get_real_time
-    from utils.ui import normal_embed
+    from utils.ui import normal_embed, bot_notice
     from utils.funcs import avatar_change, banner_change, mood_change, leave_voice
 
     u_msg = list_to_str(val.old_chat)
@@ -430,6 +430,20 @@ async def cmd_msg():
                 rm.add(new_remind)
                 
                 print(f"{get_real_time()}> Đã tạo lời nhắc cho {val.ai_name}.")
+                
+                user = await bot.fetch_user(val.owner_uid)
+                
+                embed, view = await bot_notice(
+                    tt="Đã thêm lời nhắc.",
+                    des=f"⏲️ Time: {new_remind[2]}:{new_remind[3]} - {new_remind[4]}/{new_remind[5]}/{new_remind[6]}\n💬 Note: {new_remind[0]} - {new_remind[1]}\n✨ Loop: {new_remind[7]}\n📳 CMD: {new_remind[8]}\n",
+                    footer="Các CMD được hỗ trợ: Voice join/leave | Avatar change | Banner change | Newchat | Update.",
+                    ava_link=bot.user.display_avatar,
+                    au_name=user.display_name,
+                    au_avatar=user.display_avatar,
+                    au_link=user.display_avatar,
+                    )
+                
+                await send_embed(embed=embed, view=view)
                 
         except Exception as e:
             print(f"{get_real_time()}> lỗi khi tạo lời nhắc: ", e)
