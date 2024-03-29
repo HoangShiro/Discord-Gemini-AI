@@ -386,10 +386,27 @@ async def cmd_msg():
         hh, m, ss, dd, mm, yy = get_real_time(date=True)
         text = f"Now time today: {hh}|{m}, {dd}|{mm}|{yy}\nPlease analyze the chat below and return the appointment with the format:\nuser_name|appointment content|HH|MM|DD|MM|YY\nChat:\n\n{u_msg}"
         try:
+            new_remind = []
             remind = await gemini_task(text)
             if val.chat_csl: print(f"{get_real_time()}> lời nhắc: ", {remind})
             remind = remind.split("|")
             if len(remind) == 7:
+                for elm in remind:
+                    elm = elm.strip()
+                    new_remind.append(elm)
+                
+                if not new_remind[2]: new_remind[2] = hh
+                if not new_remind[3]: new_remind[3] = m
+                if not new_remind[4]: new_remind[4] = dd
+                if not new_remind[5]: new_remind[5] = mm
+                if not new_remind[6]: new_remind[6] = yy
+                
+                new_remind[2] = int(new_remind[2])
+                new_remind[3] = int(new_remind[3])
+                new_remind[4] = int(new_remind[4])
+                new_remind[5] = int(new_remind[5])
+                new_remind[6] = int(new_remind[6])
+                
                 loop = None
                 mode = None
                 
@@ -407,10 +424,10 @@ async def cmd_msg():
                 if u_monthLremind: loop = "monthly"
                 if u_yearLremind: loop = "yearly"
                 
-                remind.append(loop)
-                remind.append(mode)
+                new_remind.append(loop)
+                new_remind.append(mode)
                 
-                rm.add(remind)
+                rm.add(new_remind)
                 
                 print(f"{get_real_time()}> Đã tạo lời nhắc cho {val.ai_name}.")
                 

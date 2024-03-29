@@ -1189,11 +1189,6 @@ class Remind:
                   ok = True
                   remove = False
                   user_name, note, hour, minute, day, month, year, loop, mode = reminder
-                  hour = int(hour.strip())
-                  minute = int(minute.strip())
-                  day = int(day.strip())
-                  month = int(month.strip())
-                  year = int(year.strip())
                   if loop == "daily":
                       reminder_time = datetime.datetime(hour=hour, minute=minute)
                   elif loop == "weekdays": 
