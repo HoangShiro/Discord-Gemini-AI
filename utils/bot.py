@@ -897,6 +897,13 @@ async def embed_send(
     )
     
     await interaction.response.send_message(embed=embed, view=view)
+
+# Hiển thị danh sách lời nhắc
+@bot.slash_command(name="remind", description=f"Show danh sách lời nhắc")
+async def remind_list(interaction: discord.Interaction):
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    await show_remind(interaction=interaction)
     
 """# Load plugin
 @bot.slash_command(name="loadplug", description=f"Load các plugin cho {val.ai_name}")

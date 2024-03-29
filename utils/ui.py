@@ -985,7 +985,6 @@ async def show_remind(interaction: discord.Interaction, edit=None):
         rback_btt=True,
         rnext_btt=True,
         rremind_btt=True,
-        remind_btt=True,
         )
     
     if edit: await interaction.response.edit_message(embed=embed, view=view)
