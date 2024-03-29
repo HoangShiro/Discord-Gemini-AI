@@ -206,6 +206,7 @@ async def v_join_auto():
     chat = val.old_chat
     name = [message.split(":")[0] for message in chat]
     guild = bot.get_guild(val.ai_guild)
+    if not guild: return
     voice_channels = guild.voice_channels
     found = False
 
@@ -251,19 +252,22 @@ async def v_leave_auto():
 async def voice_rcn(pr_v = None):
     from utils.bot import bot, val
     from utils.reply import voice_send
+    from utils.daily import get_real_time
     
     if not pr_v: pr_v = val.pr_vch_id
     if pr_v and val.tts_toggle:
         await v_leave_auto()
         await asyncio.sleep(1)
-        vc = await bot.get_channel(pr_v).connect()
-        sound = await sob('greeting')
-        if sound:
-          await voice_send(sound, vc)
-        
-        val.update('total_join', 1)
-        val.update('one_join', 1)
-
+        try:
+          vc = await bot.get_channel(pr_v).connect()
+          sound = await sob('greeting')
+          if sound:
+            await voice_send(sound, vc)
+          val.update('total_join', 1)
+          val.update('one_join', 1)
+        except Exception as e:
+          print(f"{get_real_time()}> lỗi voice RCN: ", e)
+          
 # Voice make
 async def voice_make_tts(text):
     from utils.bot import val, bot
@@ -315,7 +319,6 @@ async def sob(sound_list, sound=None):
         # Filter audio files and handle empty list
         audio_files = [os.path.join(audio_dir, f) for f in os.listdir(audio_dir) if f.endswith(".wav")]
         if not audio_files:
-            print(f"WARNING: No WAV audio files found in '{audio_dir}'. No sound will be played.")
             return None
 
         # Randomly choose an audio file
