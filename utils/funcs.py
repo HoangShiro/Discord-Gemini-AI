@@ -1213,8 +1213,9 @@ class Remind:
                   now_datetime = datetime.datetime.combine(now.date(), now.time())
                   if (now_datetime >= reminder_time) and ok:
                       now_chat = val.now_chat
-                      now_chat.append(f"SYSTEM: {hour}:{minute}-{day}{month}{year} now, {user_name} remind you to '{note}'")
+                      now_chat.append(f"SYSTEM: {hour}:{minute}-{day}/{month}/{year} now, {user_name} remind you to '{note}'")
                       val.set('now_chat', now_chat)
+                      val.set('CD', 1)
                       
                       print(f"{get_real_time()}> Đã nhắc {val.ai_name}.")
                       
