@@ -114,17 +114,21 @@ def list_to_str(list):
             new_list.append(list[i])
         else:
             # Kiểm tra tên của phần tử hiện tại và phần tử trước đó
-            if list[i].split(":")[0] == list[i-1].split(":")[0]:
-                # Gộp nội dung của hai phần tử nếu nằm cạnh nhau
-                new_list[-1] += ". " + list[i].split(":")[1]
-            else:
+            if ":" in list[i]:
+                if list[i].split(":")[0] == list[i-1].split(":")[0]:
+                    # Gộp nội dung của hai phần tử nếu nằm cạnh nhau
+                    new_list[-1] += ". " + list[i].split(":")[1]
+                else:
+                    new_list.append(list[i])
+            elif list[i] != list[i-1]:
                 new_list.append(list[i])
+                
     # Chuyển từ list sang str
     my_str = ""
     for item in new_list:
         my_str += item + "\n"
     return my_str
-
+  
 # Xử lý lời nhắc  
 def remmid_edit(list1, filter, text):
   
