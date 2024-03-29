@@ -384,29 +384,29 @@ async def cmd_msg():
     # Remind
     if u_remind and u_tremind and not ai_no:
         hh, m, ss, dd, mm, yy = get_real_time(date=True)
-        text = f"Now time today: {hh}|{m}, {dd}|{mm}|{yy}\nPlease analyze the chat below and return the appointment with the format:\nuser_name|appointment content|HH|MM|DD|MM|YY\nChat:\n\n{u_msg}"
+        text = f"Now time today: {hh}|{m}, {dd}|{mm}|{yy}\nPlease analyze the chat below and return the appointment with the format:\nappointment content|HH|MM|DD|MM|YY\nChat:\n\n{u_msg}"
         async def create_remind():
             try:
                 new_remind = []
                 remind = await gemini_task(text)
                 if val.chat_csl: print(f"{get_real_time()}> lời nhắc: ", {remind})
                 remind = remind.split("|")
-                if len(remind) == 7:
+                if len(remind) == 6:
                     for elm in remind:
                         elm = elm.strip()
                         new_remind.append(elm)
                     
-                    if not new_remind[2]: new_remind[2] = hh
-                    if not new_remind[3]: new_remind[3] = m
-                    if not new_remind[4]: new_remind[4] = dd
-                    if not new_remind[5]: new_remind[5] = mm
-                    if not new_remind[6]: new_remind[6] = yy
+                    if not new_remind[1]: new_remind[1] = hh
+                    if not new_remind[2]: new_remind[2] = m
+                    if not new_remind[3]: new_remind[3] = dd
+                    if not new_remind[4]: new_remind[4] = mm
+                    if not new_remind[5]: new_remind[5] = yy
                     
+                    new_remind[1] = int(new_remind[1])
                     new_remind[2] = int(new_remind[2])
                     new_remind[3] = int(new_remind[3])
                     new_remind[4] = int(new_remind[4])
                     new_remind[5] = int(new_remind[5])
-                    new_remind[6] = int(new_remind[6])
                     
                     loop = None
                     mode = None
@@ -425,6 +425,7 @@ async def cmd_msg():
                     if u_monthLremind: loop = "monthly"
                     if u_yearLremind: loop = "yearly"
                     
+                    new_remind.insert(0, val.last_uname)
                     new_remind.append(loop)
                     new_remind.append(mode)
                     
@@ -432,11 +433,12 @@ async def cmd_msg():
                     
                     print(f"{get_real_time()}> Đã tạo lời nhắc cho {val.ai_name}.")
                     print(f"{get_real_time()}> {new_remind}")
+                    
                     user = await bot.fetch_user(val.owner_uid)
                     
                     embed, view = await bot_notice(
                         tt="Đã thêm lời nhắc.",
-                        des=f"⏲️ Time: {new_remind[2]}:{new_remind[3]} - {new_remind[4]}/{new_remind[5]}/{new_remind[6]}\n💬 Note: {new_remind[0]} - {new_remind[1]}\n✨ Loop: {new_remind[7]}\n📳 CMD: {new_remind[8]}\n",
+                        des=f"💬 Note: {new_remind[0]} - {new_remind[1]}\n⏲️ Time: {new_remind[2]}:{new_remind[3]} - {new_remind[4]}/{new_remind[5]}/{new_remind[6]}\n✨ Loop: {new_remind[7]}\n📳 CMD: {new_remind[8]}\n",
                         footer="Các CMD được hỗ trợ: Voice join/leave | Avatar change | Banner change | Newchat | Update.",
                         ava_link=bot.user.display_avatar,
                         au_name=user.display_name,
