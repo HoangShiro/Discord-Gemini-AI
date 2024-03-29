@@ -384,7 +384,7 @@ async def cmd_msg():
     # Remind
     if u_remind and u_tremind and not ai_no:
         hh, m, ss, dd, mm, yy = get_real_time(date=True)
-        text = f"Now time today: {hh}|{m}, {dd}|{mm}|{yy}\n- Please analyze the chat below and return the reminder with the format: content|HH|MM|DD|MM|YY\nChat: {u_msg}"
+        text = f"Now time today: {hh}|{m}, {dd}|{mm}|{yy}\n- Please analyze the chat below and return the reminder with the format: content|HH|MM|DD|MM|YY\nChat: '{u_msg}'"
         async def create_remind():
             try:
                 new_remind = []
@@ -433,7 +433,6 @@ async def cmd_msg():
                     rm.add(new_remind)
                     
                     print(f"{get_real_time()}> Đã tạo lời nhắc cho {val.ai_name}.")
-                    print(f"{get_real_time()}> {new_remind}")
                     
                     user = await bot.fetch_user(val.owner_uid)
                     
