@@ -1186,6 +1186,7 @@ class Remind:
           new_list = []
           for reminder in self.data:
               remove = False
+              on_remove = False
               if len(reminder) == 9:
                   ok = True
                   user_name, note, hour, minute, day, month, year, loop, mode = reminder
@@ -1203,7 +1204,7 @@ class Remind:
                       reminder_time = datetime.datetime(year=year, month=month, day=day, hour=hour, minute=minute)
                   else:
                       reminder_time = datetime.datetime(year=year, month=month, day=day, hour=hour, minute=minute)
-                      remove = True
+                      on_remove = True
                   
                   now_datetime = datetime.datetime.combine(now.date(), now.time())
                   if (now_datetime >= reminder_time) and ok:
@@ -1211,6 +1212,8 @@ class Remind:
                       now_chat.append(f"SYSTEM: {hour}:{minute}-{day}/{month}/{year} now, {user_name} remind you to '{note}'")
                       val.set('now_chat', now_chat)
                       val.set('CD', 1)
+                      
+                      if on_remove: remove = True
                       
                       print(f"{get_real_time()}> Đã nhắc {val.ai_name}.")
                       
