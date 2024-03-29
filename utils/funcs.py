@@ -1155,7 +1155,7 @@ class AllSpeaker:
 # Remind
 class Remind:
     def __init__(self):
-        self.data = []
+        self.data = {}
 
     def save(self):
         with open("saves/reminds.json", "w", encoding="utf-8") as file:
@@ -1171,7 +1171,7 @@ class Remind:
             with open("saves/reminds.json", "r", encoding="utf-8") as file:
                 self.data = json.load(file)
         except FileNotFoundError:
-            self.data = []
+            self.data = {}
 
     async def check(self, now=None):
         from utils.daily import get_real_time
