@@ -292,6 +292,8 @@ async def cmd_msg():
     u_monthLremind = re.search(r'mỗi tháng|mọi tháng|hàng tháng|every month|monthly', u_msg, re.IGNORECASE)
     u_yearLremind = re.search(r'mỗi năm|mọi năm|hàng năm|every year|yearly|sinh nhật|birthday', u_msg, re.IGNORECASE)
     
+    u_num = re.search("[0-9]", u_msg)
+    
     # Bot
     ai_voice = re.search(r'vc|voice channel|voice chat|voice', ai_msg, re.IGNORECASE)
     ai_join = re.search(r'joi|jum|vào|nhảy|chui|vô', ai_msg, re.IGNORECASE)
@@ -386,7 +388,7 @@ async def cmd_msg():
         val.set('cavatar', False)
 
     # Remind
-    if u_remind and u_tremind and not ai_no:
+    if u_remind and u_tremind and u_num:
         hh, m, ss, dd, mm, yy = get_real_time(date=True)
         text = f"Now time today: {hh}|{m}, {dd}|{mm}|{yy}\n- Please analyze the chat below and return the reminder with the format: content|HH|MM|DD|MM|YY\nChat: '{u_msg}'"
         async def create_remind():
