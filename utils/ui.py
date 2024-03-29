@@ -970,7 +970,7 @@ async def show_remind(interaction: discord.Interaction, edit=None):
             yy = remind[6]
             loop = remind[7]
             mode = remind[8]
-            if remind == now_remind: list_rm += f"> {viewing} `{h}:{m}-{dd}/{mm}/{yy}`: **{uname} - {note}** [{loop}|{mode}]\n"
+            if remind == now_remind: list_rm += f"{viewing}> `{h}:{m}-{dd}/{mm}/{yy}`: **{uname} - {note}** [{loop}|{mode}]\n"
             else: list_rm += f"{normal} `{h}:{m}-{dd}/{mm}/{yy}`: **{uname} - {note}** [{loop}|{mode}]\n"
     
     embed, view = await bot_notice(
