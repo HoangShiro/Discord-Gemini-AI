@@ -38,6 +38,13 @@ setspeaker_bt = discord.ui.Button(label="✨ set", custom_id="set_speaker", styl
 testspeaker_bt = discord.ui.Button(label="🔊 hear", custom_id="test_speaker", style=discord.ButtonStyle.green)
 testsspeaker_bt = discord.ui.Button(label="🔊 hear", custom_id="test_sspeaker", style=discord.ButtonStyle.green)
 
+# Remind
+rnext_bt = discord.ui.Button(label="🔆 next", custom_id="remind_next", style=discord.ButtonStyle.green)
+rback_bt = discord.ui.Button(label="🔅 back", custom_id="remind_back", style=discord.ButtonStyle.green)
+
+remind_bt = discord.ui.Button(label="⏰ remind", custom_id="remind", style=discord.ButtonStyle.green)
+rmv_remind_bt = discord.ui.Button(label="Remove", custom_id="remind_remove", style=discord.ButtonStyle.red)
+
 """ BUTTON """
 
 # Button call
@@ -76,6 +83,12 @@ async def load_btt():
     setspeaker_bt.callback = set_speaker_atv
     testspeaker_bt.callback = test_speaker_atv
     testsspeaker_bt.callback = test_sspeaker_atv
+    
+    # Remind
+    rnext_bt.callback = next_remind_atv
+    rback_bt.callback = back_remind_atv
+    remind_bt.callback = remind_atv
+    rmv_remind_bt.callback = remove_remind_atv
     
 # Button add
 async def DM_button():
@@ -369,7 +382,35 @@ async def test_sspeaker_atv(interaction: discord.Interaction):
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
     await play_speaker(interaction, False)   
+
+# Remind
+async def remind_atv(interaction: discord.Interaction):
+    from utils.bot import val
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
     
+    await show_remind(interaction=interaction, edit=True)
+
+async def next_remind_atv(interaction: discord.Interaction):
+    from utils.bot import val, rm
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
+    rm.view("+")
+    await show_remind(interaction=interaction, edit=True)
+
+async def back_remind_atv(interaction: discord.Interaction):
+    from utils.bot import val, rm
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
+    rm.view("-")
+    await show_remind(interaction=interaction, edit=True)
+
+async def remove_remind_atv(interaction: discord.Interaction):
+    from utils.bot import val, rm
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
+    rm.remove()
+    await show_remind(interaction=interaction, edit=True)
+
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
     from utils.bot import bot, val
@@ -464,6 +505,11 @@ async def bot_notice(
     allp_btt=None,
     preset_btt=None,
     
+    remind_btt=None,
+    rnext_btt=None,
+    rback_btt=None,
+    rremind_btt=None,
+    
     remove_btt=True,
     color=None,
     ):
@@ -515,6 +561,12 @@ async def bot_notice(
     if setspeaker_btt: view.add_item(setspeaker_bt)
     if speaker_btt: view.add_item(speaker_bt)
     if sspeaker_btt: view.add_item(sspeaker_bt)
+    
+    # Remind
+    if rback_btt: view.add_item(rback_bt)
+    if rnext_btt: view.add_item(rnext_bt)
+    if rremind_btt: view.add_item(rmv_remind_bt)
+    if remind_btt: view.add_item(remind_bt)
     
     if remove_btt: view.add_item(ermv_bt)
 
@@ -895,3 +947,46 @@ async def play_speaker(interaction: discord.Interaction, speaker=True):
                     print(f"{get_real_time()}> lỗi tts: ", e)
                     
     await byB(interaction)
+    
+# Show remind
+async def show_remind(interaction: discord.Interaction, edit=None):
+    from utils.bot import val, rm, bot
+    reminds = rm.data
+    list_rm = ""
+    normal = "🔹"
+    viewing = "💠"
+    now = ""
+    
+    
+    if reminds:
+        now_remind = reminds[rm.now_index]
+        for remind in reminds:
+            uname = remind[0]
+            note = remind[1]
+            h = remind[2]
+            m = remind[3]
+            dd = remind[4]
+            mm = remind[5]
+            yy = remind[6]
+            loop = remind[7]
+            mode = remind[8]
+            if remind == now_remind: list_rm += f"> {viewing} `{h}:{m}-{dd}/{mm}/{yy}`: **{uname} - {note}** [{loop}|{mode}]\n"
+            else: list_rm += f"{normal} `{h}:{m}-{dd}/{mm}/{yy}`: **{uname} - {note}** [{loop}|{mode}]\n"
+    
+    embed, view = await bot_notice(
+        tt="Danh sách lời nhắc: ",
+        des=list_rm,
+        footer="Các CMD được hỗ trợ: Voice join/leave | Avatar change | Banner change | Newchat | Update.",
+        ava_link=bot.user.display_avatar,
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar,
+        
+        rback_btt=True,
+        rnext_btt=True,
+        rremind_btt=True,
+        remind_btt=True,
+        )
+    
+    if edit: await interaction.response.edit_message(embed=embed, view=view)
+    else: await interaction.response.send_message(embed=embed, view=view)

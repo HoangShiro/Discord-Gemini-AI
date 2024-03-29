@@ -442,7 +442,7 @@ async def cmd_msg():
                     
                     embed, view = await bot_notice(
                         tt="Đã thêm lời nhắc.",
-                        des=f"💬 Note: {new_remind[0]} - {new_remind[1]}\n⏲️ Time: {new_remind[2]}:{new_remind[3]} - {new_remind[4]}/{new_remind[5]}/{new_remind[6]}\n✨ Loop: {new_remind[7]}\n📳 CMD: {new_remind[8]}\n",
+                        des=f"💬 Note: **{new_remind[0]} - {new_remind[1]}**\n⏲️ Time: **{new_remind[2]}:{new_remind[3]} - {new_remind[4]}/{new_remind[5]}/{new_remind[6]}**\n✨ Loop: **{new_remind[7]}**\n📳 CMD: **{new_remind[8]}**\n",
                         footer="Các CMD được hỗ trợ: Voice join/leave | Avatar change | Banner change | Newchat | Update.",
                         ava_link=bot.user.display_avatar,
                         au_name=user.display_name,

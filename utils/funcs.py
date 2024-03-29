@@ -1156,6 +1156,8 @@ class AllSpeaker:
 class Remind:
     def __init__(self):
         self.data = []
+        self.now_index = None
+        self.max_index = None
 
     def save(self):
         with open("saves/reminds.json", "w", encoding="utf-8") as file:
@@ -1164,6 +1166,7 @@ class Remind:
     def add(self, reminder):
         self.get()
         self.data.append(reminder)
+        self.max_index = len(self.data)
         self.save()
 
     def get(self):
@@ -1173,6 +1176,27 @@ class Remind:
         except FileNotFoundError:
             self.data = []
 
+        self.max_index = len(self.data)
+        if not self.now_index: self.now_index = 0
+        
+    def view(self, view):
+        self.max_index = len(self.data)
+        if self.max_index == 0: return
+        
+        if view == "+":
+            if (self.max_index > 1) and (self.now_index + 1 < self.max_index): self.now_index += 1
+            elif self.now_index + 1 == self.max_index: self.now_index = 0
+        elif view == "-":
+            if self.now_index > 0: self.now_index -= 1
+            elif self.now_index == 0: self.now_index = self.max_index - 1  
+    
+    def remove(self, index=None):
+        if not index: index = self.now_index
+        self.max_index = len(self.data)
+        if self.max_index == 0: return
+        
+        if self.max_index -1 >= index > -1: self.data.pop(index)
+      
     async def check(self, now=None):
         from utils.daily import get_real_time
         from utils.bot import val, bot
