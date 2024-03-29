@@ -431,7 +431,7 @@ async def cmd_msg():
                     rm.add(new_remind)
                     
                     print(f"{get_real_time()}> Đã tạo lời nhắc cho {val.ai_name}.")
-                    
+                    print(f"{get_real_time()}> {new_remind}")
                     user = await bot.fetch_user(val.owner_uid)
                     
                     embed, view = await bot_notice(
