@@ -1164,7 +1164,6 @@ class Remind:
     def add(self, reminder):
         self.get()
         self.data.append(reminder)
-        print(self.data)
         self.save()
 
     def get(self):
@@ -1186,9 +1185,9 @@ class Remind:
         if self.data:
           new_list = []
           for reminder in self.data:
+              remove = False
               if len(reminder) == 9:
                   ok = True
-                  remove = False
                   user_name, note, hour, minute, day, month, year, loop, mode = reminder
                   if loop == "daily":
                       reminder_time = datetime.datetime(hour=hour, minute=minute)
@@ -1239,7 +1238,7 @@ class Remind:
                           await asyncio.sleep(1)
                           await bot.close()
                       
-                  if not remove: new_list.append(reminder)
+              if not remove: new_list.append(reminder)
                 
                 
           self.data = new_list
