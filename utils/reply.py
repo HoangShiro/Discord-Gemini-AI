@@ -383,7 +383,6 @@ async def cmd_msg():
 
     # Remind
     if u_remind and u_tremind and not ai_no:
-        print("OK")
         hh, m, ss, dd, mm, yy = get_real_time(date=True)
         text = f"Now time today: {hh}|{m}, {dd}|{mm}|{yy}\nPlease analyze the chat below and return the appointment with the format:\nuser_name|appointment content|HH|MM|DD|MM|YY\nChat:\n\n{u_msg}"
         async def create_remind():
