@@ -1,5 +1,5 @@
 """Các hàm chức năng"""
-import json, os, shutil, asyncio, jaconv, re, random, discord, importlib, aiohttp, requests
+import json, os, shutil, asyncio, jaconv, re, random, discord, importlib, aiohttp, requests, datetime
 
 from translate import Translator
 from mtranslate import translate
@@ -1151,6 +1151,100 @@ class AllSpeaker:
       
       self.speaker_index = speaker_index
       self.style_index = style_index
+
+# Remind
+class Remind:
+    def __init__(self):
+        self.data = []
+
+    def save(self):
+        with open("saves/reminds.json", "w", encoding="utf-8") as file:
+            json.dump(self.data, file, indent=4)
+    
+    def add(self, reminder):
+        self.get()
+        self.data.append(reminder)
+        self.save()
+
+    def get(self):
+        try:
+            with open("saves/reminds.json", "r", encoding="utf-8") as file:
+                self.data = json.load(file)
+        except FileNotFoundError:
+            self.data = []
+
+    async def check(self, now=None):
+        from utils.daily import get_real_time
+        from utils.bot import val, bot
+        from utils.ui import bot_notice, edit_last_msg
+        from utils.reply import get_channel
+        
+        if not now: now = get_real_time(raw=True)
+        
+        self.get()
+        if self.data:
+          new_list = []
+          for reminder in self.data:
+              if len(reminder) == 9:
+                  ok = True
+                  remove = False
+                  user_name, note, hour, minute, day, month, year, loop, mode = reminder
+                  if loop == "daily":
+                      reminder_time = datetime.datetime(hour=hour, minute=minute)
+                  elif loop == "weekdays": 
+                      reminder_time = datetime.datetime(hour=hour, minute=minute)
+                      if val.weekend: ok = False
+                  elif loop == "weekend":
+                      reminder_time = datetime.datetime(hour=hour, minute=minute)
+                      if not val.weekend: ok = False
+                  elif loop == "monthly":
+                      reminder_time = datetime.datetime(month=month, day=day, hour=hour, minute=minute)
+                  elif loop == "yearly":
+                      reminder_time = datetime.datetime(year=year, month=month, day=day, hour=hour, minute=minute)
+                  else:
+                      reminder_time = datetime.datetime(year=year, month=month, day=day, hour=hour, minute=minute)
+                      remove = True
+                      
+                  if (now >= reminder_time) and ok:
+                      now_chat = val.now_chat
+                      now_chat.append(f"SYSTEM: {hour}:{minute}-{day}{month}{year} now, {user_name} remind you to '{note}'")
+                      val.set('now_chat', now_chat)
+                      
+                      print(f"{get_real_time()}> Đã nhắc {val.ai_name}.")
+                      
+                      if mode == "voice join": await voice_rcn()
+                      elif mode == "voice leave": await v_leave_auto()
+                      elif mode == "avatar": await avatar_change()
+                      elif mode == "banner": await banner_change()
+                      elif mode == "newchat":
+                          await new_chat()
+                          user = await bot.fetch_user(val.owner_uid)
+                          channel = await get_channel()
+                          if not channel: return
+                          
+                          embed, view = await bot_notice(
+                              tt="Đã làm mới cuộc trò chuyện 🌟",
+                              ava_link=bot.user.display_avatar,
+                              au_name=user.display_name,
+                              au_avatar=user.display_avatar,
+                              au_link=user.display_avatar,
+                              )
+                          
+                          await channel.send(embed=embed, view=view)
+                      elif mode == "update":
+                          await edit_last_msg()
+                          val.set('last_mess_id', None)
+                          val.set('old_mess_id', None)
+                          await asyncio.sleep(1)
+                          await bot.close()
+                      
+                  if not remove: new_list.append(reminder)
+                
+                
+          self.data = new_list
+          self.save()
+        
+        return None, None
      
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')

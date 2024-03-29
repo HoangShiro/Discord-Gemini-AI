@@ -257,9 +257,7 @@ async def voice_send(url, ch):
 async def cmd_msg():
     global voice_follow
     
-    
-    from utils.bot import val, bot
-    from utils.api import chat
+    from utils.bot import val, bot, rm
     from utils.daily import get_real_time
     from utils.ui import normal_embed
     from utils.funcs import avatar_change, banner_change, mood_change, leave_voice
@@ -278,6 +276,18 @@ async def cmd_msg():
     u_banner = re.search(r'banner|cover|biểu ngữ|bìa', u_msg, re.IGNORECASE)
     u_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm|add', u_msg, re.IGNORECASE)
 
+    u_newchat = re.search(r'newchat|làm mới chat|cuộc trò chuyện mới|reset chat|new chat|new conv|clear chat|chat mới', u_msg, re.IGNORECASE)
+    u_update = re.search(r'cập nhật|update|restart|khởi động lại', u_msg, re.IGNORECASE)
+    
+    u_remind = re.search(r'hẹn|nhắc|nhớ|remember|remind|kêu|gọi|call', u_msg, re.IGNORECASE)
+    u_tremind = re.search(r'vào|lúc|ngày|giờ|at|on|in', u_msg, re.IGNORECASE)
+    u_dayLremind = re.search(r'hàng ngày|mỗi|every day|mọi ngày|daily', u_msg, re.IGNORECASE)
+    u_ndayLremind = re.search(r'ngày thường|weekday|working day|ngày làm|ngày trong tuần', u_msg, re.IGNORECASE)
+    u_bdayLremind = re.search(r'ngày nghỉ|weekend|cuối tuần|break day', u_msg, re.IGNORECASE)
+    u_weekLremind = re.search(r'mỗi tuần|mọi tuần|hàng tuần|every week|weekly|seven day', u_msg, re.IGNORECASE)
+    u_monthLremind = re.search(r'mỗi tháng|mọi tháng|hàng tháng|every month|monthly', u_msg, re.IGNORECASE)
+    u_yearLremind = re.search(r'mỗi năm|mọi năm|hàng năm|every year|yearly|sinh nhật|birthday', u_msg, re.IGNORECASE)
+    
     # Bot
     ai_voice = re.search(r'vc|voice channel|voice chat|voice', ai_msg, re.IGNORECASE)
     ai_join = re.search(r'joi|jum|vào|nhảy|chui|vô', ai_msg, re.IGNORECASE)
@@ -371,6 +381,44 @@ async def cmd_msg():
     else:
         val.set('cavatar', False)
 
+    # Remind
+    if u_remind and u_tremind and not ai_no:
+        hh, m, ss, dd, mm, yy = get_real_time(date=True)
+        text = f"Now time today: {hh}|{m}, {dd}|{mm}|{yy}\nPlease analyze the chat below and return the appointment with the format:\nuser_name|appointment content|HH|MM|DD|MM|YY\nChat:\n\n{u_msg}"
+        try:
+            remind = await gemini_task(text)
+            if val.chat_csl: print(f"{get_real_time()}> lời nhắc: ", {remind})
+            remind = remind.split("|")
+            if len(remind) == 7:
+                loop = None
+                mode = None
+                
+                if u_voice and u_join: mode = "voice join"
+                if u_voice and u_out: mode = "voice leave"
+                if u_avt and u_cg: mode = "avatar"
+                if u_banner and u_cg: mode = "banner"
+                if u_newchat: mode = "newchat"
+                if u_update: mode = "update"
+                
+                if u_dayLremind: loop = "daily"
+                if u_ndayLremind: loop = "weekdays"
+                if u_bdayLremind: loop = "weekend"
+                if u_weekLremind: loop = "weekly"
+                if u_monthLremind: loop = "monthly"
+                if u_yearLremind: loop = "yearly"
+                
+                remind.append(loop)
+                remind.append(mode)
+                
+                rm.add(remind)
+                
+                print(f"{get_real_time()}> Đã tạo lời nhắc cho {val.ai_name}.")
+                
+        except Exception as e:
+            print(f"{get_real_time()}> lỗi khi tạo lời nhắc: ", e)
+            pass
+            
+            
 async def cmd_msg_user():
     from utils.bot import val, bot
     from utils.daily import get_real_time

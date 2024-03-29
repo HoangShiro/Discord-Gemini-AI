@@ -201,6 +201,8 @@ val.load('saves/vals.json')
 sk = AllSpeaker()
 sk.get_data()
 
+rm = Remind()
+rm.get()
 
 intents = discord.Intents.all()
 bot = commands.Bot(intents=intents, command_prefix="/")
@@ -894,7 +896,6 @@ async def embed_send(
     )
     
     await interaction.response.send_message(embed=embed, view=view)
-    
     
 """# Load plugin
 @bot.slash_command(name="loadplug", description=f"Load các plugin cho {val.ai_name}")

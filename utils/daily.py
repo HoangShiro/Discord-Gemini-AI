@@ -54,9 +54,9 @@ async def sec_check():
     update_voice(val.mood_name)
     
 # Daily tasks
-@tasks.loop(seconds=60)
+@tasks.loop(seconds=59)
 async def h_check():
-    from utils.bot import bot, val
+    from utils.bot import bot, val, rm
     
     # Có phải là ngày nghỉ?
     wcheck = is_weekend()
@@ -71,7 +71,10 @@ async def h_check():
     val.load_val_char('saves/char.json', val.ai_char, period)
     if val.CD_idle == val.to_worktime:
         await status_busy_set()
-        
+    
+    # Kiểm tra lời nhắc
+    await rm.check()
+    
 # Lấy khoảng thời gian và xử lý các tác vụ
 async def get_current_period(timezone_name="Asia/Bangkok"):
     global morning_check, noon_check, afternoon_check, night_check, sleep_check
@@ -184,12 +187,14 @@ def is_weekend(timezone_name="Asia/Bangkok"):
   return today.weekday() in [5, 6]
 
 # Lấy thời gian thực HH:MM:SS
-def get_real_time(timezone_name="Asia/Bangkok"):
+def get_real_time(timezone_name="Asia/Bangkok", date=False, raw=False):
     my_timezone = pytz.timezone(timezone_name)
     now = datetime.datetime.now(my_timezone)
 
-    return f"{now.hour}:{now.minute}:{now.second}"
-
+    if raw: return now
+    elif date: return now.hour, now.minute, now.second, now.day, now.month, now.year
+    else: return f"{now.hour}:{now.minute}:{now.second}"
+    
 # Lấy thời gian dựa theo tính cách
 def get_ctime(char, per, take, t="h"):
     with open('saves/char.json', "r", encoding="utf-8") as f:
