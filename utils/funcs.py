@@ -1210,7 +1210,7 @@ class Remind:
                       reminder_time = datetime.datetime(year=year, month=month, day=day, hour=hour, minute=minute)
                       remove = True
                       
-                  if (now >= reminder_time) and ok:
+                  if (now.time() >= reminder_time) and ok:
                       now_chat = val.now_chat
                       now_chat.append(f"SYSTEM: {hour}:{minute}-{day}{month}{year} now, {user_name} remind you to '{note}'")
                       val.set('now_chat', now_chat)
