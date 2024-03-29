@@ -1195,8 +1195,10 @@ class Remind:
         self.max_index = len(self.data)
         if self.max_index == 0: return
         
-        if self.max_index -1 >= index > -1: self.data.pop(index)
-      
+        if self.max_index -1 >= index > -1:
+            self.data.pop(index)
+            self.save()
+            
     async def check(self, now=None):
         from utils.daily import get_real_time
         from utils.bot import val, bot
