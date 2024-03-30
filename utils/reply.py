@@ -260,7 +260,13 @@ async def cmd_msg():
     if not u_msg: return
     ai_msg = val.now_chat_ai
     if not ai_msg: return
-
+    
+    ai_name = False
+    if not val.public: ai_name = True
+    else:
+        if val.ai_name.lower() in u_msg.lower():
+            ai_name = True
+    
     # User
     u_voice = re.search(r'vc|voice channel|voice chat|voice', u_msg, re.IGNORECASE)
     u_join = re.search(r'joi|jum|vào|nhảy|chui|vô|đi|nào', u_msg, re.IGNORECASE)
@@ -312,7 +318,7 @@ async def cmd_msg():
         mood_change("unlike")
         
     # Voice
-    if (u_voice or ai_voice or voice_follow) and (u_join or ai_join) and not ai_no and not (u_out or ai_out or u_remind):
+    if (u_voice or ai_voice or voice_follow) and (u_join or ai_join) and ai_name and not ai_no and not (u_out or ai_out or u_remind):
         if not voice_follow: voice_follow = True
         else: voice_follow = False
         
@@ -330,7 +336,7 @@ async def cmd_msg():
     else:
         val.set('vc_invited', False)
 
-    if (u_voice or ai_voice or voice_follow) and (u_out or ai_out) and not ai_no and not u_remind:
+    if (u_voice or ai_voice or voice_follow) and (u_out or ai_out) and ai_name and not ai_no and not u_remind:
         await v_leave_auto()
 
     
@@ -340,7 +346,7 @@ async def cmd_msg():
         
     
     # Đổi avatar:
-    if (u_avt or ai_avt) and (u_cg or ai_cg) and ai_ok and not ai_no and not u_remind:
+    if (u_avt or ai_avt) and (u_cg or ai_cg) and ai_ok and ai_name and not ai_no and not u_remind:
         
         if not val.public:
             if val.last_uid != val.owner_uid: return
@@ -357,7 +363,7 @@ async def cmd_msg():
                 val.set('now_chat', new_chat)
                 val.set('CD', 1)
                 pass
-    elif (u_banner or ai_banner) and (u_cg or ai_cg) and ai_ok and not ai_no and not u_remind:
+    elif (u_banner or ai_banner) and (u_cg or ai_cg) and ai_ok and ai_name and not ai_no and not u_remind:
         
         if not val.public:
             if val.last_uid != val.owner_uid: return
@@ -378,7 +384,7 @@ async def cmd_msg():
         val.set('cavatar', False)
 
     # Remind
-    if u_remind and u_tremind and u_num:
+    if u_remind and u_tremind and u_num and ai_name:
         if not val.remind_msg:
             hh, m, ss, dd, mm, yy = get_real_time(date=True)
             text = f"Now time today: {hh}|{m}, {dd}|{mm}|{yy}\n- Please analyze the chat below and return the reminder with the format: content|HH|MM|DD|MM|YY\nChat: '{u_msg}'"
