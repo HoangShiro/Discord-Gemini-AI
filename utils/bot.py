@@ -522,20 +522,28 @@ async def newchat(interaction: discord.Interaction):
         )
     mess = await interaction.response.send_message(embed=embed, view=view)
     await char_check()
-    await des_check()
-    await color_check()
     embed, view = await bot_notice(
-        tt="Đã làm mới cuộc trò chuyện 🌟",
-        footer=val.ai_des,
+        tt="Đang tạo cuộc trò chuyện mới 💫",
+        des=f"Đang tóm tắt bối cảnh...",
         ava_link=bot.user.display_avatar,
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
         )
     mess = await mess.edit_original_response(embed=embed)
-    
+    await des_check()
     embed, view = await bot_notice(
-        tt="Đã ",
+        tt="Đang tạo cuộc trò chuyện mới 💫",
+        des=f"Đang tạo màu mới cho {val.ai_name}...",
+        ava_link=bot.user.display_avatar,
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar,
+        )
+    mess = await mess.edit(embed=embed)
+    await color_check()
+    embed, view = await bot_notice(
+        tt="Đã làm mới cuộc trò chuyện 🌟",
         footer=val.ai_des,
         ava_link=bot.user.display_avatar,
         au_name=interaction.user.display_name,
