@@ -428,7 +428,8 @@ async def on_message(message: discord.Message):
 
     # Trả lời tin nhắn ngay nếu nhắc tới bot hoặc cho bot khác rep trước
     if bot.user in message.mentions:
-        asyncio.create_task(reply_id(channel=message, rep=True))
+        val.set('CD', 0)
+        #asyncio.create_task(reply_id(channel=message, rep=True))
     elif message.mentions and bot.user not in message.mentions:
         val.update('CD', 10)
 
