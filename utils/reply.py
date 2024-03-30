@@ -463,3 +463,8 @@ async def cmd_msg_user():
     from utils.ui import normal_embed
     from utils.funcs import list_to_str
     
+    u_msg = val.now_chat
+    if not u_msg: return
+    
+    time = re.search(r'giờ|time', u_msg, re.IGNORECASE)
+    nowtime = re.search(r'bây giờ|giờ là|mấy giờ|hiện tại|now|what time|today is|hôm nay là|tháng này là|năm nay là|thời gian thực|realtime|the time|s time', u_msg, re.IGNORECASE)
