@@ -415,6 +415,8 @@ async def on_message(message: discord.Message):
         if len(val.now_chat) >= 10:
             val.now_chat.pop(0)
 
+    await cmd_msg_user()
+    
     # Đợi đến lượt trả lời nếu người khác vẫn đang nhắn hoặc ưu tiên trả lời nếu có xuất hiện tên bot
     if val.CD_idle < val.to_worktime:
         bot_name = val.ai_name.split(" ")

@@ -1200,7 +1200,7 @@ class Remind:
             self.data.pop(index)
             self.save()
     
-    def handle_remind(reminder):
+    def handle_remind(self, reminder):
         """
         Handles reminder updates based on the request frequency.
 
@@ -1247,8 +1247,6 @@ class Remind:
         
         if not now: now = get_real_time(raw=True)
         
-        rh, rm, rs, rdd, rmm, ryy = get_real_time(date=True) 
-        
         self.get()
         if self.data:
           new_list = []
@@ -1276,7 +1274,7 @@ class Remind:
                       val.set('now_chat', now_chat)
                       val.set('CD', 1)
                       
-                      new_reminder = self.handle_remind(reminder=reminder)
+                      new_reminder = self.handle_remind(reminder)
                       if on_remove: remove = True
                       
                       print(f"{get_real_time()}> Đã nhắc {val.ai_name}.")

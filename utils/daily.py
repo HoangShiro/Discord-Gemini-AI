@@ -192,7 +192,7 @@ def get_real_time(timezone_name="Asia/Bangkok", date=False, raw=False):
     now = datetime.datetime.now(my_timezone)
 
     if raw: return now
-    elif date: return now.hour, now.minute, now.second, now.day, now.month, now.year
+    elif date: return f"{now.hour}:{now.minute} - {now.day}/{now.month}/{now.year}"
     else: return f"{now.hour}:{now.minute}:{now.second}"
     
 # Lấy thời gian dựa theo tính cách
