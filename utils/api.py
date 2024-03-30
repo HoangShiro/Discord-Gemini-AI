@@ -39,7 +39,7 @@ async def gemini_rep(mess, limit_check=True, creative_check=True):
     from utils.status import status_busy_set, status_chat_set
     
     """ GỬI TIN NHẮN TỚI GEMINI API"""
-    async def _clearchat():
+    async def _startchat():
         old_chat = val.now_chat                                     # Lưu chat mới vào chat cũ
         val.set('old_chat', old_chat) # Lưu chat cũ
         val.set('now_chat', [])                                     # Clear chat mới
@@ -115,23 +115,22 @@ async def gemini_rep(mess, limit_check=True, creative_check=True):
         val.update('one_rep', 1)
       
     
-    await _clearchat()
+    await _startchat()
     try:
         response = chat.send_message(mess)                          # Gửi tới API
     except Exception as e:
         print(f"{get_real_time()}> Lỗi GEMINI API: ", e)
         await _rechat()
         return None
-    
-    _addtime()
-    _limit_check()
 
     reply = await _filter(response.text)
     
     if not reply: return None
-    else:
-        _donechat()
-        return reply
+    
+    _addtime()
+    _limit_check()
+    _donechat()
+    return reply
 
 # Gemini Vision
 async def igemini_text(img, text=None):
