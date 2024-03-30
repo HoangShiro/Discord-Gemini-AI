@@ -423,12 +423,14 @@ async def on_message(message: discord.Message):
         if bot_name and val.public:
             for name in bot_name:
                 if name.lower() in chat.lower():
-                    val.set('CD', 3)
+                    val.set('CD', 1)
     elif val.public: val.set('CD', val.chat_speed)
 
-    # Trả lời tin nhắn ngay nếu nhắc tới bot
+    # Trả lời tin nhắn ngay nếu nhắc tới bot hoặc cho bot khác rep trước
     if bot.user in message.mentions:
         asyncio.create_task(reply_id(channel=message, rep=True))
+    elif bot.user not in message.mentions:
+        val.update('CD', 10)
 
 # set key
 @bot.slash_command(name="setkeys", description=f"Đổi key cho {val.ai_name}.")
