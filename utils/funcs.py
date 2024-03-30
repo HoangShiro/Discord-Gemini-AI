@@ -281,6 +281,7 @@ async def voice_make_tts(text):
     
     guild = bot.get_guild(val.ai_guild)
     # Huỷ nếu không trong voice
+    if not guild: return
     if not guild.voice_client: return
 
     voice_channels = guild.voice_channels
