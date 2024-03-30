@@ -1199,6 +1199,45 @@ class Remind:
         if self.max_index -1 >= index > -1:
             self.data.pop(index)
             self.save()
+    
+    def handle_remind(reminder):
+        """
+        Handles reminder updates based on the request frequency.
+
+        Args:
+            reminder: A list representing the reminder with format ["name", "note", "hour", "minute", "day", "month", "year", "loop", "mode"].
+            request: A string indicating the update frequency ("daily", "weekly", "monthly", "yearly").
+
+        Returns:
+            The updated reminder list.
+        """
+
+        name, note, hour, minute, day, month, year, loop, mode = reminder
+
+        # Convert reminder time to datetime object
+        reminder_datetime = datetime.datetime(year, month, day, hour, minute)
+
+        if loop == "daily":
+            delta = datetime.timedelta(days=1)
+        elif loop == "weekly":
+            delta = datetime.timedelta(weeks=1)
+        elif loop == "monthly":
+            delta = datetime.timedelta(days=30)  # Approximate month
+        elif loop == "yearly":
+            delta = datetime.timedelta(days=365)  # Approximate year
+        else:
+            return reminder
+
+        # Update the reminder time
+        new_datetime = reminder_datetime + delta
+
+        # Extract updated date and time components
+        updated_day = new_datetime.day
+        updated_month = new_datetime.month
+        updated_year = new_datetime.year
+
+        # Return the updated reminder list
+        return [name, note, hour, minute, updated_day, updated_month, updated_year, loop, mode]
             
     async def check(self, now=None):
         from utils.daily import get_real_time
@@ -1207,6 +1246,8 @@ class Remind:
         from utils.reply import get_channel, send_embed
         
         if not now: now = get_real_time(raw=True)
+        
+        rh, rm, rs, rdd, rmm, ryy = get_real_time(date=True) 
         
         self.get()
         if self.data:
@@ -1217,20 +1258,13 @@ class Remind:
               if len(reminder) == 9:
                   ok = True
                   user_name, note, hour, minute, day, month, year, loop, mode = reminder
-                  if loop == "daily":
-                      reminder_time = datetime.datetime(hour=hour, minute=minute)
-                  elif loop == "weekdays": 
-                      reminder_time = datetime.datetime(hour=hour, minute=minute)
+                  reminder_time = datetime.datetime(year=year, month=month, day=day, hour=hour, minute=minute)
+                  
+                  if loop == "weekdays": 
                       if val.weekend: ok = False
                   elif loop == "weekend":
-                      reminder_time = datetime.datetime(hour=hour, minute=minute)
                       if not val.weekend: ok = False
-                  elif loop == "monthly":
-                      reminder_time = datetime.datetime(month=month, day=day, hour=hour, minute=minute)
-                  elif loop == "yearly":
-                      reminder_time = datetime.datetime(year=year, month=month, day=day, hour=hour, minute=minute)
                   else:
-                      reminder_time = datetime.datetime(year=year, month=month, day=day, hour=hour, minute=minute)
                       on_remove = True
                   
                   now_datetime = datetime.datetime.combine(now.date(), now.time())
@@ -1240,6 +1274,7 @@ class Remind:
                       val.set('now_chat', now_chat)
                       val.set('CD', 1)
                       
+                      new_reminder = self.handle_remind(reminder=reminder)
                       if on_remove: remove = True
                       
                       print(f"{get_real_time()}> Đã nhắc {val.ai_name}.")
@@ -1268,8 +1303,8 @@ class Remind:
                           await asyncio.sleep(1)
                           await bot.close()
                       
-              if not remove: new_list.append(reminder)
-                
+              if not remove: new_list.append(new_reminder)
+              
                 
           self.data = new_list
           self.save()
