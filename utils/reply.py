@@ -463,7 +463,7 @@ async def cmd_msg_user():
     from utils.ui import normal_embed
     from utils.funcs import list_to_str
     
-    u_msg = val.now_chat
+    u_msg = list_to_str(val.now_chat)
     if not u_msg: return
     
     time = re.search(r'giờ|time', u_msg, re.IGNORECASE)
