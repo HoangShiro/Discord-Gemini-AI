@@ -532,7 +532,17 @@ async def newchat(interaction: discord.Interaction):
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
         )
-    await mess.edit_original_response(embed=embed)
+    mess = await mess.edit_original_response(embed=embed)
+    
+    embed, view = await bot_notice(
+        tt="Đã ",
+        footer=val.ai_des,
+        ava_link=bot.user.display_avatar,
+        au_name=interaction.user.display_name,
+        au_avatar=interaction.user.display_avatar,
+        au_link=interaction.user.display_avatar,
+        )
+    mess = await mess.edit_original_response(embed=embed)
 
 # Chuyển chế độ chat
 @bot.slash_command(name="chatmode", description=f"Kêu {val.ai_name} chat public/private.")
