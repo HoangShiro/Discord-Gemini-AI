@@ -252,11 +252,11 @@ def update_mood():
         val.set('mood_name', "excited")
         chat = val.mood_excited
     
-    if val.old_chat and val.mood_chat and chat:
+    """if val.old_chat and val.mood_chat and chat:
         new_chat = val.now_chat
         new_chat.append(chat)
         val.set('now_chat', new_chat)
-        val.set('mood_chat', False)
+        val.set('mood_chat', False)"""
 
 # Cập nhật voice
 def update_voice(mood):

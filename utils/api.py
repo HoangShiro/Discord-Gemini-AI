@@ -33,18 +33,27 @@ chat = model.start_chat(history=prompt)
 alt_trans = False
 
 # Gemini
-async def gemini_rep(mess):
+async def gemini_rep(mess, limit_check=True, creative_check=True):
     from utils.bot import val
     from utils.daily import get_real_time
     from utils.status import status_busy_set, status_chat_set
-
+    
     """ GỬI TIN NHẮN TỚI GEMINI API"""
-    async def _chat():
+    async def _clearchat():
+        old_chat = val.now_chat                                     # Lưu chat mới vào chat cũ
+        val.set('old_chat', old_chat) # Lưu chat cũ
+        val.set('now_chat', [])                                     # Clear chat mới
+        await status_chat_set()                                     # Set activity là đang chat
+        
+    async def _rechat():
         old_chat = val.old_chat                                     # Khôi phục lại chat của user từ chat cũ nếu API lỗi
         new_chat = val.now_chat
         all_chat = old_chat + new_chat
         val.set('now_chat', all_chat)
-
+        
+        chat.rewind()
+        await _error()
+        
     async def _error():
         val.update('stop_chat', 1)                                  # Dừng chat nếu lỗi quá 3 lần, thử lại sau khi bot rảnh trở lại
         if val.stop_chat == 3:
@@ -52,22 +61,25 @@ async def gemini_rep(mess):
             val.set('CD', val.to_breaktime)
             await status_busy_set()                                 # Set activity là đang bận
 
-    try:
-        old_chat = val.now_chat                                     # Lưu chat mới vào chat cũ
-        val.set('old_chat', old_chat) # Lưu chat cũ
-        val.set('now_chat', [])                                     # Clear chat mới
+    async def _filter(reply):
+        reply = clean_chat(reply)                                   # Check và lọc những từ không mong muốn       
+        if val.name_filter:                                         # Check và xoá tag name mở đầu
+            reply = name_cut(reply)                                 # Nếu sai tên, rep lại
+            if not reply:
+                await _rechat()
+                return None                                         
+        if creative_check:
+            reply = if_chat_loop(reply)                             # Nếu chat lặp lại, rep lại
+            if not reply:
+                await _rechat()
+                creative = load_prompt("saves/creative.txt")
+                chat.history.extend(creative)
+                return None
         
-        await status_chat_set()                                     # Set activity là đang chat
-        response = chat.send_message(mess)                          # Gửi với API
-
-        if val.to_worktime < 300:                                   # Bot sẽ muốn chat với user lâu hơn
-            if val.public: val.update('to_worktime', 10)
-            else: val.update('to_worktime', 120)
-
-        if val.public: val.set('CD', val.chat_speed)                # Bot sẽ rep ngay nếu là Owner nhắn trong DM channel
-        else: val.set('CD', 0)
-        val.set('CD_idle', 0)                                       # Reset thời gian chờ của bot
-
+        return reply
+    
+    def _limit_check():
+        if not limit_check: return
         remind = load_prompt("saves/limit.txt")                     # Kiểm tra xem bot có chat dài quá giới hạn, nếu có thì thêm lời nhắc vào history
         num = txt_read("saves/limit.txt")
         limit = 150
@@ -84,42 +96,42 @@ async def gemini_rep(mess):
             print("===== [CHAT HISTORY] =====")
             print(chat.history)
             print("\n")
+    
+    def _addtime():
+        if val.to_worktime < 300:                                   # Bot sẽ muốn chat với user lâu hơn
+            if val.public: val.update('to_worktime', 10)
+            else: val.update('to_worktime', 120)
 
-        reply = response.text
-        
-        reply = clean_chat(reply)                                   # Check và lọc những từ không mong muốn
-        
-        if val.name_filter:                                         # Check và xoá tag name mở đầu
-            reply = name_cut(reply)
-            if not reply:
-                await _chat()
-                chat.rewind()
-                await _error()
-                return None                                         # Nếu sai tên, rep lại
-                            
-        reply = if_chat_loop(reply)
-        if not reply:
-            await _chat()
-            chat.rewind()
-            creative = load_prompt("saves/creative.txt")
-            chat.history.extend(creative)
-            await _error()
-            return None                                             # Nếu chat lặp lại, rep lại
-
+        if val.public: val.set('CD', val.chat_speed)                
+        else: val.set('CD', 0)                                      # Bot sẽ rep ngay nếu là Owner nhắn trong DM channel
+        val.set('CD_idle', 0)                                       # Reset thời gian chờ của bot
+    
+    def _donechat():
         old_chat_ai = val.now_chat_ai
         val.set('old_chat_ai', old_chat_ai)
         val.set('now_chat_ai', reply)
         
         val.update('total_rep', 1)
         val.update('one_rep', 1)
-        return reply
+      
+    
+    await _clearchat()
+    try:
+        response = chat.send_message(mess)                          # Gửi tới API
     except Exception as e:
         print(f"{get_real_time()}> Lỗi GEMINI API: ", e)
-        await _chat()
-
-        await _error()
-        
+        await _rechat()
         return None
+    
+    _addtime()
+    _limit_check()
+
+    reply = await _filter(response.text)
+    
+    if not reply: return None
+    else:
+        _donechat()
+        return reply
 
 # Gemini Vision
 async def igemini_text(img, text=None):

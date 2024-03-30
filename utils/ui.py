@@ -141,7 +141,7 @@ async def rc_atv(interaction):
         rep = await gemini_rep(text)
         if not rep:
             await _chat()
-            rep = await gemini_rep(text)
+            rep = await gemini_rep(text, limit_check=False, creative_check=False)
             if not rep:
                 chat.history.extend(last)
                 return
