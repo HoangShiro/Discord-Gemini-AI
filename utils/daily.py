@@ -187,12 +187,13 @@ def is_weekend(timezone_name="Asia/Bangkok"):
   return today.weekday() in [5, 6]
 
 # Lấy thời gian thực HH:MM:SS
-def get_real_time(timezone_name="Asia/Bangkok", date=False, raw=False):
+def get_real_time(timezone_name="Asia/Bangkok", date=False, raw=False, full=False):
     my_timezone = pytz.timezone(timezone_name)
     now = datetime.datetime.now(my_timezone)
 
     if raw: return now
-    elif date: return f"{now.hour}:{now.minute} - {now.day}/{now.month}/{now.year}"
+    elif date: return now.hour, now.minute, now.second, now.day, now.month, now.year
+    elif full: return f"{now.hour}:{now.minute} - {now.day}/{now.month}/{now.year}"
     else: return f"{now.hour}:{now.minute}:{now.second}"
     
 # Lấy thời gian dựa theo tính cách
