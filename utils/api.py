@@ -98,13 +98,13 @@ async def gemini_rep(mess, limit_check=True, creative_check=True):
             print("\n")
     
     def _addtime():
-        if val.to_worktime < 300:                                   # Bot sẽ muốn chat với user lâu hơn
-            if val.public: val.update('to_worktime', 10)
-            else: val.update('to_worktime', 120)
+        if val.CD_idle > -300:                                   # Bot sẽ muốn chat với user lâu hơn
+            if val.public: val.update('CD_idle', -10)
+            else: val.update('CD_idle', -120)
 
         if val.public: val.set('CD', val.chat_speed)                
         else: val.set('CD', 0)                                      # Bot sẽ rep ngay nếu là Owner nhắn trong DM channel
-        val.set('CD_idle', 0)                                       # Reset thời gian chờ của bot
+        if val.CD_idle > 0: val.set('CD_idle', 0)                                       # Reset thời gian chờ của bot
     
     def _donechat():
         old_chat_ai = val.now_chat_ai
