@@ -1271,6 +1271,7 @@ class Remind:
                   if (now_datetime >= reminder_time) and ok:
                       now_chat = val.now_chat
                       now_chat.append(f"SYSTEM: {hour}:{minute}-{day}/{month}/{year} now, {user_name} remind you to '{note}'")
+                      val.set('remind_msg', True)
                       val.set('now_chat', now_chat)
                       val.set('CD', 1)
                       

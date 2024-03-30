@@ -254,11 +254,8 @@ async def cmd_msg():
     from utils.daily import get_real_time
     from utils.ui import normal_embed, bot_notice
     from utils.funcs import avatar_change, banner_change, mood_change, leave_voice
-
-    if val.last_chat == val.old_chat: return
     
     old_chat = val.old_chat
-    val.set('last_chat', old_chat)
     u_msg = list_to_str(old_chat)
     if not u_msg: return
     ai_msg = val.now_chat_ai
@@ -382,81 +379,84 @@ async def cmd_msg():
 
     # Remind
     if u_remind and u_tremind and u_num:
-        hh, m, ss, dd, mm, yy = get_real_time(date=True)
-        text = f"Now time today: {hh}|{m}, {dd}|{mm}|{yy}\n- Please analyze the chat below and return the reminder with the format: content|HH|MM|DD|MM|YY\nChat: '{u_msg}'"
-        async def create_remind():
-            try:
-                new_remind = []
-                remind = await gemini_cmd(text)
-                if val.chat_csl: print(f"{get_real_time()}> lời nhắc: ", {remind})
-                if ":" in remind: remind = remind.split(":")[1]
-                remind = remind.split("|")
-                if len(remind) == 6:
-                    for elm in remind:
-                        elm = elm.strip()
-                        new_remind.append(elm)
-                    
-                    if not new_remind[1]: new_remind[1] = hh
-                    if not new_remind[2]: new_remind[2] = m
-                    if not new_remind[3]: new_remind[3] = dd
-                    if not new_remind[4]: new_remind[4] = mm
-                    if not new_remind[5]: new_remind[5] = yy
-                    
-                    new_remind[1] = int(new_remind[1])
-                    new_remind[2] = int(new_remind[2])
-                    new_remind[3] = int(new_remind[3])
-                    new_remind[4] = int(new_remind[4])
-                    new_remind[5] = int(new_remind[5])
-                    
-                    loop = None
-                    mode = None
-                    
-                    if u_voice and u_join: mode = "voice join"
-                    if u_voice and u_out: mode = "voice leave"
-                    if u_avt and u_cg: mode = "avatar"
-                    if u_banner and u_cg: mode = "banner"
-                    if u_newchat: mode = "newchat"
-                    if u_update: mode = "update"
-                    
-                    if u_dayLremind: loop = "daily"
-                    if u_ndayLremind: loop = "weekdays"
-                    if u_bdayLremind: loop = "weekend"
-                    if u_weekLremind: loop = "weekly"
-                    if u_monthLremind: loop = "monthly"
-                    if u_yearLremind: loop = "yearly"
-                    
-                    new_remind.insert(0, val.last_uname)
-                    new_remind.append(loop)
-                    new_remind.append(mode)
-                    
-                    rm.add(new_remind)
-                    
-                    print(f"{get_real_time()}> Đã tạo lời nhắc cho {val.ai_name}.")
-                    
-                    user = await bot.fetch_user(val.owner_uid)
-                    
-                    embed, view = await bot_notice(
-                        tt="Đã thêm lời nhắc.",
-                        des=f"💬 Note: **{new_remind[0]} - {new_remind[1]}**\n⏲️ Time: **{new_remind[2]}:{new_remind[3]} - {new_remind[4]}/{new_remind[5]}/{new_remind[6]}**\n✨ Loop: **{new_remind[7]}**\n📳 CMD: **{new_remind[8]}**\n",
-                        footer="Có thể nhắc lại: Hàng ngày/tuần/tháng/năm | Ngày trong tuần | Ngày nghỉ.\nCác CMD được hỗ trợ: Voice join/leave | Avatar change | Banner change | Newchat | Update.",
-                        ava_link=bot.user.display_avatar,
-                        au_name=user.display_name,
-                        au_avatar=user.display_avatar,
-                        au_link=user.display_avatar,
-                        remind_btt=True,
-                        )
-                    
-                    await send_embed(embed=embed, view=view)
-                    return True
-            except Exception as e:
-                print(f"{get_real_time()}> lỗi khi tạo lời nhắc: ", e)
-                pass
-            
-            return False
-        if not await create_remind():
-            if not await create_remind():
-                await create_remind()
+        if not val.remind_msg:
+            hh, m, ss, dd, mm, yy = get_real_time(date=True)
+            text = f"Now time today: {hh}|{m}, {dd}|{mm}|{yy}\n- Please analyze the chat below and return the reminder with the format: content|HH|MM|DD|MM|YY\nChat: '{u_msg}'"
+            async def create_remind():
+                try:
+                    new_remind = []
+                    remind = await gemini_cmd(text)
+                    if val.chat_csl: print(f"{get_real_time()}> lời nhắc: ", {remind})
+                    if ":" in remind: remind = remind.split(":")[1]
+                    remind = remind.split("|")
+                    if len(remind) == 6:
+                        for elm in remind:
+                            elm = elm.strip()
+                            new_remind.append(elm)
+                        
+                        if not new_remind[1]: new_remind[1] = hh
+                        if not new_remind[2]: new_remind[2] = m
+                        if not new_remind[3]: new_remind[3] = dd
+                        if not new_remind[4]: new_remind[4] = mm
+                        if not new_remind[5]: new_remind[5] = yy
+                        
+                        new_remind[1] = int(new_remind[1])
+                        new_remind[2] = int(new_remind[2])
+                        new_remind[3] = int(new_remind[3])
+                        new_remind[4] = int(new_remind[4])
+                        new_remind[5] = int(new_remind[5])
+                        
+                        loop = None
+                        mode = None
+                        
+                        if u_voice and u_join: mode = "voice join"
+                        if u_voice and u_out: mode = "voice leave"
+                        if u_avt and u_cg: mode = "avatar"
+                        if u_banner and u_cg: mode = "banner"
+                        if u_newchat: mode = "newchat"
+                        if u_update: mode = "update"
+                        
+                        if u_dayLremind: loop = "daily"
+                        if u_ndayLremind: loop = "weekdays"
+                        if u_bdayLremind: loop = "weekend"
+                        if u_weekLremind: loop = "weekly"
+                        if u_monthLremind: loop = "monthly"
+                        if u_yearLremind: loop = "yearly"
+                        
+                        new_remind.insert(0, val.last_uname)
+                        new_remind.append(loop)
+                        new_remind.append(mode)
+                        
+                        rm.add(new_remind)
+                        
+                        print(f"{get_real_time()}> Đã tạo lời nhắc cho {val.ai_name}.")
+                        
+                        user = await bot.fetch_user(val.owner_uid)
+                        
+                        embed, view = await bot_notice(
+                            tt="Đã thêm lời nhắc.",
+                            des=f"💬 Note: **{new_remind[0]} - {new_remind[1]}**\n⏲️ Time: **{new_remind[2]}:{new_remind[3]} - {new_remind[4]}/{new_remind[5]}/{new_remind[6]}**\n✨ Loop: **{new_remind[7]}**\n📳 CMD: **{new_remind[8]}**\n",
+                            footer="Có thể nhắc lại: Hàng ngày/tuần/tháng/năm | Ngày trong tuần | Ngày nghỉ.\nCác CMD được hỗ trợ: Voice join/leave | Avatar change | Banner change | Newchat | Update.",
+                            ava_link=bot.user.display_avatar,
+                            au_name=user.display_name,
+                            au_avatar=user.display_avatar,
+                            au_link=user.display_avatar,
+                            remind_btt=True,
+                            )
+                        
+                        await send_embed(embed=embed, view=view)
+                        return True
+                except Exception as e:
+                    print(f"{get_real_time()}> lỗi khi tạo lời nhắc: ", e)
+                    pass
                 
+                return False
+            if not await create_remind():
+                if not await create_remind():
+                    await create_remind()
+        else:
+            val.set('remind_msg', False)
+        
 async def cmd_msg_user():
     from utils.bot import val, bot
     from utils.daily import get_real_time

@@ -36,7 +36,6 @@ class AllStatus:
         self.final_mess_id = 0              # ID tin nhắn cuối cùng trước khi update
         self.now_chat = []                  # Các chat hiện tại mà bot chưa rep
         self.old_chat = []                  # Các chat mà bot đã rep gần nhất
-        self.last_chat = []                 # Tin nhắn cũ đã được lưu trữ
         self.ignore_chat = []               # Các chat mà bot sẽ bơ
         self.now_chat_ai = ""               # Chat mới của bot
         self.old_chat_ai = ""               # chat cũ của bot
@@ -118,6 +117,9 @@ class AllStatus:
         # Speaker
         self.speaker_index = None
         self.style_index = None
+        
+        # Remind
+        self.remind_msg = False
         
     def update(self, val_name, value):
         if hasattr(self, val_name):
