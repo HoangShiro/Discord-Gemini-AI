@@ -264,9 +264,9 @@ async def cmd_msg():
     ai_name = False
     if not val.public: ai_name = True
     else:
-        if val.ai_name.lower() in u_msg.lower():
-            ai_name = True
-    
+        if val.ai_name.lower() in u_msg.lower(): ai_name = True
+        elif val.last_uid == val.owner_uid: ai_name = True
+        
     # User
     u_voice = re.search(r'vc|voice channel|voice chat|voice', u_msg, re.IGNORECASE)
     u_join = re.search(r'joi|jum|vào|nhảy|chui|vô|đi|nào', u_msg, re.IGNORECASE)
