@@ -973,7 +973,7 @@ async def show_remind(interaction: discord.Interaction, edit=None):
             if remind == now_remind: list_rm += f"{viewing}> `{h}:{m}-{dd}/{mm}/{yy}`: **{uname} - {note}** [{loop}|{mode}]\n"
             else: list_rm += f"{normal} `{h}:{m}-{dd}/{mm}/{yy}`: **{uname} - {note}** [{loop}|{mode}]\n"
     
-    if not list_rm: list_rm = f"\nHiện không có lời nhắc nào, hãy nhờ {val.ai_name} để thêm.\n"
+    if not list_rm: list_rm = f"\n> Hiện không có lời nhắc nào, hãy nhờ **{val.ai_name}** để thêm.\n"
     
     embed, view = await bot_notice(
         tt="Danh sách lời nhắc: ",
