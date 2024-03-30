@@ -542,7 +542,7 @@ async def newchat(interaction: discord.Interaction):
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
         )
-    mess = await mess.edit_original_response(embed=embed)
+    mess = await mess.edit(embed=embed)
 
 # Chuyển chế độ chat
 @bot.slash_command(name="chatmode", description=f"Kêu {val.ai_name} chat public/private.")
