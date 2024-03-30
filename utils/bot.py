@@ -431,7 +431,8 @@ async def on_message(message: discord.Message):
         val.set('CD', 1)
         #asyncio.create_task(reply_id(channel=message, rep=True))
     elif message.mentions and bot.user not in message.mentions:
-        val.update('CD', 10)
+        if val.CD_idle < val.to_worktime:
+            if val.CD - 10 < val.to_breaktime: val.update('CD', 10)
 
 # set key
 @bot.slash_command(name="setkeys", description=f"Đổi key cho {val.ai_name}.")
