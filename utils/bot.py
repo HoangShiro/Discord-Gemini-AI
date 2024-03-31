@@ -949,7 +949,7 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
 
     if quantity > 100: quantity = 100
     
-    content, embed, view = await art_embed(keys=keywords, img_url=val.last_img)
+    content, embed, view = await art_embed(keys=keywords, img_url="https://safebooru.org//images/4600/c0f567ee30f544fcd6074055b6c14f1a794ae50f.jpg")
     
     msg = await interaction.response.send_message(content=content, embed=embed, view=view)
     
