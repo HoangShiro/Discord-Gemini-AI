@@ -983,10 +983,10 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
     msg_id = msgs.id
     
     ok = False
-    #try:
-    ok = await art.search(msg_id, keywords=keywords, limit=quantity, page=page, random=random, gacha=gacha, block=val.img_block, mode=server)
-    #except Exception as e:
-    #    print(f"{get_real_time()}> Lỗi khi tìm art: ", e)
+    try:
+        ok = await art.search(msg_id, keywords=keywords, limit=quantity, page=page, random=random, gacha=gacha, block=val.img_block, mode=server)
+    except Exception as e:
+        print(f"{get_real_time()}> Lỗi khi tìm art: ", e)
         
     if ok: content, embed, view = await art_embed()
     else: content, embed, view = await art_embed(
