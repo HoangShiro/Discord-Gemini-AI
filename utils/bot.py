@@ -964,6 +964,12 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
     if server: val.set('search_mode', server)
     else: server = val.search_mode
     
+    if val.public:
+        if interaction.guild:
+            if not interaction.channel.nsfw:
+                if server != "safebooru":
+                    return await interaction.response.send_message(f"> Server hiện tại: `{val.search_mode}`. Chỉ có thể search art NSFW tại NSFW channels.", ephemeral=True)
+        
     if not keywords:
         keywords = val.ai_name.lower().replace(" ", "_")
         gacha = True
