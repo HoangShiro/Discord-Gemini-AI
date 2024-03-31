@@ -952,9 +952,7 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
     content, embed, view = await art_embed(keys=keywords, img_url="https://safebooru.org//images/4600/c0f567ee30f544fcd6074055b6c14f1a794ae50f.jpg")
     
     msg = await interaction.response.send_message(content=content, embed=embed, view=view)
-    
     msgs = await msg.original_response()
-    
     msg_id = msgs.id
     
     await art.search(msg_id, keywords=keywords, limit=quantity, page=page, random=random, gacha=gacha, block=val.img_block)
