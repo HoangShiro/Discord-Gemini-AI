@@ -1416,6 +1416,7 @@ class Art_Search:
         
         self.get(msg_id=msg_id)
         
+        return True
     def get(self, msg_id:int , turn:str=None):
         self.load()
         

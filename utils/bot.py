@@ -950,8 +950,8 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
     if quantity > 100: quantity = 100
     
     content, embed, view = await art_embed(
-        keys=keywords,
-        img_url="https://safebooru.org//images/4600/c0f567ee30f544fcd6074055b6c14f1a794ae50f.jpg",
+        title=keywords,
+        des=f"Đang tìm art với từ khoá: **{keywords}**...",
         next_bt=False,
         back_bt=False,
         )
@@ -960,10 +960,18 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
     msgs = await msg.original_response()
     msg_id = msgs.id
     
-    await art.search(msg_id, keywords=keywords, limit=quantity, page=page, random=random, gacha=gacha, block=val.img_block)
-    
-    content, embed, view = await art_embed(keys=keywords)
-    
+    ok = False
+    try:
+        ok = await art.search(msg_id, keywords=keywords, limit=quantity, page=page, random=random, gacha=gacha, block=val.img_block)
+    except Exception as e:
+        print(f"{get_real_time()}> Lỗi khi tìm art: ", e)
+        
+    if ok: content, embed, view = await art_embed()
+    else: content, embed, view = await art_embed(
+        title=keywords,
+        des="Không tìm thấy kết quả nào.\n",
+        img_url="https://safebooru.org//images/4607/ce2c013b6d00bb9991783672a14502fa6a4dd6d8.jpg"
+        )
     await msg.edit_original_response(content=content, embed=embed, view=view)
     
 def bot_run():

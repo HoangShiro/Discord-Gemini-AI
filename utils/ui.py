@@ -1041,39 +1041,39 @@ async def show_remind(interaction: discord.Interaction, edit=None):
 
 # Art search
 
-async def art_embed(keys=None, des=None, img_url: str=None, footer=None, next_bt=True, back_bt=True, remove_bt=True):
+async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_bt=True, back_bt=True, remove_bt=True):
     from utils.bot import bot, val, art
     from utils.funcs import hex_to_rgb, int_emoji
     
     if not img_url: img_url = art.img
-    
-    keywords = art.keywords
-    post = art.post
-    
-    if not keywords:
-        name = None
-        desc = f"Đang tìm art với từ khoá: **{keys}**..."
-    else:
+    if not title: title = art.keywords
+    if not des:
         now_index = int_emoji(art.now_index + 1)
         max_index = int_emoji(art.max_index)
-        
-        name = None
-        desc = f"**[{keywords}]({post})**\n{now_index}🔹{max_index} ➖ 💟 {art.rate}"
+        des = f"{now_index}🔹{max_index} ➖ 🔗 [post link]({art.post}) ➖ 💟 {art.rate}\n"
         
     r, g, b = hex_to_rgb(val.ai_color)
     color = discord.Colour.from_rgb(r, g, b)
     
+    
+    if not img_url:
+        embed=discord.Embed(title=title, description=des, color=color)
+        if img_url: embed.set_image(url="https://safebooru.org//images/4600/c0f567ee30f544fcd6074055b6c14f1a794ae50f.jpg")
+        if footer: embed.set_footer(footer)
+        content = None
+        
     if img_url.endswith((".png",".jpeg",".jpg",".webp",".gif")):
-        embed=discord.Embed(title=name, description=desc, color=color)
+        embed=discord.Embed(title=title, description=des, color=color)
         if img_url: embed.set_image(url=img_url)
         if footer: embed.set_footer(footer)
         content = None
+        
     else:
         if footer:
-            noti = f"\n{footer}"
+            noti = f"\n{footer}\n"
         else:
             noti = ""
-        content = f"({art.keywords})[{art.img}]\n{now_index}🔹{max_index} ➖ 💟 {art.rate}{noti}"
+        content = f"{now_index}🔹{max_index} ➖ 🔗 [post link]({art.img}) ➖ 💟 {art.rate}{noti}"
 
         embed = None
         
