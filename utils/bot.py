@@ -970,6 +970,7 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
 
     if quantity > 100: quantity = 100
     
+    art.img = None
     content, embed, view = await art_embed(
         title="Đang tìm artworks ✨",
         des=f"Đang tìm art với từ khoá: **{keywords}**...",
