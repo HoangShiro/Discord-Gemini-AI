@@ -1414,6 +1414,7 @@ class Art_Search:
             
         self.data.append([msg_id, now_index, list_img])
         self.keywords = fix_kws
+        self.img = list_img[0]
         
         self.save()
         
