@@ -1418,7 +1418,7 @@ class Art_Search:
     def get(self, msg_id:int , turn:str=None):
         self.load()
         
-        data = next((index, item[1], item[2]) for index, item in enumerate(self.data) if item[0] == msg_id)
+        data = next((index, item[1], item[2], item[3]) for index, item in enumerate(self.data) if item[0] == msg_id)
         
         data_index = data[0]
         
