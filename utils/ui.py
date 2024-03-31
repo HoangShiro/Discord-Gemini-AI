@@ -1069,8 +1069,8 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
         if footer:
             noti = f"\n{footer}\n"
         else:
-            noti = ""
-        content = f"{now_index}🔹{max_index} ➖ 💟 {art.rate}\n🔗 [post link]({art.img}){noti}"
+            noti = "\n"
+        content = f"{title}\n\n{now_index}🔹{max_index} ➖ 💟 {art.rate}\n🔗 [post link]({art.img}){noti}"
 
         embed = None
         
