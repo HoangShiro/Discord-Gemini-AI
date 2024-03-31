@@ -961,7 +961,7 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
     
     content, embed, view = await art_embed(keys=keywords)
     
-    await msg.response.edit_message(content, embed, view)
+    await msg.response.edit_message(content=content, embed=embed, view=view)
     
 def bot_run():
     try:
