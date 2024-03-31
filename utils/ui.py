@@ -1110,8 +1110,8 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
         embed = None
         
     view = View(timeout=None)
-    if back_bt and max_index > 1: view.add_item(aback_bt)
-    if next_bt and max_index > 1: view.add_item(anext_bt)
+    if back_bt and art.max_index > 1: view.add_item(aback_bt)
+    if next_bt and art.max_index > 1: view.add_item(anext_bt)
     if send_bt: view.add_item(asend_bt)
     if remove_bt: view.add_item(rmv_art_bt)
     
