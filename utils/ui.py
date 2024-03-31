@@ -455,8 +455,11 @@ async def random_art_atv(interaction: discord.Interaction):
     
     msgs = interaction.message
     msg_id = msgs.id
+    try:
+        ok = await art.search(msg_id, keywords=val.last_keywords, gacha=True, block=val.img_block, mode=val.search_mode)
+    except Exception as e:
+        pass
     
-    ok = await art.search(msg_id, keywords=val.last_keywords, gacha=True, block=val.img_block, mode=val.search_mode)
     content, embed, view = await art_embed()
     await interaction.response.edit_message(content=content, embed=embed, view=view)
 
@@ -1073,7 +1076,7 @@ async def show_remind(interaction: discord.Interaction, edit=None):
 
 # Art search
 
-async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_bt=True, back_bt=True, remove_bt=True, send_bt=True):
+async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_bt=True, back_bt=True, remove_bt=True, send_bt=True, random_bt=True):
     from utils.bot import bot, val, art
     from utils.funcs import hex_to_rgb, int_emoji
     
@@ -1112,6 +1115,7 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
     view = View(timeout=None)
     if back_bt and art.max_index > 1: view.add_item(aback_bt)
     if next_bt and art.max_index > 1: view.add_item(anext_bt)
+    if random_bt and art.max_index == 1: view.add_item(arandom_bt)
     if send_bt: view.add_item(asend_bt)
     if remove_bt: view.add_item(rmv_art_bt)
     
