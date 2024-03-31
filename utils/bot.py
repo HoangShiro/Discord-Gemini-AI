@@ -975,6 +975,7 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
         des=f"Đang tìm art với từ khoá: **{keywords}**...",
         next_bt=False,
         back_bt=False,
+        send_bt=False,
         )
     
     msg = await interaction.response.send_message(content=content, embed=embed, view=view)
