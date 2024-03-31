@@ -1059,13 +1059,13 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
     if not img_url:
         embed=discord.Embed(title=title, description=des, color=color)
         if img_url: embed.set_image(url="https://safebooru.org//images/4600/c0f567ee30f544fcd6074055b6c14f1a794ae50f.jpg")
-        if footer: embed.set_footer(footer)
+        if footer: embed.set_footer(footer=footer)
         content = None
         
     elif img_url.endswith((".png",".jpeg",".jpg",".webp",".gif")):
         embed=discord.Embed(title=title, description=des, color=color)
         if img_url: embed.set_image(url=img_url)
-        if footer: embed.set_footer(footer)
+        if footer: embed.set_footer(footer=footer)
         content = None
         
     else:
