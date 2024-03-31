@@ -1370,7 +1370,7 @@ class Art_Search:
         tags = keywords.split(",") if "," in keywords else keywords.split()
         tasks = []
         for tag in tags:
-            task = asyncio.create_task(engine.find_tags(query=tag))
+            task = asyncio.create_task(engine.find_tags(query=tag.strip()))
             tasks.append(task)
         found_tags = []
         results = await asyncio.gather(*tasks)
