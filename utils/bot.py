@@ -992,7 +992,10 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
     else: content, embed, view = await art_embed(
         title=keywords,
         des="Không tìm thấy kết quả nào.\n",
-        img_url="https://safebooru.org//images/4607/ce2c013b6d00bb9991783672a14502fa6a4dd6d8.jpg"
+        img_url="https://safebooru.org//images/4607/ce2c013b6d00bb9991783672a14502fa6a4dd6d8.jpg",
+        next_bt=False,
+        back_bt=False,
+        send_bt=False,
         )
     await msg.edit_original_response(content=content, embed=embed, view=view)
     
