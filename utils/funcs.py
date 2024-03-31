@@ -1361,7 +1361,6 @@ class Art_Search:
         self.max_index = None
         
         self.keywords = None
-        self.mode = "safebooru"
         self.img = None
         self.rate = None
         self.post = None
@@ -1386,20 +1385,20 @@ class Art_Search:
         
         return tags_str
 
-    async def search(self, msg_id, keywords, limit=10, page=1, random=False, gacha=False, block=""):
+    async def search(self, msg_id, keywords, limit=10, page=1, random=False, gacha=False, block="", mode="safebooru"):
         se = booru.Safebooru()
-        if self.mode == "gelbooru": se = booru.Gelbooru() 
-        elif self.mode == "rule34": se = booru.Rule34()
-        elif self.mode == "tbib": se = booru.Tbib()
-        elif self.mode == "xbooru": se = booru.Xbooru()
-        elif self.mode == "realbooru": se = booru.Realbooru()
-        elif self.mode == "hypnohub": se = booru.Hypnohub()
-        elif self.mode == "danbooru": se = booru.Danbooru()
-        elif self.mode == "atfbooru": se = booru.Atfbooru()
-        elif self.mode == "yandere": se = booru.Yandere()
-        elif self.mode == "konachan": se = booru.Konachan()
-        elif self.mode == "konachan_net": se = booru.Konachan_Net()
-        elif self.mode == "lolibooru": se = booru.Lolibooru()
+        if mode == "gelbooru": se = booru.Gelbooru() 
+        elif mode == "rule34": se = booru.Rule34()
+        elif mode == "tbib": se = booru.Tbib()
+        elif mode == "xbooru": se = booru.Xbooru()
+        elif mode == "realbooru": se = booru.Realbooru()
+        elif mode == "hypnohub": se = booru.Hypnohub()
+        elif mode == "danbooru": se = booru.Danbooru()
+        elif mode == "atfbooru": se = booru.Atfbooru()
+        elif mode == "yandere": se = booru.Yandere()
+        elif mode == "konachan": se = booru.Konachan()
+        elif mode == "konachan_net": se = booru.Konachan_Net()
+        elif mode == "lolibooru": se = booru.Lolibooru()
             
         fix_kws = await self.find(se, keywords)
         img_urls = await se.search(query=fix_kws, limit=limit, page=page, random=random, gacha=gacha, block=block)

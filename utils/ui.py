@@ -453,10 +453,7 @@ async def remove_art_atv(interaction: discord.Interaction):
     
     removed = art.remove(msg_id)
     
-    if removed: await interaction.message.delete()
-    else:
-        content, embed, view = await art_embed(footer="Lỗi khi xoá: ID không tồn tại.")
-        await interaction.response.edit_message(content=content, embed=embed, view=view)
+    await interaction.message.delete()
         
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):

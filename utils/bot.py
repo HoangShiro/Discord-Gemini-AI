@@ -123,6 +123,7 @@ class AllStatus:
         
         # Art
         self.img_block = "futanari furry bestiality yaoi hairy"
+        self.search_mode = "safebooru"
         
     def update(self, val_name, value):
         if hasattr(self, val_name):
@@ -939,8 +940,28 @@ async def remind_list(interaction: discord.Interaction):
 
 # Search art
 @bot.slash_command(name="art", description=f"tìm kiếm art")
-async def art_search(interaction: discord.Interaction, keywords: str=None, quantity: int=1, page: int=1, random: bool=False, gacha: bool=False):
+async def art_search(interaction: discord.Interaction, keywords: str=None, quantity: int=1, page: int=1, random: bool=False, gacha: bool=False, server: discord.Option(
+        description="Chọn server search:",
+        choices=[
+            discord.OptionChoice(name="safebooru"),
+            discord.OptionChoice(name="gelbooru"),
+            discord.OptionChoice(name="rule34"),
+            discord.OptionChoice(name="tbib"),
+            discord.OptionChoice(name="xbooru"),
+            discord.OptionChoice(name="realbooru"),
+            discord.OptionChoice(name="hypnohub"),
+            discord.OptionChoice(name="danbooru"),
+            discord.OptionChoice(name="atfbooru"),
+            discord.OptionChoice(name="yandere"),
+            discord.OptionChoice(name="konachan"),
+            discord.OptionChoice(name="konachan_net"),
+            discord.OptionChoice(name="lolibooru"),
+        ],
+    ) = None):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    if server: val.set('search_mode', server)
+    else: server = val.search_mode
     
     if not keywords:
         keywords = val.ai_name.lower().replace(" ", "_")
@@ -950,7 +971,7 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
     if quantity > 100: quantity = 100
     
     content, embed, view = await art_embed(
-        title=keywords,
+        title="Đang tìm artworks ✨",
         des=f"Đang tìm art với từ khoá: **{keywords}**...",
         next_bt=False,
         back_bt=False,
@@ -962,7 +983,7 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
     
     ok = False
     try:
-        ok = await art.search(msg_id, keywords=keywords, limit=quantity, page=page, random=random, gacha=gacha, block=val.img_block)
+        ok = await art.search(msg_id, keywords=keywords, limit=quantity, page=page, random=random, gacha=gacha, block=val.img_block, mode=server)
     except Exception as e:
         print(f"{get_real_time()}> Lỗi khi tìm art: ", e)
         
