@@ -426,7 +426,7 @@ async def next_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    msgs = await interaction.message
+    msgs = interaction.message
     msg_id = msgs.id
     
     art.get(msg_id, "+")
