@@ -1402,12 +1402,13 @@ class Art_Search:
             
         fix_kws = await self.find(se, keywords)
         img_urls = await se.search(query=fix_kws, limit=limit, page=page, random=random, gacha=gacha, block=block)
-        print(img_urls)
         imgs = booru.resolve(img_urls)
         list_img = []
         now_index = 0
-        for img in imgs:
-            list_img.append([img["file_url"], img["post_url"], img["rating"]])
+        if not gacha:
+            for img in imgs: list_img.append([img["file_url"], img["post_url"], img["rating"]])
+        else:
+            list_img.append([imgs["file_url"], imgs["post_url"], imgs["rating"]])
             
         self.data.append([msg_id, now_index, list_img, fix_kws])
         
