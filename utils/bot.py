@@ -124,6 +124,7 @@ class AllStatus:
         # Art
         self.img_block = "futanari furry bestiality yaoi hairy"
         self.search_mode = "safebooru"
+        self.last_keywords = None
         
     def update(self, val_name, value):
         if hasattr(self, val_name):
@@ -968,6 +969,8 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
         gacha = True
         random = True
 
+    val.set('last_keywords', keywords)
+    
     if quantity > 100: quantity = 100
     
     art.img = None

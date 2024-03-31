@@ -49,6 +49,7 @@ rmv_remind_bt = discord.ui.Button(label="Remove", custom_id="remind_remove", sty
 anext_bt = discord.ui.Button(label="🔆 next", custom_id="art_next", style=discord.ButtonStyle.green)
 aback_bt = discord.ui.Button(label="🔅 back", custom_id="art_back", style=discord.ButtonStyle.green)
 
+arandom_bt = discord.ui.Button(label="✨ random", custom_id="art_random", style=discord.ButtonStyle.green)
 asend_bt = discord.ui.Button(label="💖 send", custom_id="art_send", style=discord.ButtonStyle.blurple)
 rmv_art_bt = discord.ui.Button(label="➖", custom_id="art_remove", style=discord.ButtonStyle.grey)
 
@@ -101,6 +102,7 @@ async def load_btt():
     anext_bt.callback = next_art_atv
     aback_bt.callback = back_art_atv
     asend_bt.callback = send_art_atv
+    arandom_bt.callback = random_art_atv
     rmv_art_bt.callback = remove_art_atv
     
 # Button add
@@ -444,6 +446,17 @@ async def back_art_atv(interaction: discord.Interaction):
     msg_id = msgs.id
     
     art.get(msg_id, "-")
+    content, embed, view = await art_embed()
+    await interaction.response.edit_message(content=content, embed=embed, view=view)
+
+async def random_art_atv(interaction: discord.Interaction):
+    from utils.bot import val, art
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
+    msgs = interaction.message
+    msg_id = msgs.id
+    
+    ok = await art.search(msg_id, keywords=val.last_keywords, gacha=True, block=val.img_block, mode=val.search_mode)
     content, embed, view = await art_embed()
     await interaction.response.edit_message(content=content, embed=embed, view=view)
 
@@ -1097,8 +1110,8 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
         embed = None
         
     view = View(timeout=None)
-    if back_bt: view.add_item(aback_bt)
-    if next_bt: view.add_item(anext_bt)
+    if back_bt and max_index > 1: view.add_item(aback_bt)
+    if next_bt and max_index > 1: view.add_item(anext_bt)
     if send_bt: view.add_item(asend_bt)
     if remove_bt: view.add_item(rmv_art_bt)
     
