@@ -48,6 +48,8 @@ rmv_remind_bt = discord.ui.Button(label="Remove", custom_id="remind_remove", sty
 # Art
 anext_bt = discord.ui.Button(label="🔆 next", custom_id="art_next", style=discord.ButtonStyle.green)
 aback_bt = discord.ui.Button(label="🔅 back", custom_id="art_back", style=discord.ButtonStyle.green)
+
+asend_bt = discord.ui.Button(label="💖 send", custom_id="art_send", style=discord.ButtonStyle.blurple)
 rmv_art_bt = discord.ui.Button(label="➖", custom_id="art_remove", style=discord.ButtonStyle.grey)
 
 """ BUTTON """
@@ -98,6 +100,7 @@ async def load_btt():
     # Art
     anext_bt.callback = next_art_atv
     aback_bt.callback = back_art_atv
+    asend_bt.callback = send_art_atv
     rmv_art_bt.callback = remove_art_atv
     
 # Button add
@@ -454,7 +457,19 @@ async def remove_art_atv(interaction: discord.Interaction):
     removed = art.remove(msg_id)
     
     await interaction.message.delete()
-        
+
+async def send_art_atv(interaction: discord.Interaction):
+    from utils.bot import val, art
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
+    msgs = interaction.message
+    msg_id = msgs.id
+    
+    art.get(msg_id)
+    
+    await interaction.response.send_message(art.img)
+    
+     
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
     from utils.bot import bot, val
@@ -1038,7 +1053,7 @@ async def show_remind(interaction: discord.Interaction, edit=None):
 
 # Art search
 
-async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_bt=True, back_bt=True, remove_bt=True):
+async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_bt=True, back_bt=True, remove_bt=True, send_bt=True):
     from utils.bot import bot, val, art
     from utils.funcs import hex_to_rgb, int_emoji
     
@@ -1077,6 +1092,7 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
     view = View(timeout=None)
     if back_bt: view.add_item(aback_bt)
     if next_bt: view.add_item(anext_bt)
+    if send_bt: view.add_item(asend_bt)
     if remove_bt: view.add_item(rmv_art_bt)
     
     return content, embed, view
