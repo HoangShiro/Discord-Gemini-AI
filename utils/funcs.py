@@ -1424,6 +1424,8 @@ class Art_Search:
         
         art_index = data[1]
         arts = data[2]
+        self.keywords = data[3]
+        
         max_art_index = len(arts)
         if max_art_index == 0: return
         
@@ -1439,7 +1441,6 @@ class Art_Search:
         self.post = arts[art_index][1]
         self.rate = arts[art_index][2]
 
-        self.keywords = data[3]
         self.data[data_index][1] = art_index
         self.now_index = art_index
         self.max_index = max_art_index
