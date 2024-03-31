@@ -1407,8 +1407,11 @@ class Art_Search:
         list_img = []
         now_index = 0
         for img in imgs:
-            list_img.append([img["file_url"], img["post_url"], img["rating"]])
-        
+            list_img.append(img["file_url"])
+            list_img.append(img["post_url"])
+            list_img.append(img["rating"])
+            
+            
         self.data.append([msg_id, now_index, list_img])
         self.keywords = fix_kws
         
