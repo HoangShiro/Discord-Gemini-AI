@@ -1262,7 +1262,7 @@ class Remind:
                       if val.weekend: ok = False
                   elif loop == "weekend":
                       if not val.weekend: ok = False
-                  else:
+                  elif not loop:
                       on_remove = True
                   
                   now_datetime = datetime.datetime.combine(now.date(), now.time())
