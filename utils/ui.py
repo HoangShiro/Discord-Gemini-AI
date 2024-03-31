@@ -1069,7 +1069,7 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
     if not des:
         now_index = int_emoji(art.now_index + 1)
         max_index = int_emoji(art.max_index)
-        des = f"💟 {art.rate} ➖ 🔗 [post link]({art.post})\n{now_index}🔹{max_index}\n"
+        des = f"💟 {art.rate} ➖ 🔗 [post link]({art.post})\n\n{now_index}🔹{max_index}\n"
         
     r, g, b = hex_to_rgb(val.ai_color)
     color = discord.Colour.from_rgb(r, g, b)
@@ -1092,7 +1092,7 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
             noti = f"\n{footer}\n"
         else:
             noti = "\n"
-        content = f"{title}\n\n💟 {art.rate} ➖ 🔗 [post link]({art.img})\n{now_index}🔹{max_index}{noti}"
+        content = f"{title}\n\n💟 {art.rate} ➖ 🔗 [post link]({art.img})\n\n{now_index}🔹{max_index}{noti}"
 
         embed = None
         
