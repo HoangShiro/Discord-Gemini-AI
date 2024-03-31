@@ -470,7 +470,7 @@ async def send_art_atv(interaction: discord.Interaction):
     
     art.get(msg_id)
     text = IMG_link_read(art.img)
-    if not text: text = f"*đã gửi cho bạn art: {art.img}*"
+    if not text: text = f"*đã gửi cho bạn art:* {art.img}"
     
     now_chat = val.now_chat
     now_chat.append(text)
