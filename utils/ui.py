@@ -426,7 +426,9 @@ async def next_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    art.get(interaction.message.id, "+")
+    msg = await interaction.original_message()
+    
+    art.get(msg.id, "+")
     content, embed, view = await art_embed()
     await interaction.response.edit_message(content=content, embed=embed, view=view)
 
@@ -434,7 +436,9 @@ async def back_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    art.get(interaction.message.id, "-")
+    msg = await interaction.original_message()
+    
+    art.get(msg.id, "-")
     content, embed, view = await art_embed()
     await interaction.response.edit_message(content=content, embed=embed, view=view)
 
@@ -442,7 +446,9 @@ async def remove_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    removed = art.remove(interaction.message.id)
+    msg = await interaction.original_message()
+    
+    removed = art.remove(msg.id)
     
     if removed: await interaction.message.delete()
     else:
@@ -1043,7 +1049,7 @@ async def art_embed(keys=None, des=None, img_url: str=None, footer=None):
     
     if not keywords:
         name = None
-        desc = f"Đang tìm art với từ khoá: '{keys}'..."
+        desc = f"Đang tìm art với từ khoá: **{keys}**..."
     else:
         name = f"({keywords})[{post}]"
         desc = f"{now_index}🔹{max_index}        💟 {art.rate}"

@@ -951,13 +951,15 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
     
     content, embed, view = await art_embed(keys=keywords, img_url="https://safebooru.org//images/4600/c0f567ee30f544fcd6074055b6c14f1a794ae50f.jpg")
     
-    msg = await interaction.response.send_message(content=content, embed=embed, view=view)
+    await interaction.response.send_message(content=content, embed=embed, view=view)
     
-    await art.search(msg.message.id, keywords=keywords, limit=quantity, page=page, random=random, gacha=gacha, block=val.img_block)
+    msg = await interaction.original_message()
+    
+    await art.search(msg.id, keywords=keywords, limit=quantity, page=page, random=random, gacha=gacha, block=val.img_block)
     
     content, embed, view = await art_embed(keys=keywords)
     
-    await msg.response.edit_message(content, embed, view)
+    await msg.edit(content, embed, view)
     
 def bot_run():
     try:
