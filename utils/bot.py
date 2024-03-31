@@ -953,9 +953,11 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
     
     msg = await interaction.response.send_message(content=content, embed=embed, view=view)
     
-    msgid = await msg.original_message()
+    msgs = await msg.original_response()
     
-    await art.search(msgid.id, keywords=keywords, limit=quantity, page=page, random=random, gacha=gacha, block=val.img_block)
+    msg_id = msgs.id
+    
+    await art.search(msg_id, keywords=keywords, limit=quantity, page=page, random=random, gacha=gacha, block=val.img_block)
     
     content, embed, view = await art_embed(keys=keywords)
     
