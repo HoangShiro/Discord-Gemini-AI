@@ -1408,8 +1408,7 @@ class Art_Search:
         for img in imgs:
             list_img.append([img["file_url"], img["post_url"], img["rating"]])
             
-        self.data.append([msg_id, now_index, list_img])
-        self.keywords = fix_kws
+        self.data.append([msg_id, now_index, list_img, fix_kws])
         
         self.save()
         
@@ -1440,6 +1439,7 @@ class Art_Search:
         self.post = arts[art_index][1]
         self.rate = arts[art_index][2]
 
+        self.keywords = data[3]
         self.data[data_index][1] = art_index
         self.now_index = art_index
         self.max_index = max_art_index
