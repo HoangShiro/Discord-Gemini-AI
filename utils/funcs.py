@@ -1410,8 +1410,18 @@ class Art_Search:
             for img in imgs: list_img.append([img["file_url"], img["post_url"], img["rating"]])
         else:
             list_img.append([imgs["file_url"], imgs["post_url"], imgs["rating"]])
+        
+        data = None
+        try:
+            data = next((index) for index, item in enumerate(self.data) if item[0] == msg_id)
+        except Exception as e:
+            pass
+        
+        if data:
+            index = data[0]
+            self.data[index][2] = list_img
             
-        self.data.append([msg_id, now_index, list_img, fix_kws])
+        else: self.data.append([msg_id, now_index, list_img, fix_kws])
         
         self.save()
         
