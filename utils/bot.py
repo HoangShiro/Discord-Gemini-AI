@@ -121,6 +121,9 @@ class AllStatus:
         # Remind
         self.remind_msg = False
         
+        # Art
+        self.img_block = "futanari furry bestiality yaoi hairy"
+        
     def update(self, val_name, value):
         if hasattr(self, val_name):
             current_value = getattr(self, val_name)
@@ -206,6 +209,9 @@ sk.get_data()
 
 rm = Remind()
 rm.get()
+
+art = Art_Search()
+art.load()
 
 intents = discord.Intents.all()
 bot = commands.Bot(intents=intents, command_prefix="/")
@@ -930,39 +936,29 @@ async def remind_list(interaction: discord.Interaction):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
     await show_remind(interaction=interaction)
-    
-"""# Load plugin
-@bot.slash_command(name="loadplug", description=f"Load các plugin cho {val.ai_name}")
-async def loadplugin(interaction: discord.Interaction, name: str = None):
+
+# Search art
+@bot.slash_command(name="art", description=f"tìm kiếm art")
+async def art_search(interaction: discord.Interaction, keywords: str=None, quantity: int=1, page: int=1, random: bool=False, gacha: bool=False):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
-
-    val.update('total_cmd', 1)
-    val.update('one_cmd', 1)
     
-    no = "> Đã load plugin."
-    if name:
-        ok = await load_plugin(name)
-        if not ok: no = "> Có lỗi khi load plugin."
-    else:
-        await load_all_plugin()
-        no = "> Đã thử load các plugin."
-    
-    await interaction.response.send_message(no, ephemeral=True)
+    if not keywords:
+        keywords = val.ai_name.lower().replace(" ", "_")
+        gacha = True
+        random = True
 
-# Load plugin
-@bot.slash_command(name="reloadplug", description=f"Reload plugin cho {val.ai_name}")
-async def reloadplugin(interaction: discord.Interaction, name: str):
-    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
-
-    val.update('total_cmd', 1)
-    val.update('one_cmd', 1)
+    if quantity > 100: quantity = 100
     
-    no = "> Đã reload plugin."
-    ok = await reload_plugin(name)
-    if not ok: no = "> Có lỗi khi reload plugin."
+    content, embed, view = await art_embed(keys=keywords)
     
-    await interaction.response.send_message(no, ephemeral=True)"""
-
+    msg = await interaction.response.send_message(content=content, embed=embed, view=view)
+    
+    await art.search(msg.message.id, keywords=keywords, limit=quantity, page=page, random=random, gacha=gacha, block=val.img_block)
+    
+    content, embed, view = await art_embed(keys=keywords)
+    
+    await msg.response.edit_message(content, embed, view)
+    
 def bot_run():
     try:
         bot.run(val.bot_key)

@@ -45,6 +45,11 @@ rback_bt = discord.ui.Button(label="🔅 back", custom_id="remind_back", style=d
 remind_bt = discord.ui.Button(label="⏰ remind", custom_id="remind", style=discord.ButtonStyle.green)
 rmv_remind_bt = discord.ui.Button(label="Remove", custom_id="remind_remove", style=discord.ButtonStyle.red)
 
+# Art
+anext_bt = discord.ui.Button(label="🔆 next", custom_id="art_next", style=discord.ButtonStyle.green)
+aback_bt = discord.ui.Button(label="🔅 back", custom_id="art_back", style=discord.ButtonStyle.green)
+rmv_art_bt = discord.ui.Button(label="➖", custom_id="art_remove", style=discord.ButtonStyle.grey)
+
 """ BUTTON """
 
 # Button call
@@ -89,6 +94,11 @@ async def load_btt():
     rback_bt.callback = back_remind_atv
     remind_bt.callback = remind_atv
     rmv_remind_bt.callback = remove_remind_atv
+    
+    # Art
+    anext_bt.callback = next_art_atv
+    aback_bt.callback = back_art_atv
+    rmv_art_bt.callback = remove_art_atv
     
 # Button add
 async def DM_button():
@@ -411,6 +421,34 @@ async def remove_remind_atv(interaction: discord.Interaction):
     rm.remove()
     await show_remind(interaction=interaction, edit=True)
 
+# Art search
+async def next_art_atv(interaction: discord.Interaction):
+    from utils.bot import val, art
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
+    art.get(interaction.message.id, "+")
+    content, embed, view = await art_embed()
+    await interaction.response.edit_message(content=content, embed=embed, view=view)
+
+async def back_art_atv(interaction: discord.Interaction):
+    from utils.bot import val, art
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
+    art.get(interaction.message.id, "-")
+    content, embed, view = await art_embed()
+    await interaction.response.edit_message(content=content, embed=embed, view=view)
+
+async def remove_art_atv(interaction: discord.Interaction):
+    from utils.bot import val, art
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
+    removed = art.remove(interaction.message.id)
+    
+    if removed: await interaction.message.delete()
+    else:
+        content, embed, view = await art_embed(footer="Lỗi khi xoá: ID không tồn tại.")
+        await interaction.response.edit_message(content=content, embed=embed, view=view)
+        
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
     from utils.bot import bot, val
@@ -991,3 +1029,48 @@ async def show_remind(interaction: discord.Interaction, edit=None):
     
     if edit: await interaction.response.edit_message(embed=embed, view=view)
     else: await interaction.response.send_message(embed=embed, view=view)
+
+# Art search
+
+async def art_embed(keys=None, des=None, img_url: str=None, footer=None):
+    from utils.bot import bot, val, art
+    from utils.funcs import hex_to_rgb, int_emoji
+    
+    if not img_url: img_url = art.img
+    
+    keywords = art.keywords
+    post = art.post
+    
+    if not keywords:
+        name = None
+        desc = f"Đang tìm art với từ khoá: '{keys}'..."
+    else:
+        name = f"({keywords})[{post}]"
+        desc = f"{now_index}🔹{max_index}        💟 {art.rate}"
+        
+    r, g, b = hex_to_rgb(val.ai_color)
+    color = discord.Colour.from_rgb(r, g, b)
+    
+    now_index = int_emoji(art.now_index)
+    max_index = int_emoji(art.max_index)
+    
+    if img_url.endswith((".png",".jpeg",".jpg",".webp",".gif")):
+        embed=discord.Embed(title=name, description=desc, color=color)
+        if img_url: embed.set_image(url=img_url)
+        if footer: embed.set_footer(footer)
+        content = None
+    else:
+        if footer:
+            noti = f"\n{footer}"
+        else:
+            noti = ""
+        content = f"({art.keywords})[{art.img}]\n{now_index}🔹{max_index}        💟 {art.rate}{noti}"
+
+        embed = None
+        
+    view = View(timeout=None)
+    view.add_item(aback_bt)
+    view.add_item(anext_bt)
+    view.add_item(rmv_art_bt)
+    
+    return content, embed, view

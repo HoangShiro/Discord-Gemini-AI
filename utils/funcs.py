@@ -1,5 +1,5 @@
 """Các hàm chức năng"""
-import json, os, shutil, asyncio, jaconv, re, random, discord, importlib, aiohttp, requests, datetime
+import json, os, shutil, asyncio, jaconv, re, random, discord, importlib, aiohttp, requests, datetime, booru
 
 from translate import Translator
 from mtranslate import translate
@@ -1002,6 +1002,47 @@ async def new_chat():
       public_remind = load_prompt("saves/public_chat.txt")
       chat.history.extend(public_remind)
 
+# Num to emoji
+def int_emoji(num:int):
+  
+    if not num: num = 0
+    
+    emoji_digits = {
+        '0': '0️⃣',
+        '1': '1️⃣',
+        '2': '2️⃣',
+        '3': '3️⃣',
+        '4': '4️⃣',
+        '5': '5️⃣',
+        '6': '6️⃣',
+        '7': '7️⃣',
+        '8': '8️⃣',
+        '9': '9️⃣'
+    }
+
+    if num == 0:
+        return emoji_digits['0']
+
+    emoji_str = ""
+    is_negative = False
+
+    if num < 0:
+        is_negative = True
+        num = abs(num)
+
+    if num < 10:
+        emoji_str = emoji_digits['0'] + emoji_digits[str(num)]
+    else:
+        while num > 0:
+            digit = num % 10
+            emoji_str = emoji_digits[str(digit)] + emoji_str
+            num //= 10
+
+    if is_negative:
+        emoji_str = '➖' + emoji_str
+
+    return emoji_str
+
 # Speaker loader
 class AllSpeaker:
     
@@ -1310,6 +1351,122 @@ class Remind:
           self.save()
         
         return None, None
+
+# Art search
+class Art_Search:
+    # Correct search
+    def __init__(self):
+        self.data = []
+        self.now_index = None
+        self.max_index = None
+        
+        self.keywords = None
+        self.mode = "safebooru"
+        self.img = None
+        self.rate = None
+        self.post = None
+        
+    async def find(self, engine, keywords:str):
+        
+        tags = keywords.split(",") if "," in keywords else keywords.split()
+        tasks = []
+        for tag in tags:
+            task = asyncio.create_task(engine.find_tags(query=tag))
+            tasks.append(task)
+        found_tags = []
+        results = await asyncio.gather(*tasks)
+        for tag_result in results:
+            tag_result = booru.resolve(tag_result)
+            if tag_result:
+                found_tags.append(tag_result[0])
+        if found_tags:
+            tags_str = " ".join(found_tags)
+        else:
+            tags_str = ""
+        
+        return tags_str
+
+    async def search(self, msg_id, keywords, limit=10, page=1, random=False, gacha=False, block=""):
+        se = booru.Safebooru()
+        if self.mode == "gelbooru": se = booru.Gelbooru() 
+        elif self.mode == "rule34": se = booru.Rule34()
+        elif self.mode == "tbib": se = booru.Tbib()
+        elif self.mode == "xbooru": se = booru.Xbooru()
+        elif self.mode == "realbooru": se = booru.Realbooru()
+        elif self.mode == "hypnohub": se = booru.Hypnohub()
+        elif self.mode == "danbooru": se = booru.Danbooru()
+        elif self.mode == "atfbooru": se = booru.Atfbooru()
+        elif self.mode == "yandere": se = booru.Yandere()
+        elif self.mode == "konachan": se = booru.Konachan()
+        elif self.mode == "konachan_net": se = booru.Konachan_Net()
+        elif self.mode == "lolibooru": se = booru.Lolibooru()
+            
+        fix_kws = await self.find(se, keywords)
+        img_urls = await se.search(query=fix_kws, limit=limit, page=page, random=random, gacha=gacha, block=block)
+        imgs = booru.resolve(img_urls)
+        list_img = []
+        now_index = 0
+        for img in imgs:
+            list_img.append([img["file_url"], img["post_url"], img["rating"]])
+        
+        self.data.append([msg_id, now_index, list_img])
+        self.keywords = fix_kws
+        
+        self.save()
+        
+    def get(self, msg_id:int , turn:str=None):
+        self.load()
+        
+        data = next((index, item[1], item[2]) for index, item in enumerate(self.data) if item[0] == msg_id)
+        
+        data_index = data[0]
+        
+        art_index = data[1]
+        arts = data[2]
+        max_art_index = len(arts)
+        if max_art_index == 0: return
+        
+        if not turn: art_index = 0
+        if turn == "+":
+            if art_index + 1 < max_art_index: art_index += 1
+            elif art_index + 1 == max_art_index: art_index = 0
+        elif turn == "-":
+            if art_index > 0: art_index -= 1
+            elif art_index == 0: art_index = max_art_index - 1
+        
+        self.img = arts[art_index][0]
+        self.post = arts[art_index][1]
+        self.rate = arts[art_index][2]
+
+        self.data[data_index][1] = art_index
+        self.now_index = art_index
+        self.max_index = max_art_index
+        
+        self.save()
+    
+    def remove(self, msg_id):
+        self.load()
+
+        removed = False
+        for index, arts in enumerate(self.data):
+            if arts[0] == msg_id:
+                self.data.pop(index)
+                removed = True
+                break
+        
+        self.save()
+        return removed
+        
+    def save(self):
+        with open("saves/arts.json", 'w', encoding="utf-8") as file:
+            json.dump(self.data, file, ensure_ascii=False, indent=4)
+            
+    def load(self):
+        try:
+            with open("saves/arts.json", "r", encoding="utf-8") as file:
+                self.data = json.load(file)
+        except FileNotFoundError:
+            self.data = []
      
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
