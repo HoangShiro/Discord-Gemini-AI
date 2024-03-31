@@ -1062,7 +1062,7 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
         if footer: embed.set_footer(footer)
         content = None
         
-    if img_url.endswith((".png",".jpeg",".jpg",".webp",".gif")):
+    elif img_url.endswith((".png",".jpeg",".jpg",".webp",".gif")):
         embed=discord.Embed(title=title, description=des, color=color)
         if img_url: embed.set_image(url=img_url)
         if footer: embed.set_footer(footer)
