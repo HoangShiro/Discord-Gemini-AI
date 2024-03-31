@@ -456,7 +456,7 @@ async def random_art_atv(interaction: discord.Interaction):
     msgs = interaction.message
     msg_id = msgs.id
     try:
-        ok = await art.search(msg_id, keywords=val.last_keywords, page=100, random=True, gacha=True, block=val.img_block, mode=val.search_mode)
+        ok = await art.search(msg_id, keywords=val.last_keywords, limit=100, random=True, gacha=True, block=val.img_block, mode=val.search_mode)
     except Exception as e:
         pass
     
