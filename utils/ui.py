@@ -437,7 +437,7 @@ async def back_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    msgs = await interaction.original_response()
+    msgs = interaction.message
     msg_id = msgs.id
     
     art.get(msg_id, "-")
@@ -448,7 +448,7 @@ async def remove_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    msgs = await interaction.original_response()
+    msgs = interaction.message
     msg_id = msgs.id
     
     removed = art.remove(msg_id)
@@ -1041,7 +1041,7 @@ async def show_remind(interaction: discord.Interaction, edit=None):
 
 # Art search
 
-async def art_embed(keys=None, des=None, img_url: str=None, footer=None):
+async def art_embed(keys=None, des=None, img_url: str=None, footer=None, next_bt=True, back_bt=True, remove_bt=True):
     from utils.bot import bot, val, art
     from utils.funcs import hex_to_rgb, int_emoji
     
@@ -1078,8 +1078,8 @@ async def art_embed(keys=None, des=None, img_url: str=None, footer=None):
         embed = None
         
     view = View(timeout=None)
-    view.add_item(aback_bt)
-    view.add_item(anext_bt)
-    view.add_item(rmv_art_bt)
+    if back_bt: view.add_item(aback_bt)
+    if next_bt: view.add_item(anext_bt)
+    if remove_bt: view.add_item(rmv_art_bt)
     
     return content, embed, view
