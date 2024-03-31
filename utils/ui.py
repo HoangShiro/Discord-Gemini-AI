@@ -1051,11 +1051,11 @@ async def art_embed(keys=None, des=None, img_url: str=None, footer=None):
         name = None
         desc = f"Đang tìm art với từ khoá: **{keys}**..."
     else:
-        now_index = int_emoji(art.now_index)
+        now_index = int_emoji(art.now_index + 1)
         max_index = int_emoji(art.max_index)
         
-        name = f"[{keywords}]({post})"
-        desc = f"{now_index}🔹{max_index}        💟 {art.rate}"
+        name = None
+        desc = f"**[{keywords}]({post})**\n{now_index}🔹{max_index} ➖ 💟 {art.rate}"
         
     r, g, b = hex_to_rgb(val.ai_color)
     color = discord.Colour.from_rgb(r, g, b)
@@ -1070,7 +1070,7 @@ async def art_embed(keys=None, des=None, img_url: str=None, footer=None):
             noti = f"\n{footer}"
         else:
             noti = ""
-        content = f"({art.keywords})[{art.img}]\n{now_index}🔹{max_index}        💟 {art.rate}{noti}"
+        content = f"({art.keywords})[{art.img}]\n{now_index}🔹{max_index} ➖ 💟 {art.rate}{noti}"
 
         embed = None
         
