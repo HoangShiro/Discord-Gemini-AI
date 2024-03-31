@@ -460,15 +460,22 @@ async def remove_art_atv(interaction: discord.Interaction):
 
 async def send_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
+    from utils.reply import IMG_link_read
+    
     if interaction.user.id != val.owner_uid: return await byB(interaction)
+    await byB(interaction)
     
     msgs = interaction.message
     msg_id = msgs.id
     
     art.get(msg_id)
+    text = IMG_link_read(art.img)
+    if not text: text = f"*đã gửi cho bạn art: {art.img}*"
     
-    await interaction.response.send_message(art.img)
-    
+    now_chat = val.now_chat
+    now_chat.append(text)
+    val.set('now_chat', now_chat)
+    val.set('CD', 1)
      
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
