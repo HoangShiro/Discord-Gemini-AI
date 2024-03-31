@@ -1062,7 +1062,7 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
     if not des:
         now_index = int_emoji(art.now_index + 1)
         max_index = int_emoji(art.max_index)
-        des = f"{now_index}🔹{max_index} ➖ 💟 {art.rate}\n🔗 [post link]({art.post})\n"
+        des = f"💟 {art.rate} ➖ 🔗 [post link]({art.post})\n{now_index}🔹{max_index}\n"
         
     r, g, b = hex_to_rgb(val.ai_color)
     color = discord.Colour.from_rgb(r, g, b)
@@ -1070,7 +1070,7 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
     
     if not img_url:
         embed=discord.Embed(title=title, description=des, color=color)
-        if img_url: embed.set_image(url="https://safebooru.org//images/4600/c0f567ee30f544fcd6074055b6c14f1a794ae50f.jpg")
+        embed.set_image(url="https://safebooru.org//images/4600/c0f567ee30f544fcd6074055b6c14f1a794ae50f.jpg")
         if footer: embed.set_footer(text=footer)
         content = None
         
@@ -1085,7 +1085,7 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
             noti = f"\n{footer}\n"
         else:
             noti = "\n"
-        content = f"{title}\n\n{now_index}🔹{max_index} ➖ 💟 {art.rate}\n🔗 [post link]({art.img}){noti}"
+        content = f"{title}\n\n💟 {art.rate} ➖ 🔗 [post link]({art.img})\n{now_index}🔹{max_index}{noti}"
 
         embed = None
         
