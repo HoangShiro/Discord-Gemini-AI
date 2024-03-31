@@ -426,9 +426,10 @@ async def next_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    msg = await interaction.original_message()
+    msgs = await interaction.original_response()
+    msg_id = msgs.id
     
-    art.get(msg.id, "+")
+    art.get(msg_id, "+")
     content, embed, view = await art_embed()
     await interaction.response.edit_message(content=content, embed=embed, view=view)
 
@@ -436,9 +437,10 @@ async def back_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    msg = await interaction.original_message()
+    msgs = await interaction.original_response()
+    msg_id = msgs.id
     
-    art.get(msg.id, "-")
+    art.get(msg_id, "-")
     content, embed, view = await art_embed()
     await interaction.response.edit_message(content=content, embed=embed, view=view)
 
@@ -446,9 +448,10 @@ async def remove_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
     if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    msg = await interaction.original_message()
+    msgs = await interaction.original_response()
+    msg_id = msgs.id
     
-    removed = art.remove(msg.id)
+    removed = art.remove(msg_id)
     
     if removed: await interaction.message.delete()
     else:
