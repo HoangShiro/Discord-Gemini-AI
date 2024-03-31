@@ -1043,11 +1043,11 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
     from utils.funcs import hex_to_rgb, int_emoji
     
     if not img_url: img_url = art.img
-    if not title: title = art.keywords
+    if not title: title = f"Art: {art.keywords}"
     if not des:
         now_index = int_emoji(art.now_index + 1)
         max_index = int_emoji(art.max_index)
-        des = f"{now_index}🔹{max_index} ➖ 🔗 [post link]({art.post}) ➖ 💟 {art.rate}\n"
+        des = f"{now_index}🔹{max_index} ➖ 💟 {art.rate}\n🔗 [post link]({art.post})\n"
         
     r, g, b = hex_to_rgb(val.ai_color)
     color = discord.Colour.from_rgb(r, g, b)
@@ -1070,7 +1070,7 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
             noti = f"\n{footer}\n"
         else:
             noti = ""
-        content = f"{now_index}🔹{max_index} ➖ 🔗 [post link]({art.img}) ➖ 💟 {art.rate}{noti}"
+        content = f"{now_index}🔹{max_index} ➖ 💟 {art.rate}\n🔗 [post link]({art.img}){noti}"
 
         embed = None
         
