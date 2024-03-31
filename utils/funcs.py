@@ -1414,9 +1414,10 @@ class Art_Search:
             
         self.data.append([msg_id, now_index, list_img])
         self.keywords = fix_kws
-        self.img = list_img[0]
         
         self.save()
+        
+        self.get(msg_id=msg_id)
         
     def get(self, msg_id:int , turn:str=None):
         self.load()
