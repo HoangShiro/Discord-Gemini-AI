@@ -459,7 +459,7 @@ async def random_art_atv(interaction: discord.Interaction):
     art.get(msg_id=msg_id)
     content, embed, view = await art_embed()
     
-    msg = await interaction.response.edit_message(content=content, embed=embed, view=view)
+    await interaction.response.edit_message(content=content, embed=embed, view=view)
     
     try:
         ok = await art.search(msg_id, keywords=val.last_keywords, limit=50, random=True, gacha=True, block=val.img_block, mode=val.search_mode)
@@ -468,7 +468,7 @@ async def random_art_atv(interaction: discord.Interaction):
     
     content, embed, view = await art_embed()
     
-    await msg.edit(content=content, embed=embed, view=view)
+    await interaction.edit_original_response(content=content, embed=embed, view=view)
 
 async def remove_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
