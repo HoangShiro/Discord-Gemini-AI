@@ -1439,10 +1439,13 @@ class Art_Search:
         @tasks.loop(seconds=5)
         async def _slide_run():
             ok = self.get(msg_id=msg_id, turn="+")
+            
+            if not ok:
+                _slide_run.cancel()
+                return
+            
             content, embed, view = await art_embed()
             await interaction.edit_original_response(content=content, embed=embed, view=view)
-            
-            if not ok: _slide_run.cancel()
             
         asyncio.create_task(_slide_run())
         _slide_run.start()
