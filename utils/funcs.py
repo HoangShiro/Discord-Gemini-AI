@@ -1387,7 +1387,7 @@ class Art_Search:
         
         return tags_str
 
-    async def search(self, msg_id, keywords, limit=10, page=1, random=False, gacha=False, block="", mode="safebooru"):
+    async def search(self, msg_id, keywords:str, limit=10, page=1, random=False, gacha=False, block="", mode="safebooru"):
         se = booru.Safebooru()
         if mode == "gelbooru": se = booru.Gelbooru() 
         elif mode == "rule34": se = booru.Rule34()
@@ -1402,7 +1402,7 @@ class Art_Search:
         elif mode == "konachan_net": se = booru.Konachan_Net()
         elif mode == "lolibooru": se = booru.Lolibooru()
             
-        fix_kws = await self.find(se, keywords)
+        fix_kws = await self.find(se, keywords.lower())
         img_urls = await se.search(query=fix_kws, limit=limit, page=page, random=random, gacha=gacha, block=block)
         imgs = booru.resolve(img_urls)
         list_img = []
@@ -1443,16 +1443,20 @@ class Art_Search:
             if not ok:
                 _slide_run.cancel()
                 return
+            try:
+                content, embed, view = await art_embed(slide=True)
+                await interaction.edit_original_response(content=content, embed=embed, view=view)
+            except Exception as e:
+                _slide_run.cancel()
+                return
             
-            new_inter = await interaction.original_response()
-            content, embed, view = await art_embed(slide=True)
-            await new_inter.edit(content=content, embed=embed, view=view)
             
         asyncio.create_task(_slide_run())
         _slide_run.start()
         
     def get(self, msg_id:int , turn:str=None):
         self.load()
+        
         try:
             data = next((index, item[1], item[2], item[3]) for index, item in enumerate(self.data) if item[0] == msg_id)
         except Exception as e:
@@ -1467,7 +1471,6 @@ class Art_Search:
         max_art_index = len(arts)
         if max_art_index == 0: return False
         
-        if not turn: art_index = 0
         if turn == "+":
             if art_index + 1 < max_art_index: art_index += 1
             elif art_index + 1 == max_art_index: art_index = 0

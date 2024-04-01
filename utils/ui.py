@@ -611,6 +611,7 @@ async def bot_notice(
     des=None,
     ava_link=None,
     img=None,
+    url=None,
     au_name=None,
     au_link=None,
     au_avatar=None,
@@ -672,6 +673,7 @@ async def bot_notice(
     if au_name: embed.set_author(name=au_name, url=au_link, icon_url=au_avatar)
     if ava_link: embed.set_thumbnail(url=ava_link)
     if img: embed.set_image(url=img)
+    if url: embed.url = url
     
     if f1a or f1b: embed.add_field(name=f1a, value=f1b, inline=f1i)
     if f2a or f2b: embed.add_field(name=f2a, value=f2b, inline=f2i)
@@ -1144,7 +1146,8 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, slide=
     
     if not img_url: img_url = art.img
     if not title: title = art.keywords
-    if not footer and val.art_tags: footer = f"🏷️ {', '.join(art.tags)}"
+    if not footer and val.art_tags:
+        if art.tags: footer = f"🏷️ {', '.join(art.tags)}"
     if not des:
         if slide: loop = "🔸🔁"
         else: loop = ""
@@ -1167,10 +1170,10 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, slide=
         if img_url: embed.set_image(url=img_url)
         if footer: embed.set_footer(text=footer)
         content = None
-        
+
     else:
         if footer:
-            noti = f"\n{footer}\n"
+            noti = f"\n\n{footer}\n"
         else:
             noti = ""
         content = f"**{title}**\n\n💟 {art.rate} ➖ 🔗 [post link]({art.img})\n\n{now_index}🔹{max_index}{noti}\n"
