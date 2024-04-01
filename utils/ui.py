@@ -431,7 +431,8 @@ async def remove_remind_atv(interaction: discord.Interaction):
 # Art search
 async def next_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
-    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    if not val.public:
+        if interaction.user.id != val.owner_uid: return await byB(interaction)
     
     msgs = interaction.message
     msg_id = msgs.id
@@ -442,7 +443,8 @@ async def next_art_atv(interaction: discord.Interaction):
 
 async def back_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
-    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    if not val.public:
+        if interaction.user.id != val.owner_uid: return await byB(interaction)
     
     msgs = interaction.message
     msg_id = msgs.id
@@ -453,7 +455,8 @@ async def back_art_atv(interaction: discord.Interaction):
 
 async def random_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
-    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    if not val.public:
+        if interaction.user.id != val.owner_uid: return await byB(interaction)
     
     msgs = interaction.message
     msg_id = msgs.id
@@ -506,7 +509,8 @@ async def random_art_atv(interaction: discord.Interaction):
 
 async def remove_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
-    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    if not val.public:
+        if interaction.user.id != val.owner_uid: return await byB(interaction)
     
     msgs = interaction.message
     msg_id = msgs.id
@@ -537,7 +541,8 @@ async def send_art_atv(interaction: discord.Interaction):
 async def tags_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
     
-    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    if not val.public:
+        if interaction.user.id != val.owner_uid: return await byB(interaction)
     
     msgs = interaction.message
     msg_id = msgs.id
