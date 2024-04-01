@@ -987,6 +987,8 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
         next_bt=False,
         back_bt=False,
         send_bt=False,
+        tags_bt=False,
+        random_bt=False,
         )
     
     msg = await interaction.response.send_message(content=content, embed=embed, view=view)
@@ -1008,6 +1010,7 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
         back_bt=False,
         send_bt=False,
         tags_bt=False,
+        random_bt=False,
         )
     await msg.edit_original_response(content=content, embed=embed, view=view)
     
