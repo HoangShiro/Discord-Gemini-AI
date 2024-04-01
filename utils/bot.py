@@ -1009,11 +1009,12 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
         content, embed, view = await art_embed()
         await msg.edit_original_response(content=content, embed=embed, view=view)
     elif not ok:
+        name = val.ai_name.lower().replace(' ', '_')
         content, embed, view = await art_embed(
         title=keywords,
         des="Không tìm thấy kết quả nào.\n",
         img_url="https://safebooru.org//images/4607/ce2c013b6d00bb9991783672a14502fa6a4dd6d8.jpg",
-        footer=f"🏷️ Sử dụng dấu ',' hoặc dấu cách để phân cách các tag ví dụ '{val.ai_name.lower().replace(" ", "_")}, school_uniform'. Tag của từng server và số lượng có thể khác nhau.",
+        footer=f"🏷️ Sử dụng dấu ',' hoặc dấu cách để phân cách các tag ví dụ '{name}, school_uniform'. Tag của từng server và số lượng có thể khác nhau.",
         next_bt=False,
         back_bt=False,
         send_bt=False,
