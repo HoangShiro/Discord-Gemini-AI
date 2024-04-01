@@ -466,9 +466,9 @@ async def random_art_atv(interaction: discord.Interaction):
     except Exception as e:
         pass
     
-    content, embed, view = await art_embed(content=content, embed=embed, view=view)
+    content, embed, view = await art_embed()
     
-    await interaction.edit()
+    await interaction.edit(content=content, embed=embed, view=view)
 
 async def remove_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
