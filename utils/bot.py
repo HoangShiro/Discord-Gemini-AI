@@ -1004,7 +1004,7 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
     if ok and not slide: 
         content, embed, view = await art_embed()
         await msg.edit_original_response(content=content, embed=embed, view=view)
-    elif ok and slide: await art.slide(interaction=interaction, msg_id=msg_id)
+    elif ok and slide: await art.slide(interaction=msg, msg_id=msg_id)
     elif not ok:
         content, embed, view = await art_embed(
         title=keywords,
