@@ -468,7 +468,7 @@ async def random_art_atv(interaction: discord.Interaction):
     
     content, embed, view = await art_embed()
     
-    await interaction.edit(content=content, embed=embed, view=view)
+    await interaction.response.edit_message(content=content, embed=embed, view=view)
 
 async def remove_art_atv(interaction: discord.Interaction):
     from utils.bot import val, art
