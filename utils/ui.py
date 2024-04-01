@@ -1139,7 +1139,7 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
     
     if not img_url: img_url = art.img
     if not title: title = art.keywords
-    if not footer and val.art_tags: footer = art.tags
+    if not footer and val.art_tags: footer = f"🏷️ {', '.join(art.tags)}"
     if not des:
         now_index = int_emoji(art.now_index + 1)
         max_index = int_emoji(art.max_index)
