@@ -457,14 +457,50 @@ async def random_art_atv(interaction: discord.Interaction):
     msg_id = msgs.id
     
     art.get(msg_id=msg_id)
-    content, embed, view = await art_embed()
+    content, embed, view = await art_embed(title=f"Đang gacha 1️⃣0️⃣0️⃣ art... ✨")
     
     await interaction.response.edit_message(content=content, embed=embed, view=view)
-    
+    ok = False
     try:
-        ok = await art.search(msg_id, keywords=val.last_keywords, limit=50, random=True, gacha=True, block=val.img_block, mode=val.search_mode)
+        ok = await art.search(msg_id, keywords=val.last_keywords, limit=100, random=True, gacha=True, block=val.img_block, mode=val.search_mode)
     except Exception as e:
         pass
+    
+    content, embed, view = await art_embed(title=f"Không đủ, thử gacha 5️⃣0️⃣ art... ✨")
+    await interaction.edit_original_response(content=content, embed=embed, view=view)
+    
+    if not ok:
+        try:
+            ok = await art.search(msg_id, keywords=val.last_keywords, limit=50, random=True, gacha=True, block=val.img_block, mode=val.search_mode)
+        except Exception as e:
+            pass
+    
+    content, embed, view = await art_embed(title=f"Không đủ, thử gacha 3️⃣0️⃣ art... ✨")
+    await interaction.edit_original_response(content=content, embed=embed, view=view)
+    
+    if not ok:
+        try:
+            ok = await art.search(msg_id, keywords=val.last_keywords, limit=30, random=True, gacha=True, block=val.img_block, mode=val.search_mode)
+        except Exception as e:
+            pass
+    
+    content, embed, view = await art_embed(title=f"Không đủ, thử gacha 1️⃣0️⃣ art... ✨")
+    await interaction.edit_original_response(content=content, embed=embed, view=view)
+    
+    if not ok:
+        try:
+            ok = await art.search(msg_id, keywords=val.last_keywords, limit=10, random=True, gacha=True, block=val.img_block, mode=val.search_mode)
+        except Exception as e:
+            pass
+    
+    content, embed, view = await art_embed(title=f"Không đủ, thử gacha 3️⃣ art... ✨")
+    await interaction.edit_original_response(content=content, embed=embed, view=view)
+    
+    if not ok:
+        try:
+            ok = await art.search(msg_id, keywords=val.last_keywords, limit=3, random=True, gacha=True, block=val.img_block, mode=val.search_mode)
+        except Exception as e:
+            pass
     
     content, embed, view = await art_embed()
     
