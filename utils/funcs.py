@@ -1444,7 +1444,7 @@ class Art_Search:
                 _slide_run.cancel()
                 return
             
-            content, embed, view = await art_embed()
+            content, embed, view = await art_embed(slide=True)
             await interaction.edit_original_response(content=content, embed=embed, view=view)
             
         asyncio.create_task(_slide_run())

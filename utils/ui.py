@@ -1138,7 +1138,7 @@ async def show_remind(interaction: discord.Interaction, edit=None):
 
 # Art search
 
-async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_bt=True, back_bt=True, remove_bt=True, send_bt=True, random_bt=True, tags_bt=True):
+async def art_embed(title=None, des=None, img_url: str=None, footer=None, slide=False, next_bt=True, back_bt=True, remove_bt=True, send_bt=True, random_bt=True, tags_bt=True):
     from utils.bot import bot, val, art
     from utils.funcs import hex_to_rgb, int_emoji
     
@@ -1146,9 +1146,11 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
     if not title: title = art.keywords
     if not footer and val.art_tags: footer = f"🏷️ {', '.join(art.tags)}"
     if not des:
+        if slide: loop = "🔸🔁"
+        else: loop = ""
         now_index = int_emoji(art.now_index + 1)
         max_index = int_emoji(art.max_index)
-        des = f"💟 {art.rate} ➖ 🔗 [post link]({art.post})\n\n{now_index}🔹{max_index}\n"
+        des = f"💟 {art.rate} ➖ 🔗 [post link]({art.post})\n\n{now_index}🔹{max_index}{loop}\n"
         
     r, g, b = hex_to_rgb(val.ai_color)
     color = discord.Colour.from_rgb(r, g, b)
