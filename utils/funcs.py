@@ -1435,19 +1435,24 @@ class Art_Search:
         
         self.get(msg_id=msg_id)
         
+        ok = False
         @tasks.loop(seconds=5)
         async def _slide_run():
-            self.get(msg_id=msg_id, turn="+")
+            ok = self.get(msg_id=msg_id, turn="+")
             content, embed, view = await art_embed()
             await interaction.edit_original_response(content=content, embed=embed, view=view)
-
+            
+            if not ok: _slide_run.cancel()
+            
         asyncio.create_task(_slide_run())
         _slide_run.start()
         
     def get(self, msg_id:int , turn:str=None):
         self.load()
-        
-        data = next((index, item[1], item[2], item[3]) for index, item in enumerate(self.data) if item[0] == msg_id)
+        try:
+            data = next((index, item[1], item[2], item[3]) for index, item in enumerate(self.data) if item[0] == msg_id)
+        except Exception as e:
+            return False
         
         data_index = data[0]
         
@@ -1456,7 +1461,7 @@ class Art_Search:
         self.keywords = data[3]
         
         max_art_index = len(arts)
-        if max_art_index == 0: return
+        if max_art_index == 0: return False
         
         if not turn: art_index = 0
         if turn == "+":
@@ -1476,7 +1481,8 @@ class Art_Search:
         self.max_index = max_art_index
         
         self.save()
-    
+
+        return True
     def remove(self, msg_id):
         self.load()
 
