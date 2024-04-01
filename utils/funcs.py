@@ -1,5 +1,6 @@
 """Các hàm chức năng"""
 import json, os, shutil, asyncio, jaconv, re, random, discord, importlib, aiohttp, requests, datetime, booru
+from discord.ext import tasks
 
 from translate import Translator
 from mtranslate import translate
@@ -1428,6 +1429,21 @@ class Art_Search:
         self.get(msg_id=msg_id)
         
         return True
+    
+    async def slide(self, interaction: discord.Interaction, msg_id):
+        from utils.ui import art_embed
+        
+        self.get(msg_id=msg_id)
+        
+        @tasks.loop(seconds=5)
+        async def _slide_run():
+            self.get(msg_id=msg_id, turn="+")
+            content, embed, view = await art_embed()
+            await interaction.edit_original_response(content=content, embed=embed, view=view)
+
+        asyncio.create_task(_slide_run())
+        _slide_run.start()
+        
     def get(self, msg_id:int , turn:str=None):
         self.load()
         
@@ -1484,7 +1500,8 @@ class Art_Search:
                 self.data = json.load(file)
         except FileNotFoundError:
             self.data = []
-     
+        
+    
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
   print(p)

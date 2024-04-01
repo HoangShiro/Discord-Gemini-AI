@@ -942,7 +942,7 @@ async def remind_list(interaction: discord.Interaction):
 
 # Search art
 @bot.slash_command(name="art", description=f"tìm kiếm art")
-async def art_search(interaction: discord.Interaction, keywords: str=None, quantity: int=1, page: int=1, random: bool=False, gacha: bool=False, server: discord.Option(
+async def art_search(interaction: discord.Interaction, keywords: str=None, quantity: int=1, page: int=1, random: bool=False, gacha: bool=False, slide: bool=False, server: discord.Option(
         description="Chọn server search:",
         choices=[
             discord.OptionChoice(name="safebooru"),
@@ -1001,8 +1001,12 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
     except Exception as e:
         print(f"{get_real_time()}> Lỗi khi tìm art: ", e)
         
-    if ok: content, embed, view = await art_embed()
-    else: content, embed, view = await art_embed(
+    if ok: 
+        content, embed, view = await art_embed()
+        await msg.edit_original_response(content=content, embed=embed, view=view)
+    elif ok and slide: await art.slide(interaction=interaction, msg_id=msg_id)
+    else:
+        content, embed, view = await art_embed(
         title=keywords,
         des="Không tìm thấy kết quả nào.\n",
         img_url="https://safebooru.org//images/4607/ce2c013b6d00bb9991783672a14502fa6a4dd6d8.jpg",
@@ -1012,7 +1016,7 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
         tags_bt=False,
         random_bt=False,
         )
-    await msg.edit_original_response(content=content, embed=embed, view=view)
+        await msg.edit_original_response(content=content, embed=embed, view=view)
     
 def bot_run():
     try:
