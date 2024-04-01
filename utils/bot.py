@@ -1000,11 +1000,11 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
         ok = await art.search(msg_id, keywords=keywords, limit=quantity, page=page, random=random, gacha=gacha, block=val.img_block, mode=server)
     except Exception as e:
         print(f"{get_real_time()}> Lỗi khi tìm art: ", e)
-        
-    if ok and not slide: 
+    
+    if ok and slide and quantity > 1: await art.slide(interaction=msg, msg_id=msg_id)
+    elif ok: 
         content, embed, view = await art_embed()
         await msg.edit_original_response(content=content, embed=embed, view=view)
-    elif ok and slide: await art.slide(interaction=msg, msg_id=msg_id)
     elif not ok:
         content, embed, view = await art_embed(
         title=keywords,
