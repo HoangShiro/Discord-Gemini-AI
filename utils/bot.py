@@ -125,6 +125,7 @@ class AllStatus:
         self.img_block = "futanari furry bestiality yaoi hairy"
         self.search_mode = "safebooru"
         self.last_keywords = None
+        self.art_tags = False
         
     def update(self, val_name, value):
         if hasattr(self, val_name):

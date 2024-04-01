@@ -50,7 +50,8 @@ anext_bt = discord.ui.Button(label="🔆 next", custom_id="art_next", style=disc
 aback_bt = discord.ui.Button(label="🔅 back", custom_id="art_back", style=discord.ButtonStyle.green)
 
 arandom_bt = discord.ui.Button(label="✨ random", custom_id="art_random", style=discord.ButtonStyle.green)
-asend_bt = discord.ui.Button(label="💖 send", custom_id="art_send", style=discord.ButtonStyle.blurple)
+#asend_bt = discord.ui.Button(label="💖 send", custom_id="art_send", style=discord.ButtonStyle.blurple)
+atags_bt = discord.ui.Button(label="🏷️ tags", custom_id="art_tags", style=discord.ButtonStyle.green)
 rmv_art_bt = discord.ui.Button(label="➖", custom_id="art_remove", style=discord.ButtonStyle.grey)
 
 """ BUTTON """
@@ -101,7 +102,8 @@ async def load_btt():
     # Art
     anext_bt.callback = next_art_atv
     aback_bt.callback = back_art_atv
-    asend_bt.callback = send_art_atv
+    #asend_bt.callback = send_art_atv
+    atags_bt.callback = tags_art_atv
     arandom_bt.callback = random_art_atv
     rmv_art_bt.callback = remove_art_atv
     
@@ -531,7 +533,23 @@ async def send_art_atv(interaction: discord.Interaction):
     now_chat.append(text)
     val.set('now_chat', now_chat)
     val.set('CD', 1)
-     
+
+async def tags_art_atv(interaction: discord.Interaction):
+    from utils.bot import val, art
+    
+    if interaction.user.id != val.owner_uid: return await byB(interaction)
+    
+    msgs = interaction.message
+    msg_id = msgs.id
+    
+    art.get(msg_id)
+    
+    if not val.art_tags: val.set('art_tags', True)
+    else: val.set('art_tags', False)
+    
+    content, embed, view = await art_embed()
+    await interaction.response.edit_message(content=content, embed=embed, view=view)
+    
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
     from utils.bot import bot, val
@@ -1115,12 +1133,13 @@ async def show_remind(interaction: discord.Interaction, edit=None):
 
 # Art search
 
-async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_bt=True, back_bt=True, remove_bt=True, send_bt=True, random_bt=True):
+async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_bt=True, back_bt=True, remove_bt=True, send_bt=True, random_bt=True, tags_bt=True):
     from utils.bot import bot, val, art
     from utils.funcs import hex_to_rgb, int_emoji
     
     if not img_url: img_url = art.img
     if not title: title = art.keywords
+    if not footer and val.art_tags: footer = art.tags
     if not des:
         now_index = int_emoji(art.now_index + 1)
         max_index = int_emoji(art.max_index)
@@ -1155,7 +1174,8 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, next_b
     if back_bt and art.max_index > 1: view.add_item(aback_bt)
     if next_bt and art.max_index > 1: view.add_item(anext_bt)
     if random_bt and art.max_index == 1: view.add_item(arandom_bt)
-    if send_bt: view.add_item(asend_bt)
+    if tags_bt: view.add_item(atags_bt)
+    #if send_bt: view.add_item(asend_bt)
     if remove_bt: view.add_item(rmv_art_bt)
     
     return content, embed, view

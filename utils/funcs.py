@@ -1364,6 +1364,7 @@ class Art_Search:
         self.img = None
         self.rate = None
         self.post = None
+        self.tags = None
         
     async def find(self, engine, keywords:str):
         
@@ -1407,9 +1408,9 @@ class Art_Search:
         now_index = 0
         
         if not gacha:
-            for img in imgs: list_img.append([img["file_url"], img["post_url"], img["rating"]])
+            for img in imgs: list_img.append([img["file_url"], img["post_url"], img["rating"], img["tags"]])
         else:
-            list_img.append([imgs["file_url"], imgs["post_url"], imgs["rating"]])
+            list_img.append([imgs["file_url"], imgs["post_url"], imgs["rating"], imgs["tags"]])
         
         index = None
         if self.data:
@@ -1452,6 +1453,7 @@ class Art_Search:
         self.img = arts[art_index][0]
         self.post = arts[art_index][1]
         self.rate = arts[art_index][2]
+        self.tags = arts[art_index][3]
 
         self.data[data_index][1] = art_index
         self.now_index = art_index
