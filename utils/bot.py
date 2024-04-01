@@ -962,7 +962,8 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
             discord.OptionChoice(name="lolibooru"),
         ],
     ) = None):
-    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    if not val.public:
+        if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
     if server: val.set('search_mode', server)
     else: server = val.search_mode
