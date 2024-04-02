@@ -220,7 +220,6 @@ async def v_join_auto():
         
         for member in members:
             if (member.display_name or member.name) in name:
-                mems_list = ", ".join(members)
                 vname = channel.name
             # Tham gia kênh thoại nếu user có trong vc
                 await v_leave_auto()
@@ -229,7 +228,7 @@ async def v_join_auto():
                 sound = await sob('greeting')
                 if sound: await voice_send(sound, vc)
                 
-                text = f"SYSTEM: Bạn vừa vào voi-ce channel {vname} cùng với {mems_list}."
+                text = f"SYSTEM: Bạn vừa vào voi-ce channel {vname}."
                 ignore_chat = val.ignore_chat
                 ignore_chat.append(text)
                 val.set('ignore_chat', ignore_chat)
