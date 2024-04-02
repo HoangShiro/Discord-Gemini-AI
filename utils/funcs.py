@@ -1366,7 +1366,23 @@ class Art_Search:
         self.rate = None
         self.post = None
         self.tags = None
+    
+    def engine(self, mode):
+        se = booru.Safebooru()
+        if mode == "gelbooru": se = booru.Gelbooru() 
+        elif mode == "rule34": se = booru.Rule34()
+        elif mode == "tbib": se = booru.Tbib()
+        elif mode == "xbooru": se = booru.Xbooru()
+        elif mode == "realbooru": se = booru.Realbooru()
+        elif mode == "hypnohub": se = booru.Hypnohub()
+        elif mode == "danbooru": se = booru.Danbooru()
+        elif mode == "atfbooru": se = booru.Atfbooru()
+        elif mode == "yandere": se = booru.Yandere()
+        elif mode == "konachan": se = booru.Konachan()
+        elif mode == "konachan_net": se = booru.Konachan_Net()
+        elif mode == "lolibooru": se = booru.Lolibooru()
         
+        return se
     async def find(self, engine, keywords:str):
         
         tags = keywords.split(",") if "," in keywords else keywords.split()
@@ -1386,22 +1402,9 @@ class Art_Search:
             tags_str = ""
         
         return tags_str
-
+    
     async def search(self, msg_id, keywords:str, limit=10, page=1, random=False, gacha=False, block="", mode="safebooru"):
-        se = booru.Safebooru()
-        if mode == "gelbooru": se = booru.Gelbooru() 
-        elif mode == "rule34": se = booru.Rule34()
-        elif mode == "tbib": se = booru.Tbib()
-        elif mode == "xbooru": se = booru.Xbooru()
-        elif mode == "realbooru": se = booru.Realbooru()
-        elif mode == "hypnohub": se = booru.Hypnohub()
-        elif mode == "danbooru": se = booru.Danbooru()
-        elif mode == "atfbooru": se = booru.Atfbooru()
-        elif mode == "yandere": se = booru.Yandere()
-        elif mode == "konachan": se = booru.Konachan()
-        elif mode == "konachan_net": se = booru.Konachan_Net()
-        elif mode == "lolibooru": se = booru.Lolibooru()
-            
+        se = self.engine(mode=mode)
         fix_kws = await self.find(se, keywords.lower())
         img_urls = await se.search(query=fix_kws, limit=limit, page=page, random=random, gacha=gacha, block=block)
         imgs = booru.resolve(img_urls)
@@ -1430,6 +1433,39 @@ class Art_Search:
         
         return True
     
+    async def search_all(self, msg_id, keywords: str, block="", mode="safebooru"):
+        se = self.engine(mode=mode)
+        fix_kws = await self.find(se, keywords.lower())
+
+        page = 1
+        list_img = []
+        now_index = 0
+
+        async def _search():
+            try:
+                img_urls = await se.search(query=fix_kws, limit=1, page=page, block=block)
+                imgs = booru.resolve(img_urls)
+                return imgs
+            except Exception as e:
+                return None
+
+        while True:
+            imgs = await _search()
+            if not imgs or page == 100:
+                break  # Exit the loop if no results are found
+
+            for img in imgs:
+                list_img.append([img["file_url"], img["post_url"], img["rating"], img["tags"]])
+            page += 1
+
+        self.data.append([msg_id, now_index, list_img, fix_kws])
+        
+        self.save()
+        
+        self.get(msg_id=msg_id)
+        
+        return True
+        
     async def slide(self, interaction: discord.Interaction, msg_id):
         from utils.ui import art_embed
         

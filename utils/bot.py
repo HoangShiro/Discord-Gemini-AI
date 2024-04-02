@@ -947,6 +947,7 @@ async def art_search(interaction: discord.Interaction,
                      keywords: discord.Option(str, description=f"Ví dụ: {val.ai_name.lower().replace(' ', '_')}, school_uniform. Mặc định: keywords cuối từng điền.")=None,
                      quantity: discord.Option(int, "Số lượng art trong một page. Mặc định: 1.")=1,
                      page: discord.Option(int, "Search trong page thứ mấy? Mặc định: 1.")=1,
+                     all: discord.Option(bool, "Search tất cả, tối đa 100 art. Quantity, page, random, gacha sẽ bị bỏ qua. Mặc định: False.")=False,
                      random: discord.Option(bool, "Đảo thứ tự các art. Mặc định: False.")=False,
                      gacha: discord.Option(bool, "Lấy ra một art ngẫu nhiên trong số. Mặc định: False.")=False,
                      slide: discord.Option(bool, "Autoplay khi số lượng art từ 2 trở lên. Mặc định: False.")=False,
@@ -1014,27 +1015,30 @@ async def art_search(interaction: discord.Interaction,
         except Exception as e:
             print(f"{get_real_time()}> Lỗi khi tìm art: ", e)
             return False
+        
+    if not all:
+        ok = await _start_search()
+        
+        if not ok and quantity > 500:
+            quantity = 500
+            ok = await _start_search()
+        if not ok and quantity > 100:
+            quantity = 100
+            ok = await _start_search()
+        if not ok and quantity > 50:
+            quantity = 50
+            ok = await _start_search()
+        if not ok and quantity > 20:
+            quantity = 20
+            ok = await _start_search()
+        if not ok and quantity > 10:
+            quantity = 10
+            ok = await _start_search()
+        if not ok and quantity > 1:
+            quantity = 1
+            ok = await _start_search()
     
-    ok = await _start_search()
-    
-    if not ok and quantity > 500:
-        quantity = 500
-        ok = await _start_search()
-    if not ok and quantity > 100:
-        quantity = 100
-        ok = await _start_search()
-    if not ok and quantity > 50:
-        quantity = 50
-        ok = await _start_search()
-    if not ok and quantity > 20:
-        quantity = 20
-        ok = await _start_search()
-    if not ok and quantity > 10:
-        quantity = 10
-        ok = await _start_search()
-    if not ok and quantity > 1:
-        quantity = 1
-        ok = await _start_search()
+    else: ok = await art.search_all(msg_id=msg_id, keywords=keywords, block=val.img_block, mode=server)
     
     if ok and slide and quantity > 1: await art.slide(interaction=msg, msg_id=msg_id)
     elif ok: 
