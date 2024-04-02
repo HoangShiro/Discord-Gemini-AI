@@ -1451,7 +1451,7 @@ class Art_Search:
 
         while True:
             imgs = await _search()
-            if not imgs or page == 100:
+            if not imgs or page == 1000:
                 break  # Exit the loop if no results are found
 
             for img in imgs:

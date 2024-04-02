@@ -945,9 +945,9 @@ async def remind_list(interaction: discord.Interaction):
 @bot.slash_command(name="art", description=f"tìm kiếm art")
 async def art_search(interaction: discord.Interaction,
                      keywords: discord.Option(str, description=f"Ví dụ: {val.ai_name.lower().replace(' ', '_')}, school_uniform. Mặc định: keywords cuối từng điền.")=None,
-                     quantity: discord.Option(int, "Số lượng art trong một page. Mặc định: 1.")=1,
+                     quantity: discord.Option(int, "Số lượng art trong một page, tối đa 1000. Mặc định: 1.")=1,
                      page: discord.Option(int, "Search trong page thứ mấy? Mặc định: 1.")=1,
-                     all: discord.Option(bool, "Search tất cả, tối đa 100 art. Quantity, page, random, gacha sẽ bị bỏ qua. Mặc định: False.")=False,
+                     all: discord.Option(bool, "Search tất cả, tối đa 1000 art. Quantity, page, random, gacha sẽ bị bỏ qua. Mặc định: False.")=False,
                      random: discord.Option(bool, "Đảo thứ tự các art. Mặc định: False.")=False,
                      gacha: discord.Option(bool, "Lấy ra một art ngẫu nhiên trong số. Mặc định: False.")=False,
                      slide: discord.Option(bool, "Autoplay khi số lượng art từ 2 trở lên. Mặc định: False.")=False,
