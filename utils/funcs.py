@@ -310,7 +310,7 @@ async def voice_make_tts(text):
                 except Exception as e:
                     print(f"{get_real_time()}> lỗi tts: ", e)
                     return
-                await voice_send(url, guild.voice_client)
+                if url: await voice_send(url, guild.voice_client)
 
 # Soundboard get
 async def sob(sound_list, sound=None):

@@ -175,8 +175,10 @@ async def tts_get(text):
             text = "..."
         text_fill = text
     cnv_text = romaji_to_katakana(text_fill)"""
+    text = remove_act(text)
     if len(text) > 210: text = text_tts_cut(text)
     
+    if not text: return
     prompt = f"Translate the following chat into Japanese(hiragana and katakana) anime spoken style with the character's personality being '{val.ai_char}': {text}"
     
     jtext = await model.generate_content_async(prompt)
