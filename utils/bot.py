@@ -823,8 +823,7 @@ async def preset_change(interaction: discord.Interaction, save: str = None, load
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
     if share:
-        await share_pfp(interaction, share)   
-        #return await interaction.response.send_message("> Có lỗi khi gửi preset.", ephemeral=True)
+        if not await share_pfp(interaction, share): return await interaction.response.send_message(f"> Preset `{share}` không tồn tại.", ephemeral=True)
         return
     
     if remove:
@@ -944,24 +943,31 @@ async def remind_list(interaction: discord.Interaction):
 
 # Search art
 @bot.slash_command(name="art", description=f"tìm kiếm art")
-async def art_search(interaction: discord.Interaction, keywords: str=None, quantity: int=1, page: int=1, random: bool=False, gacha: bool=False, slide: bool=False, server: discord.Option(
-        description="Chọn server search:",
-        choices=[
-            discord.OptionChoice(name="safebooru"),
-            discord.OptionChoice(name="gelbooru"),
-            discord.OptionChoice(name="rule34"),
-            discord.OptionChoice(name="tbib"),
-            discord.OptionChoice(name="xbooru"),
-            discord.OptionChoice(name="realbooru"),
-            discord.OptionChoice(name="hypnohub"),
-            discord.OptionChoice(name="danbooru"),
-            discord.OptionChoice(name="atfbooru"),
-            discord.OptionChoice(name="yandere"),
-            discord.OptionChoice(name="konachan"),
-            discord.OptionChoice(name="konachan_net"),
-            discord.OptionChoice(name="lolibooru"),
-        ],
-    ) = None):
+async def art_search(interaction: discord.Interaction,
+                     keywords: discord.Option(str, description=f"ví dụ: {val.ai_name.lower().replace(' ', '_')}, school_uniform. Mặc định là keywords cuối từng điền nếu để trống.")=None,
+                     quantity: discord.Option(int, "Số lượng art trong một page.")=1,
+                     page: discord.Option(int, "Search trong page thứ mấy?")=1,
+                     random: discord.Option(bool, "Đảo thứ tự các art.")=False,
+                     gacha: discord.Option(bool, "Lấy ra một art ngẫu nhiên trong số.")=False,
+                     slide: discord.Option(bool, "Autoplay khi số lượng art từ 2 trở lên.")=False,
+                     server: discord.Option(
+                        description="Các server search, mặc định là Safebooru(SFW).",
+                        choices=[
+                            discord.OptionChoice(name="safebooru"),
+                            discord.OptionChoice(name="gelbooru"),
+                            discord.OptionChoice(name="rule34"),
+                            discord.OptionChoice(name="tbib"),
+                            discord.OptionChoice(name="xbooru"),
+                            discord.OptionChoice(name="realbooru"),
+                            discord.OptionChoice(name="hypnohub"),
+                            discord.OptionChoice(name="danbooru"),
+                            discord.OptionChoice(name="atfbooru"),
+                            discord.OptionChoice(name="yandere"),
+                            discord.OptionChoice(name="konachan"),
+                            discord.OptionChoice(name="konachan_net"),
+                            discord.OptionChoice(name="lolibooru"),
+                        ],
+                    ) = None):
     if not val.public:
         if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
@@ -975,7 +981,8 @@ async def art_search(interaction: discord.Interaction, keywords: str=None, quant
                     return await interaction.response.send_message(f"> Server hiện tại: `{val.search_mode}`. Chỉ có thể search art NSFW tại NSFW channels.", ephemeral=True)
         
     if not keywords:
-        keywords = val.ai_name.lower().replace(" ", "_")
+        keywords = val.last_keywords
+        if not keywords: keywords = val.ai_name.lower().replace(" ", "_")
         gacha = True
         random = True
 
