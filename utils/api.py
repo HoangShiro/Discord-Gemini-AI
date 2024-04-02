@@ -159,9 +159,9 @@ async def gemini_cmd(cmd):
 async def tts_get(text):
     from utils.funcs import remove_act, romaji_to_katakana, text_translate, text_translate2, text_tts_cut
     from utils.bot import val
-    global alt_trans
+    #global alt_trans
 
-    translated = None
+    """translated = None
     if not alt_trans:
         translated = text_translate(text, "ja")
         if "MYMEMORY WARNING:" in translated:
@@ -174,10 +174,14 @@ async def tts_get(text):
         if not text:
             text = "..."
         text_fill = text
-    cnv_text = romaji_to_katakana(text_fill)
-    if len(cnv_text) > 210: cnv_text = text_tts_cut(cnv_text)
-
-    url = tts_get_url(cnv_text)
+    cnv_text = romaji_to_katakana(text_fill)"""
+    if len(text) > 210: text = text_tts_cut(text)
+    
+    prompt = f"Translate the following chat into Japanese (hiragana and katakana) anime spoken style with the character's personality being '{val.ai_char}': {text}"
+    
+    jtext = await model.generate_content_async(prompt)
+    
+    url = tts_get_url(jtext)
     
     """response = requests.get(url)
     st_log = await vals_load('user_files/vals.json', 'st_log')

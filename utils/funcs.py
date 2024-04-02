@@ -217,16 +217,23 @@ async def v_join_auto():
 
     for channel in voice_channels:
         members = channel.members
-
+        
         for member in members:
             if (member.display_name or member.name) in name:
+                mems_list = ", ".join(members)
+                vname = channel.name
             # Tham gia kênh thoại nếu user có trong vc
                 await v_leave_auto()
                 await asyncio.sleep(1)
                 vc = await channel.connect()
                 sound = await sob('greeting')
-                if sound:
-                    await voice_send(sound, vc)
+                if sound: await voice_send(sound, vc)
+                
+                text = f"SYSTEM: Bạn vừa vào voi-ce channel {vname} cùng với {mems_list}."
+                ignore_chat = val.ignore_chat
+                ignore_chat.append(text)
+                val.set('ignore_chat', ignore_chat)
+                
                 val.set('pr_vch_id', channel.id)
                 val.set('last_vch_id', channel.id)
                 val.set('vc_invited', False)
@@ -247,10 +254,15 @@ async def v_leave_auto():
     vc = guild.voice_client
     if not vc: return
     sound = await sob('bye')
-    if sound:
-        await voice_send(sound, vc)
+    if sound: await voice_send(sound, vc)
     await asyncio.sleep(3)
     await vc.disconnect()
+    
+    text = f"SYSTEM: Bạn vừa rời voi-ce chat."
+    ignore_chat = val.ignore_chat
+    ignore_chat.append(text)
+    val.set('ignore_chat', ignore_chat)
+    
     val.set('pr_vch_id', None)
 
 # Reconnect to voice channel
@@ -266,8 +278,7 @@ async def voice_rcn(pr_v = None):
         try:
           vc = await bot.get_channel(pr_v).connect()
           sound = await sob('greeting')
-          if sound:
-            await voice_send(sound, vc)
+          if sound: await voice_send(sound, vc)
           val.update('total_join', 1)
           val.update('one_join', 1)
         except Exception as e:
@@ -299,6 +310,7 @@ async def voice_make_tts(text):
                     url = await tts_get(text)
                 except Exception as e:
                     print(f"{get_real_time()}> lỗi tts: ", e)
+                    return
                 await voice_send(url, guild.voice_client)
 
 # Soundboard get
