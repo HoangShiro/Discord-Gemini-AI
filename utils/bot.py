@@ -944,14 +944,14 @@ async def remind_list(interaction: discord.Interaction):
 # Search art
 @bot.slash_command(name="art", description=f"tìm kiếm art")
 async def art_search(interaction: discord.Interaction,
-                     keywords: discord.Option(str, description=f"ví dụ: {val.ai_name.lower().replace(' ', '_')}, school_uniform. Mặc định là keywords cuối từng điền nếu để trống.")=None,
-                     quantity: discord.Option(int, "Số lượng art trong một page.")=1,
-                     page: discord.Option(int, "Search trong page thứ mấy?")=1,
-                     random: discord.Option(bool, "Đảo thứ tự các art.")=False,
-                     gacha: discord.Option(bool, "Lấy ra một art ngẫu nhiên trong số.")=False,
-                     slide: discord.Option(bool, "Autoplay khi số lượng art từ 2 trở lên.")=False,
+                     keywords: discord.Option(str, description=f"Ví dụ: {val.ai_name.lower().replace(' ', '_')}, school_uniform. Mặc định: keywords cuối từng điền.")=None,
+                     quantity: discord.Option(int, "Số lượng art trong một page. Mặc định: 1.")=1,
+                     page: discord.Option(int, "Search trong page thứ mấy? Mặc định: 1.")=1,
+                     random: discord.Option(bool, "Đảo thứ tự các art. Mặc định: False.")=False,
+                     gacha: discord.Option(bool, "Lấy ra một art ngẫu nhiên trong số. Mặc định: False.")=False,
+                     slide: discord.Option(bool, "Autoplay khi số lượng art từ 2 trở lên. Mặc định: False.")=False,
                      server: discord.Option(
-                        description="Các server search, mặc định là Safebooru(SFW).",
+                        description="Các server search. Mặc định: server cuối từng dùng.",
                         choices=[
                             discord.OptionChoice(name="safebooru"),
                             discord.OptionChoice(name="gelbooru"),
@@ -988,7 +988,7 @@ async def art_search(interaction: discord.Interaction,
 
     val.set('last_keywords', keywords)
     
-    if quantity > 100: quantity = 100
+    if quantity > 1000: quantity = 1000
     
     art.img = None
     content, embed, view = await art_embed(
@@ -1007,10 +1007,34 @@ async def art_search(interaction: discord.Interaction,
     msg_id = msgs.id
     
     ok = False
-    try:
-        ok = await art.search(msg_id, keywords=keywords, limit=quantity, page=page, random=random, gacha=gacha, block=val.img_block, mode=server)
-    except Exception as e:
-        print(f"{get_real_time()}> Lỗi khi tìm art: ", e)
+    
+    async def _start_search():
+        try:
+            return await art.search(msg_id, keywords=keywords, limit=quantity, page=page, random=random, gacha=gacha, block=val.img_block, mode=server)
+        except Exception as e:
+            print(f"{get_real_time()}> Lỗi khi tìm art: ", e)
+            return False
+    
+    ok = await _start_search()
+    
+    if not ok and quantity > 500:
+        quantity = 500
+        ok = await _start_search()
+    if not ok and quantity > 100:
+        quantity = 100
+        ok = await _start_search()
+    if not ok and quantity > 50:
+        quantity = 50
+        ok = await _start_search()
+    if not ok and quantity > 20:
+        quantity = 20
+        ok = await _start_search()
+    if not ok and quantity > 10:
+        quantity = 10
+        ok = await _start_search()
+    if not ok and quantity > 1:
+        quantity = 1
+        ok = await _start_search()
     
     if ok and slide and quantity > 1: await art.slide(interaction=msg, msg_id=msg_id)
     elif ok: 
