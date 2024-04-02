@@ -304,7 +304,7 @@ async def voice_make_tts(text):
     for channel in voice_channels:
         members = channel.members
         for member in members:
-            if member.display_name in name:
+            if (member.display_name or member.name) in name:
                 try:
                     url = await tts_get(text)
                 except Exception as e:
