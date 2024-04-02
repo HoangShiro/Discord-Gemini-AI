@@ -181,7 +181,7 @@ async def tts_get(text):
     
     jtext = await model.generate_content_async(prompt)
     
-    url = tts_get_url(jtext)
+    url = tts_get_url(jtext.text)
     
     """response = requests.get(url)
     st_log = await vals_load('user_files/vals.json', 'st_log')
