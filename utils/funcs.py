@@ -1011,7 +1011,7 @@ async def new_chat():
   val.set('one_cmd', 0)
   
   if val.public:
-      public_remind = load_prompt("saves/public_chat.txt")
+      public_remind = load_prompt("saves/public.txt")
       chat.history.extend(public_remind)
 
 # Num to emoji
