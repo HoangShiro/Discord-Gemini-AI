@@ -40,6 +40,8 @@ class AllStatus:
         self.now_chat_ai = ""               # Chat mới của bot
         self.old_chat_ai = ""               # chat cũ của bot
         self.in_reply = False               # Bot có đang reply hay không
+        self.in_notice = False              # Check xem bot có đang bị nhắc nhở hay không
+        self.in_creative = False            # Tương tự như trên
         self.stop_chat = 0                  # Dừng chat nếu phát hiện lỗi API
         self.CD = 300                       # Thời gian đếm ngược trước khi check tin nhắn
         self.CD_idle = 0                    # Thời gian đếm tiến trước khi work trở lại

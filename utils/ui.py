@@ -121,7 +121,15 @@ async def rmv_bt_atv(interaction):
     from utils.api import chat
 
     await interaction.message.delete()
+    if val.in_notice:
+        chat.rewind()
+        val.set('in_notice', False)
+    if val.in_creative:
+        chat.rewind()
+        val.set('in_creative', False)
+        
     chat.rewind()
+    
     if val.last_mess_id == val.old_mess_id:
         val.set('last_mess_id', None)
         val.set('old_mess_id', None)

@@ -75,23 +75,26 @@ async def gemini_rep(mess, limit_check=True, creative_check=True):
                 await _rechat()
                 creative = load_prompt("saves/creative.txt")
                 chat.history.extend(creative)
+                val.set('in_creative', True)
                 return None
-        
+            else: val.set('in_creative', False)
         return reply
     
-    def _limit_check():
+    def _limit_check(reply):
         if not limit_check: return
         remind = load_prompt("saves/limit.txt")                     # Kiểm tra xem bot có chat dài quá giới hạn, nếu có thì thêm lời nhắc vào history
         num = txt_read("saves/limit.txt")
-        limit = 150
+        limit = 200
         if num:
             num = re.sub(r"[^\d]", "", num)
         if num:
             limit = int(num)
-        if len(response.text) > limit:
+        if len(reply) > limit:
+            val.set('in_notice', True)
             chat.history.extend(remind)
             if val.chat_csl: print(f"{get_real_time()}> ", remind)
-        
+        else: val.set('in_notice', False)
+            
         if val.bug_csl:
             print("\n")
             print("===== [CHAT HISTORY] =====")
@@ -130,7 +133,7 @@ async def gemini_rep(mess, limit_check=True, creative_check=True):
     if not reply: return None
     
     _addtime()
-    _limit_check()
+    _limit_check(reply)
     _donechat()
     return reply
 
