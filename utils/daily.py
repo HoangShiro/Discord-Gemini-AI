@@ -20,7 +20,9 @@ async def sec_check():
     
     # Rep khi bot rảnh
     if val.CD == 0 and val.now_chat:
-        asyncio.create_task(reply_id())
+        if not val.in_reply:
+            val.set('in_reply', True)
+            asyncio.create_task(reply_id())
         
     # Trời lại làm việc nếu không có chat mới
     elif val.CD == 0 and not val.now_chat:
