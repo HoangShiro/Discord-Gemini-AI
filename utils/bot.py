@@ -228,8 +228,9 @@ async def on_ready():
     with open('saves/char.json', 'w', encoding="utf-8") as file:
         json.dump(char, file, ensure_ascii=False, indent=4)"""
     
-    # Lưu bot name và avatar
+    # Lưu bot name và reset chat state
     val.set('ai_name', bot.user.name)
+    val.set('in_reply', False)
     
     # Load các button
     await load_btt()
