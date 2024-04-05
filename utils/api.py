@@ -50,7 +50,6 @@ async def gemini_rep(mess, limit_check=True, creative_check=True):
         new_chat = val.now_chat
         all_chat = old_chat + new_chat
         val.set('now_chat', all_chat)
-        val.set('in_reply', False)
         
         chat.rewind()
         await _error()
@@ -125,6 +124,7 @@ async def gemini_rep(mess, limit_check=True, creative_check=True):
         val.set('in_reply', False)
     except Exception as e:
         print(f"{get_real_time()}> Lỗi GEMINI API: ", e)
+        val.set('in_reply', False)
         await _rechat()
         return None
 

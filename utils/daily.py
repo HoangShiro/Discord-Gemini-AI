@@ -26,6 +26,7 @@ async def sec_check():
         
     # Trời lại làm việc nếu không có chat mới
     elif val.CD == 0 and not val.now_chat:
+        val.set('in_reply', False)
         if val.public: val.set('CD', val.chat_speed) # Chờ trước khi rep tiếp
         if val.CD_idle == val.to_worktime:
             val.set('CD', val.to_breaktime)
