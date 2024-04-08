@@ -184,7 +184,20 @@ async def tts_get(text):
     if len(text) > 210: text = text_tts_cut(text)
     
     if not text: return
+    
+    vie = re.search(r'việt|vietnamese', text, re.IGNORECASE)
+    en = re.search(r'english|tiếng anh|anh ngữ', text, re.IGNORECASE)
+    kr = re.search(r'korean|tiếng hàn|hàn ngữ', text, re.IGNORECASE)
+    
+    lang = None
+    
+    if vie: lang = "Vietnamese"
+    elif en: lang = "English"
+    elif kr: lang = "Korean"
+    
     prompt = f"Translate the following chat into Japanese(hiragana and katakana) anime spoken style with the character's personality being '{val.ai_char}': {text}"
+    
+    if lang: prompt = f"Please pronounce the following {lang} sentence in katakana, as best as possible, no need to worry about correct grammar: {text}"
     
     jtext = await model.generate_content_async(prompt)
     
