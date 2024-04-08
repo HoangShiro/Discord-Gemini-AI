@@ -162,7 +162,7 @@ async def gemini_cmd(cmd):
 
 # TTS - VoiceVox
 async def tts_get(text):
-    from utils.funcs import remove_act, romaji_to_katakana, text_translate, text_translate2, text_tts_cut
+    from utils.funcs import remove_act, romaji_to_katakana, text_translate, text_translate2, text_tts_cut, list_to_str
     from utils.bot import val
     #global alt_trans
 
@@ -185,9 +185,11 @@ async def tts_get(text):
     
     if not text: return
     
-    vie = re.search(r'việt|vietnamese', text, re.IGNORECASE)
-    en = re.search(r'english|tiếng anh|anh ngữ', text, re.IGNORECASE)
-    kr = re.search(r'korean|tiếng hàn|hàn ngữ', text, re.IGNORECASE)
+    old_chat = val.old_chat
+    u_msg = list_to_str(old_chat)
+    vie = re.search(r'việt|vietnamese', u_msg, re.IGNORECASE)
+    en = re.search(r'english|tiếng anh|anh ngữ', u_msg, re.IGNORECASE)
+    kr = re.search(r'korean|tiếng hàn|hàn ngữ', u_msg, re.IGNORECASE)
     
     lang = None
     
