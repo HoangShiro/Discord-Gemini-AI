@@ -468,17 +468,19 @@ char = {
         },
 }
 
-Q_litmit = "(SYSTEM: Những chat sau hãy chat ngắn hơn 200 ký tự!)"
-A_limit = "Oki nè."
+Q_litmit = "*bạn đột nhiên cảm thấy bản thân nên nói ít hơn 200 ký tự*"
+A_limit = "sẽ nói ít lại"
 
-Q_public = "(SYSTEM: Những chat sau là chat nhóm, hãy chat với tư cách là chính bản thân bạn. Nếu cuộc trò chuyện nhắc tới một người khác, hãy theo sát nó một cách sáng tạo bằng chính bản thân bạn!)"
-A_public = "Oki nè, mình sẽ là chính mình."
+Q_public = "*bạn vừa tham gia một nhóm chat gồm nhiều người, mỗi người sẽ có tag name ở đằng trước.*"
+A_public = "Chào mọi người!"
 
 Q_chat = "Bạn là bot AI trên discord. Tin nhắn tiếp theo sẽ là của bạn với user - chủ nhân mới của bạn. Hãy hướng dẫn master của bạn bắt đầu bằng lệnh `/prompts` để thiết lập thông tin về bản thân bạn, lệnh `/chatmode` để quyết định bạn có trả lời người lạ hay không, lệnh `/newchat` để làm mới cuộc trò chuyện, lệnh `/voice` để set voice cho bạn, cuối cùng là lệnh `/update` để cập nhật cho bạn. Được rồi, bây giờ hãy hướng dẫn chủ nhân mới của bạn đi!"
-A_chat = "*vẫy chào* Mình hiểu rồi nè."
+A_chat = "*vẫy chào* Mình hiểu rồi nè"
 
-Q_creative = "(SYSTEM: Hãy tiếp tục cuộc trò chuyện bên trên một cách sáng tạo hơn!)"
-A_creative = "Oki nè."
+Q_creative = "*tự nhiên bạn thấy cần chat sáng tạo hơn*"
+A_creative = "Đổi chủ đề đi"
+
+Start_P = "Hãy chat ngắn gọn trong vài từ, ngữ điệu như trong anime."
 
 # Hàm update file json
 def json_update(path, vals):
@@ -506,12 +508,16 @@ def update_cfg(path, vals):
                     with open(path, "a") as config_file:
                         config_file.write(f"{key} = {repr(value)}\n")
 # Hàm tại file mới
-def createfile(path, Q, A):
+def createfile(path, Q=None, A=None):
     if not os.path.exists(path):
         try:
             with open(path, "w", encoding="utf-8") as file:
                 # Write both text1 and text2 to the file, separated by a newline
-                file.write(Q + "\n" + A)
+                if Q and A: file.write(Q + "\n" + A)
+                elif Q: file.write(Q)
+                elif A: file.write(A)
+                else: file.close()
+                
         except OSError as e:
             raise OSError(f"An error occurred while creating the file: {e}")
 
@@ -559,6 +565,7 @@ if __name__ == '__main__':
     createfile('saves/limit.txt', Q_litmit, A_limit)
     createfile('saves/public.txt', Q_public, A_public)
     createfile('saves/creative.txt', Q_creative, A_creative)
+    createfile('saves/system_prompt.txt', Q=Start_P)
     json_update('saves/vals.json', default_values)
     json_update('saves/char.json', char)
     plugins("plugins/apps.py", plugins_para)

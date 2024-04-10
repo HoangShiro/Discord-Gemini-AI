@@ -25,6 +25,7 @@ if __name__ == '__main__':
     createfile('saves/limit.txt', Q_litmit, A_limit)
     createfile('saves/public.txt', Q_public, A_public)
     createfile('saves/creative.txt', Q_creative, A_creative)
+    createfile('saves/system_prompt.txt', Q=Start_P)
     json_update('saves/vals.json', default_values)
     json_update('saves/char.json', char)
     plugins("plugins/apps.py", plugins_para)

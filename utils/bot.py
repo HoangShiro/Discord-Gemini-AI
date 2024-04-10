@@ -113,6 +113,9 @@ class AllStatus:
         # Lời nhắc cho user
         self.no_perm = "> Bạn hem có quyền sử dụng lệnh nỳ." # Không có quyền sử dụng slash
         
+        # Gemini
+        self.gmodel = "gemini-1.0-pro-latest"
+        
         # Preset viewer
         self.preset_list = []
         self.preset_now = 0
@@ -461,6 +464,7 @@ async def keys(interaction: discord.Interaction, gemini: str = None, voicevox: s
     
     if gemini:
         val.set('gai_key', gemini)
+        val.set('gmodel', "gemini-1.0-pro-latest")
     if voicevox:
         val.set('vv_key', voicevox)
     await interaction.response.send_message(f"`Đã cập nhật key cho {val.ai_name}`", ephemeral=True)
@@ -1062,7 +1066,24 @@ async def art_search(interaction: discord.Interaction,
         random_bt=False,
         )
         await msg.edit_original_response(content=content, embed=embed, view=view)
+
+# Đổi model chat
+@bot.slash_command(name="chat_model", description=f"Đổi model chat")
+async def remind_list(interaction: discord.Interaction, model:discord.Option(
+        description="Mặc định: Gemini Pro 1.0 latest",
+        choices=[
+            discord.OptionChoice(name="Gemini Pro 1.0 stable", value="gemini-1.0-pro"),
+            discord.OptionChoice(name="Gemini Pro 1.0 custom", value="gemini-1.0-pro-001"),
+            discord.OptionChoice(name="Gemini Pro 1.0 latest", value="gemini-1.0-pro-latest"),
+            discord.OptionChoice(name="Gemini Pro 1.5 latest", value="gemini-1.5-pro-latest"),
+        ],) = "gemini-1.0-pro-latest"):
     
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    val.set('gmodel', model)
+    
+    await interaction.response.send_message(content=f"> Đã đổi model: {model}", ephemeral=True)
+  
 def bot_run():
     try:
         bot.run(val.bot_key)

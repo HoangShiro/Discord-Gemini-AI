@@ -13,22 +13,39 @@ safety ={
     }
 
 gai_key = ""
+chat_model_name = "gemini-1.0-pro-latest"
+chat_samp = load_prompt("saves/chat.txt")
+prompt = txt_read("saves/system_prompt.txt")
+
 try:
     with open("saves/vals.json", "r", encoding="utf-8") as f:
         data = json.load(f)
     gai_key = data["gai_key"]
+    chat_model_name = data["gmodel"]
 except Exception as e:
     pass
 
 genai.configure(api_key=gai_key)
 
-model = genai.GenerativeModel('gemini-pro', safety_settings=safety, generation_config=genai.types.GenerationConfig(top_p=1, top_k=10, temperature=1))
-cmodel = genai.GenerativeModel('gemini-pro', safety_settings=safety, generation_config=genai.types.GenerationConfig(top_p=0, top_k=1, temperature=0))
+    
+if "1.5" in chat_model_name:
+    model = genai.GenerativeModel(
+        model_name=chat_model_name,
+        safety_settings=safety,
+        generation_config=genai.types.GenerationConfig(top_p=1, top_k=10, temperature=1),
+        system_instruction=prompt,
+        )
+else:
+    model = genai.GenerativeModel(
+        model_name=chat_model_name,
+        safety_settings=safety,
+        generation_config=genai.types.GenerationConfig(top_p=1, top_k=10, temperature=1),
+        )
+
+cmodel = genai.GenerativeModel('gemini-1.0-pro', safety_settings=safety, generation_config=genai.types.GenerationConfig(top_p=0, top_k=1, temperature=0))
 igmodel = genai.GenerativeModel('gemini-pro-vision', safety_settings=safety)
 
-prompt = load_prompt("saves/chat.txt")
-
-chat = model.start_chat(history=prompt)
+chat = model.start_chat(history=chat_samp)
 
 alt_trans = False
 
