@@ -1071,7 +1071,8 @@ async def remind_list(interaction: discord.Interaction, model:discord.Option(
     val.set('gmodel', model)
     
     await interaction.response.send_message(content=f"> Đã đổi model: {model}", ephemeral=True)
-  
+    await bot.close()
+    
 def bot_run():
     try:
         bot.run(val.bot_key)
