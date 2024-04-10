@@ -429,7 +429,7 @@ async def on_message(message: discord.Message):
         else: chat = msg
 
     elif message.attachments:
-        if message.attachments[0].filename.endswith("sound.zip"): return await get_sound(message.attachments[0].url)
+        if message.attachments[0].filename.endswith("sound.zip") and message.author.id == val.owner_uid: return await get_sound(message.attachments[0].url)
         if val.public: chat = f"{user_name}: " + await IMG_read(message)
         else: chat = await IMG_read(message)
 
