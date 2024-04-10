@@ -120,7 +120,7 @@ async def gemini_rep(mess, limit_check=True, creative_check=True):
     
     await _startchat()
     try:
-        response = chat.send_message(mess)                          # Gửi tới API
+        response = await chat.send_message_async(mess)                          # Gửi tới API
         val.set('in_reply', False)
     except Exception as e:
         print(f"{get_real_time()}> Lỗi GEMINI API: ", e)

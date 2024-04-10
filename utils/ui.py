@@ -154,7 +154,16 @@ async def rc_atv(interaction):
 
     await byB(interaction)
     last = chat.history[-2:]
+    
+    if val.in_notice:
+        chat.rewind()
+        val.set('in_notice', False)
+    if val.in_creative:
+        chat.rewind()
+        val.set('in_creative', False)
+        
     chat.rewind()
+    
     try:
         async def _chat():
             new_chat = val.old_chat
