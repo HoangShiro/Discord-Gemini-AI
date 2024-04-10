@@ -1,5 +1,5 @@
 py-cord
-google-generativeai
+google-generativeai==0.6.1
 pillow
 pytz
 translate
@@ -7,3 +7,5 @@ mtranslate
 langdetect
 jaconv
 PyNaCl
+booru
+BingImageCreator-fork==0.7.5
