@@ -1109,7 +1109,7 @@ async def pfp_change(interaction: discord.Interaction, pfp:discord.Option(
     else: await mess.delete_original_response()
 
 # play audio
-@bot.slash_command(name="sound", description=f"Show danh sách lời nhắc")
+@bot.slash_command(name="sound", description=f"Play local sound")
 async def sound_play(interaction: discord.Interaction, sound:str):
     if not val.public:
         if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
