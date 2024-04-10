@@ -290,13 +290,15 @@ async def on_message(message: discord.Message):
 
     # Dành cho fix prompt
     if val.prompt_fix and message.author.id == val.owner_uid:
-        val.set('prompt_fix', False)
         if len(message.content) < 30 and message.content.count("\n") == 0:
-            if "system" not in val.prompt_fix: return await message.channel.send('> Prompt phải dài hơn 30 ký tự và tối thiểu 2 dòng.')
+            if "system" not in val.prompt_fix:
+                val.set('prompt_fix', False)
+                return await message.channel.send('> Prompt phải dài hơn 30 ký tự và tối thiểu 2 dòng.')
         
         fix_mess = message.content.strip("`")
         txt_save(f'saves/{val.prompt_fix}.txt', fix_mess)
         await message.channel.send(f'> Đã đổi prompt: {val.prompt_fix}.')
+        val.set('prompt_fix', False)
         return
     
     if val.ai_pchat_channel:
