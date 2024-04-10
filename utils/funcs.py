@@ -361,8 +361,30 @@ async def sob_play(file):
         if not guild.voice_client: return
         await voice_send(file, guild.voice_client)
         return True
-        
 
+# get sound
+async def get_sound(url):
+  from utils.bot import val
+  from utils.daily import get_real_time
+  
+  path = f"sound/{val.get_preset_name}"
+  
+  async with aiohttp.ClientSession() as session:
+    async with session.get(url) as response:
+      if response.status != 200:
+        print(f"{get_real_time()}> Lỗi tải sound: {response.status}")
+        return False
+      
+      with open("temp.zip", "wb") as f:
+        f.write(await response.read())
+  
+  with ZipFile("temp.zip", "r") as zip_ref:
+    zip_ref.extractall(path)
+  
+  os.remove("temp.zip")
+  
+  return True
+       
 # Hàm lấy link
 def get_img_link(text:str=None):
     from utils.bot import val
