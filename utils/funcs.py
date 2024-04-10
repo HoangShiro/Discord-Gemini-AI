@@ -351,7 +351,7 @@ async def sob_play(file):
     from utils.bot import bot, val
     from utils.reply import voice_send
     
-    file = f"sound/{file}.wav"
+    file = f"sound/{file}"
     
     if not os.path.exists(file): return False
     else:
