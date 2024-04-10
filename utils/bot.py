@@ -503,7 +503,7 @@ async def update(interaction: discord.Interaction):
     val.update('one_cmd', 1)
     val.update('total_update', 1)
     
-    mess = await interaction.response.send_message(f"`Đang cập nhật...`", ephemeral=True)
+    mess = await interaction.response.send_message(f"> Đang cập nhật...", ephemeral=True)
     await edit_last_msg()
     val.set('last_mess_id', None)
     val.set('old_mess_id', None)
@@ -1084,13 +1084,15 @@ async def pfp_change(interaction: discord.Interaction, pfp:discord.Option(
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
     if not get_img_link(url): return await interaction.response.send_message(f"> Hình như '{url}' không phải là ảnh?", ephemeral=True)
+
+    mess = await interaction.response.send_message(f"> Đang đổi {pfp} cho {val.ai_name}...", ephemeral=True)
     
     ok = False
     if pfp == "avatar": ok = await avatar_change(img_url=url)
     else: ok = await banner_change(img_url=url)
     
-    if not ok: await interaction.response.send_message(f"> Có lỗi khi đổi {pfp}. Check console để xem chi tiết.", ephemeral=True)
-    else: await byB(interaction)
+    if not ok: await mess.edit_original_response(content=f"> Có lỗi khi đổi {pfp}, check console để biết thêm chi tiết.")
+    else: await mess.delete_original_response()
     
 def bot_run():
     try:
