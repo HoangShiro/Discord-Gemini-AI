@@ -301,6 +301,7 @@ async def on_message(message: discord.Message):
         val.set('prompt_fix', False)
         return
     
+    # Nếu chat ngoài channel chỉ đinh
     if val.ai_pchat_channel:
         if message.channel.id != val.ai_pchat_channel:
             if message.author.id != val.owner_uid: return
@@ -378,6 +379,18 @@ async def on_message(message: discord.Message):
                     return await message.channel.send(embed=embed, view=view)
             return
     else:
+        if "1.5" in val.gmodel and message.author.id == val.owner_uid:
+            embed, view = await bot_notice(
+                tt=f"Model: {val.gmodel}",
+                des=f"> Model này chỉ hỗ trợ chat private.",
+                footer=f"Đổi /chat_model để {val.ai_name} có thể chat với mọi người.",
+                ava_link=bot.user.display_avatar,
+                au_name=message.author.display_name,
+                au_avatar=message.author.display_avatar,
+                au_link=message.author.display_avatar,
+                )
+            return await message.channel.send(embed=embed, view=view)
+        
         if isinstance(message.channel, discord.DMChannel):
             if message.author.id != val.owner_uid: return
             bot_name = val.ai_name.split(" ")
