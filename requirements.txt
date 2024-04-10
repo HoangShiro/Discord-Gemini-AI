@@ -1,5 +1,5 @@
 py-cord
-google-generativeai==0.6.1
+google-generativeai==0.5.0
 pillow
 pytz
 translate
