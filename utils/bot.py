@@ -572,7 +572,7 @@ async def newchat(interaction: discord.Interaction):
     mess = await mess.edit(embed=embed)
 
 # Chuyển chế độ chat
-@bot.slash_command(name="chatmode", description=f"Kêu {val.ai_name} chat public/private.")
+@bot.slash_command(name="chat_mode", description=f"Kêu {val.ai_name} chat public/private.")
 async def chat_mode(interaction: discord.Interaction):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     

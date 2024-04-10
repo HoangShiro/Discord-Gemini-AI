@@ -145,9 +145,10 @@ async def des_check():
     from utils.bot import val
     from utils.daily import get_real_time
 
+    sys = txt_read('saves/system_prompt.txt')
     chat = txt_read('saves/chat.txt')
     des = "Không có thông tin nhân vật."
-    prompt = f"Tóm tắt ngắn gọn thông tin nhân vật của {val.ai_name} trên cùng một dòng, dựa trên prompt bên dưới. Cho phép NSFW nếu prompt có NSFW:\n\n{chat}"
+    prompt = f"Tóm tắt ngắn gọn thông tin nhân vật của {val.ai_name} trên cùng một dòng, dựa trên prompt bên dưới. Cho phép NSFW nếu prompt có NSFW:\n\n{sys}\n{chat}"
     try:
         des = await gemini_task(prompt)
         print(f"{get_real_time()}> tóm tắt của {val.ai_name} được tạo thành công.")
