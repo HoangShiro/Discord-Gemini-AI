@@ -347,7 +347,10 @@ async def sob(sound_list, sound=None):
         return None
 
 # Hàm lấy link
-def get_img_link(text):
+def get_img_link(text:str=None):
+    from utils.bot import val
+    
+    if not text: text = val.last_img
     match = re.search(r"(http\S+.\S+.(jpg|jpeg|png|webp|gif))", text)
     if match:
         link = match.group(1)
