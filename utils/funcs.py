@@ -353,21 +353,20 @@ async def sob_play(file):
     
     file = f"sound/{file}.wav"
     
-    if not os.path.isdir(file): return False
+    if not os.path.exists(file): return False
     else:
         guild = bot.get_guild(val.ai_guild)
         # Huỷ nếu không trong voice
-        if not guild: return
-        if not guild.voice_client: return
+        if not guild: return False
+        if not guild.voice_client: return False
         await voice_send(file, guild.voice_client)
         return True
 
 # get sound
 async def get_sound(url):
-  from utils.bot import val
   from utils.daily import get_real_time
   
-  path = f"sound/{val.get_preset_name}"
+  path = f"sound"
   
   async with aiohttp.ClientSession() as session:
     async with session.get(url) as response:
