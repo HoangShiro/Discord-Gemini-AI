@@ -1072,6 +1072,26 @@ async def remind_list(interaction: discord.Interaction, model:discord.Option(
     
     await interaction.response.send_message(content=f"> Đã đổi model: {model}", ephemeral=True)
     await bot.close()
+
+# Đổi avatar hoặc banner
+@bot.slash_command(name="pfp", description=f"Đổi avatar hoặc banner cho {val.ai_name}")
+async def remind_list(interaction: discord.Interaction, pfp:discord.Option(
+        description="Chọn pfp. Banner hỗ trợ .gif",
+        choices=[
+            discord.OptionChoice(name="Avatar", value="avatar"),
+            discord.OptionChoice(name="Banner", value="banner"),
+        ],), url:str):
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    if get_img_link(url): val.set('last_img', url)
+    else: return await interaction.response.send_message(f"> Hình như '{url}' không phải là ảnh?", ephemeral=True)
+    
+    ok = False
+    if pfp == "avatar": ok = await avatar_change()
+    else: ok = await banner_change()
+    
+    if not ok: await interaction.response.send_message(f"> Có lỗi khi đổi {pfp}. Check console để xem chi tiết.", ephemeral=True)
+    else: await byB(interaction)
     
 def bot_run():
     try:

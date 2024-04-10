@@ -348,7 +348,7 @@ async def sob(sound_list, sound=None):
 
 # Hàm lấy link
 def get_img_link(text):
-    match = re.search(r"(http\S+.\S+.(jpg|jpeg|png))", text)
+    match = re.search(r"(http\S+.\S+.(jpg|jpeg|png|webp|gif))", text)
     if match:
         link = match.group(1)
         return link
@@ -364,11 +364,14 @@ async def get_msg_img_url(message: discord.Message):
     if not message.reference:
         if message.content:
             url = get_img_link(message.content)
-            if url: val.set('last_img', url)
-
+            if url:
+                val.set('last_img', url)
+                return True
         if message.attachments:
             attachment = message.attachments[0]
-            if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')): val.set('last_img', attachment.url)
+            if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png', '.webp', '.gif')):
+                val.set('last_img', attachment.url)
+                return True
 
     # Khi là tin nhắn được nhắc tới
     else:
@@ -379,10 +382,16 @@ async def get_msg_img_url(message: discord.Message):
         if ref_msg:
             if ref_msg.content and not ref_msg.attachments:
                 url = get_img_link(ref_msg.content)
-                if url: val.set('last_img', url)
+                if url:
+                    val.set('last_img', url)
+                    return True
             elif ref_msg.attachments:
                 attachment = ref_msg.attachments[0]
-                if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')): val.set('last_img', attachment.url)
+                if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png', '.webp', '.gif')):
+                    val.set('last_img', attachment.url)
+                    return True
+    
+    return False
 
 # Xoá tag name mở đầu
 def name_cut(reply: str):
@@ -530,6 +539,7 @@ async def avatar_change(img_url=None):
     embed, view = await normal_embed(description=f"> Avatar mới của {val.ai_name}:", img=avatar_url, color=0xffbf75, delete=True)
     await send_embed(embed=embed, view=view)
   print(f'{get_real_time()}> {val.ai_name} đã thay đổi ảnh đại diện.')
+  return True
 
 # Đổi banner
 async def banner_change(img_url=None):
@@ -561,6 +571,7 @@ async def banner_change(img_url=None):
                 val.set('ai_banner_url', url)
             else:
                 print(f'{get_real_time()}> Lỗi khi cập nhật ảnh bìa : {response.status}.')
+    return True
 
 # Thay đổi mood
 def mood_change(name):
