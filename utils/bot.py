@@ -290,12 +290,12 @@ async def on_message(message: discord.Message):
 
     # Dành cho fix prompt
     if val.prompt_fix and message.author.id == val.owner_uid:
-        if len(message.content) >= 50 and message.content.count("\n") > 0:
+        if len(message.content) >= 30 and message.content.count("\n") > 0:
             fix_mess = message.content.strip("`")
             txt_save(f'saves/{val.prompt_fix}.txt', fix_mess)
             await message.channel.send(f'`Đã đổi prompt: {val.prompt_fix}.`')
         else:
-            await message.channel.send('`Prompt phải dài hơn 50 ký tự và tối thiểu 2 dòng.`')
+            await message.channel.send('`Prompt phải dài hơn 30 ký tự và tối thiểu 2 dòng.`')
         val.set('prompt_fix', False)
         return
     
@@ -640,39 +640,25 @@ async def prompts(interaction: discord.Interaction, view: discord.Option(
             discord.OptionChoice(name="Limit", value="limit"),
             discord.OptionChoice(name="Public", value="public"),
             discord.OptionChoice(name="Creative", value="creative"),
+            discord.OptionChoice(name="System (Gemini 1.5 only)", value="system_prompt"),
         ],
-    ) = "char", fix: bool = False, char_check: bool = False):
+    ) = None, fix: bool = False):
     if val.owner_uid != interaction.user.id: return await interaction.response.send_message(val.no_perm, ephemeral=True)
 
     val.update('total_cmd', 1)
     val.update('one_cmd', 1)
     
-    if char_check: return await interaction.response.send_message(f"`Tính cách hiện tại: {val.ai_char}`", ephemeral=True)
+    if not view: return await interaction.response.send_message(f"`Tính cách hiện tại: {val.ai_char}`", ephemeral=True)
     
-    prompt = ""
-    if view == "chat":
-        prompt = txt_read('saves/chat.txt')
-        if fix:
-            val.set('prompt_fix', "chat")
-    elif view == "limit":
-        if fix:
-            val.set('prompt_fix', "limit")
-        prompt = txt_read('saves/limit.txt')
-    elif view == "public":
-        if fix:
-            val.set('prompt_fix', "public")
-        prompt = txt_read('saves/public_chat.txt')
-    elif view == "creative":
-        if fix:
-            val.set('prompt_fix', "creative")
-        prompt = txt_read("saves/creative.txt")
+    prompt = txt_read(f"saves/{view}.txt")
+    
     if fix:
+        val.set('prompt_fix', view)
         await interaction.response.send_message("> Hãy gửi prompt mới vào chat.", ephemeral=True)
-        await send_mess(interaction, prompt, inter=True)
     else:
         await interaction.response.send_message(f"> '{view}' Prompt: ", ephemeral=True)
         await send_mess(interaction, prompt, inter=True)
-
+    
 # Logs
 @bot.slash_command(name="clogs", description=f"Nhật ký của {val.ai_name}")
 async def cslog(interaction: discord.Interaction, get: discord.Option(
