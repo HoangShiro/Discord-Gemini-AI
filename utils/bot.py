@@ -1106,7 +1106,16 @@ async def pfp_change(interaction: discord.Interaction, pfp:discord.Option(
     
     if not ok: await mess.edit_original_response(content=f"> Có lỗi khi đổi {pfp}, check console để biết thêm chi tiết.")
     else: await mess.delete_original_response()
+
+# play audio
+@bot.slash_command(name="sound", description=f"Show danh sách lời nhắc")
+async def sound_play(interaction: discord.Interaction, sound:str):
+    if not val.public:
+        if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
+    if not await sob_play(sound): return await interaction.response.send_message(f"> Không có sound: {sound}.", ephemeral=True)
+    else: return await interaction.response.send_message(f"> Đã play: {sound}.", ephemeral=True)
+
 def bot_run():
     try:
         bot.run(val.bot_key)

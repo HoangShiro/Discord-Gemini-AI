@@ -312,7 +312,7 @@ async def voice_make_tts(text):
                     return
                 if url: await voice_send(url, guild.voice_client)
 
-# Soundboard get
+# Soundboard get random
 async def sob(sound_list, sound=None):
     audio_dir = "/sound"
 
@@ -345,6 +345,23 @@ async def sob(sound_list, sound=None):
     except Exception as e:
         print(f"Error processing sound: {e}")
         return None
+
+# Soundboard get and play
+async def sob_play(file):
+    from utils.bot import bot, val
+    from utils.reply import voice_send
+    
+    file = f"sound/{file}.wav"
+    
+    if not os.path.isdir(file): return False
+    else:
+        guild = bot.get_guild(val.ai_guild)
+        # Huỷ nếu không trong voice
+        if not guild: return
+        if not guild.voice_client: return
+        await voice_send(file, guild.voice_client)
+        return True
+        
 
 # Hàm lấy link
 def get_img_link(text:str=None):
