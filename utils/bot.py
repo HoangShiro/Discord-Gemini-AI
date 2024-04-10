@@ -1057,7 +1057,7 @@ async def art_search(interaction: discord.Interaction,
 
 # Đổi model chat
 @bot.slash_command(name="chat_model", description=f"Đổi model chat")
-async def remind_list(interaction: discord.Interaction, model:discord.Option(
+async def chat_mode(interaction: discord.Interaction, model:discord.Option(
         description="Mặc định: Gemini Pro 1.0 latest",
         choices=[
             discord.OptionChoice(name="Gemini Pro 1.0 stable", value="gemini-1.0-pro"),
@@ -1075,7 +1075,7 @@ async def remind_list(interaction: discord.Interaction, model:discord.Option(
 
 # Đổi avatar hoặc banner
 @bot.slash_command(name="pfp", description=f"Đổi avatar hoặc banner cho {val.ai_name}")
-async def remind_list(interaction: discord.Interaction, pfp:discord.Option(
+async def pfp_change(interaction: discord.Interaction, pfp:discord.Option(
         description="Chọn pfp. Banner hỗ trợ .gif",
         choices=[
             discord.OptionChoice(name="Avatar", value="avatar"),
