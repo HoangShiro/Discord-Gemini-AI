@@ -281,7 +281,7 @@ async def music_dl(url:str=None, name:str=None):
         except Exception as e: return
     
     with builtins.open("sound/caption.xml", "w") as f:
-        f.write(cp)
+        f.write(cp.xml_captions)
  
 async def music_play(inter:discord.Interaction):
     from utils.bot import val
