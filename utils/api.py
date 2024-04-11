@@ -1,6 +1,6 @@
 """Xử lý thông tin của API"""
 
-import re, json, time, builtins, asyncio, os
+import re, json, time, builtins, asyncio, os, discord
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 from pytube import YouTube, Search
@@ -283,9 +283,10 @@ async def music_dl(url:str=None, name:str=None):
     with builtins.open("sound/caption.xml", "w") as f:
         f.write(cp)
  
-async def music_play():
+async def music_play(inter:discord.Interaction):
     from utils.bot import val
     from utils.funcs import sob_play
+    from utils.ui import music_show
     
     file = "sound/caption.xml"
     if not os.path.exists(file):
@@ -318,13 +319,15 @@ async def music_play():
                     print(text)
                     printed_captions.add(text)
                 val.set('current_caption', text)  # Update current caption
+                await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True)
                 found_caption = True
                 break
 
         if not found_caption and val.current_caption:  # Caption ended
             print()  # Print blank space
             val.set('current_caption', "")  # Reset current caption
-
+            await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True)
+            
         if elapsed_time > captions[-1][0] + captions[-1][1]:
             val.set("sound_playing", None)
             break

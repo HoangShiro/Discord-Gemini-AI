@@ -1257,7 +1257,7 @@ async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True
     
     if lyric: des = timebar + "\n" + lyric
     
-    embed, view = bot_notice(
+    embed, view = await bot_notice(
         tt=title,
         des=des,
         ava_link=cover,
