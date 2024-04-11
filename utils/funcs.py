@@ -1137,7 +1137,7 @@ async def count_to_max(inter: discord.Interaction):
     from utils.ui import music_show
     
     max = val.sound_lengh
-    loop = max/2
+    loop = max//2
     for i in range(loop + 1):
         # In thanh giả lập
         start = f"{i // 60}: {i % 60}"
