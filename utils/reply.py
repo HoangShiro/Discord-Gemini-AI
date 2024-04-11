@@ -241,8 +241,8 @@ async def send_mess(channel, reply, rep = False, inter = False):
 async def voice_send(url, ch):
     from utils.daily import get_real_time
     try:
-        if ch.voice_client is not None and ch.voice_client.is_playing():
-            await ch.voice_client.stop()
+        if ch.voice_client is not None and ch.is_playing():
+            await ch.stop()
             
         audio_source = FFmpegPCMAudio(url)
 
