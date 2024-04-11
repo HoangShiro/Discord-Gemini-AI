@@ -304,7 +304,7 @@ async def music_play(inter:discord.Interaction):
         text = child.text.strip()
         captions.append((start_time, duration, text))
     
-    val.set('sound_playing', True)
+    val.set('sound_playing', "[░░░░░░░░░░░░░░░]")
     asyncio.create_task(sob_play("sound/now.mp3"))
     asyncio.create_task(count_to_max())
     
