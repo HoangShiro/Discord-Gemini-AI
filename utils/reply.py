@@ -241,13 +241,12 @@ async def send_mess(channel, reply, rep = False, inter = False):
 async def voice_send(url, ch):
     from utils.daily import get_real_time
     try:
-        if ch is not None and ch.is_playing():
-            await ch.stop()
+        if ch is not None and ch.is_playing(): ch.stop()
             
         audio_source = FFmpegPCMAudio(url)
 
         # Play audio
-        await ch.play(audio_source, after=lambda e: print(f'Player error: {e}' if e else None))
+        ch.play(audio_source, after=lambda e: print(f'Player error: {e}' if e else None))
 
     except Exception as e:
         print(f"{get_real_time()}> Send voice error: {e}")
