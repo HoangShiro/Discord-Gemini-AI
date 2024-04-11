@@ -1145,6 +1145,9 @@ async def count_to_max(inter: discord.Interaction):
         await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
         await asyncio.sleep(2)
 
+    val.set("sound_playing", None)
+    await music_show(interaction=inter, play_bt=True, rmv_bt=None, edit=True, ermv_bt=True)
+    
 # Tạo thanh giả lập [██████████░░░░░]
 def _create_progress_bar(current, max):
   """
