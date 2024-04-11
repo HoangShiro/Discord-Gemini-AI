@@ -297,8 +297,10 @@ async def music_play(inter:discord.Interaction):
     from utils.ui import music_show
     
     file = "sound/caption.xml"
+    val.set('sound_playing', "[░░░░░░░░░░░░░░░]")
     if not os.path.exists(file):
-        asyncio.create_task(sob_play("sound/now.mp3"))
+        asyncio.create_task(sob_play("now.mp3"))
+        asyncio.create_task(count_to_max())
         await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True)
         return False
     
@@ -312,7 +314,7 @@ async def music_play(inter:discord.Interaction):
         text = child.text.strip()
         captions.append((start_time, duration, text))
     
-    val.set('sound_playing', "[░░░░░░░░░░░░░░░]")
+    
     asyncio.create_task(count_to_max())
     asyncio.create_task(sob_play("now.mp3"))
     
@@ -337,5 +339,6 @@ async def music_play(inter:discord.Interaction):
             
         if elapsed_time > captions[-1][0] + captions[-1][1]:
             val.set("sound_playing", None)
+            await music_show(interaction=inter, play_bt=True, rmv_bt=None, edit=True, ermv_bt=True)
             break
     

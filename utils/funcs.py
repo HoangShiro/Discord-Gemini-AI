@@ -369,6 +369,13 @@ async def sob_play(file):
 def sob_stop():
     from utils.bot import bot, val
 
+    val.set('sound_author', None)
+    val.set('sound_title', None)
+    val.set('sound_des', None)
+    val.set('sound_lengh', None)
+    val.set('sound_cover', None)
+    val.set('sound_playing', None)
+    
     guild = bot.get_guild(val.ai_guild)
     # Huỷ nếu không trong voice
     if not guild: return
@@ -1122,16 +1129,18 @@ def int_emoji(num:int):
 
 # Hàm đếm tiến
 async def count_to_max():
-  """
-  Hàm đếm tiến từ 0 tới max (giây) và in ra thanh giả lập mỗi giây.
-  """
-  from utils.bot import val
-  
-  max = val.sound_lengh
-  for i in range(max + 1):
-    # In thanh giả lập
-    val.set("sound_playing", f"[{_create_progress_bar(i, max)}]")
-    await asyncio.sleep(1)
+    """
+    Hàm đếm tiến từ 0 tới max (giây) và in ra thanh giả lập mỗi giây.
+    """
+    from utils.bot import val
+    
+    max = val.sound_lengh
+    for i in range(max + 1):
+        # In thanh giả lập
+        val.set("sound_playing", f"[{_create_progress_bar(i, max)}]")
+        await asyncio.sleep(1)
+        
+    val.set("sound_playing", None)
 
 # Tạo thanh giả lập [██████████░░░░░]
 def _create_progress_bar(current, max):
