@@ -1140,7 +1140,7 @@ async def count_to_max(inter: discord.Interaction):
     loop = max//2
     for i in range(loop + 1):
         # In thanh giả lập
-        start = f"{i // 30}: {i % 60*2}"
+        start = f"{i // 30}: {i % 30*2}"
         end = f"{max // 60}: {max % 60}"
         val.set("sound_playing", f"{start} [{_create_progress_bar(i, loop)}] {end}")
         await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
