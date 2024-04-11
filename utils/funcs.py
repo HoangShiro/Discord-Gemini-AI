@@ -1704,7 +1704,7 @@ class Music:
             if update: await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
 
             # Sleep for a short duration to avoid overwhelming the UI
-            await asyncio.sleep(1)
+            await asyncio.sleep(2)
 
             # Break the loop if song length is reached
             if current_time >= max_seconds:
@@ -1736,7 +1736,7 @@ class Music:
             text = child.text.strip()
             captions.append((start_time, duration, text))
 
-        asyncio.create_task(self.count_to_max(inter=inter, update=False))
+        asyncio.create_task(self.count_to_max(inter=inter, update=True))
         asyncio.create_task(sob_play("now.mp3"))
 
         # Play cap with datetime
