@@ -1165,7 +1165,7 @@ async def count_to_max(inter: discord.Interaction, update=False):
 
         # Update progress bar (implementation assumed to be in _create_progress_bar)
         progress_bar = _create_progress_bar(current_time, max_seconds)
-        val.set("sound_playing", f"{start_str} [{progress_bar}] {end_str}")
+        val.set("sound_playing", f"{current_str} [{progress_bar}] {end_str}")
 
         if update:
             await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
