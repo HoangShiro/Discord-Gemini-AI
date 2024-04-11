@@ -1130,8 +1130,9 @@ async def sound_play(interaction: discord.Interaction, sound:str=None):
         
     elif sound.startswith("https"):
         msg = await music_show(interaction=interaction, play_bt=False, rmv_bt=True, edit=False)
+        new_msg = await msg.original_response()
         await music_dl(sound)
-        await music_play(inter=msg)
+        await music_play(inter=new_msg)
         
     else:
         ok = await sob_play(sound)
