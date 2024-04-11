@@ -500,7 +500,7 @@ async def cmd_msg_user():
         val.set('now_chat', now_chat)
     
     if (search or play) and music and ai_name:
-        prompt = f"Returns only the name of the song and artist name(if any) requested to search in the following chat: {u_msg}"
+        prompt = f"Returns only the name of the song and author name(if any) requested to search in the following chat: {u_msg}"
         song_name = None
         try:
             song_name = await gemini_cmd(prompt)
@@ -509,8 +509,8 @@ async def cmd_msg_user():
             return
         
         if song_name:
-            title = await music_dl(name=song_name)
-            noti = f"*hỏi {val.last_uname} xem có phải bài này không -> {title}"
+            title, author = await music_dl(name=song_name)
+            noti = f"*hỏi {val.last_uname} xem có phải bài này không -> song: {title} - author: {author}"
             now_chat = val.now_chat
             now_chat.append(noti)
             val.set('now_chat', now_chat)
