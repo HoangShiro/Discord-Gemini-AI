@@ -1262,7 +1262,8 @@ async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True
     if timebar and not lyric: des = timebar
     
     if not title: title = "Đang tìm kiếm... ✨"
-    if not des: des = "Đã kết thúc."
+    if not des and title: des = "> Sẽ mất một lát."
+    elif not des: des = "Đã kết thúc."
     
     embed, view = await bot_notice(
         tt=title,
