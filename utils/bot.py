@@ -1130,7 +1130,11 @@ async def sound_play(interaction: discord.Interaction, sound:str=None, embed:boo
     
     elif sound.startswith("https") and not embed:
         sob_stop()
-        await music_dl(sound)
+        msg = await interaction.response.send_message(f"> Đang tải sound: {sound}.", ephemeral=True)
+        title = await music_dl(sound)
+        await msg.edit_original_response(content=f"> Đang play: {title}.")
+        await sob_play("now.mp3")
+        return
     
     ok = await sob_play(sound)
     if not ok: return await interaction.response.send_message(f"> Không có sound: {sound}.", ephemeral=True)

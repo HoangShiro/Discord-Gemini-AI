@@ -293,3 +293,4 @@ async def music_dl(url:str=None, name:str=None):
     with builtins.open("sound/caption.xml", "w", encoding="utf-8") as f:
         f.write(cp.xml_captions)
     
+    return video.title
