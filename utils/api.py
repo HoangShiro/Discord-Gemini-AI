@@ -4,7 +4,7 @@ import re, json, time, builtins, asyncio, os, discord, datetime
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 from pytube import YouTube, Search
-from utils.funcs import load_prompt, txt_read, name_cut, if_chat_loop, clean_chat, count_to_max, sob_stop
+from utils.funcs import load_prompt, txt_read, name_cut, if_chat_loop, clean_chat, sob_stop
 
 safety ={
         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.	BLOCK_NONE,

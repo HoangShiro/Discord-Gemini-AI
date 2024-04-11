@@ -2,7 +2,7 @@ import discord, asyncio, json, importlib
 
 from discord.ext import commands
 
-from utils.api import chat, music_dl, music_play
+from utils.api import chat, music_dl
 from utils.status import *
 from utils.reply import *
 from utils.funcs import *
