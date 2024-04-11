@@ -1270,7 +1270,5 @@ async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True
         remove_btt=False,
     )
     
-    if edit:
-        msg = await interaction.original_response()
-        await msg.edit_original_response(embed=embed, view=view)
+    if edit: await interaction.edit_original_response(embed=embed, view=view)
     else: await interaction.response.send_message(embed=embed, view=view)
