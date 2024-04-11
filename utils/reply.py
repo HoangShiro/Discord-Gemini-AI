@@ -259,7 +259,6 @@ async def cmd_msg():
     from utils.daily import get_real_time
     from utils.ui import normal_embed, bot_notice, music_embed
     from utils.funcs import avatar_change, banner_change, mood_change, leave_voice, sob_stop
-    from utils.api import music_dl
     
     old_chat = val.old_chat
     u_msg = list_to_str(old_chat)
@@ -477,14 +476,7 @@ async def cmd_msg():
         
         await v_join_auto()
         
-        title, author = await music_dl(name=u_play_song)
         mu.set('sound_search', None)
-        noti = f"*bạn thử hỏi {val.last_uname} xem có phải bài này không: {title} của {author}"
-        now_chat = val.now_chat
-        now_chat.append(noti)
-        val.set('now_chat', now_chat)
-        val.set('CD', 1)
-        
         embed, view = await music_embed(play_bt=True, rmv_bt=False, ermv_bt=True)
         await send_embed(embed=embed, view=view)
     
@@ -494,6 +486,7 @@ async def cmd_msg_user():
     from utils.ui import normal_embed, music_embed
     from utils.funcs import list_to_str, sob_stop
     from utils.reply import send_embed
+    from utils.api import music_dl
     
     u_msg = list_to_str(val.now_chat)
     if not u_msg: return
@@ -530,7 +523,9 @@ async def cmd_msg_user():
         
         if song_name:
             mu.set('sound_search', song_name)
-            noti = f"*đang tìm nhạc, {val.ai_name} hãy kêu {val.last_uname} đợi chút...*"
+            title, author = await music_dl(name=song_name)
+            noti = f"*hãy thử hỏi {val.last_uname} xem có phải bài này không: {title} của {author}"
             now_chat = val.now_chat
             now_chat.append(noti)
             val.set('now_chat', now_chat)
+            val.set('CD', 1)
