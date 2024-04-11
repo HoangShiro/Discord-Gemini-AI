@@ -10,4 +10,3 @@ PyNaCl
 booru
 BingImageCreator-fork==0.7.5
 pytube
-Levenshtein
