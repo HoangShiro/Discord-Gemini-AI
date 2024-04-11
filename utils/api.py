@@ -276,13 +276,17 @@ async def music_dl(url:str=None, name:str=None):
     cp = None
     file = "sound/caption.xml"
     
-    try: cp = video.captions['en']
+    try: cp = video.captions['vi']
     except Exception as e: pass
     if not cp:
+        try: cp = video.captions['en']
+        except Exception as e: pass
+    if not cp:
         try: cp = video.captions['ja']
-        except Exception as e:
-            if os.path.exists(file): os.remove(file)
-            return
+        except Exception as e: pass
+    if not cp:
+        if os.path.exists(file): os.remove(file)
+        return
     
     with builtins.open("sound/caption.xml", "w", encoding="utf-8") as f:
         f.write(cp.xml_captions)
@@ -292,6 +296,7 @@ async def music_play(inter:discord.Interaction):
     from utils.funcs import sob_play
     from utils.ui import music_show
     
+    file = "sound/caption.xml"
     if not os.path.exists(file):
         asyncio.create_task(sob_play("sound/now.mp3"))
         await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True)
