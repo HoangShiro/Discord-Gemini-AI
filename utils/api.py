@@ -340,6 +340,5 @@ async def music_play(inter:discord.Interaction):
         if elapsed_time > captions[-1][0] + captions[-1][1]:
             val.set("sound_playing", None)
             await music_show(interaction=inter, play_bt=True, rmv_bt=None, edit=True, ermv_bt=True)
-            sob_stop()
             break
     
