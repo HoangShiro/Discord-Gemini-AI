@@ -1248,18 +1248,19 @@ async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True
     from utils.bot import val, bot
     
     author = val.sound_author
-    title = val.sound_title
+    title = val.sound_title + author
     info = val.sound_des
     cover = val.sound_cover
     lyric = val.sound_cap
     timebar = val.sound_playing
     
-    des = author
     if not title: title = "Đang tìm kiếm... ✨"
     if not des: des = "Lyric sẽ hiện ở đây nếu có."
     if not cover: cover = bot.user.display_avatar
     
     if lyric: des = timebar + "\n" + lyric
+    if timebar: des = timebar
+    
     
     embed, view = await bot_notice(
         tt=title,
