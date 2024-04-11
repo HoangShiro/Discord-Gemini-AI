@@ -1139,8 +1139,6 @@ async def count_to_max():
         # In thanh giả lập
         val.set("sound_playing", f"[{_create_progress_bar(i, max)}]")
         await asyncio.sleep(1)
-        
-    val.set("sound_playing", None)
 
 # Tạo thanh giả lập [██████████░░░░░]
 def _create_progress_bar(current, max):
