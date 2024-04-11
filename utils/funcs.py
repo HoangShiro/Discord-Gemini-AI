@@ -1130,32 +1130,56 @@ def int_emoji(num:int):
 
 # Hàm đếm tiến
 async def count_to_max(inter: discord.Interaction, update=False):
-    """
-    Hàm đếm tiến từ 0 tới max (giây) và in ra thanh giả lập mỗi giây.
-    """
     from utils.bot import val
     from utils.ui import music_show
-    
-    max = val.sound_lengh
-    for i in range(max + 1):
-        # In thanh giả lập
-        start = f"{i // 60}: {i % 60}"
-        end = f"{max // 60}: {max % 60}"
-        val.set("sound_playing", f"{start} [{_create_progress_bar(i, max)}] {end}")
-        if update: await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
+
+    max_seconds = val.sound_lengh
+
+    # Initial timestamp for accurate progress calculation
+    start_time = datetime.utcnow()
+
+    while True:
+        
+        # Tạo thanh giả lập [██████████░░░░░]
+        def _create_progress_bar(current, max):
+            """
+            Hàm tạo thanh giả lập.
+            """
+            progress = int((current / max) * 11)
+            return "█" * progress + "░" * (11 - progress)
+        
+        elapsed_seconds = (datetime.datetime.now() - start_time).total_seconds()
+
+        # Ensure progress doesn't exceed song length
+        current_time = min(elapsed_seconds, max_seconds)
+
+        # Generate formatted time strings
+        current_minutes = int(current_time // 60)
+        current_seconds = int(current_time % 60)
+        start_minutes = int(start_time.minute)
+        start_seconds = int(start_time.second)
+
+        start_str = f"{start_minutes}:{start_seconds:02d}"
+        current_str = f"{current_minutes}:{current_seconds:02d}"
+        end_str = f"{max_seconds // 60}:{max_seconds % 60}"
+
+        # Update progress bar (implementation assumed to be in _create_progress_bar)
+        progress_bar = _create_progress_bar(current_time, max_seconds)
+        val.set("sound_playing", f"{start_str} [{progress_bar}] {end_str}")
+
+        if update:
+            await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
+
+        # Sleep for a short duration to avoid overwhelming the UI
         await asyncio.sleep(1)
+
+        # Break the loop if song length is reached
+        if current_time >= max_seconds:
+            break
 
     if update: 
         val.set("sound_playing", None)
         await music_show(interaction=inter, play_bt=True, rmv_bt=None, edit=True, ermv_bt=True)
-    
-# Tạo thanh giả lập [██████████░░░░░]
-def _create_progress_bar(current, max):
-  """
-  Hàm tạo thanh giả lập.
-  """
-  progress = int((current / max) * 11)
-  return "█" * progress + "░" * (11 - progress)
 
 # Speaker loader
 class AllSpeaker:
