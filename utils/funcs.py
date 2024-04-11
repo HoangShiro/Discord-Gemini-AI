@@ -368,17 +368,17 @@ async def sob_play(file):
         return True
 
 def sob_stop():
-    from utils.bot import bot, val
+    from utils.bot import bot, val, mu
 
-    val.set('sound_author', None)
-    val.set('sound_title', None)
-    val.set('sound_des', None)
-    val.set('sound_lengh', None)
-    val.set('sound_cover', None)
-    val.set('sound_time', None)
-    val.set('sound_cap', None)
-    val.set('sound_time', "0:00 [░░░░░░░░░░░] 0:00")
-    val.set('sound_playing', False)
+    mu.set('sound_author', None)
+    mu.set('sound_title', None)
+    mu.set('sound_des', None)
+    mu.set('sound_lengh', None)
+    mu.set('sound_cover', None)
+    mu.set('sound_time', None)
+    mu.set('sound_cap', None)
+    mu.set('sound_time', "0:00 [░░░░░░░░░░░] 0:00")
+    mu.set('sound_playing', False)
     
     guild = bot.get_guild(val.ai_guild)
     # Huỷ nếu không trong voice
