@@ -4,7 +4,6 @@ import re, json, time, builtins, asyncio, os, discord, datetime
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 from pytube import YouTube, Search
-import xml.etree.ElementTree as ET
 from utils.funcs import load_prompt, txt_read, name_cut, if_chat_loop, clean_chat, count_to_max, sob_stop
 
 safety ={
@@ -255,7 +254,7 @@ def tts_get_url(text):
 # Play sound
 async def music_dl(url:str=None, name:str=None):
     from utils.daily import get_real_time
-    from utils.bot import val
+    from utils.bot import mu
     
     try:
         if url: video = YouTube(url)
@@ -266,11 +265,11 @@ async def music_dl(url:str=None, name:str=None):
         print(f"{get_real_time()}> Lỗi khi tải .mp3 từ url: ", e)
         return
     
-    val.set('sound_author', video.author)
-    val.set('sound_title', video.title)
-    val.set('sound_des', video.description)
-    val.set('sound_lengh', video.length)
-    val.set('sound_cover', video.thumbnail_url)
+    mu.set('sound_author', video.author)
+    mu.set('sound_title', video.title)
+    mu.set('sound_des', video.description)
+    mu.set('sound_lengh', video.length)
+    mu.set('sound_cover', video.thumbnail_url)
     
     file = "sound/caption.xml"
     if not video.captions:
@@ -293,53 +292,4 @@ async def music_dl(url:str=None, name:str=None):
     
     with builtins.open("sound/caption.xml", "w", encoding="utf-8") as f:
         f.write(cp.xml_captions)
- 
-async def music_play(inter: discord.Interaction):
-    from utils.bot import val
-    from utils.funcs import sob_play
-    from utils.ui import music_show
-
-    file = "sound/caption.xml"
-    val.set('sound_time', "0:00 [░░░░░░░░░░░] 0:00")
-    val.set('sound_playing', True)
-
-    if not os.path.exists(file):
-        asyncio.create_task(count_to_max(inter=inter, update=True))
-        asyncio.create_task(sob_play("now.mp3"))
-        return False
-
-    tree = ET.parse(file)
-    root = tree.getroot()
-    captions = []
-
-    for child in root.iter('p'):
-        start_time = int(child.attrib['t']) / 1000
-        duration = int(child.attrib['d']) / 1000
-        text = child.text.strip()
-        captions.append((start_time, duration, text))
-
-    asyncio.create_task(count_to_max(inter=inter))
-    asyncio.create_task(sob_play("now.mp3"))
-
-    # Play cap with datetime
-    start_time = datetime.datetime.now()
-    printed_captions = set()
-    while val.sound_playing:
-        elapsed_time = (datetime.datetime.now() - start_time).total_seconds()
-        found_caption = False
-        for start, duration, text in captions:
-            if start <= elapsed_time <= start + duration:
-                if text != val.sound_cap and text not in printed_captions:
-                    printed_captions.add(text)
-                val.set('sound_cap', text)  # Update current caption
-                await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
-                found_caption = True
-                break
-
-        if not found_caption and val.sound_cap:  # Caption ended
-            val.set('sound_cap', "")  # Reset current caption
-            await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
-
-        if elapsed_time > captions[-1][0] + captions[-1][1]:
-            break
     

@@ -594,14 +594,14 @@ async def mplay_atv(interaction: discord.Interaction):
     await music_play(inter=msg)
 
 async def mrmv_atv(interaction: discord.Interaction):
-    from utils.bot import val 
+    from utils.bot import val, mu
     from utils.funcs import sob_stop
     
     if not val.public:
         if interaction.user.id != val.owner_uid: return await byB(interaction)
     
     sob_stop()
-    val.set("sound_time", None)
+    mu.set("sound_time", None)
     await interaction.message.delete()
     
 # Edit message with mess id
@@ -1247,15 +1247,15 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, slide=
 
 # Music show
 async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True, edit=False, resp_edit=False, ermv_bt=True):
-    from utils.bot import val, bot
+    from utils.bot import mu, bot
     
     title = None
-    author = val.sound_author
-    if val.sound_title: title = f"{val.sound_title} — {author}"
-    info = val.sound_des
-    cover = val.sound_cover
-    lyric = val.sound_cap
-    timebar = val.sound_time
+    author = mu.sound_author
+    if mu.sound_title: title = f"{mu.sound_title} — {author}"
+    info = mu.sound_des
+    cover = mu.sound_cover
+    lyric = mu.sound_cap
+    timebar = mu.sound_time
     des = None
     
     if not cover: cover = bot.user.display_avatar

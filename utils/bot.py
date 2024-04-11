@@ -133,16 +133,6 @@ class AllStatus:
         self.last_keywords = None
         self.art_tags = False
         
-        # Sound
-        self.sound_author = None
-        self.sound_title = None
-        self.sound_des = None
-        self.sound_lengh = None
-        self.sound_cover = None
-        self.sound_cap = ""
-        self.sound_time = None
-        self.sound_playing = False
-        
     def update(self, val_name, value):
         if hasattr(self, val_name):
             current_value = getattr(self, val_name)
@@ -231,6 +221,8 @@ rm.get()
 
 art = Art_Search()
 art.load()
+
+mu = Music()
 
 intents = discord.Intents.all()
 bot = commands.Bot(intents=intents, command_prefix="/")

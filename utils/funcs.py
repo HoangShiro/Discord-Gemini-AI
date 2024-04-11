@@ -1,6 +1,7 @@
 """Các hàm chức năng"""
 import json, os, shutil, asyncio, jaconv, re, random, discord, importlib, aiohttp, requests, datetime, booru
 from discord.ext import tasks
+import xml.etree.ElementTree as ET
 
 from translate import Translator
 from mtranslate import translate
@@ -1130,59 +1131,6 @@ def int_emoji(num:int):
 
     return emoji_str
 
-# Hàm đếm tiến
-async def count_to_max(inter: discord.Interaction, update=False):
-    from utils.bot import val
-    from utils.ui import music_show
-
-    max_seconds = val.sound_lengh
-
-    # Initial timestamp for accurate progress calculation
-    start_time = datetime.datetime.now()
-
-    while val.sound_playing:
-        
-        # Tạo thanh giả lập [██████████░░░░░]
-        def _create_progress_bar(current, max):
-            """
-            Hàm tạo thanh giả lập.
-            """
-            progress = int((current / max) * 11)
-            return "█" * progress + "░" * (11 - progress)
-        
-        elapsed_seconds = (datetime.datetime.now() - start_time).total_seconds()
-
-        # Ensure progress doesn't exceed song length
-        current_time = min(elapsed_seconds, max_seconds)
-
-        # Generate formatted time strings
-        current_minutes = int(current_time // 60)
-        current_seconds = int(current_time % 60)
-        start_minutes = int(start_time.minute)
-        start_seconds = int(start_time.second)
-
-        start_str = f"{start_minutes}:{start_seconds:02d}"
-        current_str = f"{current_minutes}:{current_seconds:02d}"
-        end_str = f"{max_seconds // 60}:{max_seconds % 60}"
-
-        # Update progress bar (implementation assumed to be in _create_progress_bar)
-        progress_bar = _create_progress_bar(current_time, max_seconds)
-        val.set("sound_time", f"{current_str} [{progress_bar}] {end_str}")
-
-        if update:
-            await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
-
-        # Sleep for a short duration to avoid overwhelming the UI
-        await asyncio.sleep(1)
-
-        # Break the loop if song length is reached
-        if current_time >= max_seconds:
-            break
-
-    if update: 
-        val.set("sound_playing", False)
-        await music_show(interaction=inter, play_bt=True, rmv_bt=None, edit=True, ermv_bt=True)
-
 # Speaker loader
 class AllSpeaker:
     
@@ -1689,7 +1637,133 @@ class Art_Search:
         except FileNotFoundError:
             self.data = []
         
+# Music class
+class Music:
+    def __init__(self):
+        self.sound_author = None
+        self.sound_title = None
+        self.sound_des = None
+        self.sound_lengh = None
+        self.sound_cover = None
+        self.sound_cap = ""
+        self.sound_time = None
+        self.sound_playing = False
     
+    def update(self, val_name, value):
+        if hasattr(self, val_name):
+            current_value = getattr(self, val_name)
+            setattr(self, val_name, current_value + value)
+        else:
+            print(f"Error: Variable '{val_name}' not found.")
+
+    def set(self, val_name, value):
+        if hasattr(self, val_name):
+            setattr(self, val_name, value)
+        else:
+            print(f"Error: Variable '{val_name}' not found.")
+
+    # Hàm đếm tiến
+    async def count_to_max(self, inter: discord.Interaction, update=False):
+        from utils.bot import mu
+        from utils.ui import music_show
+
+        max_seconds = mu.sound_lengh
+
+        # Initial timestamp for accurate progress calculation
+        start_time = datetime.datetime.now()
+
+        while mu.sound_playing:
+            
+            # Tạo thanh giả lập [██████████░░░░░]
+            def _create_progress_bar(current, max):
+                """
+                Hàm tạo thanh giả lập.
+                """
+                progress = int((current / max) * 11)
+                return "█" * progress + "░" * (11 - progress)
+            
+            elapsed_seconds = (datetime.datetime.now() - start_time).total_seconds()
+
+            # Ensure progress doesn't exceed song length
+            current_time = min(elapsed_seconds, max_seconds)
+
+            # Generate formatted time strings
+            current_minutes = int(current_time // 60)
+            current_seconds = int(current_time % 60)
+            start_minutes = int(start_time.minute)
+            start_seconds = int(start_time.second)
+
+            start_str = f"{start_minutes}:{start_seconds:02d}"
+            current_str = f"{current_minutes}:{current_seconds:02d}"
+            end_str = f"{max_seconds // 60}:{max_seconds % 60}"
+
+            # Update progress bar (implementation assumed to be in _create_progress_bar)
+            progress_bar = _create_progress_bar(current_time, max_seconds)
+            mu.set("sound_time", f"{current_str} [{progress_bar}] {end_str}")
+
+            if update:
+                await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
+
+            # Sleep for a short duration to avoid overwhelming the UI
+            await asyncio.sleep(1)
+
+            # Break the loop if song length is reached
+            if current_time >= max_seconds:
+                break
+
+        if update: 
+            mu.set("sound_playing", False)
+            await music_show(interaction=inter, play_bt=True, rmv_bt=None, edit=True, ermv_bt=True)
+
+    async def music_play(self, inter: discord.Interaction):
+        from utils.bot import mu
+        from utils.funcs import sob_play
+        from utils.ui import music_show
+
+        file = "sound/caption.xml"
+        mu.set('sound_time', "0:00 [░░░░░░░░░░░] 0:00")
+        mu.set('sound_playing', True)
+
+        if not os.path.exists(file):
+            asyncio.create_task(self.count_to_max(inter=inter, update=True))
+            asyncio.create_task(sob_play("now.mp3"))
+            return False
+
+        tree = ET.parse(file)
+        root = tree.getroot()
+        captions = []
+
+        for child in root.iter('p'):
+            start_time = int(child.attrib['t']) / 1000
+            duration = int(child.attrib['d']) / 1000
+            text = child.text.strip()
+            captions.append((start_time, duration, text))
+
+        asyncio.create_task(self.count_to_max(inter=inter))
+        asyncio.create_task(sob_play("now.mp3"))
+
+        # Play cap with datetime
+        start_time = datetime.datetime.now()
+        printed_captions = set()
+        while mu.sound_playing:
+            elapsed_time = (datetime.datetime.now() - start_time).total_seconds()
+            found_caption = False
+            for start, duration, text in captions:
+                if start <= elapsed_time <= start + duration:
+                    if text != mu.sound_cap and text not in printed_captions:
+                        printed_captions.add(text)
+                    mu.set('sound_cap', text)  # Update current caption
+                    await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
+                    found_caption = True
+                    break
+
+            if not found_caption and mu.sound_cap:  # Caption ended
+                mu.set('sound_cap', "")  # Reset current caption
+                await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
+
+            if elapsed_time > captions[-1][0] + captions[-1][1]:
+                break
+
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
   print(p)
