@@ -300,11 +300,10 @@ async def music_play(inter:discord.Interaction):
     from utils.ui import music_show
     
     file = "sound/caption.xml"
-    val.set('sound_playing', "[░░░░░░░░░░░░░░░]")
+    val.set('sound_playing', "0:00 [░░░░░░░░░░░░░░░] 0:00")
     if not os.path.exists(file):
+        asyncio.create_task(count_to_max(inter=inter))
         asyncio.create_task(sob_play("now.mp3"))
-        asyncio.create_task(count_to_max())
-        await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True)
         return False
     
     tree = ET.parse(file)
@@ -318,7 +317,7 @@ async def music_play(inter:discord.Interaction):
         captions.append((start_time, duration, text))
     
     
-    asyncio.create_task(count_to_max())
+    asyncio.create_task(count_to_max(inter=inter))
     asyncio.create_task(sob_play("now.mp3"))
     
     # Play cap

@@ -1129,11 +1129,12 @@ def int_emoji(num:int):
     return emoji_str
 
 # Hàm đếm tiến
-async def count_to_max():
+async def count_to_max(inter: discord.Interaction):
     """
     Hàm đếm tiến từ 0 tới max (giây) và in ra thanh giả lập mỗi giây.
     """
     from utils.bot import val
+    from utils.ui import music_show
     
     max = val.sound_lengh
     for i in range(max + 1):
@@ -1141,7 +1142,8 @@ async def count_to_max():
         start = f"{i // 60}: {i % 60}"
         end = f"{max // 60}: {max % 60}"
         val.set("sound_playing", f"{start} [{_create_progress_bar(i, max)}] {end}")
-        await asyncio.sleep(1)
+        await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
+        await asyncio.sleep(2)
 
 # Tạo thanh giả lập [██████████░░░░░]
 def _create_progress_bar(current, max):
