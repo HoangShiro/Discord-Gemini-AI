@@ -1129,9 +1129,9 @@ async def sound_play(interaction: discord.Interaction, sound:str=None):
         return await interaction.response.send_message(f"> Đã tắt audio đang play nếu có.", ephemeral=True)
         
     elif sound.startswith("https"):
-        await music_show(interaction=interaction, play_bt=False, rmv_bt=True, edit=False)
+        msg = await music_show(interaction=interaction, play_bt=False, rmv_bt=True, edit=False)
         await music_dl(sound)
-        await music_play(inter=interaction)
+        await music_play(inter=msg)
         
     else:
         ok = await sob_play(sound)
