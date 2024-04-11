@@ -1701,19 +1701,16 @@ class Music:
             progress_bar = _create_progress_bar(current_time, max_seconds)
             mu.set("sound_time", f"{current_str} [{progress_bar}] {end_str}")
 
-            if update:
-                await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
+            if update: await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
 
             # Sleep for a short duration to avoid overwhelming the UI
             await asyncio.sleep(1)
 
             # Break the loop if song length is reached
             if current_time >= max_seconds:
+                mu.set("sound_playing", False)
+                await music_show(interaction=inter, play_bt=True, rmv_bt=None, edit=True, ermv_bt=True)
                 break
-
-        if update: 
-            mu.set("sound_playing", False)
-            await music_show(interaction=inter, play_bt=True, rmv_bt=None, edit=True, ermv_bt=True)
 
     async def music_play(self, inter: discord.Interaction):
         from utils.bot import mu
@@ -1739,7 +1736,7 @@ class Music:
             text = child.text.strip()
             captions.append((start_time, duration, text))
 
-        asyncio.create_task(self.count_to_max(inter=inter))
+        asyncio.create_task(self.count_to_max(inter=inter, update=False))
         asyncio.create_task(sob_play("now.mp3"))
 
         # Play cap with datetime
