@@ -246,7 +246,7 @@ async def voice_send(url, ch):
         audio_source = FFmpegPCMAudio(url)
 
         # Play audio
-        ch.play(audio_source, after=lambda e: print(f'Player error: {e}'))
+        ch.play(audio_source)
 
     except Exception as e:
         print(f"{get_real_time()}> Send voice error: {e}")
