@@ -1137,14 +1137,13 @@ async def count_to_max(inter: discord.Interaction):
     from utils.ui import music_show
     
     max = val.sound_lengh
-    loop = max//2
-    for i in range(loop + 1):
+    for i in range(max + 1):
         # In thanh giả lập
-        start = f"{i // 30}: {i % 30*2}"
+        start = f"{i // 60}: {i % 60}"
         end = f"{max // 60}: {max % 60}"
-        val.set("sound_playing", f"{start} [{_create_progress_bar(i, loop)}] {end}")
-        await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
-        await asyncio.sleep(2)
+        val.set("sound_playing", f"{start} [{_create_progress_bar(i, max)}] {end}")
+        if not val.sound_cap: await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
+        await asyncio.sleep(1)
 
     val.set("sound_playing", None)
     await music_show(interaction=inter, play_bt=True, rmv_bt=None, edit=True, ermv_bt=True)
@@ -1154,8 +1153,8 @@ def _create_progress_bar(current, max):
   """
   Hàm tạo thanh giả lập.
   """
-  progress = int((current / max) * 15)
-  return "█" * progress + "░" * (15 - progress)
+  progress = int((current / max) * 11)
+  return "█" * progress + "░" * (11 - progress)
 
 # Speaker loader
 class AllSpeaker:

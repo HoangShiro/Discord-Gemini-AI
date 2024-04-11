@@ -300,7 +300,7 @@ async def music_play(inter:discord.Interaction):
     from utils.ui import music_show
     
     file = "sound/caption.xml"
-    val.set('sound_playing', "0:00 [░░░░░░░░░░░░░░░] 0:00")
+    val.set('sound_playing', "0:00 [░░░░░░░░░░░] 0:00")
     if not os.path.exists(file):
         asyncio.create_task(count_to_max(inter=inter))
         asyncio.create_task(sob_play("now.mp3"))
