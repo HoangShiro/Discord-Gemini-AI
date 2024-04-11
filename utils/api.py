@@ -4,6 +4,7 @@ import re, json, time, builtins, asyncio, os, discord, datetime
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 from pytube import YouTube, Search
+from Levenshtein import distance
 from utils.funcs import load_prompt, txt_read, name_cut, if_chat_loop, clean_chat, sob_stop
 
 safety ={
@@ -256,6 +257,13 @@ async def music_dl(url:str=None, name:str=None):
     from utils.daily import get_real_time
     from utils.bot import mu, val
     
+    def find_cp(video_captions, target_lang="en"):
+        # Sort captions by Levenshtein distance to target_lang
+        sorted_captions = sorted(video_captions.keys(), key=lambda key: distance(key.split(".")[0], target_lang))
+
+        # Return the code of the first caption (potentially English)
+        return sorted_captions[0]
+    
     try:
         if url: video = YouTube(url)
         elif name: video = Search(query=name).results[0]
@@ -280,13 +288,13 @@ async def music_dl(url:str=None, name:str=None):
     
     cp = None
     
-    try: cp = video.captions['vi']
+    try: cp = find_cp(video.captions, target_lang="vi")
     except Exception as e: pass
     if not cp:
-        try: cp = video.captions['en']
+        try: cp = find_cp(video.captions)
         except Exception as e: pass
     if not cp:
-        try: cp = video.captions['ja']
+        try: cp = find_cp(video.captions, target_lang="ja")
         except Exception as e: pass
     if not cp:
         if os.path.exists(file): os.remove(file)

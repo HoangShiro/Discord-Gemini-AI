@@ -472,7 +472,7 @@ async def cmd_msg_user():
     from utils.bot import val, bot, mu
     from utils.daily import get_real_time
     from utils.ui import normal_embed, music_embed
-    from utils.funcs import list_to_str
+    from utils.funcs import list_to_str, sob_stop
     from utils.api import music_dl
     from utils.reply import send_embed
     
@@ -515,5 +515,7 @@ async def cmd_msg_user():
             now_chat.append(noti)
             val.set('now_chat', now_chat)
             val.set('CD', 1)
+            
+            sob_stop()
             embed, view = await music_embed(play_bt=True, rmv_bt=False, edit=False, resp_edit=False, ermv_bt=True)
             await send_embed(embed=embed, view=view)
