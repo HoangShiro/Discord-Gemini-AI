@@ -1749,8 +1749,8 @@ class Music:
                 if start <= elapsed_time <= start + duration:
                     if text != mu.sound_cap and text not in printed_captions:
                         printed_captions.add(text)
-                    mu.set('sound_cap', text)  # Update current caption
-                    await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
+                        mu.set('sound_cap', text)  # Update current caption
+                        await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
                     found_caption = True
                     break
 
