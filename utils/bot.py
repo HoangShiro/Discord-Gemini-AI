@@ -133,18 +133,18 @@ class AllStatus:
         self.last_keywords = None
         self.art_tags = False
         
-    def update(self, val_name, value):
+    def update(self, val_name, value, save=True):
         if hasattr(self, val_name):
             current_value = getattr(self, val_name)
             setattr(self, val_name, current_value + value)
-            vals_save("saves/vals.json", val_name, current_value + value)
+            if save: vals_save("saves/vals.json", val_name, current_value + value)
         else:
             print(f"Error: Variable '{val_name}' not found.")
 
-    def set(self, val_name, value):
+    def set(self, val_name, value, save=True):
         if hasattr(self, val_name):
             setattr(self, val_name, value)
-            vals_save("saves/vals.json", val_name, value)
+            if save: vals_save("saves/vals.json", val_name, value)
         else:
             print(f"Error: Variable '{val_name}' not found.")
 
@@ -238,6 +238,8 @@ async def on_ready():
     # Lưu bot name và reset chat state
     val.set('ai_name', bot.user.name)
     val.set('in_reply', False)
+    val.set('CD', val.to_breaktime)
+    val.set('CD_idle', val.to_worktime)
     
     # Load các button
     await load_btt()

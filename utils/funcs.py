@@ -1760,7 +1760,9 @@ class Music:
 
             if elapsed_time > captions[-1][0] + captions[-1][1]:
                 break
-
+            
+            await asyncio.sleep(0.25)
+            
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
   print(p)

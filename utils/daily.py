@@ -27,18 +27,18 @@ async def sec_check():
     # Trời lại làm việc nếu không có chat mới
     elif val.CD == 0 and not val.now_chat:
         val.set('in_reply', False)
-        if val.public: val.set('CD', val.chat_speed) # Chờ trước khi rep tiếp
+        if val.public: val.set('CD', val.chat_speed, save=False) # Chờ trước khi rep tiếp
         if val.CD_idle == val.to_worktime:
             val.set('CD', val.to_breaktime)
             await status_busy_set()
     
     # Đếm ngược tới thời gian check tin nhắn
     if val.CD > 0:
-        val.update('CD', -1)
+        val.update('CD', -1, save=False)
     
     # Đếm ngược tới thời gian work trở lại
     if val.CD_idle < val.to_worktime:
-        val.update('CD_idle', 1)
+        val.update('CD_idle', 1, save=False)
     elif val.CD_idle > val.to_worktime:
         val.set('CD_idle', val.to_worktime)
     
