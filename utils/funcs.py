@@ -358,7 +358,11 @@ async def sob_play(file):
         guild = bot.get_guild(val.ai_guild)
         # Huỷ nếu không trong voice
         if not guild: return False
-        if not guild.voice_client: return False
+        if not guild.voice_client:
+            await v_join_auto()
+            guild = bot.get_guild(val.ai_guild)
+            if not guild.voice_client: return False
+            
         await voice_send(file, guild.voice_client)
         return True
 
@@ -392,7 +396,7 @@ async def get_sound(url):
   os.remove("temp.zip")
   
   return True
-      
+  
 # Hàm lấy link
 def get_img_link(text:str=None):
     from utils.bot import val
@@ -1115,6 +1119,27 @@ def int_emoji(num:int):
         emoji_str = '➖' + emoji_str
 
     return emoji_str
+
+# Hàm đếm tiến
+async def count_to_max():
+  """
+  Hàm đếm tiến từ 0 tới max (giây) và in ra thanh giả lập mỗi giây.
+  """
+  from utils.bot import val
+  
+  max = val.sound_lengh
+  for i in range(max + 1):
+    # In thanh giả lập
+    val.set("sound_playing", f"[{_create_progress_bar(i, max)}]")
+    await asyncio.sleep(1)
+
+# Tạo thanh giả lập [██████████░░░░░]
+def _create_progress_bar(current, max):
+  """
+  Hàm tạo thanh giả lập.
+  """
+  progress = int((current / max) * 15)
+  return "█" * progress + "░" * (15 - progress)
 
 # Speaker loader
 class AllSpeaker:

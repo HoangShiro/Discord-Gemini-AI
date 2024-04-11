@@ -54,6 +54,11 @@ arandom_bt = discord.ui.Button(label="✨ random", custom_id="art_random", style
 atags_bt = discord.ui.Button(label="🏷️ tags", custom_id="art_tags", style=discord.ButtonStyle.green)
 rmv_art_bt = discord.ui.Button(label="➖", custom_id="art_remove", style=discord.ButtonStyle.grey)
 
+# Music
+mplay_bt = discord.ui.Button(label="🎵 play", custom_id="music_play", style=discord.ButtonStyle.green)
+rmv_m_bt = discord.ui.Button(label="➖", custom_id="music_remove", style=discord.ButtonStyle.grey)
+
+
 """ BUTTON """
 
 # Button call
@@ -106,6 +111,10 @@ async def load_btt():
     atags_bt.callback = tags_art_atv
     arandom_bt.callback = random_art_atv
     rmv_art_bt.callback = remove_art_atv
+    
+    # Music
+    mplay_bt.callback = mplay_atv
+    rmv_m_bt.callback = mrmv_atv
     
 # Button add
 async def DM_button():
@@ -571,6 +580,24 @@ async def tags_art_atv(interaction: discord.Interaction):
     
     content, embed, view = await art_embed()
     await interaction.response.edit_message(content=content, embed=embed, view=view)
+
+# Music
+async def mplay_atv(interaction: discord.Interaction):
+    from utils.api import music_play
+    from utils.bot import val
+    
+    if not val.public:
+        if interaction.user.id != val.owner_uid: return await byB(interaction)
+        
+    await music_play()
+
+async def mrmv_atv(interaction: discord.Interaction):
+    from utils.bot import val 
+    from utils.funcs import sob_stop
+    
+    sob_stop()
+    val.set("sound_playing", None)
+    await interaction.message.delete()
     
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
@@ -672,6 +699,9 @@ async def bot_notice(
     rback_btt=None,
     rremind_btt=None,
     
+    mplay_btt=None,
+    mrmv_btt=None,
+    
     remove_btt=True,
     color=None,
     ):
@@ -730,6 +760,10 @@ async def bot_notice(
     if rnext_btt: view.add_item(rnext_bt)
     if rremind_btt: view.add_item(rmv_remind_bt)
     if remind_btt: view.add_item(remind_bt)
+    
+    # Music
+    if mplay_btt: view.add_item(mplay_bt)
+    if mrmv_btt: view.add_item(rmv_m_bt)
     
     if remove_btt: view.add_item(ermv_bt)
 
@@ -1156,7 +1190,6 @@ async def show_remind(interaction: discord.Interaction, edit=None):
     else: await interaction.response.send_message(embed=embed, view=view)
 
 # Art search
-
 async def art_embed(title=None, des=None, img_url: str=None, footer=None, slide=False, next_bt=True, back_bt=True, remove_bt=True, send_bt=True, random_bt=True, tags_bt=True):
     from utils.bot import bot, val, art
     from utils.funcs import hex_to_rgb, int_emoji
@@ -1206,3 +1239,32 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, slide=
     if remove_bt: view.add_item(rmv_art_bt)
     
     return content, embed, view
+
+# Music show
+async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True, edit=False):
+    from utils.bot import val
+    
+    author = val.sound_author
+    title = val.sound_title
+    info = val.sound_des
+    cover = val.sound_cover
+    lyric = val.sound_cap
+    timebar = val.sound_playing
+    
+    des = author
+    if not title: title = "Đang tìm kiếm... ✨"
+    if not des: des = "Lyric sẽ hiện ở đây nếu có."
+    
+    if lyric: des = timebar + "\n" + lyric
+    
+    embed, view = bot_notice(
+        tt=title,
+        des=des,
+        ava_link=cover,
+        mplay_btt=play_bt,
+        mrmv_btt=rmv_bt,
+        remove_btt=False,
+    )
+    
+    if not edit: await interaction.edit_original_response(embed=embed, view=view)
+    else: await interaction.response.send_message(embed=embed, view=view)

@@ -477,11 +477,25 @@ async def cmd_msg_user():
     u_msg = list_to_str(val.now_chat)
     if not u_msg: return
     
+    ai_name = False
+    if not val.public: ai_name = True
+    else:
+        if val.ai_name.lower() in u_msg.lower(): ai_name = True
+        elif val.last_uid == val.owner_uid: ai_name = True
+    
+    
     time = re.search(r'giờ|time', u_msg, re.IGNORECASE)
     nowtime = re.search(r'bây giờ|giờ là|mấy giờ|hiện tại|now|what time|today is|hôm nay là|tháng này là|năm nay là|thời gian thực|realtime|the time|s time', u_msg, re.IGNORECASE)
+    
+    search = re.search(r'tìm|search|kiếm|find', u_msg, re.IGNORECASE)
+    music = re.search(r'music|nhạc|bài|song|video|mp3|mp4', u_msg, re.IGNORECASE)
+    play = re.search(r'hát|mở|play|chơi', u_msg, re.IGNORECASE)
     
     if nowtime:
         chat = f"SYSTEM: now is {get_real_time(full=True)}."
         now_chat = val.now_chat
         now_chat.insert(0, chat)
         val.set('now_chat', now_chat)
+    
+    if (search or play) and music and ai_name:
+        pass

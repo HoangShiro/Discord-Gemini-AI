@@ -2,7 +2,7 @@ import discord, asyncio, json, importlib
 
 from discord.ext import commands
 
-from utils.api import chat, mp3_dl
+from utils.api import chat, music_dl, music_play
 from utils.status import *
 from utils.reply import *
 from utils.funcs import *
@@ -132,6 +132,15 @@ class AllStatus:
         self.search_mode = "safebooru"
         self.last_keywords = None
         self.art_tags = False
+        
+        # Sound
+        self.sound_author = None
+        self.sound_title = None
+        self.sound_des = None
+        self.sound_lengh = None
+        self.sound_cover = None
+        self.sound_cap = ""
+        self.sound_playing = None
         
     def update(self, val_name, value):
         if hasattr(self, val_name):
@@ -1119,10 +1128,10 @@ async def sound_play(interaction: discord.Interaction, sound:str=None):
         return await interaction.response.send_message(f"> Đã tắt audio đang play nếu có.", ephemeral=True)
         
     if sound.startswith("https"):
-        msg = await interaction.response.send_message(f"> Đang tải audio...", ephemeral=True)
-        name = await mp3_dl(sound)
-        await sob_play("now.mp3")
-        return await msg.edit_original_response(content=f"> Đang play: {name}")
+        await music_show(interaction=interaction, play_bt=False, rmv_bt=True, edit=False)
+        await music_dl(sound)
+        await music_play()
+        return await music_show(interaction=interaction, play_bt=False, rmv_bt=True, edit=True)
         
     if not await sob_play(sound): return await interaction.response.send_message(f"> Không có sound: {sound}.", ephemeral=True)
     else: return await interaction.response.send_message(f"> Đã play: {sound}.", ephemeral=True)

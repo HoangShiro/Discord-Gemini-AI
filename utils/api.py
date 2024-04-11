@@ -1,10 +1,11 @@
 """Xử lý thông tin của API"""
 
-import re, json
+import re, json, time, builtins, asyncio, os
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
-from pytube import YouTube
-from utils.funcs import load_prompt, txt_read, name_cut, if_chat_loop, clean_chat
+from pytube import YouTube, Search
+import xml.etree.ElementTree as ET
+from utils.funcs import load_prompt, txt_read, name_cut, if_chat_loop, clean_chat, count_to_max
 
 safety ={
         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.	BLOCK_NONE,
@@ -251,11 +252,80 @@ def tts_get_url(text):
     
     return url
 
-# Download audio
-async def mp3_dl(url):
+# Play sound
+async def music_dl(url:str=None, name:str=None):
+    from utils.daily import get_real_time
+    from utils.bot import val
     
-    video = YouTube(url)
-    audio = video.streams.get_audio_only()
-    audio.download(filename="now.mp3", output_path="sound")
+    try:
+        if url: video = YouTube(url)
+        elif name: video = Search(query=name).results[0]
+        audio = video.streams.get_audio_only()
+        audio.download(filename="now.mp3", output_path="sound")
+    except Exception as e:
+        print(f"{get_real_time()}> Lỗi khi tải .mp3 từ url: ", e)
+        return
     
-    return video.title
+    val.set('sound_author', video.author)
+    val.set('sound_title', video.title)
+    val.set('sound_des', video.description)
+    val.set('sound_lengh', video.length)
+    val.set('sound_cover', video.thumbnail_url)
+    
+    if not video.captions: return
+    cp = None
+    try: cp = video.captions['ja']
+    except Exception as e: pass
+    if not cp:
+        try: cp = video.captions['en']
+        except Exception as e: return
+    
+    with builtins.open("sound/caption.xml", "w") as f:
+        f.write(cp)
+ 
+async def music_play():
+    from utils.bot import val
+    from utils.funcs import sob_play
+    
+    file = "sound/caption.xml"
+    if not os.path.exists(file):
+        asyncio.create_task(sob_play("sound/now.mp3"))
+        return False
+    
+    tree = ET.parse(file)
+    root = tree.getroot()
+    captions = []
+    
+    for child in root.iter('p'):
+        start_time = int(child.attrib['t']) / 1000
+        duration = int(child.attrib['d']) / 1000
+        text = child.text.strip()
+        captions.append((start_time, duration, text))
+    
+    val.set('sound_playing', True)
+    asyncio.create_task(sob_play("sound/now.mp3"))
+    asyncio.create_task(count_to_max())
+    
+    # Play cap
+    start_time = time.time()
+    printed_captions = set()
+    while val.sound_playing:
+        elapsed_time = time.time() - start_time
+        found_caption = False
+        for start, duration, text in captions:
+            if start <= elapsed_time <= start + duration:
+                if text != val.current_caption and text not in printed_captions:
+                    print(text)
+                    printed_captions.add(text)
+                val.set('current_caption', text)  # Update current caption
+                found_caption = True
+                break
+
+        if not found_caption and val.current_caption:  # Caption ended
+            print()  # Print blank space
+            val.set('current_caption', "")  # Reset current caption
+
+        if elapsed_time > captions[-1][0] + captions[-1][1]:
+            val.set("sound_playing", None)
+            break
+    
