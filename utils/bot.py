@@ -140,7 +140,8 @@ class AllStatus:
         self.sound_lengh = None
         self.sound_cover = None
         self.sound_cap = ""
-        self.sound_playing = None
+        self.sound_time = None
+        self.sound_playing = False
         
     def update(self, val_name, value):
         if hasattr(self, val_name):
@@ -1125,7 +1126,7 @@ async def sound_play(interaction: discord.Interaction, sound:str=None):
     
     if not sound:
         sob_stop()
-        val.set("sound_playing", None)
+        val.set("sound_time", None)
         return await interaction.response.send_message(f"> Đã tắt audio đang play nếu có.", ephemeral=True)
         
     elif sound.startswith("https"):

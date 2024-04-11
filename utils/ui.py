@@ -601,7 +601,7 @@ async def mrmv_atv(interaction: discord.Interaction):
         if interaction.user.id != val.owner_uid: return await byB(interaction)
     
     sob_stop()
-    val.set("sound_playing", None)
+    val.set("sound_time", None)
     await interaction.message.delete()
     
 # Edit message with mess id
@@ -1255,7 +1255,7 @@ async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True
     info = val.sound_des
     cover = val.sound_cover
     lyric = val.sound_cap
-    timebar = val.sound_playing
+    timebar = val.sound_time
     des = None
     
     if not cover: cover = bot.user.display_avatar
