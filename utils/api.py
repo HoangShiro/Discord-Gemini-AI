@@ -1,6 +1,6 @@
 """Xử lý thông tin của API"""
 
-import re, json, time, builtins, asyncio, os, discord
+import re, json, time, builtins, asyncio, os, discord, datetime
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 from pytube import YouTube, Search
@@ -294,38 +294,38 @@ async def music_dl(url:str=None, name:str=None):
     with builtins.open("sound/caption.xml", "w", encoding="utf-8") as f:
         f.write(cp.xml_captions)
  
-async def music_play(inter:discord.Interaction):
+async def music_play(inter: discord.Interaction):
     from utils.bot import val
     from utils.funcs import sob_play
     from utils.ui import music_show
-    
+
     file = "sound/caption.xml"
     val.set('sound_time', "0:00 [░░░░░░░░░░░] 0:00")
     val.set('sound_playing', True)
+
     if not os.path.exists(file):
         asyncio.create_task(count_to_max(inter=inter, update=True))
         asyncio.create_task(sob_play("now.mp3"))
         return False
-    
+
     tree = ET.parse(file)
     root = tree.getroot()
     captions = []
-    
+
     for child in root.iter('p'):
         start_time = int(child.attrib['t']) / 1000
         duration = int(child.attrib['d']) / 1000
         text = child.text.strip()
         captions.append((start_time, duration, text))
-    
-    
+
     asyncio.create_task(count_to_max(inter=inter))
     asyncio.create_task(sob_play("now.mp3"))
-    
-    # Play cap
-    start_time = time.time()
+
+    # Play cap with datetime
+    start_time = datetime.datetime.now()
     printed_captions = set()
-    while val.sound_time:
-        elapsed_time = time.time() - start_time
+    while val.sound_playing:
+        elapsed_time = (datetime.datetime.now() - start_time).total_seconds()
         found_caption = False
         for start, duration, text in captions:
             if start <= elapsed_time <= start + duration:
@@ -339,7 +339,7 @@ async def music_play(inter:discord.Interaction):
         if not found_caption and val.sound_cap:  # Caption ended
             val.set('sound_cap', "")  # Reset current caption
             await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
-            
+
         if elapsed_time > captions[-1][0] + captions[-1][1]:
             break
     
