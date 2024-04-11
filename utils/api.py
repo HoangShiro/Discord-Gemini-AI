@@ -5,7 +5,7 @@ import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 from pytube import YouTube, Search
 import xml.etree.ElementTree as ET
-from utils.funcs import load_prompt, txt_read, name_cut, if_chat_loop, clean_chat, count_to_max
+from utils.funcs import load_prompt, txt_read, name_cut, if_chat_loop, clean_chat, count_to_max, sob_stop
 
 safety ={
         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.	BLOCK_NONE,
@@ -340,5 +340,6 @@ async def music_play(inter:discord.Interaction):
         if elapsed_time > captions[-1][0] + captions[-1][1]:
             val.set("sound_playing", None)
             await music_show(interaction=inter, play_bt=True, rmv_bt=None, edit=True, ermv_bt=True)
+            sob_stop()
             break
     
