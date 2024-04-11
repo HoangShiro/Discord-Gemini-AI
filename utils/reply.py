@@ -184,7 +184,7 @@ async def color_check():
       
 # Xử lý và gửi tin nhắn
 async def send_mess(channel, reply, rep = False, inter = False):
-    from utils.bot import val
+    from utils.bot import val, mu
     from utils.daily import get_real_time
     from utils.ui import DM_button, edit_last_msg
     # In ra console
@@ -211,7 +211,7 @@ async def send_mess(channel, reply, rep = False, inter = False):
         val.set('last_mess_id', mid)
 
         await cmd_msg() # Xử lý lệnh từ bot
-        if val.tts_toggle: await voice_make_tts(reply) # Gửi voice
+        if val.tts_toggle and not mu.sound_playing: await voice_make_tts(reply) # Gửi voice
         return
 
     if not val.public: await edit_last_msg()
