@@ -1248,7 +1248,7 @@ async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True
     from utils.bot import val, bot
     
     author = val.sound_author
-    title = val.sound_title + " — " + author
+    title = f"{val.sound_title} — {author}"
     info = val.sound_des
     cover = val.sound_cover
     lyric = val.sound_cap
