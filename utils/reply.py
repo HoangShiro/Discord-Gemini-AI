@@ -240,12 +240,17 @@ async def send_mess(channel, reply, rep = False, inter = False):
 # Send voice
 async def voice_send(url, ch):
     from utils.daily import get_real_time
-    audio_source = FFmpegPCMAudio(url)
-    await asyncio.sleep(0.5)
     try:
-        ch.play(audio_source, after=lambda e: print('Player error: %s' % e) if e else None)
+        if ch.voice_client is not None and ch.voice_client.is_playing():
+            await ch.voice_client.stop()
+            
+        audio_source = FFmpegPCMAudio(url)
+
+        # Play audio
+        await ch.play(audio_source, after=lambda e: print(f'Player error: {e}' if e else None))
+
     except Exception as e:
-        print(f"{get_real_time()}> Send voice error: ", e)
+        print(f"{get_real_time()}> Send voice error: {e}")
 
 # Hàm xử lý lệnh trong tin nhắn
 async def cmd_msg():
