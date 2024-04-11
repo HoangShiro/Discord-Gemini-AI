@@ -1136,7 +1136,7 @@ async def count_to_max(inter: discord.Interaction, update=False):
     max_seconds = val.sound_lengh
 
     # Initial timestamp for accurate progress calculation
-    start_time = datetime.utcnow()
+    start_time = datetime.datetime.now()
 
     while True:
         
