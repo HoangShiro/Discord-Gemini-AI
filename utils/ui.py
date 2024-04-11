@@ -1253,6 +1253,7 @@ async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True
     cover = val.sound_cover
     lyric = val.sound_cap
     timebar = val.sound_playing
+    des = None
     
     if not cover: cover = bot.user.display_avatar
 
