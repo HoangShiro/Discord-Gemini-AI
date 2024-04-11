@@ -1254,13 +1254,13 @@ async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True
     lyric = val.sound_cap
     timebar = val.sound_playing
     
-    if not title: title = "Đang tìm kiếm... ✨"
-    if not des: des = "Lyric sẽ hiện ở đây nếu có."
     if not cover: cover = bot.user.display_avatar
-    
+
     if lyric: des = timebar + "\n\n" + lyric
     if timebar and not lyric: des = timebar
     
+    if not title: title = "Đang tìm kiếm... ✨"
+    if not des: des = "Lyric sẽ hiện ở đây nếu có."
     
     embed, view = await bot_notice(
         tt=title,
