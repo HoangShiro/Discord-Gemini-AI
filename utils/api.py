@@ -274,7 +274,7 @@ async def music_dl(url:str=None, name:str=None):
     file = "sound/caption.xml"
     if not video.captions:
         if os.path.exists(file): os.remove(file)
-        return video.title + video.author
+        return video.title, video.author
     
     cp = None
     
@@ -293,4 +293,4 @@ async def music_dl(url:str=None, name:str=None):
     with builtins.open("sound/caption.xml", "w", encoding="utf-8") as f:
         f.write(cp.xml_captions)
     
-    return video.title + video.author
+    return video.title, video.author
