@@ -469,10 +469,12 @@ async def cmd_msg():
             val.set('remind_msg', False)
         
 async def cmd_msg_user():
-    from utils.bot import val, bot
+    from utils.bot import val, bot, mu
     from utils.daily import get_real_time
-    from utils.ui import normal_embed
+    from utils.ui import normal_embed, music_embed
     from utils.funcs import list_to_str
+    from utils.api import music_dl
+    from utils.reply import send_embed
     
     u_msg = list_to_str(val.now_chat)
     if not u_msg: return
@@ -498,4 +500,15 @@ async def cmd_msg_user():
         val.set('now_chat', now_chat)
     
     if (search or play) and music and ai_name:
-        pass
+        prompt = f"Returns only the name of the song and artist name(if any) requested to search in the following chat: {u_msg}"
+        song_name = None
+        try:
+            song_name = await gemini_cmd(prompt)
+        except Exception as e:
+            print(f"{get_real_time()}> Lỗi find song name Gemini API: ", e)
+            return
+        
+        if song_name:
+            await music_dl(name=song_name)
+            embed, view = await music_embed(play_bt=True, rmv_bt=False, edit=False, resp_edit=False, ermv_bt=True)
+            await send_embed(embed=embed, view=view)

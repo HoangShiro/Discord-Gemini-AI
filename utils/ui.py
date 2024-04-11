@@ -584,13 +584,13 @@ async def tags_art_atv(interaction: discord.Interaction):
 # Music
 async def mplay_atv(interaction: discord.Interaction):
     from utils.bot import val, mu
+    from utils.reply import send_embed
     
     if not val.public:
         if interaction.user.id != val.owner_uid: return await byB(interaction)
     
     await music_show(interaction=interaction, play_bt=None, rmv_bt=True, resp_edit=True, ermv_bt=False)
-    msg = await interaction.original_response()
-    await mu.music_play(inter=msg)
+    await mu.music_play(inter=interaction)
 
 async def mrmv_atv(interaction: discord.Interaction):
     from utils.bot import val, mu
@@ -1246,6 +1246,17 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, slide=
 
 # Music show
 async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True, edit=False, resp_edit=False, ermv_bt=True):
+    
+    embed, view = await music_embed(play_bt=None, rmv_bt=True, edit=False, resp_edit=False, ermv_bt=True)
+    
+    msg = None
+    if edit: await interaction.edit_original_response(embed=embed, view=view)
+    elif resp_edit: await interaction.response.edit_message(embed=embed, view=view)
+    else: msg = await interaction.response.send_message(embed=embed, view=view)
+    
+    return msg
+
+async def music_embed(play_bt=None, rmv_bt=True, edit=False, resp_edit=False, ermv_bt=True):
     from utils.bot import mu, bot
     
     title = None
@@ -1274,10 +1285,4 @@ async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True
         mrmv_btt=rmv_bt,
         remove_btt=ermv_bt,
     )
-    
-    msg = None
-    if edit: await interaction.edit_original_response(embed=embed, view=view)
-    elif resp_edit: await interaction.response.edit_message(embed=embed, view=view)
-    else: msg = await interaction.response.send_message(embed=embed, view=view)
-    
-    return msg
+    return embed, view
