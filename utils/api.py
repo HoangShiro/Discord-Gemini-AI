@@ -254,7 +254,7 @@ def tts_get_url(text):
 # Play sound
 async def music_dl(url:str=None, name:str=None):
     from utils.daily import get_real_time
-    from utils.bot import mu
+    from utils.bot import mu, val
     
     try:
         if url: video = YouTube(url)
@@ -275,6 +275,8 @@ async def music_dl(url:str=None, name:str=None):
     if not video.captions:
         if os.path.exists(file): os.remove(file)
         return video.title, video.author
+    
+    if val.cmd_csl: print(video.captions)
     
     cp = None
     
