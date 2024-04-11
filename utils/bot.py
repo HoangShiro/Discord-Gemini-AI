@@ -1112,7 +1112,7 @@ async def pfp_change(interaction: discord.Interaction, pfp:discord.Option(
 
 # play audio
 @bot.slash_command(name="sound", description=f"Play sound from local or from url")
-async def sound_play(interaction: discord.Interaction, sound:str=None):
+async def sound_play(interaction: discord.Interaction, sound:str=None, embed:bool=True):
     if not val.public:
         if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
@@ -1121,16 +1121,20 @@ async def sound_play(interaction: discord.Interaction, sound:str=None):
         val.set("sound_time", None)
         return await interaction.response.send_message(f"> Đã tắt audio đang play nếu có.", ephemeral=True)
         
-    elif sound.startswith("https"):
+    elif sound.startswith("https") and embed:
         sob_stop()
         msg = await music_show(interaction=interaction, play_bt=False, rmv_bt=True, edit=False, ermv_bt=False)
         await music_dl(sound)
         await mu.music_play(inter=msg)
-        
-    else:
-        ok = await sob_play(sound)
-        if not ok: return await interaction.response.send_message(f"> Không có sound: {sound}.", ephemeral=True)
-        else: return await interaction.response.send_message(f"> Đã play sound: {sound}.", ephemeral=True)
+        return
+    
+    elif sound.startswith("https") and not embed:
+        sob_stop()
+        await music_dl(sound)
+    
+    ok = await sob_play(sound)
+    if not ok: return await interaction.response.send_message(f"> Không có sound: {sound}.", ephemeral=True)
+    else: return await interaction.response.send_message(f"> Đã play sound: {sound}.", ephemeral=True)
 
 def bot_run():
     try:
