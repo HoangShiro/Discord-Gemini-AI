@@ -589,11 +589,14 @@ async def mplay_atv(interaction: discord.Interaction):
     if not val.public:
         if interaction.user.id != val.owner_uid: return await byB(interaction)
         
-    await music_play()
+    await music_play(inter=interaction)
 
 async def mrmv_atv(interaction: discord.Interaction):
     from utils.bot import val 
     from utils.funcs import sob_stop
+    
+    if not val.public:
+        if interaction.user.id != val.owner_uid: return await byB(interaction)
     
     sob_stop()
     val.set("sound_playing", None)

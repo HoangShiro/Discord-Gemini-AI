@@ -1125,16 +1125,18 @@ async def sound_play(interaction: discord.Interaction, sound:str=None):
     
     if not sound:
         sob_stop()
+        val.set("sound_playing", None)
         return await interaction.response.send_message(f"> Đã tắt audio đang play nếu có.", ephemeral=True)
         
-    if sound.startswith("https"):
+    elif sound.startswith("https"):
         await music_show(interaction=interaction, play_bt=False, rmv_bt=True, edit=False)
         await music_dl(sound)
-        await music_play()
-        return await music_show(interaction=interaction, play_bt=False, rmv_bt=True, edit=True)
+        await music_play(inter=interaction)
         
-    if not await sob_play(sound): return await interaction.response.send_message(f"> Không có sound: {sound}.", ephemeral=True)
-    else: return await interaction.response.send_message(f"> Đã play: {sound}.", ephemeral=True)
+    else:
+        ok = await sob_play(sound)
+        if not ok: return await interaction.response.send_message(f"> Không có sound: {sound}.", ephemeral=True)
+        else: return await interaction.response.send_message(f"> Đã play sound: {sound}.", ephemeral=True)
 
 def bot_run():
     try:

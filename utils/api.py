@@ -291,6 +291,7 @@ async def music_play(inter:discord.Interaction):
     file = "sound/caption.xml"
     if not os.path.exists(file):
         asyncio.create_task(sob_play("sound/now.mp3"))
+        await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True)
         return False
     
     tree = ET.parse(file)
