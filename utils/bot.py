@@ -1118,7 +1118,7 @@ async def sound_play(interaction: discord.Interaction, sound:str):
         msg = await interaction.response.send_message(f"> Đang tải audio...", ephemeral=True)
         name = await mp3_dl(sound)
         await sob_play("now.mp3")
-        return await msg.edit_original_response(content=f"> Đang play: {name}.")
+        return await msg.edit_original_response(content=f"> Đang play: {name}")
         
     if not await sob_play(sound): return await interaction.response.send_message(f"> Không có sound: {sound}.", ephemeral=True)
     else: return await interaction.response.send_message(f"> Đã play: {sound}.", ephemeral=True)
