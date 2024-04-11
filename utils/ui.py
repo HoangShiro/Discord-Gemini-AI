@@ -1259,7 +1259,7 @@ async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True
     
     if not cover: cover = bot.user.display_avatar
 
-    if lyric and timebar: des = timebar + "\n\n" + lyric
+    if lyric and timebar: des = timebar + "\n\n" + f"*{lyric}*"
     if timebar and not lyric: des = timebar
     
     if not des and not title: des = "> Sẽ mất một lát."
