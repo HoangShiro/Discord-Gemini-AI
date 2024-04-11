@@ -1118,7 +1118,7 @@ async def sound_play(interaction: discord.Interaction, sound:str=None, embed:boo
     
     if not sound:
         sob_stop()
-        val.set("sound_time", None)
+        mu.set("sound_time", None)
         return await interaction.response.send_message(f"> Đã tắt audio đang play nếu có.", ephemeral=True)
         
     elif sound.startswith("https") and embed:
