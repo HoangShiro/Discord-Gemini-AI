@@ -1245,7 +1245,7 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, slide=
 
 # Music show
 async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True, edit=False):
-    from utils.bot import val
+    from utils.bot import val, bot
     
     author = val.sound_author
     title = val.sound_title
@@ -1257,6 +1257,7 @@ async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True
     des = author
     if not title: title = "Đang tìm kiếm... ✨"
     if not des: des = "Lyric sẽ hiện ở đây nếu có."
+    if not cover: cover = bot.user.display_avatar
     
     if lyric: des = timebar + "\n" + lyric
     
