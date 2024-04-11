@@ -362,6 +362,15 @@ async def sob_play(file):
         await voice_send(file, guild.voice_client)
         return True
 
+def sob_stop():
+    from utils.bot import bot, val
+
+    guild = bot.get_guild(val.ai_guild)
+    # Huỷ nếu không trong voice
+    if not guild: return
+    if not guild.voice_client: return
+    if guild.voice_client.is_playing(): guild.voice_client.stop()
+    
 # get sound
 async def get_sound(url):
   from utils.daily import get_real_time
@@ -383,7 +392,7 @@ async def get_sound(url):
   os.remove("temp.zip")
   
   return True
-       
+      
 # Hàm lấy link
 def get_img_link(text:str=None):
     from utils.bot import val

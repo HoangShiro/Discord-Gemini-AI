@@ -1110,10 +1110,14 @@ async def pfp_change(interaction: discord.Interaction, pfp:discord.Option(
 
 # play audio
 @bot.slash_command(name="sound", description=f"Play sound from local or from url")
-async def sound_play(interaction: discord.Interaction, sound:str):
+async def sound_play(interaction: discord.Interaction, sound:str=None):
     if not val.public:
         if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
+    if not sound:
+        sob_stop()
+        return await interaction.response.send_message(f"> Đã tắt audio đang play nếu có.", ephemeral=True)
+        
     if sound.startswith("https"):
         msg = await interaction.response.send_message(f"> Đang tải audio...", ephemeral=True)
         name = await mp3_dl(sound)
