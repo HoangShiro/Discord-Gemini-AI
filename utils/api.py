@@ -305,8 +305,8 @@ async def music_play(inter:discord.Interaction):
         captions.append((start_time, duration, text))
     
     val.set('sound_playing', "[░░░░░░░░░░░░░░░]")
-    asyncio.create_task(sob_play("sound/now.mp3"))
     asyncio.create_task(count_to_max())
+    asyncio.create_task(sob_play("now.mp3"))
     
     # Play cap
     start_time = time.time()
@@ -317,7 +317,6 @@ async def music_play(inter:discord.Interaction):
         for start, duration, text in captions:
             if start <= elapsed_time <= start + duration:
                 if text != val.sound_cap and text not in printed_captions:
-                    print(text)
                     printed_captions.add(text)
                 val.set('sound_cap', text)  # Update current caption
                 await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True)
@@ -325,7 +324,6 @@ async def music_play(inter:discord.Interaction):
                 break
 
         if not found_caption and val.sound_cap:  # Caption ended
-            print()  # Print blank space
             val.set('sound_cap', "")  # Reset current caption
             await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True)
             
