@@ -3,6 +3,7 @@
 import re, json
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
+from pytube import YouTube
 from utils.funcs import load_prompt, txt_read, name_cut, if_chat_loop, clean_chat
 
 safety ={
@@ -249,3 +250,12 @@ def tts_get_url(text):
     url = f"https://deprecatedapis.tts.quest/v2/voicevox/audio/?key={vv_key}&text={text}&speaker={speaker}&pitch={pitch}&intonationScale={intonation_scale}&speed={speed}"
     
     return url
+
+# Download audio
+async def mp3_dl(url):
+    
+    video = YouTube(url)
+    audio = video.streams.get_audio_only()
+    audio.download(filename="now.mp3", output_path="sound")
+    
+    return video.title

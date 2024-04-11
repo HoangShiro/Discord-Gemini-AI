@@ -2,7 +2,7 @@ import discord, asyncio, json, importlib
 
 from discord.ext import commands
 
-from utils.api import chat
+from utils.api import chat, mp3_dl
 from utils.status import *
 from utils.reply import *
 from utils.funcs import *
@@ -1109,11 +1109,17 @@ async def pfp_change(interaction: discord.Interaction, pfp:discord.Option(
     else: await mess.delete_original_response()
 
 # play audio
-@bot.slash_command(name="sound", description=f"Play local sound")
+@bot.slash_command(name="sound", description=f"Play sound from local or from url")
 async def sound_play(interaction: discord.Interaction, sound:str):
     if not val.public:
         if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
+    if sound.startswith("https"):
+        msg = await interaction.response.send_message(f"> Đang tải audio...", ephemeral=True)
+        name = await mp3_dl(sound)
+        await sob_play("now.mp3")
+        return await msg.edit_original_response(f"> Đang play: {name}.", ephemeral=True)
+        
     if not await sob_play(sound): return await interaction.response.send_message(f"> Không có sound: {sound}.", ephemeral=True)
     else: return await interaction.response.send_message(f"> Đã play: {sound}.", ephemeral=True)
 
