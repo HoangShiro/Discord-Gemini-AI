@@ -589,7 +589,7 @@ async def mplay_atv(interaction: discord.Interaction):
     if not val.public:
         if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    await music_show(interaction=interaction, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
+    await music_show(interaction=interaction, play_bt=None, rmv_bt=True, resp_edit=True, ermv_bt=False)
     msg = await interaction.original_response()
     await music_play(inter=msg)
 
