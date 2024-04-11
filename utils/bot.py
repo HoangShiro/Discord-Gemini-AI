@@ -1125,7 +1125,7 @@ async def sound_play(interaction: discord.Interaction, sound:str=None):
         sob_stop()
         msg = await music_show(interaction=interaction, play_bt=False, rmv_bt=True, edit=False, ermv_bt=False)
         await music_dl(sound)
-        await music_play(inter=msg)
+        await mu.music_play(inter=msg)
         
     else:
         ok = await sob_play(sound)

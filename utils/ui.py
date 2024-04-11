@@ -583,15 +583,14 @@ async def tags_art_atv(interaction: discord.Interaction):
 
 # Music
 async def mplay_atv(interaction: discord.Interaction):
-    from utils.api import music_play
-    from utils.bot import val
+    from utils.bot import val, mu
     
     if not val.public:
         if interaction.user.id != val.owner_uid: return await byB(interaction)
     
     await music_show(interaction=interaction, play_bt=None, rmv_bt=True, resp_edit=True, ermv_bt=False)
     msg = await interaction.original_response()
-    await music_play(inter=msg)
+    await mu.music_play(inter=msg)
 
 async def mrmv_atv(interaction: discord.Interaction):
     from utils.bot import val, mu
