@@ -375,6 +375,7 @@ def sob_stop():
     val.set('sound_lengh', None)
     val.set('sound_cover', None)
     val.set('sound_playing', None)
+    val.set('sound_cap', None)
     
     guild = bot.get_guild(val.ai_guild)
     # Huỷ nếu không trong voice
