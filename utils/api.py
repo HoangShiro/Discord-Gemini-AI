@@ -316,17 +316,17 @@ async def music_play(inter:discord.Interaction):
         found_caption = False
         for start, duration, text in captions:
             if start <= elapsed_time <= start + duration:
-                if text != val.current_caption and text not in printed_captions:
+                if text != val.sound_cap and text not in printed_captions:
                     print(text)
                     printed_captions.add(text)
-                val.set('current_caption', text)  # Update current caption
+                val.set('sound_cap', text)  # Update current caption
                 await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True)
                 found_caption = True
                 break
 
-        if not found_caption and val.current_caption:  # Caption ended
+        if not found_caption and val.sound_cap:  # Caption ended
             print()  # Print blank space
-            val.set('current_caption', "")  # Reset current caption
+            val.set('sound_cap', "")  # Reset current caption
             await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True)
             
         if elapsed_time > captions[-1][0] + captions[-1][1]:
