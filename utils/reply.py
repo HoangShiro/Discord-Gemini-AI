@@ -491,7 +491,7 @@ async def cmd_msg_user():
     
     search = re.search(r'tìm|search|kiếm|find', u_msg, re.IGNORECASE)
     music = re.search(r'music|nhạc|bài|song|video|mp3|mp4', u_msg, re.IGNORECASE)
-    play = re.search(r'hát|mở|play|chơi', u_msg, re.IGNORECASE)
+    play = re.search(r'hát|mở|play|chơi|phát', u_msg, re.IGNORECASE)
     
     if nowtime:
         chat = f"SYSTEM: now is {get_real_time(full=True)}."

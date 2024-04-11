@@ -1247,7 +1247,7 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, slide=
 # Music show
 async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True, edit=False, resp_edit=False, ermv_bt=True):
     
-    embed, view = await music_embed(play_bt=play_bt, rmv_bt=rmv_bt, edit=edit, resp_edit=resp_edit, ermv_bt=ermv_bt)
+    embed, view = await music_embed(play_bt=play_bt, rmv_bt=rmv_bt, ermv_bt=ermv_bt)
     
     msg = None
     if edit: await interaction.edit_original_response(embed=embed, view=view)
@@ -1256,7 +1256,7 @@ async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True
     
     return msg
 
-async def music_embed(play_bt=None, rmv_bt=True, edit=False, resp_edit=False, ermv_bt=True):
+async def music_embed(play_bt=None, rmv_bt=False, ermv_bt=True):
     from utils.bot import mu, bot
     
     title = None
