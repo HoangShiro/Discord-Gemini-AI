@@ -509,6 +509,9 @@ async def cmd_msg_user():
             return
         
         if song_name:
-            await music_dl(name=song_name)
+            title = await music_dl(name=song_name)
+            now_chat = val.now_chat
+            now_chat.append(object=f"*hỏi {val.last_uname} xem có phải bài này không -> {title}")
+            val.set('now_chat', now_chat)
             embed, view = await music_embed(play_bt=True, rmv_bt=False, edit=False, resp_edit=False, ermv_bt=True)
             await send_embed(embed=embed, view=view)
