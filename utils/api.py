@@ -263,7 +263,7 @@ async def music_dl(url:str=None, name:str=None):
         audio.download(filename="now.mp3", output_path="sound")
     except Exception as e:
         print(f"{get_real_time()}> Lỗi khi tải .mp3 từ url: ", e)
-        return False
+        return None, None
     
     mu.set('sound_author', video.author)
     mu.set('sound_title', video.title)
@@ -288,7 +288,7 @@ async def music_dl(url:str=None, name:str=None):
         except Exception as e: pass
     if not cp:
         if os.path.exists(file): os.remove(file)
-        return
+        return video.title, video.author
     
     with builtins.open("sound/caption.xml", "w", encoding="utf-8") as f:
         f.write(cp.xml_captions)
