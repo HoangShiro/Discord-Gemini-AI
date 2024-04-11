@@ -476,7 +476,7 @@ async def cmd_msg():
         sob_stop()
         title, author = await music_dl(name=u_play_song)
         mu.set('sound_search', None)
-        noti = f"*hỏi {val.last_uname} xem có phải bài này không -> song: {title} - author: {author}"
+        noti = f"*bạn thử hỏi {val.last_uname} xem có phải bài này không: {title} của {author}"
         now_chat = val.now_chat
         now_chat.append(noti)
         val.set('now_chat', now_chat)
@@ -525,4 +525,9 @@ async def cmd_msg_user():
             print(f"{get_real_time()}> Lỗi find song name Gemini API: ", e)
             return
         
-        if song_name: mu.set('sound_search', song_name)
+        if song_name:
+            mu.set('sound_search', song_name)
+            noti = f"*đang tìm nhạc, {val.ai_name} hãy kêu {val.last_uname} đợi chút...*"
+            now_chat = val.now_chat
+            now_chat.append(noti)
+            val.set('now_chat', now_chat)
