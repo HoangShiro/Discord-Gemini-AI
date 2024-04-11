@@ -272,9 +272,12 @@ async def music_dl(url:str=None, name:str=None):
     val.set('sound_lengh', video.length)
     val.set('sound_cover', video.thumbnail_url)
     
-    if not video.captions: return
-    cp = None
     file = "sound/caption.xml"
+    if not video.captions:
+        if os.path.exists(file): os.remove(file)
+        return
+    
+    cp = None
     
     try: cp = video.captions['vi']
     except Exception as e: pass
