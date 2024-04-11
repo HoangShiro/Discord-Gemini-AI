@@ -472,7 +472,11 @@ async def cmd_msg():
     
     # Music
     if u_play_song:
-        await v_join_auto()
+        guild = bot.get_guild(val.ai_guild)
+        # Huỷ nếu không trong voice
+        if not guild: return False
+        if not guild.voice_client:
+            await v_join_auto()
         
         mu.set('sound_search', None)
         embed, view = await music_embed(play_bt=True, rmv_bt=False, ermv_bt=True)
