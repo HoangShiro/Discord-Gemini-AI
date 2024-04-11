@@ -584,7 +584,6 @@ async def tags_art_atv(interaction: discord.Interaction):
 # Music
 async def mplay_atv(interaction: discord.Interaction):
     from utils.bot import val, mu
-    from utils.reply import send_embed
     
     if not val.public:
         if interaction.user.id != val.owner_uid: return await byB(interaction)

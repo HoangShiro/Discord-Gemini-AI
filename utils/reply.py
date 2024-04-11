@@ -474,6 +474,9 @@ async def cmd_msg():
     # Music
     if u_play_song:
         sob_stop()
+        
+        await v_join_auto()
+        
         title, author = await music_dl(name=u_play_song)
         mu.set('sound_search', None)
         noti = f"*bạn thử hỏi {val.last_uname} xem có phải bài này không: {title} của {author}"
