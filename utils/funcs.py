@@ -1648,7 +1648,9 @@ class Music:
         self.sound_cap = ""
         self.sound_time = None
         self.sound_playing = False
-    
+
+        self.sound_search = None
+        
     def update(self, val_name, value):
         if hasattr(self, val_name):
             current_value = getattr(self, val_name)

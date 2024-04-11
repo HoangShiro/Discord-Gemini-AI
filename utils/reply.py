@@ -255,10 +255,11 @@ async def voice_send(url, ch):
 async def cmd_msg():
     global voice_follow
     
-    from utils.bot import val, bot, rm
+    from utils.bot import val, bot, rm, mu
     from utils.daily import get_real_time
-    from utils.ui import normal_embed, bot_notice
-    from utils.funcs import avatar_change, banner_change, mood_change, leave_voice
+    from utils.ui import normal_embed, bot_notice, music_embed
+    from utils.funcs import avatar_change, banner_change, mood_change, leave_voice, sob_stop
+    from utils.api import music_dl
     
     old_chat = val.old_chat
     u_msg = list_to_str(old_chat)
@@ -294,6 +295,8 @@ async def cmd_msg():
     u_yearLremind = re.search(r'mỗi năm|mọi năm|hàng năm|every year|yearly|sinh nhật|birthday', u_msg, re.IGNORECASE)
     
     u_num = re.search("[0-9]", u_msg)
+    
+    u_play_song = mu.sound_search
     
     # Bot
     ai_voice = re.search(r'vc|voice channel|voice chat|voice', ai_msg, re.IGNORECASE)
@@ -467,13 +470,26 @@ async def cmd_msg():
                     await create_remind()
         else:
             val.set('remind_msg', False)
+    
+    # Music
+    if u_play_song:
+        sob_stop()
+        title, author = await music_dl(name=u_play_song)
+        mu.set('sound_search', None)
+        noti = f"*hỏi {val.last_uname} xem có phải bài này không -> song: {title} - author: {author}"
+        now_chat = val.now_chat
+        now_chat.append(noti)
+        val.set('now_chat', now_chat)
+        val.set('CD', 1)
         
+        embed, view = await music_embed(play_bt=True, rmv_bt=False, ermv_bt=True)
+        await send_embed(embed=embed, view=view)
+    
 async def cmd_msg_user():
     from utils.bot import val, bot, mu
     from utils.daily import get_real_time
     from utils.ui import normal_embed, music_embed
     from utils.funcs import list_to_str, sob_stop
-    from utils.api import music_dl
     from utils.reply import send_embed
     
     u_msg = list_to_str(val.now_chat)
@@ -509,14 +525,4 @@ async def cmd_msg_user():
             print(f"{get_real_time()}> Lỗi find song name Gemini API: ", e)
             return
         
-        if song_name:
-            sob_stop()
-            title, author = await music_dl(name=song_name)
-            noti = f"*hỏi {val.last_uname} xem có phải bài này không -> song: {title} - author: {author}"
-            now_chat = val.now_chat
-            now_chat.append(noti)
-            val.set('now_chat', now_chat)
-            val.set('CD', 1)
-            
-            embed, view = await music_embed(play_bt=True, rmv_bt=False, ermv_bt=True)
-            await send_embed(embed=embed, view=view)
+        if song_name: mu.set('sound_search', song_name)
