@@ -513,7 +513,7 @@ async def cmd_msg_user():
     search = re.search(r'tìm|search|kiếm|find', u_msg, re.IGNORECASE)
     music = re.search(r'music|nhạc|bài|song|video|mp3|mp4|asmr|video|ost|ending|opening', u_msg, re.IGNORECASE)
     play = re.search(r'hát|mở|play|chơi|phát', u_msg, re.IGNORECASE)
-    random = re.search(r'ngẫu nhiên|random|nào đó|gì đó|gì đấy|nào đấy|bài của|video của|tự tìm|tự chọn|tự mở', u_msg, re.IGNORECASE)
+    random = re.search(r'ngẫu nhiên|random|nào đó|gì đó|gì đấy|nào đấy|bài của|nhạc của|video của|tự tìm|tự chọn|tự mở', u_msg, re.IGNORECASE)
     
     if nowtime:
         chat = f"SYSTEM: now is {get_real_time(full=True)}."
