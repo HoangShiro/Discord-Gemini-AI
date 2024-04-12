@@ -518,6 +518,7 @@ async def cmd_msg_user():
         song_name = None
         try:
             song_name = await gemini_cmd(prompt)
+            if song_name == "None": song_name = "Clear Morning - Yui Ogura"
             if ":" in song_name: song_name = song_name.split(":")[1].strip()
             if val.cmd_csl: print(f"{get_real_time()}> Search song: ", song_name)
         except Exception as e:
