@@ -1126,7 +1126,11 @@ async def sound_play(interaction: discord.Interaction, sound:str=None, embed:boo
     elif sound.startswith("https") and embed:
         await sob_stop()
         msg = await music_show(interaction=interaction, play_bt=False, rmv_bt=True, edit=False, ermv_bt=False)
-        await music_dl(sound)
+        title, author = await music_dl(sound)
+        if not title:
+            mu.set('sound_title', "Không có bài nào cả 💫")
+            mu.set('sound_time', "> Hoặc bài này có bản quyền?")
+            return await music_show(interaction=msg, play_bt=False, rmv_bt=False, edit=True, ermv_bt=True)
         await mu.music_play(inter=msg)
         return
     
@@ -1134,6 +1138,7 @@ async def sound_play(interaction: discord.Interaction, sound:str=None, embed:boo
         await sob_stop()
         msg = await interaction.response.send_message(f"> Đang tải sound: {sound}.", ephemeral=True)
         title, author = await music_dl(sound)
+        if not title: return await msg.edit_original_response(content=f"> Không thể phát, chắc bài này có bản quyền?")
         await msg.edit_original_response(content=f"> Đang play: {title} - {author}.")
         await sob_play("now.mp3")
         return
