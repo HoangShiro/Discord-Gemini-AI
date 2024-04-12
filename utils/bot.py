@@ -133,6 +133,9 @@ class AllStatus:
         self.last_keywords = None
         self.art_tags = False
         
+        # Music
+        self.caption_lang = 'vi'
+        
     def update(self, val_name, value, save=True):
         if hasattr(self, val_name):
             current_value = getattr(self, val_name)
@@ -1114,9 +1117,20 @@ async def pfp_change(interaction: discord.Interaction, pfp:discord.Option(
 
 # play audio
 @bot.slash_command(name="sound", description=f"Play sound from local or from url")
-async def sound_play(interaction: discord.Interaction, sound:str=None, embed:bool=True):
+async def sound_play(interaction: discord.Interaction, sound:str=None, embed:bool=True, caption:discord.Option(
+                        description="Ưu tiên phụ đề nếu có.",
+                        choices=[
+                            discord.OptionChoice(name="Việt", value="vi"),
+                            discord.OptionChoice(name="English", value="en"),
+                            discord.OptionChoice(name="Japanese", value="ja"),
+                            discord.OptionChoice(name="Korean", value="ko"),
+                            discord.OptionChoice(name="Chinese", value="zh-Hans"),
+                        ],
+                    )=None):
     if not val.public:
         if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    if caption: val.set('caption_lang', caption)
     
     if not sound:
         await sob_stop()

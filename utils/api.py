@@ -281,14 +281,19 @@ async def music_dl(url:str=None, name:str=None):
     
     cp = None
     
-    try: cp = video.captions['vi']
-    except Exception as e: pass
+    def _get_caption(lang:str):
+        try: return video.captions[lang]
+        except Exception as e: return None
+    
+    langs = ['vi', 'en', 'ja', 'ko', 'zh-Hans']
+    plang = val.caption_lang
+    
+    cp = _get_caption(plang)
     if not cp:
-        try: cp = video.captions['en']
-        except Exception as e: pass
-    if not cp:
-        try: cp = video.captions['ja']
-        except Exception as e: pass
+        for lang in langs:
+            cp = _get_caption(lang)
+            if cp: break
+    
     if not cp:
         if os.path.exists(file): os.remove(file)
         return video.title, video.author
