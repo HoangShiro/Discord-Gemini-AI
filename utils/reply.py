@@ -491,6 +491,12 @@ async def cmd_msg_user():
     from utils.reply import send_embed
     from utils.api import music_dl
     
+    if val.now_chat: return
+    clear_chat = None
+    for chat in val.now_chat:
+        if ":" in chat: chat = chat.split(":")[1].strip()
+        clear_chat = clear_chat + f". {chat}"
+    
     u_msg = list_to_str(val.now_chat)
     if not u_msg: return
     
@@ -507,6 +513,7 @@ async def cmd_msg_user():
     search = re.search(r'tìm|search|kiếm|find', u_msg, re.IGNORECASE)
     music = re.search(r'music|nhạc|bài|song|video|mp3|mp4|asmr|video|ost|ending|opening', u_msg, re.IGNORECASE)
     play = re.search(r'hát|mở|play|chơi|phát', u_msg, re.IGNORECASE)
+    random = re.search(r'ngẫu nhiên|random|nào đó|gì đó|gì đấy|nào đấy|bài của|video của|tự tìm|tự chọn|tự mở', u_msg, re.IGNORECASE)
     
     if nowtime:
         chat = f"SYSTEM: now is {get_real_time(full=True)}."
@@ -515,7 +522,8 @@ async def cmd_msg_user():
         val.set('now_chat', now_chat)
     
     if ((search or play) and music and ai_name) or mu.sound_ctn_se:
-        prompt = f"Returns the song/video/author name specified in the following chat, otherwise returns None: {u_msg}"
+        if not random: prompt = f"Returns the song/video/author name specified in the following chat, otherwise returns None: {clear_chat}"
+        if random: prompt = f"Returns a random song by the author mentioned in the following chat or a random anime ost song if no author is mentioned: {clear_chat}"
         song_name = None
         try:
             song_name = await gemini_cmd(prompt)
