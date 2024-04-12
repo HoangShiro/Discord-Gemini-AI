@@ -1120,7 +1120,7 @@ async def pfp_change(interaction: discord.Interaction, pfp:discord.Option(
 async def sound_play(interaction: discord.Interaction, sound:str=None, embed:bool=True, caption:discord.Option(
                         description="Ưu tiên phụ đề nếu có.",
                         choices=[
-                            discord.OptionChoice(name="Việt", value="vi"),
+                            discord.OptionChoice(name="Vietnamese", value="vi"),
                             discord.OptionChoice(name="English", value="en"),
                             discord.OptionChoice(name="Japanese", value="ja"),
                             discord.OptionChoice(name="Korean", value="ko"),
