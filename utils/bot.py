@@ -1130,7 +1130,9 @@ async def sound_play(interaction: discord.Interaction, sound:str=None, embed:boo
         if not title:
             mu.set('sound_title', "Không có bài nào cả 💫")
             mu.set('sound_time', "> Hoặc bài này có bản quyền?")
-            return await music_show(interaction=msg, play_bt=False, rmv_bt=False, edit=True, ermv_bt=True)
+            await music_show(interaction=msg, play_bt=False, rmv_bt=False, edit=True, ermv_bt=True)
+            await sob_stop()
+            return
         await mu.music_play(inter=msg)
         return
     
