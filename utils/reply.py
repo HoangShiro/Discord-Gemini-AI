@@ -504,7 +504,7 @@ async def cmd_msg_user():
     nowtime = re.search(r'bây giờ|giờ là|mấy giờ|hiện tại|now|what time|today is|hôm nay là|tháng này là|năm nay là|thời gian thực|realtime|the time|s time', u_msg, re.IGNORECASE)
     
     search = re.search(r'tìm|search|kiếm|find', u_msg, re.IGNORECASE)
-    music = re.search(r'music|nhạc|bài|song|video|mp3|mp4|asmr|video', u_msg, re.IGNORECASE)
+    music = re.search(r'music|nhạc|bài|song|video|mp3|mp4|asmr|video|ost|ending|opening', u_msg, re.IGNORECASE)
     play = re.search(r'hát|mở|play|chơi|phát', u_msg, re.IGNORECASE)
     
     if nowtime:
