@@ -82,7 +82,7 @@ async def h_check():
 async def get_current_period(timezone_name="Asia/Bangkok"):
     global morning_check, noon_check, afternoon_check, night_check, sleep_check
     
-    from utils.bot import bot, val
+    from utils.bot import bot, val, mu
     from utils.funcs import v_leave_auto, voice_rcn
     
     my_timezone = pytz.timezone(timezone_name)
@@ -112,10 +112,10 @@ async def get_current_period(timezone_name="Asia/Bangkok"):
 
     if morning_start <= now.time() <= morning_end:
         if morning_check:
-            if random.random() < get_ctime(char, "morning", "voice"):
-                await voice_rcn(val.last_vch_id)
-            else:
-                await v_leave_auto()
+            if not mu.sound_playing:
+                if random.random() < get_ctime(char, "morning", "voice"): await voice_rcn(val.last_vch_id)
+                else: await v_leave_auto()
+            
             morning_check = False
             
             rmd = remmid_edit(val.ignore_chat, "Your Phone: ", f"Your Phone: morning - {now.time}. Bạn đang '{act}'.")
@@ -126,10 +126,10 @@ async def get_current_period(timezone_name="Asia/Bangkok"):
         return "morning"
     elif noon_start <= now.time() <= noon_end:
         if noon_check:
-            if random.random() < get_ctime(char, "noon", "voice"):
-                await voice_rcn(val.last_vch_id)
-            else:
-                await v_leave_auto()
+            if not mu.sound_playing:
+                if random.random() < get_ctime(char, "noon", "voice"): await voice_rcn(val.last_vch_id)
+                else: await v_leave_auto()
+            
             noon_check = False
 
             rmd = remmid_edit(val.ignore_chat, "Your Phone: ", f"Your Phone: noon - {now.time}. Bạn đang '{act}'.")
@@ -140,10 +140,10 @@ async def get_current_period(timezone_name="Asia/Bangkok"):
         return "noon"
     elif afternoon_start <= now.time() <= afternoon_end:
         if afternoon_check:
-            if random.random() < get_ctime(char, "afternoon", "voice"):
-                await voice_rcn(val.last_vch_id)
-            else:
-                await v_leave_auto()
+            if not mu.sound_playing:
+                if random.random() < get_ctime(char, "afternoon", "voice"): await voice_rcn(val.last_vch_id)
+                else: await v_leave_auto()
+            
             afternoon_check = False
             
             rmd = remmid_edit(val.ignore_chat, "Your Phone: ", f"Your Phone: afternoon - {now.time}. Bạn đang '{act}'.")
@@ -154,10 +154,10 @@ async def get_current_period(timezone_name="Asia/Bangkok"):
         return "afternoon"
     elif evening_start <= now.time() <= evening_end:
         if night_check:
-            if random.random() < get_ctime(char, "night", "voice"):
-                await voice_rcn(val.last_vch_id)
-            else:
-                await v_leave_auto()
+            if not mu.sound_playing:
+                if random.random() < get_ctime(char, "night", "voice"): await voice_rcn(val.last_vch_id)
+                else: await v_leave_auto()
+            
             night_check = False
         
             rmd = remmid_edit(val.ignore_chat, "Your Phone: ", f"Your Phone: night - {now.time}. Bạn đang '{act}'.")
@@ -168,10 +168,10 @@ async def get_current_period(timezone_name="Asia/Bangkok"):
         return "night"
     else:
         if sleep_check:
-            if random.random() < get_ctime(char, "sleep", "voice"):
-                await voice_rcn(val.last_vch_id)
-            else:
-                await v_leave_auto()
+            if not mu.sound_playing:
+                if random.random() < get_ctime(char, "sleep", "voice"): await voice_rcn(val.last_vch_id)
+                else: await v_leave_auto()
+            
             sleep_check = False
         
             rmd = remmid_edit(val.ignore_chat, "Your Phone: ", f"Your Phone: sleep - {now.time}. Bạn đang '{act}'.")
