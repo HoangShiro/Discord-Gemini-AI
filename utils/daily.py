@@ -15,7 +15,7 @@ voice_leave = True
 # Secs tasks
 @tasks.loop(seconds=1)
 async def sec_check():
-    from utils.bot import bot, val
+    from utils.bot import bot, val, mu
     from utils.funcs import update_ignore
     
     # Rep khi bot rảnh
@@ -30,6 +30,7 @@ async def sec_check():
         if val.public: val.set('CD', val.chat_speed, save=False) # Chờ trước khi rep tiếp
         if val.CD_idle == val.to_worktime:
             val.set('CD', val.to_breaktime)
+            mu.set('sound_ctn_se', False)
             await status_busy_set()
     
     # Đếm ngược tới thời gian check tin nhắn

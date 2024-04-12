@@ -479,6 +479,7 @@ async def cmd_msg():
             await v_join_auto()
         
         mu.set('sound_search', None)
+        mu.set('sound_ctn_se', True)
         embed, view = await music_embed(play_bt=True, rmv_bt=False, ermv_bt=True)
         await send_embed(embed=embed, view=view)
     
@@ -513,12 +514,14 @@ async def cmd_msg_user():
         now_chat.insert(0, chat)
         val.set('now_chat', now_chat)
     
-    if (search or play) and music and ai_name:
+    if ((search or play) and music and ai_name) or mu.sound_ctn_se:
         prompt = f"Returns the song/video/author name specified in the following chat, otherwise returns None: {u_msg}"
         song_name = None
         try:
             song_name = await gemini_cmd(prompt)
-            if song_name == "None": song_name = "Clear Morning - Yui Ogura"
+            if song_name == "None":
+                if mu.sound_ctn_se: return
+                else: song_name = "Clear Morning - Yui Ogura"
             if ":" in song_name: song_name = song_name.split(":")[1].strip()
             if val.cmd_csl: print(f"{get_real_time()}> Search song: ", song_name)
         except Exception as e:
