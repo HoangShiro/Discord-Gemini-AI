@@ -367,7 +367,7 @@ async def sob_play(file):
         await voice_send(file, guild.voice_client)
         return True
 
-def sob_stop():
+async def sob_stop():
     from utils.bot import bot, val, mu
 
     mu.set('sound_author', None)
@@ -385,6 +385,8 @@ def sob_stop():
     if not guild: return
     if not guild.voice_client: return
     if guild.voice_client.is_playing(): guild.voice_client.stop()
+    
+    asyncio.sleep(2.1)
     
 # get sound
 async def get_sound(url):
@@ -1676,7 +1678,6 @@ class Music:
 
         end = False
         while mu.sound_playing:
-            
             # Tạo thanh giả lập [██████████░░░░░]
             def _create_progress_bar(current, max):
                 """

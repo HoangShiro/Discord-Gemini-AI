@@ -1119,19 +1119,19 @@ async def sound_play(interaction: discord.Interaction, sound:str=None, embed:boo
         if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
     if not sound:
-        sob_stop()
+        await sob_stop()
         mu.set("sound_time", None)
         return await interaction.response.send_message(f"> Đã tắt audio đang play nếu có.", ephemeral=True)
         
     elif sound.startswith("https") and embed:
-        sob_stop()
+        await sob_stop()
         msg = await music_show(interaction=interaction, play_bt=False, rmv_bt=True, edit=False, ermv_bt=False)
         await music_dl(sound)
         await mu.music_play(inter=msg)
         return
     
     elif sound.startswith("https") and not embed:
-        sob_stop()
+        await sob_stop()
         msg = await interaction.response.send_message(f"> Đang tải sound: {sound}.", ephemeral=True)
         title, author = await music_dl(sound)
         await msg.edit_original_response(content=f"> Đang play: {title} - {author}.")

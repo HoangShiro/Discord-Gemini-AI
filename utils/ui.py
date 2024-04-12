@@ -598,7 +598,7 @@ async def mrmv_atv(interaction: discord.Interaction):
     if not val.public:
         if interaction.user.id != val.owner_uid: return await byB(interaction)
     
-    sob_stop()
+    await sob_stop()
     mu.set("sound_time", None)
     await interaction.message.delete()
     

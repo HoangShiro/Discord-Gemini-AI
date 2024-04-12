@@ -524,7 +524,7 @@ async def cmd_msg_user():
             return
         
         if song_name:
-            sob_stop()
+            await sob_stop()
             mu.set('sound_search', song_name)
             title, author = await music_dl(name=song_name)
             noti = f"*hãy thử hỏi {val.last_uname} xem có phải bài này không: {title} của {author}"
