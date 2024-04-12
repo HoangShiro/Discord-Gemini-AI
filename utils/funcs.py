@@ -386,7 +386,7 @@ async def sob_stop():
     if not guild.voice_client: return
     if guild.voice_client.is_playing(): guild.voice_client.stop()
     
-    asyncio.sleep(2.1)
+    await asyncio.sleep(2.1)
     
 # get sound
 async def get_sound(url):
