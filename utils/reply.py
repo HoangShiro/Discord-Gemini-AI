@@ -542,7 +542,8 @@ async def cmd_msg_user():
         
         if song_name:
             await sob_stop()
-            title, author = await music_dl(name=song_name)
+            if g_link: title, author = await music_dl(url=song_name)
+            else: title, author = await music_dl(name=song_name)
             if not title: noti = f"*Không tìm thấy bài nào là {song_name} cả*"
             else: noti = f"*hãy thử hỏi {val.last_uname} xem có phải bài này không: {title} của {author}"
             now_chat = val.now_chat
