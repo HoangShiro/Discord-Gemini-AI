@@ -519,6 +519,7 @@ async def cmd_msg_user():
         try:
             song_name = await gemini_cmd(prompt)
             if ":" in song_name: song_name = song_name.split(":")[1].strip()
+            if val.cmd_csl: print(f"{get_real_time()}> Search song: ", song_name)
         except Exception as e:
             print(f"{get_real_time()}> Lỗi find song name Gemini API: ", e)
             return
