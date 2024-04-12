@@ -282,8 +282,17 @@ async def music_dl(url:str=None, name:str=None):
     cp = None
     
     def _get_caption(lang:str):
-        try: return video.captions[lang]
-        except Exception as e: return None
+        try:
+            _cp = None
+            index = 0
+            for _cp in video.captions.lang_code_index:
+                if lang in _cp: break
+                index += 1
+            
+            if index > len(video.captions.lang_code_index) - 1: return None
+            else: return video.caption_tracks[index]
+        except Exception as e:
+            return None
     
     langs = ['vi', 'en', 'ja', 'ko', 'zh-Hans']
     plang = val.caption_lang
