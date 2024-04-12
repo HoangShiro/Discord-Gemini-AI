@@ -422,6 +422,14 @@ def get_img_link(text:str=None):
     else:
         return None
 
+def get_link(url: str = None):
+    if not url: return None
+
+    match = re.search(r"(https?://\S+)", url)
+
+    if match: return match.group(1)
+    else: return None
+
 # Hàm xử lý link ảnh
 async def get_msg_img_url(message: discord.Message):
     from utils.bot import val

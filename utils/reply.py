@@ -487,7 +487,7 @@ async def cmd_msg_user():
     from utils.bot import val, bot, mu
     from utils.daily import get_real_time
     from utils.ui import normal_embed, music_embed
-    from utils.funcs import list_to_str, sob_stop
+    from utils.funcs import list_to_str, sob_stop, get_link
     from utils.reply import send_embed
     from utils.api import music_dl
     
@@ -522,19 +522,23 @@ async def cmd_msg_user():
         val.set('now_chat', now_chat)
     
     if ((search or play) and music and ai_name) or mu.sound_ctn_se:
-        if not random: prompt = f"Returns the song/video/author name specified in the following chat, otherwise returns None: {clear_chat}"
-        if random: prompt = f"Returns one random song that you know of the author mentioned in the following chat, otherwise returns None: {clear_chat}"
         song_name = None
-        try:
-            song_name = await gemini_cmd(prompt)
-            if song_name == "None":
-                if mu.sound_ctn_se: return
-                else: song_name = "Clear Morning - Yui Ogura"
-            if ":" in song_name: song_name = song_name.split(":")[1].strip()
-            if val.cmd_csl: print(f"{get_real_time()}> Search song: ", song_name)
-        except Exception as e:
-            print(f"{get_real_time()}> Lỗi find song name Gemini API: ", e)
-            return
+        g_link = get_link(u_msg)
+        if not g_link:
+            if not random: prompt = f"Returns the song/video/author name specified in the following chat, otherwise returns None: {clear_chat}"
+            if random: prompt = f"Returns one random song that you know of the author mentioned in the following chat, otherwise returns None: {clear_chat}"
+            try:
+                song_name = await gemini_cmd(prompt)
+                if song_name == "None":
+                    if mu.sound_ctn_se: return
+                    else: song_name = "Clear Morning - Yui Ogura"
+                if ":" in song_name: song_name = song_name.split(":")[1].strip()
+                if val.cmd_csl: print(f"{get_real_time()}> Search song: ", song_name)
+            except Exception as e:
+                print(f"{get_real_time()}> Lỗi find song name Gemini API: ", e)
+                return
+        elif g_link.startswith(("https://youtu.be/", "https://www.youtube.com/")):
+            song_name = g_link
         
         if song_name:
             await sob_stop()
