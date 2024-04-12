@@ -491,7 +491,7 @@ async def cmd_msg_user():
     from utils.reply import send_embed
     from utils.api import music_dl
     
-    if val.now_chat: return
+    if not val.now_chat: return
     clear_chat = None
     for chat in val.now_chat:
         if ":" in chat: chat = chat.split(":")[1].strip()
