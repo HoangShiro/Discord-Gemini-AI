@@ -598,9 +598,8 @@ async def mrmv_atv(interaction: discord.Interaction):
     if not val.public:
         if interaction.user.id != val.owner_uid: return await byB(interaction)
     
+    await byB(interaction)
     await sob_stop()
-    mu.set("sound_time", None)
-    await interaction.message.delete()
     
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
