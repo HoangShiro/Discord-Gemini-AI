@@ -492,7 +492,7 @@ async def cmd_msg_user():
     from utils.api import music_dl
     
     if not val.now_chat: return
-    clear_chat = None
+    clear_chat = ""
     for chat in val.now_chat:
         if ":" in chat: chat = chat.split(":")[1].strip()
         clear_chat = clear_chat + f". {chat}"
