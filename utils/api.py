@@ -259,10 +259,7 @@ async def music_dl(url:str=None, name:str=None):
     try:
         if url: video = YouTube(url)
         elif name:
-            videos = Search(query=name).results
-            for vd in videos:
-                print(vd.title)
-            video = videos[0]
+            video = Search(query=name).results[0]
         audio = video.streams.get_audio_only()
         audio.download(filename="now.mp3", output_path="sound")
     except Exception as e:
