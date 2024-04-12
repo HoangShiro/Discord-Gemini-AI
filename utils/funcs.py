@@ -1750,10 +1750,13 @@ class Music:
         captions = []
 
         for child in root.iter('p'):
-            start_time = int(child.attrib['t']) / 1000
-            duration = int(child.attrib['d']) / 1000
-            text = child.text.strip()
-            captions.append((start_time, duration, text))
+            if 't' in child.attrib and 'd' in child.attrib:
+                try:
+                    start_time = int(child.attrib['t']) / 1000
+                    duration = int(child.attrib['d']) / 1000
+                    text = child.text.strip()
+                    captions.append((start_time, duration, text))
+                except ValueError: pass
 
         asyncio.create_task(self.count_to_max(inter=inter, update=True))
         asyncio.create_task(sob_play("now.mp3"))
