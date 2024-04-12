@@ -523,7 +523,7 @@ async def cmd_msg_user():
     
     if ((search or play) and music and ai_name) or mu.sound_ctn_se:
         if not random: prompt = f"Returns the song/video/author name specified in the following chat, otherwise returns None: {clear_chat}"
-        if random: prompt = f"Returns a random song by the author mentioned in the following chat or a random anime ost song if no author is mentioned: {clear_chat}"
+        if random: prompt = f"Returns one random song by the author mentioned in the following chat or Returns one random anime ost song if no author is mentioned: {clear_chat}"
         song_name = None
         try:
             song_name = await gemini_cmd(prompt)
