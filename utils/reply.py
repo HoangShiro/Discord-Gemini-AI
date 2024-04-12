@@ -116,7 +116,7 @@ async def send_embed(embed=None, view=None):
     channel = await get_channel()
     if channel:
         if embed:
-            await channel.send(embed=embed, view=view)
+            return await channel.send(embed=embed, view=view)
 
 # Set tính cách nhân vật dựa vào prompt
 async def char_check():
@@ -481,7 +481,7 @@ async def cmd_msg():
         mu.set('sound_search', None)
         mu.set('sound_ctn_se', True)
         embed, view = await music_embed(play_bt=True, rmv_bt=False, ermv_bt=True)
-        await send_embed(embed=embed, view=view)
+        inter = await send_embed(embed=embed, view=view)
     
 async def cmd_msg_user():
     from utils.bot import val, bot, mu
@@ -523,7 +523,7 @@ async def cmd_msg_user():
     
     if ((search or play) and music and ai_name) or mu.sound_ctn_se:
         if not random: prompt = f"Returns the song/video/author name specified in the following chat, otherwise returns None: {clear_chat}"
-        if random: prompt = f"Returns one random song by the author mentioned in the following chat or Returns one random anime ost song if no author is mentioned: {clear_chat}"
+        if random: prompt = f"Returns one random song that you know of the author mentioned in the following chat, otherwise returns None: {clear_chat}"
         song_name = None
         try:
             song_name = await gemini_cmd(prompt)
