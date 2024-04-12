@@ -1715,7 +1715,7 @@ class Music:
             if current_time >= max_seconds:
                 mu.set("sound_playing", False)
                 mu.set("sound_time", "Đã kết thúc.")
-                await music_show(interaction=inter, play_bt=False, rmv_bt=None, edit=True, ermv_bt=True)
+                await music_show(interaction=inter, play_bt=True, rmv_bt=None, edit=True, ermv_bt=True)
                 end = True
                 break
         

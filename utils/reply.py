@@ -530,10 +530,12 @@ async def cmd_msg_user():
         
         if song_name:
             await sob_stop()
-            mu.set('sound_search', song_name)
             title, author = await music_dl(name=song_name)
-            noti = f"*hãy thử hỏi {val.last_uname} xem có phải bài này không: {title} của {author}"
+            if not title: noti = f"*Không tìm thấy bài nào là {song_name} cả*"
+            else: noti = f"*hãy thử hỏi {val.last_uname} xem có phải bài này không: {title} của {author}"
             now_chat = val.now_chat
             now_chat.append(noti)
             val.set('now_chat', now_chat)
             val.set('CD', 1)
+            
+            if title: mu.set('sound_search', song_name)
