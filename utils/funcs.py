@@ -1711,9 +1711,13 @@ class Music:
             # Break the loop if song length is reached
             if current_time >= max_seconds:
                 mu.set("sound_playing", False)
+                mu.set("sound_time", "Đã kết thúc.")
                 await music_show(interaction=inter, play_bt=False, rmv_bt=None, edit=True, ermv_bt=True)
                 break
-
+            return
+        
+        await inter.delete_original_response()
+        
     async def music_play(self, inter: discord.Interaction):
         from utils.bot import mu
         from utils.funcs import sob_play
