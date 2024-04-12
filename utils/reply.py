@@ -276,7 +276,8 @@ async def cmd_msg():
     u_voice = re.search(r'vc|voice channel|voice chat|voice', u_msg, re.IGNORECASE)
     u_join = re.search(r'joi|jum|vào|nhảy|chui|vô|đi|nào', u_msg, re.IGNORECASE)
     u_out = re.search(r'leav|out|rời|khỏi|thoát', u_msg, re.IGNORECASE)
-
+    u_stop = re.search(r'dừng|stop|ngưng|tắt|off|thôi', u_msg, re.IGNORECASE)
+    
     u_avt = re.search(r'ava|avt|hình đại diện|ảnh đại diện|pfp', u_msg, re.IGNORECASE)
     u_banner = re.search(r'banner|cover|biểu ngữ|bìa', u_msg, re.IGNORECASE)
     u_cg = re.search(r'đổi|thay|chuyển|set|dùng|change|use|làm|add', u_msg, re.IGNORECASE)
@@ -308,7 +309,7 @@ async def cmd_msg():
 
     ai_ok = re.search(r'ok|key|hai|dạ|vâng|sẽ|vô|tới|được|đây|xong|rùi|bây giờ|now|sure|understood|right|được thôi', ai_msg, re.IGNORECASE)
     ai_no = re.search(r'no|ko|không|why|tại sao|hem|gì|là như nào|là sao|what|where', ai_msg, re.IGNORECASE)
-
+    
     ai_mood_up1 = re.search(r'woa|wa|hihi|hehe|haha|hoho|owo|uwu|<3|xd|cười|smile|:d|:p|vui', ai_msg, re.IGNORECASE)
     ai_mood_up2 = re.search(r'tuyệt|great|perfect|yêu|thích|love|like|sướng|phê', ai_msg, re.IGNORECASE)
     ai_mood_dn1 = re.search(r'xin|lỗi|gomenasai|sorry|cúi đầu|:<| tt|buồn|sad', ai_msg, re.IGNORECASE)
@@ -483,6 +484,9 @@ async def cmd_msg():
         embed, view = await music_embed(play_bt=True, rmv_bt=False, ermv_bt=True)
         inter = await send_embed(embed=embed, view=view)
     
+    if mu.sound_playing and u_stop:
+        await sob_stop()
+    
 async def cmd_msg_user():
     from utils.bot import val, bot, mu
     from utils.daily import get_real_time
@@ -514,6 +518,7 @@ async def cmd_msg_user():
     music = re.search(r'music|nhạc|bài|song|video|mp3|mp4|asmr|video|ost|ending|opening', u_msg, re.IGNORECASE)
     play = re.search(r'hát|mở|play|chơi|phát', u_msg, re.IGNORECASE)
     random = re.search(r'ngẫu nhiên|random|nào đó|gì đó|gì đấy|nào đấy|tự tìm|tự chọn|tự mở', u_msg, re.IGNORECASE)
+    stop = re.search(r'dừng|stop|ngưng|tắt|off|thôi', u_msg, re.IGNORECASE)
     
     if nowtime:
         chat = f"SYSTEM: now is {get_real_time(full=True)}."
@@ -545,10 +550,17 @@ async def cmd_msg_user():
             if g_link: title, author = await music_dl(url=song_name)
             else: title, author = await music_dl(name=song_name)
             if not title: noti = f"*Không tìm thấy bài nào là {song_name} cả*"
-            else: noti = f"*hãy thử hỏi {val.last_uname} xem có phải bài này không: {title} của {author}"
+            else: noti = f"*hãy thử hỏi {val.last_uname} xem có phải bài này không: {title} của {author}*"
             now_chat = val.now_chat
             now_chat.append(noti)
             val.set('now_chat', now_chat)
             val.set('CD', 1)
             
             if title: mu.set('sound_search', song_name)
+
+    if mu.sound_playing and stop:
+        noti = f"*Có nhạc đang phát, hãy dừng phát nhạc*"
+        now_chat = val.now_chat
+        now_chat.append(noti)
+        val.set('now_chat', now_chat)
+        val.set('CD', 1)
