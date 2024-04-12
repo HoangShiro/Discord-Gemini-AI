@@ -1130,7 +1130,9 @@ async def sound_play(interaction: discord.Interaction, sound:str=None, embed:boo
     if not val.public:
         if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
-    if caption: val.set('caption_lang', caption)
+    if caption:
+        val.set('caption_lang', caption)
+        if not sound: return await interaction.response.send_message(f"> Caption được ưu tiên: {caption}", ephemeral=True)
     
     if not sound:
         await sob_stop()
