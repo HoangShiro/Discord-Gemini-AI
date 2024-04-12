@@ -1674,6 +1674,7 @@ class Music:
         # Initial timestamp for accurate progress calculation
         start_time = datetime.datetime.now()
 
+        end = False
         while mu.sound_playing:
             
             # Tạo thanh giả lập [██████████░░░░░]
@@ -1713,10 +1714,10 @@ class Music:
                 mu.set("sound_playing", False)
                 mu.set("sound_time", "Đã kết thúc.")
                 await music_show(interaction=inter, play_bt=False, rmv_bt=None, edit=True, ermv_bt=True)
+                end = True
                 break
-            return
         
-        await inter.delete_original_response()
+        if not end: await inter.delete_original_response()
         
     async def music_play(self, inter: discord.Interaction):
         from utils.bot import mu
