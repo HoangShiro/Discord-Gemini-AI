@@ -637,8 +637,6 @@ async def cmd_msg():
     
     # Voice
     if "voice_join" in cmd and ai_name:
-        if not voice_follow: voice_follow = True
-        else: voice_follow = False
         
         found = await v_join_auto()
 
