@@ -319,9 +319,9 @@ async def cmd_msg():
     ai_mood_dn1 = re.search(r'xin|lỗi|gomenasai|sorry|cúi đầu|:<| tt|buồn|sad', ai_msg, re.IGNORECASE)
     ai_mood_dn2 = re.search(r'baka|cay|giận|tức|điên|cút|hãy rời đi|ngốc|angry|depress|go away|huhu|cry|khóc', ai_msg, re.IGNORECASE)
     
-    ai_search = re.search(r'tìm|search|kiếm|find', ai_msg, re.IGNORECASE)
+    ai_search = re.search(r'tìm|search|kiếm|find|giới thiệu|trong', ai_msg, re.IGNORECASE)
     ai_music = re.search(r'music|nhạc|bài|song|video|mp3|mp4|asmr|video|ost|ending|opening', ai_msg, re.IGNORECASE)
-    ai_play = re.search(r'hát|mở|play|chơi|phát', ai_msg, re.IGNORECASE)
+    ai_play = re.search(r'hát|mở|play|chơi|phát|nghe', ai_msg, re.IGNORECASE)
     
     # Mood
     if ai_mood_up1 and not ai_mood_dn1 and not ai_mood_dn2:
