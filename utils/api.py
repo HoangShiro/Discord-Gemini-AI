@@ -46,7 +46,7 @@ else:
 cmodel = genai.GenerativeModel(
     'gemini-1.0-pro',
     safety_settings=safety,
-    generation_config=genai.types.GenerationConfig(top_p=0, top_k=1, temperature=0),
+    generation_config=genai.types.GenerationConfig(top_p=0.3, top_k=1, temperature=0.3),
     )
 igmodel = genai.GenerativeModel(
     'gemini-pro-vision',
