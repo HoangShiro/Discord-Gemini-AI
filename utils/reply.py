@@ -3,7 +3,7 @@ import PIL.Image, asyncio, re, discord, aiohttp, random
 from io import BytesIO
 from discord import FFmpegPCMAudio
 from utils.funcs import list_to_str, txt_read, v_leave_auto, voice_make_tts, v_join_auto
-from utils.api import igemini_text, gemini_rep, gemini_task, gemini_cmd
+from utils.api import igemini_text, gemini_rep, gemini_task
 
 voice_follow = False
 
@@ -251,7 +251,7 @@ async def voice_send(url, ch):
     except Exception as e:
         print(f"{get_real_time()}> Send voice error: {e}")
 
-# Hàm xử lý lệnh trong tin nhắn
+"""# Hàm xử lý lệnh trong tin nhắn
 async def cmd_msg():
     global voice_follow
     
@@ -320,7 +320,7 @@ async def cmd_msg():
     ai_mood_dn2 = re.search(r'baka|cay|giận|tức|điên|cút|hãy rời đi|ngốc|angry|depress|go away|huhu|cry|khóc', ai_msg, re.IGNORECASE)
     
     ai_search = re.search(r'tìm|search|kiếm|find|giới thiệu|trong', ai_msg, re.IGNORECASE)
-    ai_music = re.search(r'music|nhạc|bài|song|video|mp3|mp4|asmr|video|ost|ending|opening', ai_msg, re.IGNORECASE)
+    ai_music = re.search(r'music|nhạc|bài|song|video|mp3|mp4|asmr|video|ost|ending|opening|từ anime', ai_msg, re.IGNORECASE)
     ai_play = re.search(r'hát|mở|play|chơi|phát|nghe', ai_msg, re.IGNORECASE)
     
     # Mood
@@ -585,4 +585,235 @@ async def cmd_msg_user():
         now_chat = val.now_chat
         now_chat.append(noti)
         val.set('now_chat', now_chat)
-        val.set('CD', 1)
+        val.set('CD', 1)"""
+
+# Hàm xử lý lệnh trong tin nhắn
+async def cmd_msg():
+    from utils.bot import val, bot, rm, mu
+    from utils.daily import get_real_time
+    from utils.ui import bot_notice, music_embed
+    from utils.funcs import avatar_change, banner_change, mood_change, leave_voice, sob_stop, txt_read
+    from utils.api import music_dl, gemini_cmd
+    from utils.reply import send_embed
+    
+    u_msg = val.now_chat_user
+    if not u_msg: return
+    ai_msg = val.now_chat_ai
+    if not ai_msg: return
+    
+    ai_name = False
+    if not val.public: ai_name = True
+    else:
+        if val.ai_name.lower() in u_msg.lower(): ai_name = True
+        elif val.last_uid == val.owner_uid: ai_name = True
+    
+    clear_ai_msg = ai_msg
+    if val.last_uname in clear_ai_msg: clear_ai_msg = clear_ai_msg.replace(val.last_uname, "")
+    clear_user_msg = u_msg
+    for name in val.ai_name.lower().split():
+        if name in clear_user_msg.lower(): clear_user_msg = clear_user_msg.replace(name, "")
+    clear_chat = clear_user_msg + " | " + clear_ai_msg
+    
+    cmd = "normal"
+    
+    try: cmd = await gemini_cmd(txt_read("utils/find.txt").replace("[chat]", clear_chat))
+    except Exception as e: print(f"{get_real_time()}> lỗi khi tạo lệnh: ", e)
+    
+    # Mood
+    if "so_happy" in cmd: mood_change("fun")
+    elif "happy" in cmd: mood_change("like")
+    elif "sad" in cmd: mood_change("unhappy")
+    elif "so_sad" in cmd: mood_change("unlike")
+    
+    if leave_voice():
+        if val.mood_name == "angry": await v_leave_auto()
+        elif val.mood_name == "excited":
+            guild = bot.get_guild(val.ai_guild)
+            if guild:
+                if not guild.voice_client:
+                    await v_join_auto()
+    
+    # Voice
+    if "voice_join" in cmd and ai_name:
+        if not voice_follow: voice_follow = True
+        else: voice_follow = False
+        
+        found = await v_join_auto()
+
+        # Nếu không tìm thấy user trong voice
+        if not found and not val.vc_invited:
+            umess = val.vc_invite
+            new_chat = val.now_chat
+            new_chat.append(umess)
+            val.set('vc_invited', True)
+            val.set('now_chat', new_chat)
+            val.set('CD', 1)
+    else:
+        val.set('vc_invited', False)
+
+    if "voice_leave" in cmd and ai_name: await v_leave_auto()
+        
+    
+    # Đổi avatar/banner:
+    if "avatar_change" in cmd and ai_name: 
+        if not val.public:
+            if val.last_uid != val.owner_uid: return
+        if not val.last_img: return
+        try:
+            await avatar_change()
+        except Exception as e:
+            print(f"{get_real_time()}> lỗi khi đổi avatar: ", e)
+            if not val.cavatar:
+                umess = val.set_avatar + str(e)
+                new_chat = val.now_chat
+                new_chat.append(umess)
+                val.set('cavatar', True)
+                val.set('now_chat', new_chat)
+                val.set('CD', 1)
+                pass
+    elif "banner_change" in cmd and ai_name:
+        
+        if not val.public:
+            if val.last_uid != val.owner_uid: return
+        if not val.last_img: return
+        try:
+            await banner_change()
+        except Exception as e:
+            print(f"{get_real_time()}> lỗi khi đổi avatar: ", e)
+            if not val.cavatar:
+                umess = val.set_banner + str(e)
+                new_chat = val.now_chat
+                new_chat.append(umess)
+                val.set('cavatar', True)
+                val.set('now_chat', new_chat)
+                val.set('CD', 1)
+                pass
+    else: val.set('cavatar', False)
+
+    # Remind
+    if "remind_create" in cmd and ai_name:
+        if not val.remind_msg:
+            hh, m, ss, dd, mm, yy = get_real_time(date=True)
+            text = f"Now time today: {hh}|{m}, {dd}|{mm}|{yy}\n- Please analyze the chat below and return the reminder with the format: content|HH|MM|DD|MM|YY\nChat: '{u_msg}'"
+            async def create_remind():
+                try:
+                    new_remind = []
+                    remind = await gemini_cmd(text)
+                    if val.chat_csl: print(f"{get_real_time()}> lời nhắc: ", {remind})
+                    if ":" in remind: remind = remind.split(":")[1]
+                    remind = remind.split("|")
+                    if len(remind) == 6:
+                        for elm in remind:
+                            elm = elm.strip()
+                            new_remind.append(elm)
+                        
+                        if not new_remind[1]: new_remind[1] = hh
+                        if not new_remind[2]: new_remind[2] = m
+                        if not new_remind[3]: new_remind[3] = dd
+                        if not new_remind[4]: new_remind[4] = mm
+                        if not new_remind[5]: new_remind[5] = yy
+                        
+                        new_remind[1] = int(new_remind[1])
+                        new_remind[2] = int(new_remind[2])
+                        new_remind[3] = int(new_remind[3])
+                        new_remind[4] = int(new_remind[4])
+                        new_remind[5] = int(new_remind[5])
+                        
+                        loop = None
+                        mode = None
+                        
+                        if "voice_join" in cmd: mode = "voice join"
+                        if "voice_leave" in cmd: mode = "voice leave"
+                        if "avatar_change" in cmd: mode = "avatar"
+                        if "banner_change" in cmd: mode = "banner"
+                        if "new_chat" in cmd: mode = "newchat"
+                        if "update" in cmd: mode = "update"
+                        
+                        #if u_dayLremind: loop = "daily"
+                        #if u_ndayLremind: loop = "weekdays"
+                        #if u_bdayLremind: loop = "weekend"
+                        #if u_weekLremind: loop = "weekly"
+                        #if u_monthLremind: loop = "monthly"
+                        #if u_yearLremind: loop = "yearly"
+                        
+                        new_remind.insert(0, val.last_uname)
+                        new_remind.append(loop)
+                        new_remind.append(mode)
+                        
+                        rm.add(new_remind)
+                        
+                        print(f"{get_real_time()}> Đã tạo lời nhắc cho {val.ai_name}.")
+                        
+                        user = await bot.fetch_user(val.owner_uid)
+                        
+                        embed, view = await bot_notice(
+                            tt="Đã thêm lời nhắc.",
+                            des=f"💬 Note: **{new_remind[0]} - {new_remind[1]}**\n⏲️ Time: **{new_remind[2]}:{new_remind[3]} - {new_remind[4]}/{new_remind[5]}/{new_remind[6]}**\n✨ Loop: **{new_remind[7]}**\n📳 CMD: **{new_remind[8]}**\n",
+                            footer="Có thể nhắc lại: Hàng ngày/tuần/tháng/năm | Ngày trong tuần | Ngày nghỉ.\nCác CMD được hỗ trợ: Voice join/leave | Avatar change | Banner change | Newchat | Update.",
+                            ava_link=bot.user.display_avatar,
+                            au_name=user.display_name,
+                            au_avatar=user.display_avatar,
+                            au_link=user.display_avatar,
+                            remind_btt=True,
+                            )
+                        
+                        await send_embed(embed=embed, view=view)
+                        return True
+                except Exception as e:
+                    print(f"{get_real_time()}> lỗi khi tạo lời nhắc: ", e)
+                    pass
+                
+                return False
+            if not await create_remind():
+                if not await create_remind():
+                    await create_remind()
+        else:
+            val.set('remind_msg', False)
+    
+    # Music
+    if "song_mentioned" in cmd and ai_name:
+        guild = bot.get_guild(val.ai_guild)
+        if guild:
+            if not guild.voice_client:
+                await v_join_auto()
+        
+        prompt = f"Returns the song/video/author names in the following chat if any: [{clear_chat}].\n If the chat does not contain song/video author names, return 'None'."
+        song_name = await mu.music_find(prompt=prompt)
+        
+        await sob_stop()
+        title, author = await music_dl(name=song_name)
+        noti = f"*Bạn vừa tìm được bài hát: {title} của {author}*"
+        ignore_chat = val.ignore_chat
+        ignore_chat.append(noti)
+        val.set('ignore_chat', ignore_chat)
+        
+        embed, view = await music_embed(play_bt=True, rmv_bt=False, ermv_bt=True)
+        inter = await send_embed(embed=embed, view=view)
+    
+    if mu.sound_playing and "music_stop" in cmd: await sob_stop()
+        
+    # New chat
+    if "new_chat" in cmd and ai_name:
+        await new_chat()
+    
+        embed, view = await bot_notice(
+            tt="Đã làm mới cuộc trò chuyện 🌟",
+            ava_link=bot.user.display_avatar,
+            )
+        
+        await send_embed(embed=embed, view=view)
+
+async def cmd_msg_user():
+    from utils.bot import val
+    from utils.daily import get_real_time
+    
+    u_msg = val.now_chat_user
+    if not u_msg: return
+    
+    nowtime = re.search(r'bây giờ|giờ là|mấy giờ|hiện tại|now|what time|today is|hôm nay là|tháng này là|năm nay là|thời gian thực|realtime|the time|s time', u_msg, re.IGNORECASE)
+    
+    if nowtime:
+        chat = f"SYSTEM: now is {get_real_time(full=True)}."
+        now_chat = val.now_chat
+        now_chat.insert(0, chat)
+        val.set('now_chat', now_chat)

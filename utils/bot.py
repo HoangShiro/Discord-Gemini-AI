@@ -17,32 +17,45 @@ class AllStatus:
         self.bot_key = ""                   # Discord bot TOKEN
         self.gai_key = ""                   # Gemini API
         self.vv_key = ""                    # VoiceVox API
-
-        # Configs
-        self.public = False                 # Chế độ chat Public/Private(DM)
-        self.owner_uid = None               # UID của master
+        
+        # Character infos
         self.ai_name = "AI"                 # Bot name
         self.ai_char = "innocent"           # Tính cách của bot
         self.ai_des = ""                    # Tóm tắt nhân vật
         self.ai_color = "#ffbf75"           # Màu hex của nhân vật
-        self.ai_guild = None                # ID server gần nhất
-        self.ai_channel = 0                 # ID text channel gần nhất
         self.ai_avt_url = None              # Avatar hiện tại của bot
         self.ai_banner_url = None           # Banner hiện tại của bot
-        self.ai_chat = ""                   # Chat gần nhất của bot
+        self.public = False                 # Chế độ chat Public/Private(DM)
+        self.owner_uid = None               # UID của master
+        
+        # Discord info
+        self.ai_guild = None                # ID server gần nhất
+        self.ai_channel = 0                 # ID text channel gần nhất
         self.ai_pchat_channel = None        # Channel duy nhất mà bot sẽ chat
+        self.pr_vch_id = None               # ID voice channel cuối cùng mà bot kết nối tới
+        self.pr_vch = None                  # Voice channel cuối cùng
+        self.last_vch_id = None             # Lưu lại voice channel cuối
+        
+        # Chat area - AI
+        self.ai_chat = ""                   # Chat gần nhất của bot
         self.last_mess_id = 0               # ID tin nhắn gần nhất
         self.old_mess_id = 0                # ID tin nhắn cũ hơn
         self.final_mess_id = 0              # ID tin nhắn cuối cùng trước khi update
+        self.now_chat_ai = ""               # Chat mới của bot
+        self.old_chat_ai = ""               # chat cũ của bot
+        
+        # Chat area - USER
         self.now_chat = []                  # Các chat hiện tại mà bot chưa rep
         self.old_chat = []                  # Các chat mà bot đã rep gần nhất
         self.ignore_chat = []               # Các chat mà bot sẽ bơ
-        self.now_chat_ai = ""               # Chat mới của bot
-        self.old_chat_ai = ""               # chat cũ của bot
+        self.now_chat_user = ""             # chat mới của user
+        self.last_uname = "User"            # Username gần nhất
+        
         self.in_reply = False               # Bot có đang reply hay không
         self.in_notice = False              # Check xem bot có đang bị nhắc nhở hay không
         self.in_creative = False            # Tương tự như trên
         self.stop_chat = 0                  # Dừng chat nếu phát hiện lỗi API
+        
         self.CD = 300                       # Thời gian đếm ngược trước khi check tin nhắn
         self.CD_idle = 0                    # Thời gian đếm tiến trước khi work trở lại
         self.to_breaktime = 300             # Max của CD
@@ -52,31 +65,22 @@ class AllStatus:
         self.weekend = False                # Check cuối tuần
         self.chat_speed = 5                 # Thời gian bot nghỉ giữa các lần trả lời chat
         self.friendliness = 5               # Độ thân thiện
+        self.now_period = "noon"            # Buổi hiện tại
+        
+        # Logs
         self.chat_csl = False               # Log chat ra console
         self.cmd_csl = False                # Log slash command ra console
         self.bug_csl = False                # Log bug ra console
         self.prompt_fix = ""                # Prompt cần fix với /prompts
-        self.now_period = "noon"            # Buổi hiện tại
-        self.last_uname = "User"            # Username gần nhất
-        self.last_uid = 0                   # UID gần nhất
-        self.vv_speaker = 46                # Speaker (voicevox)
-        self.vv_pitch = 0                   # Cao độ (voicevox)
-        self.vv_iscale = 1.5                # Ngữ điệu (voicevox)
-        self.vv_speed = 1                   # Tốc độ (voicevox)
-        self.pr_vch_id = None               # ID voice channel cuối cùng mà bot kết nối tới
-        self.pr_vch = None                  # Voice channel cuối cùng
-        self.last_vch_id = None             # Lưu lại voice channel cuối
-        self.vc_invited = False             # Thông báo lỗi cho user nếu không tìm thấy họ trong voice
-        self.tts_toggle = False             # Bật/Tắt voice cho bot
+        
         self.cavatar = False                # Đổi avatar cho bot
         self.last_img = ""                  # URL của ảnh cuối
         self.ignore_name = []               # Danh sách tên mà bot sẽ hạn chế reply
         self.ignore_rep = 0.8               # Tỷ lệ ignore user mà bot ignore
         self.bot_rep = True                 # Cho phép reply chat của bot khác
+        self.last_uid = 0                   # UID gần nhất
         self.name_filter = True             # Lọc tên
         self.name_ctime = 0                 # Thời gian chờ đổi tên cho bot
-        self.get_preset = None              # Lưu link preset mà bot khác gửi
-        self.get_preset_name = None         # Lưu tên preset mà bot khác gửi
         
         # Status total
         self.total_rep = 0                  # Tổng chat đã trả lời
@@ -119,10 +123,18 @@ class AllStatus:
         # Preset viewer
         self.preset_list = []
         self.preset_now = 0
+        self.get_preset = None              # Lưu link preset mà bot khác gửi
+        self.get_preset_name = None         # Lưu tên preset mà bot khác gửi
         
-        # Speaker
+        # Speaker/Voice
         self.speaker_index = None
         self.style_index = None
+        self.vv_speaker = 46                # Speaker (voicevox)
+        self.vv_pitch = 0                   # Cao độ (voicevox)
+        self.vv_iscale = 1.5                # Ngữ điệu (voicevox)
+        self.vv_speed = 1                   # Tốc độ (voicevox)
+        self.tts_toggle = False             # Bật/Tắt voice cho bot
+        self.vc_invited = False             # Thông báo lỗi cho user nếu không tìm thấy họ trong voice
         
         # Remind
         self.remind_msg = False
@@ -444,6 +456,8 @@ async def on_message(message: discord.Message):
     # Nhớ tin nhắn
     if chat:
         chat = await clean_msg(chat)
+        
+        val.set('now_chat_user', chat)
         
         if val.chat_csl: print(f"{get_real_time()}> {chat}")
         

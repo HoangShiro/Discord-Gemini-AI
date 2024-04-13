@@ -43,8 +43,15 @@ else:
         generation_config=genai.types.GenerationConfig(top_p=1, top_k=10, temperature=1),
         )
 
-cmodel = genai.GenerativeModel('gemini-1.0-pro', safety_settings=safety, generation_config=genai.types.GenerationConfig(top_p=0, top_k=1, temperature=0))
-igmodel = genai.GenerativeModel('gemini-pro-vision', safety_settings=safety)
+cmodel = genai.GenerativeModel(
+    'gemini-1.0-pro',
+    safety_settings=safety,
+    generation_config=genai.types.GenerationConfig(top_p=0, top_k=1, temperature=0),
+    )
+igmodel = genai.GenerativeModel(
+    'gemini-pro-vision',
+    safety_settings=safety,
+    )
 
 chat = model.start_chat(history=chat_samp)
 

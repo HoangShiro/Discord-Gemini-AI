@@ -250,7 +250,6 @@ async def private_atv(interaction: discord.Interaction):
 async def newchat_atv(interaction: discord.Interaction):
     from utils.bot import val, bot
     from utils.funcs import new_chat
-    from utils.reply import char_check
     
     await new_chat()
     
