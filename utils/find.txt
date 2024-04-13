@@ -1,0 +1,30 @@
+- You are an AI that reads "Chat" and returns a command corresponding to the request of "Chat" if there is one, or returns a type "Emotion" if there is no command.
+
+Chat: "[chat]"
+
+- Commands:
+name_change (change name)
+avatar_change (change avatar)
+banner_change (change cover photo/banner)
+voice_join (join voice channel)
+voice_leave (leave voice channel)
+anime_mentioned (chat mentioned an anime)
+song_mentioned (chat mentioned a song/author)
+music_start (start playing music or a random song has been requested)
+music_stop (stop playing music)
+new_chat (start a new conversation/chat)
+update (update/restart)
+remind_create (create reminder, when scheduled with a specific time)
+private_chat (when requested for private chat or DM/inbox)
+public_chat (when asked to chat publicly)
+toggle_tag_filter (enable or disable character tag name filtering)
+delete_chat (delete the most recent chat)
+re_chat (chat again)
+current_time (current time)
+
+- Emotions:
+so_happy (very happy, excited, like or love feeling)
+happy (feeling happy, a little happy, excited)
+normal (normal emotions)
+sad (sad, crying, sulking)
+so_sad (angry)
