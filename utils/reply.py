@@ -771,7 +771,7 @@ async def cmd_msg():
             val.set('remind_msg', False)
     
     # Music
-    if ("song_mentioned", "music_start") in cmd and ai_name:
+    if ("song_mentioned" in cmd or "music_start" in cmd) and ai_name:
         guild = bot.get_guild(val.ai_guild)
         if guild:
             if not guild.voice_client:
