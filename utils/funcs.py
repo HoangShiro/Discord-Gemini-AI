@@ -1729,7 +1729,7 @@ class Music:
                 break
         
         if not end: await inter.delete_original_response()
-        
+    # Hàm play song
     async def music_play(self, inter: discord.Interaction):
         from utils.bot import mu
         from utils.funcs import sob_play
@@ -1784,7 +1784,26 @@ class Music:
                 break
             
             await asyncio.sleep(0.25)
-            
+    
+    # Hàm tìm song bằng chat
+    async def music_find(self, prompt:str):
+        from utils.bot import val 
+        from utils.api import gemini_cmd
+        from utils.daily import get_real_time
+        
+        try:
+            song_name = None
+            song_name = await gemini_cmd(prompt)
+            if song_name == "None":
+                if self.sound_ctn_se: return
+                else: song_name = "Clear Morning - Yui Ogura"
+            if ":" in song_name: song_name = song_name.split(":")[1].strip()
+            if val.cmd_csl: print(f"{get_real_time()}> Search song: ", song_name)
+            return song_name
+        except Exception as e:
+            print(f"{get_real_time()}> Lỗi find song name Gemini API: ", e)
+            return None
+    
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
   print(p)

@@ -259,6 +259,7 @@ async def cmd_msg():
     from utils.daily import get_real_time
     from utils.ui import normal_embed, bot_notice, music_embed
     from utils.funcs import avatar_change, banner_change, mood_change, leave_voice, sob_stop
+    from utils.api import music_dl
     
     old_chat = val.old_chat
     u_msg = list_to_str(old_chat)
@@ -271,7 +272,10 @@ async def cmd_msg():
     else:
         if val.ai_name.lower() in u_msg.lower(): ai_name = True
         elif val.last_uid == val.owner_uid: ai_name = True
-        
+    
+    clear_chat = ai_msg
+    if val.last_uname in clear_chat: clear_chat = clear_chat.replace(val.last_uname, "")
+    
     # User
     u_voice = re.search(r'vc|voice channel|voice chat|voice', u_msg, re.IGNORECASE)
     u_join = re.search(r'joi|jum|vào|nhảy|chui|vô|đi|nào', u_msg, re.IGNORECASE)
@@ -314,6 +318,10 @@ async def cmd_msg():
     ai_mood_up2 = re.search(r'tuyệt|great|perfect|yêu|thích|love|like|sướng|phê', ai_msg, re.IGNORECASE)
     ai_mood_dn1 = re.search(r'xin|lỗi|gomenasai|sorry|cúi đầu|:<| tt|buồn|sad', ai_msg, re.IGNORECASE)
     ai_mood_dn2 = re.search(r'baka|cay|giận|tức|điên|cút|hãy rời đi|ngốc|angry|depress|go away|huhu|cry|khóc', ai_msg, re.IGNORECASE)
+    
+    ai_search = re.search(r'tìm|search|kiếm|find', ai_msg, re.IGNORECASE)
+    ai_music = re.search(r'music|nhạc|bài|song|video|mp3|mp4|asmr|video|ost|ending|opening', ai_msg, re.IGNORECASE)
+    ai_play = re.search(r'hát|mở|play|chơi|phát', ai_msg, re.IGNORECASE)
     
     # Mood
     if ai_mood_up1 and not ai_mood_dn1 and not ai_mood_dn2:
@@ -484,8 +492,30 @@ async def cmd_msg():
         embed, view = await music_embed(play_bt=True, rmv_bt=False, ermv_bt=True)
         inter = await send_embed(embed=embed, view=view)
     
+    elif not u_play_song and (ai_search or ai_play) and ai_music:
+        prompt = f"Returns the song/video/author name specified in the following chat: [{clear_chat}], otherwise returns None."
+        song_name = await mu.music_find(prompt=prompt)
+        if song_name:
+            await sob_stop()
+            title, author = await music_dl(name=song_name)
+            noti = f"*Bạn vừa tìm được bài hát: {title} của {author}*"
+            ignore_chat = val.ignore_chat
+            ignore_chat.append(noti)
+            val.set('ignore_chat', ignore_chat)
+
+            mu.set('sound_ctn_se', True)
+            guild = bot.get_guild(val.ai_guild)
+            # Huỷ nếu không trong voice
+            if not guild: return False
+            if not guild.voice_client:
+                await v_join_auto()
+            
+            embed, view = await music_embed(play_bt=True, rmv_bt=False, ermv_bt=True)
+            inter = await send_embed(embed=embed, view=view)
+    
     if mu.sound_playing and u_stop:
         await sob_stop()
+    
     
 async def cmd_msg_user():
     from utils.bot import val, bot, mu
@@ -533,16 +563,7 @@ async def cmd_msg_user():
         if not g_link:
             if not random: prompt = f"Returns the song/video/author name specified in the following chat: [{clear_chat}], otherwise returns None."
             if random: prompt = f"Returns one random song that you know of the author mentioned in the following chat: [{clear_chat}], otherwise returns None."
-            try:
-                song_name = await gemini_cmd(prompt)
-                if song_name == "None":
-                    if mu.sound_ctn_se: return
-                    else: song_name = "Clear Morning - Yui Ogura"
-                if ":" in song_name: song_name = song_name.split(":")[1].strip()
-                if val.cmd_csl: print(f"{get_real_time()}> Search song: ", song_name)
-            except Exception as e:
-                print(f"{get_real_time()}> Lỗi find song name Gemini API: ", e)
-                return
+            song_name = await mu.music_find(prompt=prompt)
         elif g_link.startswith(("https://youtu.be/", "https://www.youtube.com/")):
             song_name = g_link
         
