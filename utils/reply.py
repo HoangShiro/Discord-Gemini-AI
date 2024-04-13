@@ -601,7 +601,7 @@ async def cmd_msg():
     ai_msg = val.now_chat_ai
     if not ai_msg: return
     
-    ai_name = False
+    ai_name = True
     if not val.public: ai_name = True
     else:
         if val.ai_name.lower() in u_msg.lower(): ai_name = True
