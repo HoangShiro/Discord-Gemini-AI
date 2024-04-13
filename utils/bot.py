@@ -243,6 +243,7 @@ async def on_ready():
     val.set('in_reply', False)
     val.set('CD', val.to_breaktime)
     val.set('CD_idle', val.to_worktime)
+    mu.set('sound_ctn_se', False)
     
     # Load các button
     await load_btt()

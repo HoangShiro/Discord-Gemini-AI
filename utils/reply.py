@@ -499,6 +499,7 @@ async def cmd_msg_user():
     clear_chat = ""
     for chat in val.now_chat:
         if ":" in chat: chat = chat.split(":")[1].strip()
+        if val.ai_name in chat: chat = chat.replace(val.ai_name, "")
         clear_chat = clear_chat + f". {chat}"
     
     u_msg = list_to_str(val.now_chat)

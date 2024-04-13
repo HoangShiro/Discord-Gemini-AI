@@ -1738,7 +1738,6 @@ class Music:
         file = "sound/caption.xml"
         mu.set('sound_time', "0:00 [░░░░░░░░░░░] 0:00")
         mu.set('sound_playing', True)
-        mu.set('sound_ctn_se', False)
         
         if not os.path.exists(file):
             asyncio.create_task(self.count_to_max(inter=inter, update=True))
