@@ -592,7 +592,7 @@ async def cmd_msg():
     from utils.bot import val, bot, rm, mu
     from utils.daily import get_real_time
     from utils.ui import bot_notice, music_embed
-    from utils.funcs import avatar_change, banner_change, mood_change, leave_voice, sob_stop, txt_read
+    from utils.funcs import avatar_change, banner_change, mood_change, leave_voice, sob_stop, txt_read, new_chat
     from utils.api import music_dl, gemini_cmd
     from utils.reply import send_embed
     
