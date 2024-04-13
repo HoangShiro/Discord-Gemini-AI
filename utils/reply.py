@@ -771,7 +771,7 @@ async def cmd_msg():
             val.set('remind_msg', False)
     
     # Music
-    if "song_mentioned" in cmd and ai_name:
+    if ("song_mentioned", "music_start") in cmd and ai_name:
         guild = bot.get_guild(val.ai_guild)
         if guild:
             if not guild.voice_client:
@@ -780,15 +780,16 @@ async def cmd_msg():
         prompt = f"Returns the song/video/author names in the following chat if any: [{clear_chat}].\n If the chat does not contain song/video author names, return 'None'."
         song_name = await mu.music_find(prompt=prompt)
         
-        await sob_stop()
-        title, author = await music_dl(name=song_name)
-        noti = f"*Bạn vừa tìm được bài hát: {title} của {author}*"
-        ignore_chat = val.ignore_chat
-        ignore_chat.append(noti)
-        val.set('ignore_chat', ignore_chat)
-        
-        embed, view = await music_embed(play_bt=True, rmv_bt=False, ermv_bt=True)
-        inter = await send_embed(embed=embed, view=view)
+        if song_name.lower() != "none":
+            await sob_stop()
+            title, author = await music_dl(name=song_name)
+            noti = f"*Bạn vừa tìm được bài hát: {title} của {author}*"
+            ignore_chat = val.ignore_chat
+            ignore_chat.append(noti)
+            val.set('ignore_chat', ignore_chat)
+            
+            embed, view = await music_embed(play_bt=True, rmv_bt=False, ermv_bt=True)
+            inter = await send_embed(embed=embed, view=view)
     
     if mu.sound_playing and "music_stop" in cmd: await sob_stop()
         
