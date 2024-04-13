@@ -493,7 +493,7 @@ async def cmd_msg():
         inter = await send_embed(embed=embed, view=view)
     
     elif not u_play_song and (ai_search or ai_play) and ai_music:
-        prompt = f"Returns the song/video/author name specified in the following chat: [{clear_chat}], otherwise returns None."
+        prompt = f"Returns the song/video/author names in the following chat if any: [{clear_chat}].\n If the chat does not contain song/video author names, return 'None'."
         song_name = await mu.music_find(prompt=prompt)
         if song_name:
             await sob_stop()
@@ -561,8 +561,8 @@ async def cmd_msg_user():
         song_name = None
         g_link = get_link(u_msg)
         if not g_link:
-            if not random: prompt = f"Returns the song/video/author name specified in the following chat: [{clear_chat}], otherwise returns None."
-            if random: prompt = f"Returns one random song that you know of the author mentioned in the following chat: [{clear_chat}], otherwise returns None."
+            if not random: prompt = f"Returns the song/video/author names in the following chat if any: [{clear_chat}].\n If the chat does not contain song/video author names, return 'None'."
+            if random: prompt = f"Returns one random song that you know of the author mentioned in the following chat if any: [{clear_chat}].\n If you don't know any song, return 'None'."
             song_name = await mu.music_find(prompt=prompt)
         elif g_link.startswith(("https://youtu.be/", "https://www.youtube.com/")):
             song_name = g_link
