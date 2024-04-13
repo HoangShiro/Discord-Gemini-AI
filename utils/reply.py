@@ -619,6 +619,8 @@ async def cmd_msg():
     try: cmd = await gemini_cmd(txt_read("utils/find.txt").replace("[chat]", clear_chat))
     except Exception as e: print(f"{get_real_time()}> lỗi khi tạo lệnh: ", e)
     
+    if val.cmd_csl: print(f"{get_real_time()}> CMD: ", cmd)
+    
     # Mood
     if "so_happy" in cmd: mood_change("fun")
     elif "happy" in cmd: mood_change("like")
