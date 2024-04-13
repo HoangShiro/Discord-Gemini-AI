@@ -498,7 +498,7 @@ async def cmd_msg_user():
     if not val.now_chat: return
     clear_chat = ""
     for chat in val.now_chat:
-        if ":" in chat: chat = chat.split(":")[1].strip()
+        if val.last_uname in chat: chat = chat.replace(val.last_uname, "")
         if val.ai_name in chat: chat = chat.replace(val.ai_name, "")
         clear_chat = clear_chat + f". {chat}"
     
@@ -531,8 +531,8 @@ async def cmd_msg_user():
         song_name = None
         g_link = get_link(u_msg)
         if not g_link:
-            if not random: prompt = f"Returns the song/video/author name specified in the following chat, otherwise returns None: {clear_chat}"
-            if random: prompt = f"Returns one random song that you know of the author mentioned in the following chat, otherwise returns None: {clear_chat}"
+            if not random: prompt = f"Returns the song/video/author name specified in the following chat: [{clear_chat}], otherwise returns None."
+            if random: prompt = f"Returns one random song that you know of the author mentioned in the following chat: [{clear_chat}], otherwise returns None."
             try:
                 song_name = await gemini_cmd(prompt)
                 if song_name == "None":
