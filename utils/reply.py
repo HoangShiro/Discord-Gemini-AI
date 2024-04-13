@@ -777,8 +777,9 @@ async def cmd_msg():
             if not guild.voice_client:
                 await v_join_auto()
         
-        prompt = f"Returns the song/video and author names in the following chat if any: [{clear_chat}].\n If the chat does not contain song/video or author names, return 'None'."
+        prompt = txt_read("utils/find_song.txt").replace("[chat]", clear_chat)
         song_name = await mu.music_find(prompt=prompt)
+        if "\n" in song_name: song_name = song_name.replace("\n", " - ")
         
         if song_name.lower() != "none":
             await sob_stop()

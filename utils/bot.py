@@ -440,6 +440,7 @@ async def on_message(message: discord.Message):
     # Xử lý tin nhắn
     chat = ""
     if message.content and not message.attachments:
+        val.set('now_chat_user', message.content)
         url = get_img_link(message.content)
         vision = None
         msg = message.content
@@ -456,8 +457,6 @@ async def on_message(message: discord.Message):
     # Nhớ tin nhắn
     if chat:
         chat = await clean_msg(chat)
-        
-        val.set('now_chat_user', chat)
         
         if val.chat_csl: print(f"{get_real_time()}> {chat}")
         
