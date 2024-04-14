@@ -1894,6 +1894,10 @@ class XO():
         if random.random() < 0.5: self.turn = "x"
         else: self.turn = "o"
         
+        if self.ai_match:
+            if self.turn == "o":
+                self.ai_move(notice=True)
+        
     def select(self):
         if not self.in_match:
             raise Exception("Match has not started yet.")
