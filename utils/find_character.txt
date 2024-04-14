@@ -1,0 +1,3 @@
+You are an AI that reads "Chat" and returns the name of a character named in "Chat", if no character is mentioned in "Chat", return 'None'.
+
+Chat: [chat]

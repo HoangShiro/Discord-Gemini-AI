@@ -112,11 +112,11 @@ async def reply_id(channel=None, rep=False):
                 if reply: await send_mess(channel, reply, rep)
 
 # Gửi embed
-async def send_embed(embed=None, view=None):
+async def send_embed(embed=None, view=None, content=None):
     channel = await get_channel()
     if channel:
         if embed:
-            return await channel.send(embed=embed, view=view)
+            return await channel.send(content=content, embed=embed, view=view)
 
 # Set tính cách nhân vật dựa vào prompt
 async def char_check():
@@ -589,19 +589,20 @@ async def cmd_msg_user():
 
 # Hàm xử lý lệnh trong tin nhắn
 async def cmd_msg():
-    from utils.bot import val, bot, rm, mu
+    from utils.bot import val, bot, rm, mu, art
     from utils.daily import get_real_time
-    from utils.ui import bot_notice, music_embed
+    from utils.ui import bot_notice, music_embed, normal_embed
     from utils.funcs import avatar_change, banner_change, mood_change, leave_voice, sob_stop, txt_read, new_chat
     from utils.api import music_dl, gemini_cmd
     from utils.reply import send_embed
+    from utils.status import status_busy_set
     
     u_msg = val.now_chat_user
     if not u_msg: return
     ai_msg = val.now_chat_ai
     if not ai_msg: return
     
-    ai_name = True
+    ai_name = False
     if not val.public: ai_name = True
     else:
         if val.ai_name.lower() in u_msg.lower(): ai_name = True
@@ -636,7 +637,7 @@ async def cmd_msg():
                     await v_join_auto()
     
     # Voice
-    if "voice_join" in cmd and ai_name:
+    if "voice_join" in cmd:
         
         found = await v_join_auto()
 
@@ -651,11 +652,11 @@ async def cmd_msg():
     else:
         val.set('vc_invited', False)
 
-    if "voice_leave" in cmd and ai_name: await v_leave_auto()
+    if "voice_leave" in cmd: await v_leave_auto()
         
     
     # Đổi avatar/banner:
-    if "avatar_change" in cmd and ai_name: 
+    if "avatar_change" in cmd: 
         if not val.public:
             if val.last_uid != val.owner_uid: return
         if not val.last_img: return
@@ -671,7 +672,7 @@ async def cmd_msg():
                 val.set('now_chat', new_chat)
                 val.set('CD', 1)
                 pass
-    elif "banner_change" in cmd and ai_name:
+    elif "banner_change" in cmd:
         
         if not val.public:
             if val.last_uid != val.owner_uid: return
@@ -691,7 +692,7 @@ async def cmd_msg():
     else: val.set('cavatar', False)
 
     # Remind
-    if "remind_create" in cmd and ai_name:
+    if "remind_create" in cmd:
         if not val.remind_msg:
             hh, m, ss, dd, mm, yy = get_real_time(date=True)
             text = f"Now time today: {hh}|{m}, {dd}|{mm}|{yy}\n- Please analyze the chat below and return the reminder with the format: content|HH|MM|DD|MM|YY\nChat: '{u_msg}'"
@@ -771,7 +772,7 @@ async def cmd_msg():
             val.set('remind_msg', False)
     
     # Music
-    if ("song_mentioned" in cmd or "music_start" in cmd) and ai_name:
+    if "song_mentioned" in cmd or "music_start" in cmd:
         guild = bot.get_guild(val.ai_guild)
         if guild:
             if not guild.voice_client:
@@ -797,7 +798,7 @@ async def cmd_msg():
     if mu.sound_playing and "music_stop" in cmd: await sob_stop()
         
     # New chat
-    if "new_chat" in cmd and ai_name:
+    if "new_chat" in cmd:
         await new_chat()
 
         footer = val.ai_des
@@ -811,8 +812,46 @@ async def cmd_msg():
         await send_embed(embed=embed, view=view)
 
     # Art search
-    if "illust_mentioned" and ai_name:
-        pass
+    if "illust_mentioned" in cmd:
+        found = False
+
+        async def _get_keywords():
+            prompt = txt_read("find_character.txt").replace("[chat]", clear_chat)
+            try: return await gemini_cmd(prompt)
+            except Exception as e: return None
+        
+        keywords = await _get_keywords()
+        if not keywords: return
+        
+        async def _start_search():
+            gacha = re.search(r'ngẫu nhiên|bất kỳ|random|nào đó|tuỳ ý|gacha', clear_chat, re.IGNORECASE)
+            limit = 1; page = 1; mode = "safebooru"; random = False
+            if not val.public: mode = val.search_mode
+            else:
+                guild = bot.get_guild(val.ai_guild)
+                if guild:
+                    channel = guild.get_channel(val.ai_channel)
+                    if channel:
+                        if channel.nsfw: mode = val.search_mode
+            if gacha: limit = 10
+            try: return await art.search_one(keywords=keywords, limit=limit, page=page, random=random, gacha=gacha, block=val.img_block, mode=mode)
+            except Exception as e:
+                print(f"{get_real_time()}> Lỗi khi tìm art: ", e)
+                return None
+        img_url, fixkws = await _start_search()
+        if img_url:
+            embed, view = await normal_embed(
+                img=img_url,
+                delete=True,
+            )
+            
+            if img_url.endswith((".png",".jpeg",".jpg",".webp",".gif")): await send_embed(embed=embed, view=view)
+            else: await send_embed(content=f"[video]({img_url})", view=view)
+    
+    # "Go play somewhere else" or sleep
+    if "go_rest" in cmd and ai_name:
+        val.set('CD', val.to_breaktime)
+        await status_busy_set()
     
 async def cmd_msg_user():
     from utils.bot import val
