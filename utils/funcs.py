@@ -1873,10 +1873,7 @@ class XO():
 
         if drt == "next":
             next_col = (current_col + 1) % len(self.map[0])  # Move right, wrap around if needed
-            if next_col == 0:  # Reached the end of the row, move down
-                next_row = (current_row + 1) % len(self.map)  # Move down, wrap around if needed
-            else:
-                next_row = current_row
+            next_row = current_row
         elif drt == "down":
             next_row = (current_row + 1) % len(self.map)  # Move down, wrap around if needed
             next_col = current_col
