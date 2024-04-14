@@ -28,7 +28,7 @@ async def sec_check():
     elif val.CD == 0 and not val.now_chat:
         val.set('in_reply', False)
         if val.public: val.set('CD', val.chat_speed, save=False) # Chờ trước khi rep tiếp
-        if val.CD_idle >= (val.to_worktime - 1) and not mu.sound_playing:
+        if val.CD_idle == (val.to_worktime - 1) and not mu.sound_playing:
             val.set('CD', val.to_breaktime)
             await status_busy_set()
     
@@ -43,7 +43,7 @@ async def sec_check():
         val.set('CD_idle', val.to_worktime)
     
     # Work trở lại
-    if val.CD_idle >= (val.to_worktime - 1) and not mu.sound_playing:
+    if val.CD_idle == (val.to_worktime - 1) and not mu.sound_playing:
         val.set('CD', val.to_breaktime)
         # Set lại status
         await status_busy_set()

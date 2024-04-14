@@ -251,7 +251,7 @@ async def voice_send(url, ch):
     except Exception as e:
         print(f"{get_real_time()}> Send voice error: {e}")
 
-"""# Hàm xử lý lệnh trong tin nhắn
+"""# Hàm xử lý lệnh trong tin nhắn kiểu cũ
 async def cmd_msg():
     global voice_follow
     
@@ -810,6 +810,10 @@ async def cmd_msg():
         
         await send_embed(embed=embed, view=view)
 
+    # Art search
+    if "illust_mentioned" and ai_name:
+        pass
+    
 async def cmd_msg_user():
     from utils.bot import val
     from utils.daily import get_real_time

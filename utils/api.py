@@ -80,9 +80,9 @@ async def gemini_rep(mess, limit_check=True, creative_check=True):
         await _error()
         
     async def _error():
-        val.update('stop_chat', 1)                                  # Dừng chat nếu lỗi quá 3 lần, thử lại sau khi bot rảnh trở lại
+        val.update('stop_chat', 1, save=False)                                  # Dừng chat nếu lỗi quá 3 lần, thử lại sau khi bot rảnh trở lại
         if val.stop_chat == 3:
-            val.set('stop_chat', 0)
+            val.set('stop_chat', 0, save=False)
             val.set('CD', val.to_breaktime)
             await status_busy_set()                                 # Set activity là đang bận
 
