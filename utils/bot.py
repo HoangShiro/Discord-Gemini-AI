@@ -22,8 +22,10 @@ class AllStatus:
         self.ai_name = "AI"                 # Bot name
         self.ai_char = "innocent"           # Tính cách của bot
         self.ai_des = ""                    # Tóm tắt nhân vật
+        self.ai_prompt = ""                 # Prompt của nhân vật
         self.ai_color = "#ffbf75"           # Màu hex của nhân vật
         self.ai_avt_url = None              # Avatar hiện tại của bot
+        self.ai_old_avr_url = None          # Avatar trước đó của bot
         self.ai_banner_url = None           # Banner hiện tại của bot
         self.public = False                 # Chế độ chat Public/Private(DM)
         self.owner_uid = None               # UID của master
@@ -564,38 +566,52 @@ async def newchat(interaction: discord.Interaction):
     val.update('one_cmd', 1)
     val.update('total_newchat', 1)
     
-    await new_chat()
-        
     embed, view = await bot_notice(
         tt="Đang tạo cuộc trò chuyện mới 💫",
-        des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...",
+        des=f"Đang làm mới chat...",
         ava_link=bot.user.display_avatar,
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar
         )
-    mess = await interaction.response.send_message(embed=embed, view=view)
-    await char_check()
-    embed, view = await bot_notice(
-        tt="Đang tạo cuộc trò chuyện mới 💫",
-        des=f"Đang tóm tắt bối cảnh...",
-        ava_link=bot.user.display_avatar,
-        au_name=interaction.user.display_name,
-        au_avatar=interaction.user.display_avatar,
-        au_link=interaction.user.display_avatar,
-        )
-    mess = await mess.edit_original_response(embed=embed)
-    await des_check()
-    embed, view = await bot_notice(
-        tt="Đang tạo cuộc trò chuyện mới 💫",
-        des=f"Đang tạo màu mới cho {val.ai_name}...",
-        ava_link=bot.user.display_avatar,
-        au_name=interaction.user.display_name,
-        au_avatar=interaction.user.display_avatar,
-        au_link=interaction.user.display_avatar,
-        )
-    mess = await mess.edit(embed=embed)
-    await color_check()
+    msg = await interaction.response.send_message(embed=embed, view=view)
+    
+    renew, cavatar = await new_chat()
+    
+    if renew:
+        embed, view = await bot_notice(
+            tt="Đang tạo cuộc trò chuyện mới 💫",
+            des=f"Đang phân tích tính cách của {val.ai_name} từ prompt...",
+            ava_link=bot.user.display_avatar,
+            au_name=interaction.user.display_name,
+            au_avatar=interaction.user.display_avatar,
+            au_link=interaction.user.display_avatar
+            )
+        await msg.edit_original_response(embed=embed, view=view)
+        await char_check()
+        embed, view = await bot_notice(
+            tt="Đang tạo cuộc trò chuyện mới 💫",
+            des=f"Đang tóm tắt bối cảnh...",
+            ava_link=bot.user.display_avatar,
+            au_name=interaction.user.display_name,
+            au_avatar=interaction.user.display_avatar,
+            au_link=interaction.user.display_avatar,
+            )
+        await msg.edit_original_response(embed=embed)
+        await des_check()
+    
+    if cavatar:
+        embed, view = await bot_notice(
+            tt="Đang tạo cuộc trò chuyện mới 💫",
+            des=f"Đang tạo màu mới cho {val.ai_name}...",
+            ava_link=bot.user.display_avatar,
+            au_name=interaction.user.display_name,
+            au_avatar=interaction.user.display_avatar,
+            au_link=interaction.user.display_avatar,
+            )
+        await msg.edit_original_response(embed=embed)
+        await color_check()
+        
     embed, view = await bot_notice(
         tt="Đã làm mới cuộc trò chuyện 🌟",
         footer=val.ai_des,
@@ -604,7 +620,7 @@ async def newchat(interaction: discord.Interaction):
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
         )
-    mess = await mess.edit(embed=embed)
+    await msg.edit_original_response(embed=embed)
 
 # Chuyển chế độ chat
 @bot.slash_command(name="chat_mode", description=f"Kêu {val.ai_name} chat public/private.")

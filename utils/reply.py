@@ -791,16 +791,21 @@ async def cmd_msg():
             
             embed, view = await music_embed(play_bt=True, rmv_bt=False, ermv_bt=True)
             inter = await send_embed(embed=embed, view=view)
-    
+
+            if val.cmd_csl: print(inter)
+            
     if mu.sound_playing and "music_stop" in cmd: await sob_stop()
         
     # New chat
     if "new_chat" in cmd and ai_name:
         await new_chat()
-    
+
+        footer = val.ai_des
+        
         embed, view = await bot_notice(
             tt="Đã làm mới cuộc trò chuyện 🌟",
             ava_link=bot.user.display_avatar,
+            footer=footer,
             )
         
         await send_embed(embed=embed, view=view)

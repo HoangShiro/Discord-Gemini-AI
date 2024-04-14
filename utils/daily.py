@@ -28,9 +28,8 @@ async def sec_check():
     elif val.CD == 0 and not val.now_chat:
         val.set('in_reply', False)
         if val.public: val.set('CD', val.chat_speed, save=False) # Chờ trước khi rep tiếp
-        if val.CD_idle == val.to_worktime:
+        if val.CD_idle >= (val.to_worktime - 1) and not mu.sound_playing:
             val.set('CD', val.to_breaktime)
-            mu.set('sound_ctn_se', False)
             await status_busy_set()
     
     # Đếm ngược tới thời gian check tin nhắn
@@ -44,7 +43,7 @@ async def sec_check():
         val.set('CD_idle', val.to_worktime)
     
     # Work trở lại
-    if val.CD_idle == (val.to_worktime - 1):
+    if val.CD_idle >= (val.to_worktime - 1) and not mu.sound_playing:
         val.set('CD', val.to_breaktime)
         # Set lại status
         await status_busy_set()
@@ -236,25 +235,25 @@ def update_mood():
         
     # Lấy tên mood cho bot
     if -2000 < val.ai_mood < -1000:
-        val.set('mood_name', "angry")
+        val.set('mood_name', "angry", save=False)
         chat = val.mood_angry
         
     elif -1000 < val.ai_mood < -500:
-        val.set('mood_name', "sad")
+        val.set('mood_name', "sad", save=False)
         #chat = val.mood_sad
-        val.set('mood_chat', True)
+        val.set('mood_chat', True, save=False)
         
     elif -500 < val.ai_mood < 1000:
-        val.set('mood_name', "normal")
-        val.set('mood_chat', True)
+        val.set('mood_name', "normal", save=False)
+        val.set('mood_chat', True, save=False)
         
     elif 1000 < val.ai_mood < 2000:
-        val.set('mood_name', "happy")
+        val.set('mood_name', "happy", save=False)
         #chat = val.mood_happy
-        val.set('mood_chat', True)
+        val.set('mood_chat', True, save=False)
         
     elif 2000 < val.ai_mood < 4000:
-        val.set('mood_name', "excited")
+        val.set('mood_name', "excited", save=False)
         chat = val.mood_excited
     
     """if val.old_chat and val.mood_chat and chat:
@@ -269,208 +268,208 @@ def update_voice(mood):
     
     if mood == "angry":
         if val.ai_char == "gentle":
-            val.set('vv_pitch', -0.06)
-            val.set('vv_iscale', 0.8)
-            val.set('vv_speed', 0.7)
+            val.set('vv_pitch', -0.06, save=False)
+            val.set('vv_iscale', 0.8, save=False)
+            val.set('vv_speed', 0.7, save=False)
             
         elif val.ai_char == "cold":
-            val.set('vv_pitch', -0.07)
-            val.set('vv_iscale', 0.1)
-            val.set('vv_speed', 0.7)
+            val.set('vv_pitch', -0.07, save=False)
+            val.set('vv_iscale', 0.1, save=False)
+            val.set('vv_speed', 0.7, save=False)
             
         elif val.ai_char == "extrovert":
-            val.set('vv_pitch', -0.01)
-            val.set('vv_iscale', 1)
-            val.set('vv_speed', 0.9)
+            val.set('vv_pitch', -0.01, save=False)
+            val.set('vv_iscale', 1, save=False)
+            val.set('vv_speed', 0.9, save=False)
             
         elif val.ai_char == "introvert":
-            val.set('vv_pitch', -0.06)
-            val.set('vv_iscale', 0.5)
-            val.set('vv_speed', 0.82)
+            val.set('vv_pitch', -0.06, save=False)
+            val.set('vv_iscale', 0.5, save=False)
+            val.set('vv_speed', 0.82, save=False)
             
         elif val.ai_char == "lazy":
-            val.set('vv_pitch', -0.07)
-            val.set('vv_iscale', 0.5)
-            val.set('vv_speed', 0.6)
+            val.set('vv_pitch', -0.07, save=False)
+            val.set('vv_iscale', 0.5, save=False)
+            val.set('vv_speed', 0.6, save=False)
             
         elif val.ai_char == "tsundere":
-            val.set('vv_pitch', -0.03)
-            val.set('vv_iscale', 1.2)
-            val.set('vv_speed', 0.8)
+            val.set('vv_pitch', -0.03, save=False)
+            val.set('vv_iscale', 1.2, save=False)
+            val.set('vv_speed', 0.8, save=False)
             
         elif val.ai_char == "yandere":
-            val.set('vv_pitch', -0.08)
+            val.set('vv_pitch', -0.08, save=False)
             val.set('vv_iscale', 2)
-            val.set('vv_speed', 0.6)
+            val.set('vv_speed', 0.6, save=False)
             
         else:
-            val.set('vv_pitch', -0.03)
-            val.set('vv_iscale', 0.6)
-            val.set('vv_speed', 0.8)
+            val.set('vv_pitch', -0.03, save=False)
+            val.set('vv_iscale', 0.6, save=False)
+            val.set('vv_speed', 0.8, save=False)
     
     if mood == "sad":
         if val.ai_char == "gentle":
-            val.set('vv_pitch', -0.04)
-            val.set('vv_iscale', 1)
-            val.set('vv_speed', 0.8)
+            val.set('vv_pitch', -0.04, save=False)
+            val.set('vv_iscale', 1, save=False)
+            val.set('vv_speed', 0.8, save=False)
             
         elif val.ai_char == "cold":
-            val.set('vv_pitch', -0.05)
-            val.set('vv_iscale', 0.3)
-            val.set('vv_speed', 0.8)
+            val.set('vv_pitch', -0.05, save=False)
+            val.set('vv_iscale', 0.3, save=False)
+            val.set('vv_speed', 0.8, save=False)
             
         elif val.ai_char == "extrovert":
-            val.set('vv_pitch', 0.01)
-            val.set('vv_iscale', 1.2)
-            val.set('vv_speed', 1)
+            val.set('vv_pitch', 0.01, save=False)
+            val.set('vv_iscale', 1.2, save=False)
+            val.set('vv_speed', 1, save=False)
             
         elif val.ai_char == "introvert":
-            val.set('vv_pitch', -0.04)
-            val.set('vv_iscale', 0.7)
-            val.set('vv_speed', 0.92)
+            val.set('vv_pitch', -0.04, save=False)
+            val.set('vv_iscale', 0.7, save=False)
+            val.set('vv_speed', 0.92, save=False)
             
         elif val.ai_char == "lazy":
-            val.set('vv_pitch', -0.05)
-            val.set('vv_iscale', 0.6)
-            val.set('vv_speed', 0.7)
+            val.set('vv_pitch', -0.05, save=False)
+            val.set('vv_iscale', 0.6, save=False)
+            val.set('vv_speed', 0.7, save=False)
             
         elif val.ai_char == "tsundere":
-            val.set('vv_pitch', -0.01)
-            val.set('vv_iscale', 1.5)
-            val.set('vv_speed', 0.9)
+            val.set('vv_pitch', -0.01, save=False)
+            val.set('vv_iscale', 1.5, save=False)
+            val.set('vv_speed', 0.9, save=False)
             
         elif val.ai_char == "yandere":
-            val.set('vv_pitch', -0.06)
-            val.set('vv_iscale', 1.9)
-            val.set('vv_speed', 0.70)
+            val.set('vv_pitch', -0.06, save=False)
+            val.set('vv_iscale', 1.9, save=False)
+            val.set('vv_speed', 0.70, save=False)
             
         else:
-            val.set('vv_pitch', -0.01)
-            val.set('vv_iscale', 0.8)
-            val.set('vv_speed', 0.9)
+            val.set('vv_pitch', -0.01, save=False)
+            val.set('vv_iscale', 0.8, save=False)
+            val.set('vv_speed', 0.9, save=False)
             
     if mood == "normal":
         if val.ai_char == "gentle":
-            val.set('vv_pitch', -0.02)
-            val.set('vv_iscale', 1.2)
-            val.set('vv_speed', 0.9)
+            val.set('vv_pitch', -0.02, save=False)
+            val.set('vv_iscale', 1.2, save=False)
+            val.set('vv_speed', 0.9, save=False)
             
         elif val.ai_char == "cold":
-            val.set('vv_pitch', -0.03)
-            val.set('vv_iscale', 0.5)
-            val.set('vv_speed', 0.9)
+            val.set('vv_pitch', -0.03, save=False)
+            val.set('vv_iscale', 0.5, save=False)
+            val.set('vv_speed', 0.9, save=False)
             
         elif val.ai_char == "extrovert":
-            val.set('vv_pitch', 0.03)
-            val.set('vv_iscale', 1.5)
-            val.set('vv_speed', 1.1)
+            val.set('vv_pitch', 0.03, save=False)
+            val.set('vv_iscale', 1.5, save=False)
+            val.set('vv_speed', 1.1, save=False)
             
         elif val.ai_char == "introvert":
-            val.set('vv_pitch', -0.02)
-            val.set('vv_iscale', 0.9)
-            val.set('vv_speed', 1.02)
+            val.set('vv_pitch', -0.02, save=False)
+            val.set('vv_iscale', 0.9, save=False)
+            val.set('vv_speed', 1.02, save=False)
             
         elif val.ai_char == "lazy":
-            val.set('vv_pitch', -0.03)
-            val.set('vv_iscale', 0.8)
-            val.set('vv_speed', 0.8)
+            val.set('vv_pitch', -0.03, save=False)
+            val.set('vv_iscale', 0.8, save=False)
+            val.set('vv_speed', 0.8, save=False)
             
         elif val.ai_char == "tsundere":
-            val.set('vv_pitch', 0.01)
-            val.set('vv_iscale', 1.8)
-            val.set('vv_speed', 1)
+            val.set('vv_pitch', 0.01, save=False)
+            val.set('vv_iscale', 1.8, save=False)
+            val.set('vv_speed', 1, save=False)
             
         elif val.ai_char == "yandere":
-            val.set('vv_pitch', -0.04)
-            val.set('vv_iscale', 1.8)
-            val.set('vv_speed', 0.75)
+            val.set('vv_pitch', -0.04, save=False)
+            val.set('vv_iscale', 1.8, save=False)
+            val.set('vv_speed', 0.75, save=False)
             
         else:
-            val.set('vv_pitch', 0)
-            val.set('vv_iscale', 1)
-            val.set('vv_speed', 1)
+            val.set('vv_pitch', 0, save=False)
+            val.set('vv_iscale', 1, save=False)
+            val.set('vv_speed', 1, save=False)
     
     if mood == "happy":
         if val.ai_char == "gentle":
-            val.set('vv_pitch', 0)
-            val.set('vv_iscale', 1.4)
-            val.set('vv_speed', 1)
+            val.set('vv_pitch', 0, save=False)
+            val.set('vv_iscale', 1.4, save=False)
+            val.set('vv_speed', 1, save=False)
             
         elif val.ai_char == "cold":
-            val.set('vv_pitch', -0.01)
-            val.set('vv_iscale', 0.8)
-            val.set('vv_speed', 1)
+            val.set('vv_pitch', -0.01, save=False)
+            val.set('vv_iscale', 0.8, save=False)
+            val.set('vv_speed', 1, save=False)
             
         elif val.ai_char == "extrovert":
-            val.set('vv_pitch', 0.02)
-            val.set('vv_iscale', 1.7)
-            val.set('vv_speed', 1.15)
+            val.set('vv_pitch', 0.02, save=False)
+            val.set('vv_iscale', 1.7, save=False)
+            val.set('vv_speed', 1.15, save=False)
             
         elif val.ai_char == "introvert":
-            val.set('vv_pitch', 0)
-            val.set('vv_iscale', 1.1)
-            val.set('vv_speed', 1.08)
+            val.set('vv_pitch', 0, save=False)
+            val.set('vv_iscale', 1.1, save=False)
+            val.set('vv_speed', 1.08, save=False)
             
         elif val.ai_char == "lazy":
-            val.set('vv_pitch', -0.01)
-            val.set('vv_iscale', 1)
-            val.set('vv_speed', 0.9)
+            val.set('vv_pitch', -0.01, save=False)
+            val.set('vv_iscale', 1, save=False)
+            val.set('vv_speed', 0.9, save=False)
             
         elif val.ai_char == "tsundere":
-            val.set('vv_pitch', 0.02)
-            val.set('vv_iscale', 1.9)
-            val.set('vv_speed', 1.05)
+            val.set('vv_pitch', 0.02, save=False)
+            val.set('vv_iscale', 1.9, save=False)
+            val.set('vv_speed', 1.05, save=False)
             
         elif val.ai_char == "yandere":
-            val.set('vv_pitch', -0.02)
-            val.set('vv_iscale', 1.9)
-            val.set('vv_speed', 0.85)
+            val.set('vv_pitch', -0.02, save=False)
+            val.set('vv_iscale', 1.9, save=False)
+            val.set('vv_speed', 0.85, save=False)
             
         else:
-            val.set('vv_pitch', 0.01)
-            val.set('vv_iscale', 1.2)
-            val.set('vv_speed', 1.1)
+            val.set('vv_pitch', 0.01, save=False)
+            val.set('vv_iscale', 1.2, save=False)
+            val.set('vv_speed', 1.1, save=False)
     
     if mood == "excited":
         if val.ai_char == "gentle":
-            val.set('vv_pitch', 0.01)
-            val.set('vv_iscale', 1.6)
-            val.set('vv_speed', 1.1)
+            val.set('vv_pitch', 0.01, save=False)
+            val.set('vv_iscale', 1.6, save=False)
+            val.set('vv_speed', 1.1, save=False)
             
         elif val.ai_char == "cold":
-            val.set('vv_pitch', 0.01)
-            val.set('vv_iscale', 1)
-            val.set('vv_speed', 1.05)
+            val.set('vv_pitch', 0.01, save=False)
+            val.set('vv_iscale', 1, save=False)
+            val.set('vv_speed', 1.05, save=False)
             
         elif val.ai_char == "extrovert":
-            val.set('vv_pitch', 0.02)
-            val.set('vv_iscale', 1.8)
-            val.set('vv_speed', 1.2)
+            val.set('vv_pitch', 0.02, save=False)
+            val.set('vv_iscale', 1.8, save=False)
+            val.set('vv_speed', 1.2, save=False)
             
         elif val.ai_char == "introvert":
-            val.set('vv_pitch', 0.01)
-            val.set('vv_iscale', 1.3)
-            val.set('vv_speed', 1.12)
+            val.set('vv_pitch', 0.01, save=False)
+            val.set('vv_iscale', 1.3, save=False)
+            val.set('vv_speed', 1.12, save=False)
             
         elif val.ai_char == "lazy":
-            val.set('vv_pitch', 0.01)
-            val.set('vv_iscale', 1.2)
-            val.set('vv_speed', 1.09)
+            val.set('vv_pitch', 0.01, save=False)
+            val.set('vv_iscale', 1.2, save=False)
+            val.set('vv_speed', 1.09, save=False)
             
         elif val.ai_char == "tsundere":
-            val.set('vv_pitch', 0.02)
-            val.set('vv_iscale', 2)
-            val.set('vv_speed', 1.15)
+            val.set('vv_pitch', 0.02, save=False)
+            val.set('vv_iscale', 2, save=False)
+            val.set('vv_speed', 1.15, save=False)
             
         elif val.ai_char == "yandere":
-            val.set('vv_pitch', 0)
-            val.set('vv_iscale', 2)
-            val.set('vv_speed', 0.95)
+            val.set('vv_pitch', 0, save=False)
+            val.set('vv_iscale', 2, save=False)
+            val.set('vv_speed', 0.95, save=False)
             
         else:
-            val.set('vv_pitch', 0.02)
-            val.set('vv_iscale', 1.4)
-            val.set('vv_speed', 1.15)
+            val.set('vv_pitch', 0.02, save=False)
+            val.set('vv_iscale', 1.4, save=False)
+            val.set('vv_speed', 1.15, save=False)
 
 
     

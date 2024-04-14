@@ -696,23 +696,23 @@ def mood_restore():
   from utils.bot import val
   
   if val.ai_mood < 0:
-    if val.ai_char == "gentle": val.update('ai_mood', 1)
-    elif val.ai_char == "cold": val.update('ai_mood', 1)
-    elif val.ai_char == "extrovert": val.update('ai_mood', 2)
-    elif val.ai_char == "introvert": val.update('ai_mood', 1)
-    elif val.ai_char == "lazy": val.update('ai_mood', 1)
-    elif val.ai_char == "tsundere": val.update('ai_mood', 1)
-    elif val.ai_char == "yandere": val.update('ai_mood', 2)
-    else: val.update('ai_mood', 1)
+    if val.ai_char == "gentle": val.update('ai_mood', 1, save=False)
+    elif val.ai_char == "cold": val.update('ai_mood', 1, save=False)
+    elif val.ai_char == "extrovert": val.update('ai_mood', 2, save=False)
+    elif val.ai_char == "introvert": val.update('ai_mood', 1, save=False)
+    elif val.ai_char == "lazy": val.update('ai_mood', 1, save=False)
+    elif val.ai_char == "tsundere": val.update('ai_mood', 1, save=False)
+    elif val.ai_char == "yandere": val.update('ai_mood', 2, save=False)
+    else: val.update('ai_mood', 1, save=False)
   elif val.ai_mood > 0:
-    if val.ai_char == "gentle": val.update('ai_mood', -1)
-    elif val.ai_char == "cold": val.update('ai_mood', -1)
-    elif val.ai_char == "extrovert": val.update('ai_mood', -1)
-    elif val.ai_char == "introvert": val.update('ai_mood', -2)
-    elif val.ai_char == "lazy": val.update('ai_mood', -1)
-    elif val.ai_char == "tsundere": val.update('ai_mood', -1)
-    elif val.ai_char == "yandere": val.update('ai_mood', -3)
-    else: val.update('ai_mood', -1)
+    if val.ai_char == "gentle": val.update('ai_mood', -1, save=False)
+    elif val.ai_char == "cold": val.update('ai_mood', -1, save=False)
+    elif val.ai_char == "extrovert": val.update('ai_mood', -1, save=False)
+    elif val.ai_char == "introvert": val.update('ai_mood', -2, save=False)
+    elif val.ai_char == "lazy": val.update('ai_mood', -1, save=False)
+    elif val.ai_char == "tsundere": val.update('ai_mood', -1, save=False)
+    elif val.ai_char == "yandere": val.update('ai_mood', -3, save=False)
+    else: val.update('ai_mood', -1, save=False)
 
 # Leave voice nếu giận?
 def leave_voice():
@@ -745,7 +745,7 @@ def update_ignore():
     elif val.ai_char == "yandere": per = 0.99
     else: per = 0.8
     
-    val.set('ignore_rep', per)
+    val.set('ignore_rep', per, save=False)
 
 # Hex -> r,g,b
 def hex_to_rgb(hex_code):
@@ -1069,36 +1069,50 @@ def remove_preset(name: str):
   
 # New chat
 async def new_chat():
-  from utils.bot import val 
-  from utils.api import chat
-  from utils.ui import edit_last_msg
-  
-  if not val.public: await edit_last_msg()
-  new_prpt = load_prompt("saves/chat.txt")
-  chat.history.clear()
-  chat.history.extend(new_prpt)
-  
-  val.set('CD', 1)
-  val.set('CD_idle', 1)
-  val.set('now_chat', [])
-  val.set('old_chat', [])
-  val.set('ignore_chat', [])
-  val.set('last_mess_id', None)
-  val.set('old_mess_id', None)
-  
-  val.set('ai_mood', 0)
-  val.set('mood_name', "normal")
-  val.set('mood_chat', True)
-  
-  val.set('one_rep', 0)
-  val.set('one_mess', 0)
-  val.set('one_voice', 0)
-  val.set('one_join', 0)
-  val.set('one_cmd', 0)
-  
-  if val.public:
-      public_remind = load_prompt("saves/public.txt")
-      chat.history.extend(public_remind)
+    from utils.bot import val 
+    from utils.api import chat
+    from utils.ui import edit_last_msg
+    
+    renew = False
+    cavatar = False
+    
+    if not val.public: await edit_last_msg()
+    new_prpt = load_prompt("saves/chat.txt")
+    
+    if new_prpt != val.ai_prompt:
+        val.set('ai_prompt', new_prpt)
+        renew = True
+    if val.ai_avt_url != val.ai_old_avr_url:
+        val.set('ai_old_avr_url', val.ai_avt_url)
+        cavatar = True
+        
+    chat.history.clear()
+    chat.history.extend(new_prpt)
+    
+    val.set('CD', 1)
+    val.set('CD_idle', 1)
+    val.set('now_chat', [])
+    val.set('old_chat', [])
+    val.set('ignore_chat', [])
+    val.set('last_mess_id', None)
+    val.set('old_mess_id', None)
+    
+    val.set('ai_mood', 0)
+    val.set('mood_name', "normal")
+    val.set('mood_chat', True)
+    
+    val.set('one_rep', 0)
+    val.set('one_mess', 0)
+    val.set('one_voice', 0)
+    val.set('one_join', 0)
+    val.set('one_cmd', 0)
+    
+    if val.public:
+        public_remind = load_prompt("saves/public.txt")
+        chat.history.extend(public_remind)
+
+    return renew, cavatar
+
 
 # Num to emoji
 def int_emoji(num:int):

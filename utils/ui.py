@@ -253,9 +253,12 @@ async def newchat_atv(interaction: discord.Interaction):
     
     await new_chat()
     
+    footer = val.ai_des
+    
     embed, view = await bot_notice(
         tt="Đã làm mới cuộc trò chuyện 🌟",
         ava_link=bot.user.display_avatar,
+        footer=footer,
         au_name=interaction.user.display_name,
         au_avatar=interaction.user.display_avatar,
         au_link=interaction.user.display_avatar,
