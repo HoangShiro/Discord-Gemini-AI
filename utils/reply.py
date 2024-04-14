@@ -899,5 +899,5 @@ async def ai_game():
         xo.ai_move(move=True)
         
         inter = val.now_inter
-        await inter.edit_original_response(embed=embed, view=view)
+        await inter.edit(embed=embed, view=view)
             

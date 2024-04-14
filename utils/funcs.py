@@ -1988,7 +1988,7 @@ class XO():
                 prompt = f"{noti}, {board}"
                 now_chat = val.now_chat
                 now_chat.append(prompt)
-                val.set('new_chat', now_chat)
+                val.set('now_chat', now_chat)
                 val.set('CD', 1)
         
         def _move(mov):
