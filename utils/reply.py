@@ -589,7 +589,7 @@ async def cmd_msg_user():
 
 # Hàm xử lý lệnh trong tin nhắn
 async def cmd_msg():
-    from utils.bot import val, bot, rm, mu, art
+    from utils.bot import val, bot, rm, mu, art, xo
     from utils.daily import get_real_time
     from utils.ui import bot_notice, music_embed, normal_embed, xo_embed
     from utils.funcs import avatar_change, banner_change, mood_change, leave_voice, sob_stop, txt_read, new_chat
