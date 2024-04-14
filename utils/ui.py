@@ -1384,7 +1384,7 @@ async def xo_embed():
     if xo.X:
         user = await bot.fetch_user(xo.X)
         Xname = user.display_name
-    elif xo.O:
+    if xo.O:
         user = await bot.fetch_user(xo.O)
         Oname = user.display_name
         
