@@ -1858,8 +1858,8 @@ class XO():
         self.iconX = "❌"
         self.iconO = "⭕"
         self.iconB = "⬜"
-        self.iconB1 = "▫️"
-        self.iconB2 = "▫️"
+        self.iconB1 = "▪️"
+        self.iconB2 = "▪️"
         self.iconS = "💠"
         
     def move(self, drt):
