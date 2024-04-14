@@ -620,7 +620,7 @@ async def xstart_atv(interaction: discord.Interaction):
     from utils.bot import bot, val, xo
     
     if not xo.X: xo.set('X', interaction.user.id)
-    if not xo.O: xo.set('O', interaction.user.id)
+    elif not xo.O: xo.set('O', interaction.user.id)
     
     if xo.X and xo.O: xo.start()
     
@@ -666,6 +666,18 @@ async def xsl_atv(interaction: discord.Interaction):
     embed, view = await xo_embed()
     await interaction.response.edit_message(embed=embed, view=view)
     if check: xo.clear()
+
+async def xrmv_atv(interaction: discord.Interaction):
+    from utils.bot import bot, val, xo
+    
+    if xo.turn == "x":
+        if interaction.user.id != xo.X: return await byB(interaction)
+    else:
+        if interaction.user.id != xo.O: return await byB(interaction)
+    
+    xo.clear()
+    
+    await interaction.message.delete()
 
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
@@ -1377,7 +1389,7 @@ async def xo_embed():
         Yname = user.display_name
         
     title = "❌⭕ Game!"
-    des = "> Hiện không có match nào."
+    des = "> Ấn 🔅 join để tham gia."
     
     if xo.winner:
         if xo.wnner == "x": title = f"{Xname} là người chiến thắng! ✨"
