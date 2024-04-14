@@ -1222,12 +1222,24 @@ async def x_o_play(interaction: discord.Interaction):
 async def x_o_play(interaction: discord.Interaction, x:str=None, o:str=None, cursor:str=None, board1:str=None, board2:str=None, board3:str=None):
     if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
-    if x: val.set('iconX', x)
-    if o: val.set('iconO', o)
-    if cursor: val.set('iconS', cursor)
-    if board1: val.set('iconB', board1)
-    if board2: val.set('iconB1', board2)
-    if board3: val.set('iconB2', board3)
+    if x:
+        val.set('iconX', x)
+        xo.set('iconX', x)
+    if o:
+        val.set('iconO', o)
+        xo.set('iconO', o)
+    if cursor:
+        val.set('iconS', cursor)
+        xo.set('iconS', cursor)
+    if board1:
+        val.set('iconB', board1)
+        xo.set('iconB', board1)
+    if board2:
+        val.set('iconB1', board2)
+        xo.set('iconB1', board2)
+    if board3:
+        val.set('iconB2', board3)
+        xo.set('iconB2', board3)
     
     await interaction.response.send_message("> Đã đổi các emoji của board!", ephemeral=True)
 
