@@ -627,6 +627,11 @@ async def xstart_atv(interaction: discord.Interaction):
     else:
         xo.set('X', interaction.user.id)
         xo.set('O', bot.user.id)
+        
+        now_chat = val.ignore_chat
+        now_chat.append(f"X-O Game: {interaction.user.display_name} vừa bắt đầu game mới với bạn.")
+        val.set('in_game', False)
+        val.set('ignore_chat', now_chat)
     
     if xo.X and xo.O: xo.start()
     
@@ -1400,12 +1405,26 @@ async def xo_embed():
     des = "> Ấn ✨ join để tham gia."
     
     if xo.winner:
-        if xo.winner == "x": title = f"{Xname} là người chiến thắng! ✨"
-        else: title = f"{Oname} là người chiến thắng! ✨"
+        now_chat = val.now_chat
+        
+        if xo.winner == "x":
+            title = f"{Xname} là người chiến thắng! ✨"
+            now_chat.append(f"X-O Game: {Xname} là người chiến thắng!")
+        else:
+            title = f"{Oname} là người chiến thắng! ✨"
+            now_chat.append(f"X-O Game: {Oname} là người chiến thắng!")
+            
+        if xo.ai_match:
+            val.set('in_game', False)
+            val.set('now_chat', now_chat)
+            val.set('CD', 1)
+            
         des = "> Ấn ✨ join để new game."
+        
     if xo.draw: title = f"Hoà rồi! 💫"
     if xo.waiting and not xo.winner: des = "> Cần thêm 1 user nữa để bắt đầu!"
-    if xo.in_match: des = ""
+    if xo.in_match and not xo.ai_match: des = ""
+    elif xo.in_match and xo.ai_match: des = val.now_chat
     
     board = xo.icon()
     board = f"{xo.icon()[0][0]}{xo.iconB1}{xo.icon()[0][1]}{xo.iconB1}{xo.icon()[0][2]}\n{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}\n{xo.icon()[1][0]}{xo.iconB1}{xo.icon()[1][1]}{xo.iconB1}{xo.icon()[1][2]}\n{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}\n{xo.icon()[2][0]}{xo.iconB1}{xo.icon()[2][1]}{xo.iconB1}{xo.icon()[2][2]}"
