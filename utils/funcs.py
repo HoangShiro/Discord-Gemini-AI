@@ -1849,7 +1849,7 @@ class XO():
         self.O = None # uid của player O
         self.cursor = "a1" # Con trỏ
         self.turn = None # Lượt của X hoặc O
-        self.wating = False # Liệu bàn cờ có đang được tạo?
+        self.waiting = False # Liệu bàn cờ có đang được tạo?
         self.in_match = False # Đánh dấu trạng thái của match
         self.ai_match = False # Check xem có phải bot chơi hay không
         self.winner = None # uid người thắng cuộc
@@ -1882,7 +1882,7 @@ class XO():
         self.cursor = self.map[next_row][next_col]
     
     def start(self):
-        self.wating = False
+        self.waiting = False
         self.in_match = True
         
         if random.random() < 0.5: self.turn = "x"
@@ -1927,7 +1927,7 @@ class XO():
                 self.winner = values[0]  # Set the winner based on the winning symbol
                 self.loser = "o" if self.winner == "x" else "x"
                 self.in_match = False  # End the match
-                self.wating = True
+                self.waiting = True
                 return True  # Indicate that a winner was found
 
         # Check for a draw (no empty cells and no winner)

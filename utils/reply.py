@@ -862,6 +862,7 @@ async def cmd_msg():
     
     # X-O
     if "x_o" in cmd:
+        xo.set('waiting', True)
         embed, view = await xo_embed()
         await send_embed(embed=embed, view=view)
     

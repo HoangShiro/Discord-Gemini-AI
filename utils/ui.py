@@ -126,6 +126,7 @@ async def load_btt():
     xnext_bt.callback = xnext_atv
     xdown_bt.callback = xdown_atv
     xstart_bt.callback = xstart_atv
+    xsl_bt.callback = xsl_atv
     
 # Button add
 async def DM_button():
@@ -1381,7 +1382,7 @@ async def xo_embed():
     if xo.winner:
         if xo.wnner == "x": title = f"{Xname} là người chiến thắng! ✨"
         else: title = f"{Yname} là người chiến thắng! ✨"
-    if xo.wating: des = "> Cần thêm 1 user nữa để bắt đầu!"
+    if xo.waiting: des = "> Cần thêm 1 user nữa để bắt đầu!"
     if xo.in_match: des = ""
     
     board = xo.icon()
@@ -1400,7 +1401,7 @@ async def xo_embed():
     if xo.in_match: embed.set_footer(text=notice)
     
     view = View(timeout=None)
-    if xo.wating: view.add_item(xstart_bt)
+    if xo.waiting: view.add_item(xstart_bt)
     if xo.in_match and not xo.winner: view.add_item(xnext_bt)
     if xo.in_match and not xo.winner: view.add_item(xdown_bt)
     if xo.in_match and not xo.winner: view.add_item(xsl_bt)
