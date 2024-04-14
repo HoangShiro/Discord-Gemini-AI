@@ -1907,9 +1907,15 @@ class XO():
             for j in range(len(self.map[i])):
                 if self.map[i][j] == self.cursor:
                     current_row, current_col = i, j
-                    break
+                    break  # Exit the inner loop once cursor is found
 
-        if self.board[current_row][current_col] is None:  # Check if the cell is empty
+        # Handle the case where cursor is not found in the map
+        if current_row is None or current_col is None:
+            self.notice = "Lỗi vị trí rồi!"
+            return False
+
+        # Access board element only if cursor is found
+        if self.board[current_row][current_col] is None:
             self.board[current_row][current_col] = self.turn
             # Switch turns after a successful selection
             self.turn = "o" if self.turn == "x" else "x"
@@ -1919,6 +1925,7 @@ class XO():
         else:
             self.notice = "Ô này đã đi rồi."
             return False
+
     
     def check(self):
         win_conditions = [
