@@ -619,6 +619,8 @@ async def mrmv_atv(interaction: discord.Interaction):
 async def xstart_atv(interaction: discord.Interaction):
     from utils.bot import bot, val, xo
     
+    if xo.winner or xo.draw: xo.clear()
+    
     if not xo.X: xo.set('X', interaction.user.id)
     elif not xo.O: xo.set('O', interaction.user.id)
     
@@ -661,11 +663,10 @@ async def xsl_atv(interaction: discord.Interaction):
     else:
         if interaction.user.id != xo.O: return await byB(interaction)
     
-    check = xo.select()
+    xo.select()
     
     embed, view = await xo_embed()
     await interaction.response.edit_message(embed=embed, view=view)
-    if check: xo.clear()
 
 async def xrmv_atv(interaction: discord.Interaction):
     from utils.bot import bot, val, xo
@@ -1397,7 +1398,7 @@ async def xo_embed():
         else: title = f"{Oname} là người chiến thắng! ✨"
         des = "> Ấn 🔅 join để new game."
     if xo.draw: title = f"Hoà rồi! 💫"
-    if xo.waiting: des = "> Cần thêm 1 user nữa để bắt đầu!"
+    if xo.waiting and not xo.winner: des = "> Cần thêm 1 user nữa để bắt đầu!"
     if xo.in_match: des = ""
     
     board = xo.icon()
