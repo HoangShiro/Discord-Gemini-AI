@@ -880,12 +880,20 @@ async def cmd_msg_user():
     
     nowtime = re.search(r'bây giờ|giờ là|mấy giờ|hiện tại|now|what time|today is|hôm nay là|tháng này là|năm nay là|thời gian thực|realtime|the time|s time', u_msg, re.IGNORECASE)
     
+    x_o = re.search(r'xo|x-o|x_o', u_msg, re.IGNORECASE)
+    
     if nowtime:
         chat = f"SYSTEM: now is {get_real_time(full=True)}."
         now_chat = val.now_chat
         now_chat.insert(0, chat)
         val.set('now_chat', now_chat)
 
+    if x_o:
+        chat = "X-O Game: Khi bàn cờ xuất hiện hãy đi nước cờ bằng cách chat theo mã hiệu như 'a1' hoặc 'b2',... chỉ đi những nước cờ đang trống trên bàn cờ. Sẵn sàng?"
+        now_chat = val.now_chat
+        now_chat.insert(0, chat)
+        val.set('now_chat', now_chat)
+    
 async def ai_game():
     from utils.bot import val, bot, rm, mu, art, xo
     from utils.daily import get_real_time
