@@ -1959,7 +1959,7 @@ class XO():
                     new_row.append(self.iconO)
                 else:
                     new_row.append(self.iconB)
-                new_board.append(new_row)
+        new_board.append(new_row)
                 
         new_board[current_row][current_col] = self.iconS
         return new_board
