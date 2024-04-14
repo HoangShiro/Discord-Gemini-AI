@@ -21,6 +21,7 @@ toggle_tag_filter (enable or disable character tag name filtering)
 delete_chat (delete the most recent chat)
 re_chat (chat again)
 current_time (current time)
+x_o (X-O game)
 go_rest (when asked to rest or go to sleep or asked to go somewhere else to play)
 
 - Emotions:
