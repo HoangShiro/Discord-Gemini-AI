@@ -1848,6 +1848,7 @@ class XO():
         self.X = None # uid của player X
         self.O = None # uid của player O
         self.cursor = "a1" # Con trỏ
+        self.moved = None # Vừa đi
         self.turn = None # Lượt của X hoặc O
         self.waiting = False # Liệu bàn cờ có đang được tạo?
         self.in_match = False # Đánh dấu trạng thái của match
@@ -1881,7 +1882,8 @@ class XO():
             raise ValueError("Invalid direction. Use 'next' or 'down'.")
 
         self.cursor = self.map[next_row][next_col]
-    
+        self.moved = False
+        
     def start(self):
         self.waiting = False
         self.in_match = True
@@ -1905,6 +1907,7 @@ class XO():
             # Switch turns after a successful selection
             self.turn = "o" if self.turn == "x" else "x"
             check = self.check()
+            self.moved = True
             return check
         else:
             self.notice = "Ô này đã đi rồi."
@@ -1960,7 +1963,7 @@ class XO():
                     new_row.append(self.iconB)
             new_board.append(new_row)
                 
-        new_board[current_row][current_col] = self.iconS
+        if not self.moved: new_board[current_row][current_col] = self.iconS
         return new_board
     
     def update(self, val_name, value):
@@ -1986,6 +1989,8 @@ class XO():
         self.X = None
         self.O = None
         self.cursor = "a1"
+        self.turn = None
+        self.moved = None
         self.in_match = False
         self.ai_match = False
         self.draw = False
