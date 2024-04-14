@@ -127,7 +127,7 @@ async def load_btt():
     xdown_bt.callback = xdown_atv
     xstart_bt.callback = xstart_atv
     xsl_bt.callback = xsl_atv
-    
+    xrmv_bt.callback = xrmv_atv
 # Button add
 async def DM_button():
     view = View(timeout=None)
