@@ -792,8 +792,6 @@ async def cmd_msg():
             
             embed, view = await music_embed(play_bt=True, rmv_bt=False, ermv_bt=True)
             inter = await send_embed(embed=embed, view=view)
-
-            if val.cmd_csl: print(inter)
             
     if mu.sound_playing and "music_stop" in cmd: await sob_stop()
         
@@ -821,6 +819,8 @@ async def cmd_msg():
             except Exception as e: return None
         
         keywords = await _get_keywords()
+        keywords = keywords.lower()
+        if val.cmd_csl: print(f"{get_real_time()}> Art keyword: ", keywords)
         if not keywords: return
         
         async def _start_search():
