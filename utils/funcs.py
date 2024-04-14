@@ -1858,6 +1858,9 @@ class XO():
         self.iconX = "❌"
         self.iconO = "⭕"
         self.iconB = "⬜"
+        self.iconB1 = "▫️"
+        self.iconB2 = "▫️"
+        self.iconS = "💠"
         
     def move(self, drt):
         current_row, current_col = None, None
@@ -1938,18 +1941,28 @@ class XO():
         return False  # No winner or draw yet
     
     def icon(self):
-      new_board = []
-      for row in self.board:
-        new_row = []
-        for cell in row:
-          if cell == "x":
-            new_row.append(self.iconX)
-          elif cell == "o":
-            new_row.append(self.iconO)
-          else:
-            new_row.append(self.iconB)
-        new_board.append(new_row)
-      return new_board
+        new_board = []
+        
+        current_row, current_col = None, None
+        for i in range(len(self.map)):
+            for j in range(len(self.map[i])):
+                if self.map[i][j] == self.cursor:
+                    current_row, current_col = i, j
+                    break
+                
+        for row in self.board:
+            new_row = []
+            for cell in row:
+                if cell == "x":
+                    new_row.append(self.iconX)
+                elif cell == "o":
+                    new_row.append(self.iconO)
+                else:
+                    new_row.append(self.iconB)
+                new_board.append(new_row)
+                
+        new_board[current_row][current_col] = self.iconS
+        return new_board
     
     def update(self, val_name, value):
         if hasattr(self, val_name):

@@ -1379,35 +1379,35 @@ async def xo_embed():
     color = discord.Colour.from_rgb(r, g, b)
     
     Xname = None
-    Yname = None
+    Oname = None
     
     if xo.X:
         user = await bot.fetch_user(xo.X)
         Xname = user.display_name
     elif xo.O:
         user = await bot.fetch_user(xo.O)
-        Yname = user.display_name
+        Oname = user.display_name
         
     title = "❌⭕ Game!"
     des = "> Ấn 🔅 join để tham gia."
     
     if xo.winner:
-        if xo.wnner == "x": title = f"{Xname} là người chiến thắng! ✨"
-        else: title = f"{Yname} là người chiến thắng! ✨"
+        if xo.winner == "x": title = f"{Xname} là người chiến thắng! ✨"
+        else: title = f"{Oname} là người chiến thắng! ✨"
     if xo.waiting: des = "> Cần thêm 1 user nữa để bắt đầu!"
     if xo.in_match: des = ""
     
     board = xo.icon()
-    board = f"{xo.icon()[0][0]}🔹{xo.icon()[0][1]}🔹{xo.icon()[0][2]}\n🔹🔸🔹🔸🔹\n{xo.icon()[1][0]}🔹{xo.icon()[1][1]}🔹{xo.icon()[1][2]}\n🔹🔸🔹🔸🔹\n{xo.icon()[2][0]}🔹{xo.icon()[2][1]}🔹{xo.icon()[2][2]}"
+    board = f"{xo.icon()[0][0]}{xo.iconB1}{xo.icon()[0][1]}{xo.iconB1}{xo.icon()[0][2]}\n{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}\n{xo.icon()[1][0]}{xo.iconB1}{xo.icon()[1][1]}{xo.iconB1}{xo.icon()[1][2]}\n{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}\n{xo.icon()[2][0]}{xo.iconB1}{xo.icon()[2][1]}{xo.iconB1}{xo.icon()[2][2]}"
     
     notice = xo.notice
     if xo.turn == "x": notice = f"Tới lượt của {Xname}."
-    else: notice = f"Tới lượt của {Yname}."
+    else: notice = f"Tới lượt của {Oname}."
     
     
     embed=discord.Embed(title=title, description=des, color=color)
     if Xname: embed.add_field(name=f"{Xname} - {xo.iconX}", value="", inline=False)
-    if Yname: embed.add_field(name=f"{Yname} - {xo.iconY}", value="", inline=False)
+    if Oname: embed.add_field(name=f"{Oname} - {xo.iconO}", value="", inline=False)
     if xo.in_match: embed.add_field(name="", value="\n", inline=False) 
     if xo.in_match: embed.add_field(name=board, value="", inline=False)
     if xo.in_match: embed.set_footer(text=notice)
