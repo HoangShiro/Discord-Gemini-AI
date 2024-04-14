@@ -816,7 +816,7 @@ async def cmd_msg():
         found = False
 
         async def _get_keywords():
-            prompt = txt_read("find_character.txt").replace("[chat]", clear_chat)
+            prompt = txt_read("utils/find_character.txt").replace("[chat]", clear_chat)
             try: return await gemini_cmd(prompt)
             except Exception as e: return None
         
