@@ -670,10 +670,11 @@ async def xsl_atv(interaction: discord.Interaction):
 async def xrmv_atv(interaction: discord.Interaction):
     from utils.bot import bot, val, xo
     
-    if xo.turn == "x":
-        if interaction.user.id != xo.X: return await byB(interaction)
-    else:
-        if interaction.user.id != xo.O: return await byB(interaction)
+    if xo.O and xo.X:
+        if xo.turn == "x":
+            if interaction.user.id != xo.X: return await byB(interaction)
+        else:
+            if interaction.user.id != xo.O: return await byB(interaction)
     
     xo.clear()
     

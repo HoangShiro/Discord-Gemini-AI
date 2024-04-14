@@ -1990,6 +1990,8 @@ class XO():
         self.O = None
         self.cursor = "a1"
         self.in_match = False
+        self.ai_match = False
+        self.draw = False
         self.notice = ""
     
 if __name__ == '__main__':
