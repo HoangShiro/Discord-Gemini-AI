@@ -862,7 +862,7 @@ async def cmd_msg():
         await status_busy_set()
     
     # X-O
-    if "x_o" in cmd:
+    if "x_o" in cmd and not xo.winner:
         xo.set('waiting', True)
         xo.set('ai_match', True)
         val.set('in_game', True)
