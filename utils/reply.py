@@ -821,33 +821,39 @@ async def cmd_msg():
         keywords = await _get_keywords()
         keywords = keywords.lower()
         if val.cmd_csl: print(f"{get_real_time()}> Art keyword: ", keywords)
-        if not keywords: return
-        
-        async def _start_search():
-            gacha = re.search(r'ngẫu nhiên|bất kỳ|random|nào đó|tuỳ ý|gacha', clear_chat, re.IGNORECASE)
-            limit = 1; page = 1; mode = "safebooru"; random = False
-            if not val.public: mode = val.search_mode
-            else:
-                guild = bot.get_guild(val.ai_guild)
-                if guild:
-                    channel = guild.get_channel(val.ai_channel)
-                    if channel:
-                        if channel.nsfw: mode = val.search_mode
-            if gacha: limit = 10
-            try: return await art.search_one(keywords=keywords, limit=limit, page=page, random=random, gacha=gacha, block=val.img_block, mode=mode)
-            except Exception as e:
-                print(f"{get_real_time()}> Lỗi khi tìm art: ", e)
-                return None
-        img_url, fixkws = await _start_search()
-        if val.cmd_csl: print(f"{get_real_time()}> Art found: ", fixkws)
-        if img_url:
-            embed, view = await normal_embed(
-                img=img_url,
-                delete=True,
-            )
+        if keywords:
+            async def _start_search():
+                gacha = re.search(r'ngẫu nhiên|bất kỳ|random|nào đó|tuỳ ý|gacha', clear_chat, re.IGNORECASE)
+                limit = 1; page = 1; mode = "safebooru"; random = False
+                if not val.public: mode = val.search_mode
+                else:
+                    guild = bot.get_guild(val.ai_guild)
+                    if guild:
+                        channel = guild.get_channel(val.ai_channel)
+                        if channel:
+                            if channel.nsfw: mode = val.search_mode
+                if gacha: limit = 10
+                try: return await art.search_one(keywords=keywords, limit=limit, page=page, random=random, gacha=gacha, block=val.img_block, mode=mode)
+                except Exception as e:
+                    print(f"{get_real_time()}> Lỗi khi tìm art: ", e)
+                    return None
+            img_url, fixkws = await _start_search()
+            if val.cmd_csl: print(f"{get_real_time()}> Art found: ", fixkws)
             
-            if img_url.endswith((".png",".jpeg",".jpg",".webp",".gif")): await send_embed(embed=embed, view=view)
-            else: await send_embed(content=f"[video]({img_url})", view=view)
+            if fixkws: noti = f"*Bạn vừa gửi artwork: {fixkws}*"
+            else: noti = f"*Bạn không tìm được artwork nào tên '{fixkws}' cả*"
+            ignore_chat = val.ignore_chat
+            ignore_chat.append(noti)
+            val.set('ignore_chat', ignore_chat)
+            
+            if img_url:
+                embed, view = await normal_embed(
+                    img=img_url,
+                    delete=True,
+                )
+                
+                if img_url.endswith((".png",".jpeg",".jpg",".webp",".gif")): await send_embed(embed=embed, view=view)
+                else: await send_embed(content=f"[video]({img_url})", view=view)
     
     # "Go play somewhere else" or sleep
     if "go_rest" in cmd and ai_name:
