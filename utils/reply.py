@@ -839,6 +839,7 @@ async def cmd_msg():
                 print(f"{get_real_time()}> Lỗi khi tìm art: ", e)
                 return None
         img_url, fixkws = await _start_search()
+        if val.cmd_csl: print(f"{get_real_time()}> Art found: ", fixkws)
         if img_url:
             embed, view = await normal_embed(
                 img=img_url,
