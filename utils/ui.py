@@ -1388,7 +1388,7 @@ async def xo_embed():
     board = f"{xo.icon()[0][0]}{xo.icon()[0][1]}{xo.icon()[0][2]}\n{xo.icon()[1][0]}{xo.icon()[1][1]}{xo.icon()[1][2]}\n{xo.icon()[2][0]}{xo.icon()[2][1]}{xo.icon()[2][2]}"
     
     notice = xo.notice
-    if no.turn == "x": notice = f"Tới lượt của {Xname}."
+    if xo.turn == "x": notice = f"Tới lượt của {Xname}."
     else: notice = f"Tới lượt của {Yname}."
     
     
