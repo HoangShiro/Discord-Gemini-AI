@@ -2057,7 +2057,7 @@ class XO():
         self.cursor = "a1" # Con trỏ
         self.moved = None # Vừa đi
         self.turn = None # Lượt của X hoặc O
-        self.waiting = False # Liệu bàn cờ có đang được tạo?
+        self.waiting = True # Liệu bàn cờ có đang được tạo?
         self.in_match = False # Đánh dấu trạng thái của match
         self.ai_match = False # Check xem có phải bot chơi hay không
         self.winner = None # uid người thắng cuộc
