@@ -1854,6 +1854,7 @@ class XO():
         self.ai_match = False # Check xem có phải bot chơi hay không
         self.winner = None # uid người thắng cuộc
         self.loser = None # uid người thua cuộc
+        self.draw = None # Hoà
         self.notice = ""  # Thông báo
         self.iconX = "❌"
         self.iconO = "⭕"
@@ -1936,6 +1937,7 @@ class XO():
         # Check for a draw (no empty cells and no winner)
         if all(cell is not None for row in self.board for cell in row):
             self.in_match = False  # End the match
+            self.draw = True # Draw
             return False  # Indicate a draw (no winner)
 
         return False  # No winner or draw yet
