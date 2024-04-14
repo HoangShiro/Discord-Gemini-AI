@@ -1981,7 +1981,7 @@ class XO():
                     [None, None, None],
                     [None, None, None]]
 
-        self.winer = None
+        self.winner = None
         self.loser = None
         self.X = None
         self.O = None
