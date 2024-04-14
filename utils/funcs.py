@@ -2043,22 +2043,33 @@ class XO():
             print(f"Error: Variable '{val_name}' not found.")
             
     def clear(self):
+        from utils.bot import val
         self.board = [[None, None, None],
                     [None, None, None],
-                    [None, None, None]]
-
-        self.winner = None
-        self.loser = None
-        self.X = None
-        self.O = None
-        self.cursor = "a1"
-        self.turn = None
-        self.moved = None
-        self.waiting = True
-        self.in_match = False
-        self.ai_match = False
-        self.draw = False
-        self.notice = ""
+                    [None, None, None]] # Bàn cờ hiện tại
+        
+        self.map = [["a1", "a2", "a3"],
+                    ["b1", "b2", "b3"],
+                    ["c1", "c2", "c3"]] # Map gốc của bàn cờ
+        
+        self.X = None # uid của player X
+        self.O = None # uid của player O
+        self.cursor = "a1" # Con trỏ
+        self.moved = None # Vừa đi
+        self.turn = None # Lượt của X hoặc O
+        self.waiting = False # Liệu bàn cờ có đang được tạo?
+        self.in_match = False # Đánh dấu trạng thái của match
+        self.ai_match = False # Check xem có phải bot chơi hay không
+        self.winner = None # uid người thắng cuộc
+        self.loser = None # uid người thua cuộc
+        self.draw = None # Hoà
+        self.notice = ""  # Thông báo
+        self.iconX = val.iconX
+        self.iconO = val.iconO
+        self.iconB = val.iconB
+        self.iconB1 = val.iconB1
+        self.iconB2 = val.iconB2
+        self.iconS = val.iconS
     
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')

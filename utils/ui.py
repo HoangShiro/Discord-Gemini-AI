@@ -1442,7 +1442,7 @@ async def xo_embed():
     if xo.in_match: embed.set_footer(text=notice)
     
     view = View(timeout=None)
-    if xo.waiting or xo.draw: view.add_item(xstart_bt)
+    if xo.waiting or xo.draw and not xo.ai_match: view.add_item(xstart_bt)
     if xo.in_match and not xo.winner: view.add_item(xnext_bt)
     if xo.in_match and not xo.winner: view.add_item(xdown_bt)
     if xo.in_match and not xo.winner: view.add_item(xsl_bt)
