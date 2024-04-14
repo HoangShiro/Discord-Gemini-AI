@@ -1390,7 +1390,7 @@ async def xo_embed():
         user = await bot.fetch_user(xo.O)
         Oname = user.display_name
         
-    title = "❌⭕ Game!"
+    title = f"{xo.iconX}{xo.iconO} Game!"
     des = "> Ấn ✨ join để tham gia."
     
     if xo.winner:

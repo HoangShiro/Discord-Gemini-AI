@@ -1837,6 +1837,7 @@ class Music:
 # Maybe X-O games?
 class XO():
     def __init__(self):
+        from utils.bot import val
         self.board = [[None, None, None],
                     [None, None, None],
                     [None, None, None]] # Bàn cờ hiện tại
@@ -1857,12 +1858,12 @@ class XO():
         self.loser = None # uid người thua cuộc
         self.draw = None # Hoà
         self.notice = ""  # Thông báo
-        self.iconX = "❌"
-        self.iconO = "⭕"
-        self.iconB = "⬜"
-        self.iconB1 = "▪️"
-        self.iconB2 = "▪️"
-        self.iconS = "💠"
+        self.iconX = val.iconX
+        self.iconO = val.iconO
+        self.iconB = val.iconB
+        self.iconB1 = val.iconB1
+        self.iconB2 = val.iconB2
+        self.iconS = val.iconS
         
     def move(self, drt):
         current_row, current_col = None, None

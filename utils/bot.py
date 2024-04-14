@@ -150,6 +150,14 @@ class AllStatus:
         # Music
         self.caption_lang = 'vi'
         
+        # X-O
+        self.iconX = "❌"
+        self.iconO = "⭕"
+        self.iconB = "⬜"
+        self.iconB1 = "▪️"
+        self.iconB2 = "▪️"
+        self.iconS = "💠"
+        
     def update(self, val_name, value, save=True):
         if hasattr(self, val_name):
             current_value = getattr(self, val_name)
@@ -1196,6 +1204,29 @@ async def sound_play(interaction: discord.Interaction, sound:str=None, embed:boo
     ok = await sob_play(sound)
     if not ok: return await interaction.response.send_message(f"> Không có sound: {sound}.", ephemeral=True)
     else: return await interaction.response.send_message(f"> Đã play sound: {sound}.", ephemeral=True)
+
+# X-O
+@bot.slash_command(name="xo", description=f"Play X-O?")
+async def x_o_play(interaction: discord.Interaction):
+    if not val.public:
+        if interaction.user.id != val.owner_uid:
+            return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    embed, view = await xo_embed()
+    await interaction.response.send_message(embed=embed, view=view)
+
+@bot.slash_command(name="xo_edit", description=f"Edit X-O emoji.")
+async def x_o_play(interaction: discord.Interaction, x:str=None, o:str=None, cursor:str=None, board1:str=None, board2:str=None, board3:str=None):
+    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    if x: val.set('iconX', x)
+    if o: val.set('iconO', o)
+    if cursor: val.set('iconS', cursor)
+    if board1: val.set('iconB', board1)
+    if board2: val.set('iconB1', board2)
+    if board3: val.set('iconB2', board3)
+    
+    await interaction.response.send_message("> Đã đổi các emoji của board!", ephemeral=True)
 
 def bot_run():
     try:
