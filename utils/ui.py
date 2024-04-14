@@ -58,6 +58,12 @@ rmv_art_bt = discord.ui.Button(label="➖", custom_id="art_remove", style=discor
 mplay_bt = discord.ui.Button(label="🎵 play", custom_id="music_play", style=discord.ButtonStyle.green)
 rmv_m_bt = discord.ui.Button(label="➖", custom_id="music_remove", style=discord.ButtonStyle.grey)
 
+# X-O
+xstart_bt = discord.ui.Button(label="✨ join", custom_id="xo_start", style=discord.ButtonStyle.blurple)
+xnext_bt = discord.ui.Button(label="▶️", custom_id="xo_next", style=discord.ButtonStyle.green)
+xdown_bt = discord.ui.Button(label="🔽", custom_id="xo_down", style=discord.ButtonStyle.green)
+xsl_bt = discord.ui.Button(label="🔅 choose", custom_id="xo_select", style=discord.ButtonStyle.blurple)
+xrmv_bt = discord.ui.Button(label="➖", custom_id="xo_remove", style=discord.ButtonStyle.grey)
 
 """ BUTTON """
 
@@ -115,6 +121,11 @@ async def load_btt():
     # Music
     mplay_bt.callback = mplay_atv
     rmv_m_bt.callback = mrmv_atv
+    
+    # X-O
+    xnext_bt.callback = xnext_atv
+    xdown_bt.callback = xdown_atv
+    xstart_bt.callback = xstart_atv
     
 # Button add
 async def DM_button():
@@ -602,7 +613,59 @@ async def mrmv_atv(interaction: discord.Interaction):
     
     await byB(interaction)
     await sob_stop()
+
+# X-O
+async def xstart_atv(interaction: discord.Interaction):
+    from utils.bot import bot, val, xo
     
+    if not xo.X: xo.set('X', interaction.user.id)
+    if not xo.Y: xo.set('Y', interaction.user.id)
+    
+    if xo.X and xo.Y: xo.start()
+    
+    embed, view = await xo_embed()
+    await interaction.response.edit_message(embed=embed, view=view)
+
+async def xnext_atv(interaction: discord.Interaction):
+    from utils.bot import bot, val, xo
+    
+    if xo.turn == "x":
+        if interaction.user.id != xo.X: return await byB(interaction)
+    else:
+        if interaction.user.id != xo.Y: return await byB(interaction)
+    
+    xo.move("next")
+    
+    embed, view = await xo_embed()
+    await interaction.response.edit_message(embed=embed, view=view)
+
+async def xdown_atv(interaction: discord.Interaction):
+    from utils.bot import bot, val, xo
+    
+    if xo.turn == "x":
+        if interaction.user.id != xo.X: return await byB(interaction)
+    else:
+        if interaction.user.id != xo.Y: return await byB(interaction)
+    
+    xo.move("down")
+    
+    embed, view = await xo_embed()
+    await interaction.response.edit_message(embed=embed, view=view)
+
+async def xsl_atv(interaction: discord.Interaction):
+    from utils.bot import bot, val, xo
+    
+    if xo.turn == "x":
+        if interaction.user.id != xo.X: return await byB(interaction)
+    else:
+        if interaction.user.id != xo.Y: return await byB(interaction)
+    
+    check = xo.select()
+    
+    embed, view = await xo_embed()
+    await interaction.response.edit_message(embed=embed, view=view)
+    if check: xo.clear()
+
 # Edit message with mess id
 async def edit_last_msg(msg=None, view=None, embed=None, message_id=None):
     from utils.bot import bot, val
@@ -1292,4 +1355,55 @@ async def music_embed(play_bt=None, rmv_bt=False, ermv_bt=True):
         mrmv_btt=rmv_bt,
         remove_btt=ermv_bt,
     )
+    return embed, view
+
+# X-O embed
+async def xo_embed():
+    from utils.bot import bot, val, xo
+    from utils.funcs import hex_to_rgb
+    
+    r, g, b = hex_to_rgb(val.ai_color)
+    color = discord.Colour.from_rgb(r, g, b)
+    
+    Xname = None
+    Yname = None
+    
+    if xo.X:
+        user = await bot.fetch_user(xo.X)
+        Xname = user.display_name
+    elif xo.Y:
+        user = await bot.fetch_user(xo.Y)
+        Yname = user.display_name
+        
+    title = "❌⭕ Game!"
+    des = "> Hiện không có match nào."
+    
+    if xo.winner:
+        if xo.wnner == "x": title = f"{Xname} là người chiến thắng! ✨"
+        else: title = f"{Yname} là người chiến thắng! ✨"
+    if xo.wating: des = "> Cần thêm 1 user nữa để bắt đầu!"
+    if xo.in_match: des = ""
+    
+    board = xo.icon()
+    board = f"{xo.icon()[0][0]}{xo.icon()[0][1]}{xo.icon()[0][2]}\n{xo.icon()[1][0]}{xo.icon()[1][1]}{xo.icon()[1][2]}\n{xo.icon()[2][0]}{xo.icon()[2][1]}{xo.icon()[2][2]}"
+    
+    notice = xo.notice
+    if no.turn == "x": notice = f"Tới lượt của {Xname}."
+    else: notice = f"Tới lượt của {Yname}."
+    
+    
+    embed=discord.Embed(title=title, description=des, color=color)
+    if Xname: embed.add_field(name=f"{Xname} - {xo.iconX}", value="", inline=False)
+    if Yname: embed.add_field(name=f"{Yname} - {xo.iconY}", value="", inline=False)
+    if xo.in_match: embed.add_field(name="", value="\n", inline=False) 
+    if xo.in_match: embed.add_field(name=board, value="", inline=False)
+    if xo.in_match: embed.set_footer(text=notice)
+    
+    view = View(timeout=None)
+    if xo.wating: view.add_item(xstart_bt)
+    if xo.in_match and not xo.winner: view.add_item(xnext_bt)
+    if xo.in_match and not xo.winner: view.add_item(xdown_bt)
+    if xo.in_match and not xo.winner: view.add_item(xsl_bt)
+    view.add_item(xrmv_bt)
+    
     return embed, view

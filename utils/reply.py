@@ -591,7 +591,7 @@ async def cmd_msg_user():
 async def cmd_msg():
     from utils.bot import val, bot, rm, mu, art
     from utils.daily import get_real_time
-    from utils.ui import bot_notice, music_embed, normal_embed
+    from utils.ui import bot_notice, music_embed, normal_embed, xo_embed
     from utils.funcs import avatar_change, banner_change, mood_change, leave_voice, sob_stop, txt_read, new_chat
     from utils.api import music_dl, gemini_cmd
     from utils.reply import send_embed
@@ -859,6 +859,11 @@ async def cmd_msg():
     if "go_rest" in cmd and ai_name:
         val.set('CD', val.to_breaktime)
         await status_busy_set()
+    
+    # X-O
+    if "x_o" in cmd:
+        embed, view = await xo_embed()
+        await send_embed(embed=embed, view=view)
     
 async def cmd_msg_user():
     from utils.bot import val

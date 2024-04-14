@@ -1833,6 +1833,149 @@ class Music:
         except Exception as e:
             print(f"{get_real_time()}> Lỗi find song name Gemini API: ", e)
             return None
+
+# Maybe X-O games?
+class XO():
+    def __init__(self):
+        self.board = [[None, None, None],
+                    [None, None, None],
+                    [None, None, None]] # Bàn cờ hiện tại
+        
+        self.map = [["a1", "a2", "a3"],
+                    ["b1", "b2", "b3"],
+                    ["c1", "c2", "c3"]] # Map gốc của bàn cờ
+        
+        self.X = None # uid của player X
+        self.O = None # uid của player O
+        self.cursor = "a1" # Con trỏ
+        self.turn = None # Lượt của X hoặc O
+        self.wating = False # Liệu bàn cờ có đang được tạo?
+        self.in_match = False # Đánh dấu trạng thái của match
+        self.ai_match = False # Check xem có phải bot chơi hay không
+        self.winner = None # uid người thắng cuộc
+        self.loser = None # uid người thua cuộc
+        self.notice = ""  # Thông báo
+        self.iconX = "❌"
+        self.iconO = "⭕"
+        self.iconB = "⬜"
+        
+    def move(self, drt):
+        current_row, current_col = None, None
+        for i in range(len(self.map)):
+            for j in range(len(self.map[i])):
+                if self.map[i][j] == self.cursor:
+                    current_row, current_col = i, j
+                    break
+
+        if drt == "next":
+            next_col = (current_col + 1) % len(self.map[0])  # Move right, wrap around if needed
+            if next_col == 0:  # Reached the end of the row, move down
+                next_row = (current_row + 1) % len(self.map)  # Move down, wrap around if needed
+            else:
+                next_row = current_row
+        elif drt == "down":
+            next_row = (current_row + 1) % len(self.map)  # Move down, wrap around if needed
+            next_col = current_col
+        else:
+            raise ValueError("Invalid direction. Use 'next' or 'down'.")
+
+        self.cursor = self.map[next_row][next_col]
+    
+    def start(self):
+        self.wating = False
+        self.in_match = True
+        
+        if random.random() < 0.5: self.turn = "x"
+        else: self.turn = "o"
+        
+    def select(self):
+        if not self.in_match:
+            raise Exception("Match has not started yet.")
+
+        current_row, current_col = None, None
+        for i in range(len(self.map)):
+            for j in range(len(self.map[i])):
+                if self.map[i][j] == self.cursor:
+                    current_row, current_col = i, j
+                    break
+
+        if self.board[current_row][current_col] is None:  # Check if the cell is empty
+            self.board[current_row][current_col] = self.turn
+            # Switch turns after a successful selection
+            self.turn = "o" if self.turn == "x" else "x"
+            check = self.check()
+            return check
+        else:
+            self.notice = "Ô này đã đi rồi."
+            return None
+    
+    def check(self):
+        win_conditions = [
+            [(0, 0), (0, 1), (0, 2)],  # Row 1: a1, a2, a3
+            [(1, 0), (1, 1), (1, 2)],  # Row 2: b1, b2, b3
+            [(2, 0), (2, 1), (2, 2)],  # Row 3: c1, c2, c3
+            [(0, 0), (1, 0), (2, 0)],  # Column 1: a1, b1, c1
+            [(0, 1), (1, 1), (2, 1)],  # Column 2: a2, b2, c2
+            [(0, 2), (1, 2), (2, 2)],  # Column 3: a3, b3, c3
+            [(0, 0), (1, 1), (2, 2)],  # Diagonal: a1, b2, c3
+            [(2, 0), (1, 1), (0, 2)]   # Diagonal: c1, b2, a3 
+        ]
+
+        for condition in win_conditions:
+            values = [self.board[row][col] for row, col in condition]
+            if all(value == values[0] for value in values) and values[0] is not None:
+                self.winner = values[0]  # Set the winner based on the winning symbol
+                self.loser = "o" if self.winner == "x" else "x"
+                self.in_match = False  # End the match
+                self.wating = True
+                return True  # Indicate that a winner was found
+
+        # Check for a draw (no empty cells and no winner)
+        if all(cell is not None for row in self.board for cell in row):
+            self.in_match = False  # End the match
+            return False  # Indicate a draw (no winner)
+
+        return False  # No winner or draw yet
+    
+    def icon(self):
+      new_board = []
+      for row in self.board:
+        new_row = []
+        for cell in row:
+          if cell == "x":
+            new_row.append(self.iconX)
+          elif cell == "o":
+            new_row.append(self.iconO)
+          else:
+            new_row.append(self.iconB)
+        new_board.append(new_row)
+      return new_board
+    
+    def update(self, val_name, value):
+        if hasattr(self, val_name):
+            current_value = getattr(self, val_name)
+            setattr(self, val_name, current_value + value)
+        else:
+            print(f"Error: Variable '{val_name}' not found.")
+
+    def set(self, val_name, value):
+        if hasattr(self, val_name):
+            setattr(self, val_name, value)
+        else:
+            print(f"Error: Variable '{val_name}' not found.")
+            
+    def clear(self):
+        self.board = [[None, None, None],
+                    [None, None, None],
+                    [None, None, None]]
+
+        self.winer = None
+        self.loser = None
+        self.X = None
+        self.O = None
+        self.cursor = "a1"
+        self.in_match = False
+        self.notice = ""
     
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
