@@ -1391,12 +1391,12 @@ async def xo_embed():
         Oname = user.display_name
         
     title = "❌⭕ Game!"
-    des = "> Ấn 🔅 join để tham gia."
+    des = "> Ấn ✨ join để tham gia."
     
     if xo.winner:
         if xo.winner == "x": title = f"{Xname} là người chiến thắng! ✨"
         else: title = f"{Oname} là người chiến thắng! ✨"
-        des = "> Ấn 🔅 join để new game."
+        des = "> Ấn ✨ join để new game."
     if xo.draw: title = f"Hoà rồi! 💫"
     if xo.waiting and not xo.winner: des = "> Cần thêm 1 user nữa để bắt đầu!"
     if xo.in_match: des = ""
