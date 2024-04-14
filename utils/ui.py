@@ -620,7 +620,7 @@ async def xstart_atv(interaction: discord.Interaction):
     from utils.bot import bot, val, xo
     
     if not xo.X: xo.set('X', interaction.user.id)
-    if not xo.O: xo.set('Y', interaction.user.id)
+    if not xo.O: xo.set('O', interaction.user.id)
     
     if xo.X and xo.O: xo.start()
     
