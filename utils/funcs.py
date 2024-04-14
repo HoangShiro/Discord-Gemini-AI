@@ -2054,6 +2054,7 @@ class XO():
         self.cursor = "a1"
         self.turn = None
         self.moved = None
+        self.waiting = True
         self.in_match = False
         self.ai_match = False
         self.draw = False
