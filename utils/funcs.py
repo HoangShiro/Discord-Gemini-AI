@@ -1583,14 +1583,14 @@ class Art_Search:
         key_check = []
         for key in keywords.split():
             if key.lower() in fix_kws.lower(): key_check.append(key)
-        if not key_check: return None
+        if not key_check: return None, None
         try:
             img_urls = await se.search(query=fix_kws, limit=limit, page=page, random=random, gacha=gacha, block=block)
             imgs = booru.resolve(img_urls)
             if gacha: return imgs["file_url"], fix_kws
             else: return imgs[0]["file_url"], fix_kws    
         except Exception as e:
-            return None
+            return None, None
         
     async def slide(self, interaction: discord.Interaction, msg_id):
         from utils.ui import art_embed
