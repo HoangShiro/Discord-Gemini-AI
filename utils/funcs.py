@@ -2070,7 +2070,9 @@ class XO():
         self.iconB1 = val.iconB1
         self.iconB2 = val.iconB2
         self.iconS = val.iconS
-    
+
+        val.set('in_game', False)
+        
 if __name__ == '__main__':
   p = load_prompt('saves/chat.txt')
   print(p)
