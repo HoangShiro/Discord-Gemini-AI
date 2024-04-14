@@ -2010,24 +2010,41 @@ class XO():
 
         elif move:
             ok = False
-            if "a1" in val.now_chat_ai: ok = _move("a1")
-            elif "a2" in val.now_chat_ai: ok = _move("a2")
-            elif "a3" in val.now_chat_ai: ok = _move("a3")
-                
-            elif "b1" in val.now_chat_ai: ok = _move("b1")
-            elif "b2" in val.now_chat_ai: ok = _move("b2")
-            elif "b3" in val.now_chat_ai: ok = _move("b3")
-                
-            elif "c1" in val.now_chat_ai: ok = _move("c1")
-            elif "c2" in val.now_chat_ai: ok = _move("c2")
-            elif "c3" in val.now_chat_ai: ok = _move("c3")
+            turn = ""
+            if "a1" in val.now_chat_ai:
+                ok = _move("a1")
+                turn = "a1"
+            elif "a2" in val.now_chat_ai:
+                ok = _move("a2")
+                turn = "a2"
+            elif "a3" in val.now_chat_ai:
+                ok = _move("a3")
+                turn = "a3"
+            elif "b1" in val.now_chat_ai:
+                ok = _move("b1")
+                turn = "b1"
+            elif "b2" in val.now_chat_ai:
+                ok = _move("b2")
+                turn = "b2"
+            elif "b3" in val.now_chat_ai:
+                ok = _move("b3")
+                turn = "b3"
+            elif "c1" in val.now_chat_ai:
+                ok = _move("c1")
+                turn = "c1"
+            elif "c2" in val.now_chat_ai:
+                ok = _move("c2")
+                turn = "c2"
+            elif "c3" in val.now_chat_ai:
+                ok = _move("c3")
+                turn = "c3"
                 
             else:
                 ok = True
-                _notice(noti="Vị trí sai, hãy chắc rằng bạn đọc đúng vị trí muốn đi trên bàn cờ")
+                _notice(noti="Vị trí sai, hãy chắc rằng bạn đọc đúng vị trí muốn đi trên bàn cờ ví dụ [a1]")
             
             if not ok:
-                _notice(noti="Vị trí trên đã đi, hãy chắc rằng bạn đọc đúng vị trí muốn đi trên bàn cờ")
+                _notice(noti=f"Vị trí [{turn}] đã đi, hãy chắc rằng bạn đọc đúng vị trí muốn đi trên bàn cờ")
             
     def update(self, val_name, value):
         if hasattr(self, val_name):
