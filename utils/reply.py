@@ -819,7 +819,7 @@ async def cmd_msg():
             except Exception as e: return None
         
         keywords = await _get_keywords()
-        keywords = keywords.lower()
+        keywords = keywords.lower().replace(" ", "_")
         if val.cmd_csl: print(f"{get_real_time()}> Art keyword: ", keywords)
         if keywords:
             async def _start_search():
