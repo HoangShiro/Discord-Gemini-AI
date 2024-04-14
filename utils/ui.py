@@ -1398,7 +1398,7 @@ async def xo_embed():
     if xo.in_match: des = ""
     
     board = xo.icon()
-    board = f"{xo.icon()[0][0]}{xo.icon()[0][1]}{xo.icon()[0][2]}\n{xo.icon()[1][0]}{xo.icon()[1][1]}{xo.icon()[1][2]}\n{xo.icon()[2][0]}{xo.icon()[2][1]}{xo.icon()[2][2]}"
+    board = f"{xo.icon()[0][0]}🔹{xo.icon()[0][1]}🔹{xo.icon()[0][2]}\n🔹🔸🔹🔸🔹\n{xo.icon()[1][0]}🔹{xo.icon()[1][1]}🔹{xo.icon()[1][2]}\n🔹🔸🔹🔸🔹\n{xo.icon()[2][0]}🔹{xo.icon()[2][1]}🔹{xo.icon()[2][2]}"
     
     notice = xo.notice
     if xo.turn == "x": notice = f"Tới lượt của {Xname}."
