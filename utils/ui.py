@@ -619,9 +619,9 @@ async def xstart_atv(interaction: discord.Interaction):
     from utils.bot import bot, val, xo
     
     if not xo.X: xo.set('X', interaction.user.id)
-    if not xo.Y: xo.set('Y', interaction.user.id)
+    if not xo.O: xo.set('Y', interaction.user.id)
     
-    if xo.X and xo.Y: xo.start()
+    if xo.X and xo.O: xo.start()
     
     embed, view = await xo_embed()
     await interaction.response.edit_message(embed=embed, view=view)
@@ -632,7 +632,7 @@ async def xnext_atv(interaction: discord.Interaction):
     if xo.turn == "x":
         if interaction.user.id != xo.X: return await byB(interaction)
     else:
-        if interaction.user.id != xo.Y: return await byB(interaction)
+        if interaction.user.id != xo.O: return await byB(interaction)
     
     xo.move("next")
     
@@ -645,7 +645,7 @@ async def xdown_atv(interaction: discord.Interaction):
     if xo.turn == "x":
         if interaction.user.id != xo.X: return await byB(interaction)
     else:
-        if interaction.user.id != xo.Y: return await byB(interaction)
+        if interaction.user.id != xo.O: return await byB(interaction)
     
     xo.move("down")
     
@@ -658,7 +658,7 @@ async def xsl_atv(interaction: discord.Interaction):
     if xo.turn == "x":
         if interaction.user.id != xo.X: return await byB(interaction)
     else:
-        if interaction.user.id != xo.Y: return await byB(interaction)
+        if interaction.user.id != xo.O: return await byB(interaction)
     
     check = xo.select()
     
@@ -1371,8 +1371,8 @@ async def xo_embed():
     if xo.X:
         user = await bot.fetch_user(xo.X)
         Xname = user.display_name
-    elif xo.Y:
-        user = await bot.fetch_user(xo.Y)
+    elif xo.O:
+        user = await bot.fetch_user(xo.O)
         Yname = user.display_name
         
     title = "❌⭕ Game!"
