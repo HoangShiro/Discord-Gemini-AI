@@ -894,10 +894,10 @@ async def ai_game():
     
     if xo.ai_match and xo.in_match:
         xo.notice = val.now_chat_ai
-        embed, view = await xo_embed()
         
         xo.ai_move(move=True)
         
+        embed, view = await xo_embed()
         inter = val.now_inter
         await inter.edit(embed=embed, view=view)
             
