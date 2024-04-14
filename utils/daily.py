@@ -1,7 +1,7 @@
 """Quản lý thời gian"""
 import json, os, time, datetime, asyncio, discord, random, pytz
 from discord.ext import tasks
-from utils.reply import reply_id
+from utils.reply import reply_id, ai_game
 from utils.funcs import remmid_edit
 from utils.status import status_busy_set
 
@@ -30,6 +30,7 @@ async def sec_check():
         if val.public: val.set('CD', val.chat_speed, save=False) # Chờ trước khi rep tiếp
         if val.CD_idle == (val.to_worktime - 1) and not mu.sound_playing:
             val.set('CD', val.to_breaktime)
+            val.set('in_game', False)
             await status_busy_set()
     
     # Đếm ngược tới thời gian check tin nhắn
@@ -46,6 +47,7 @@ async def sec_check():
     if val.CD_idle == (val.to_worktime - 1) and not mu.sound_playing:
         val.set('CD', val.to_breaktime)
         # Set lại status
+        val.set('in_game', False)
         await status_busy_set()
 
     # Đổi tên countdown

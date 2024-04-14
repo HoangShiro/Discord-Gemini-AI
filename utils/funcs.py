@@ -1069,7 +1069,7 @@ def remove_preset(name: str):
   
 # New chat
 async def new_chat():
-    from utils.bot import val 
+    from utils.bot import val, mu
     from utils.api import chat
     from utils.ui import edit_last_msg
     
@@ -1096,6 +1096,7 @@ async def new_chat():
     val.set('ignore_chat', [])
     val.set('last_mess_id', None)
     val.set('old_mess_id', None)
+    val.set('in_game', False)
     
     val.set('ai_mood', 0)
     val.set('mood_name', "normal")
@@ -1107,6 +1108,7 @@ async def new_chat():
     val.set('one_join', 0)
     val.set('one_cmd', 0)
     
+    mu.set('sound_playing', False)
     if val.public:
         public_remind = load_prompt("saves/public.txt")
         chat.history.extend(public_remind)
@@ -1909,10 +1911,10 @@ class XO():
             self.turn = "o" if self.turn == "x" else "x"
             check = self.check()
             self.moved = True
-            return check
+            return True
         else:
             self.notice = "Ô này đã đi rồi."
-            return None
+            return False
     
     def check(self):
         win_conditions = [
@@ -1967,6 +1969,55 @@ class XO():
         if not self.moved: new_board[current_row][current_col] = self.iconS
         return new_board
     
+    def ai_move(self, move=None, notice=None):
+        from utils.bot import val
+        
+        def _notice(noti=None):
+            new_board = self.map  # Tạo bản sao 'map'
+
+            for i in range(3):
+                for j in range(3):
+                    if self.board[i][j] == "x":
+                        new_board[i][j] = "x"
+                    elif self.board[i][j] == "o":
+                        new_board[i][j] = "o"
+            
+            if self.turn == "o":
+                board = f"đây là bàn cờ X-O hiện tại: {new_board}"
+                if not noti: noti = "X-O Game: Tới lượt bạn đi"
+                prompt = f"{noti}, {board}"
+                now_chat = val.now_chat
+                now_chat.append(prompt)
+                val.set('new_chat', now_chat)
+                val.set('CD', 1)
+        
+        def _move(mov):
+            self.cursor = mov
+            return self.select()
+        
+        if notice: _notice()
+
+        elif move:
+            ok = False
+            if "a1" in val.now_chat_ai: ok = _move("a1")
+            elif "a2" in val.now_chat_ai: ok = _move("a2")
+            elif "a3" in val.now_chat_ai: ok = _move("a3")
+                
+            elif "b1" in val.now_chat_ai: ok = _move("b1")
+            elif "b2" in val.now_chat_ai: ok = _move("b2")
+            elif "b3" in val.now_chat_ai: ok = _move("b3")
+                
+            elif "c1" in val.now_chat_ai: ok = _move("c1")
+            elif "c2" in val.now_chat_ai: ok = _move("c2")
+            elif "c3" in val.now_chat_ai: ok = _move("c3")
+                
+            else:
+                ok = True
+                _notice(noti="Vị trí sai, hãy chắc rằng bạn đọc đúng vị trí muốn đi trên bàn cờ")
+            
+            if not ok:
+                _notice(noti="Vị trí trên đã đi, hãy chắc rằng bạn đọc đúng vị trí muốn đi trên bàn cờ")
+            
     def update(self, val_name, value):
         if hasattr(self, val_name):
             current_value = getattr(self, val_name)

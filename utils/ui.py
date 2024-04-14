@@ -621,8 +621,12 @@ async def xstart_atv(interaction: discord.Interaction):
     
     if xo.winner or xo.draw: xo.clear()
     
-    if not xo.X: xo.set('X', interaction.user.id)
-    elif not xo.O: xo.set('O', interaction.user.id)
+    if not xo.ai_match:
+        if not xo.X: xo.set('X', interaction.user.id)
+        elif not xo.O: xo.set('O', interaction.user.id)
+    else:
+        xo.set('X', interaction.user.id)
+        xo.set('O', bot.user.id)
     
     if xo.X and xo.O: xo.start()
     
@@ -664,6 +668,8 @@ async def xsl_atv(interaction: discord.Interaction):
         if interaction.user.id != xo.O: return await byB(interaction)
     
     xo.select()
+    
+    if xo.ai_match: xo.ai_move(notice=True)
     
     embed, view = await xo_embed()
     await interaction.response.edit_message(embed=embed, view=view)

@@ -105,12 +105,13 @@ async def reply_id(channel=None, rep=False):
         if rep:
             async with channel.channel.typing():
                 reply = await gemini_rep(text)
-                if reply: await send_mess(channel, reply, rep)
+                if reply and not val.in_game: await send_mess(channel, reply, rep)
+                elif reply and val.in_game: asyncio.create_task(ai_game())
         else:
             async with channel.typing():
                 reply = await gemini_rep(text)
-                if reply: await send_mess(channel, reply, rep)
-
+                if reply and not val.in_game: await send_mess(channel, reply, rep)
+                elif reply and val.in_game: asyncio.create_task(ai_game())
 # Gửi embed
 async def send_embed(embed=None, view=None, content=None):
     channel = await get_channel()
@@ -863,9 +864,13 @@ async def cmd_msg():
     # X-O
     if "x_o" in cmd:
         xo.set('waiting', True)
+        xo.set('ai_match', True)
+        val.set('in_game', True)
         embed, view = await xo_embed()
-        await send_embed(embed=embed, view=view)
-    
+        inter = await send_embed(embed=embed, view=view)
+
+        val.set('now_inter', inter, save=False)
+        
 async def cmd_msg_user():
     from utils.bot import val
     from utils.daily import get_real_time
@@ -880,3 +885,19 @@ async def cmd_msg_user():
         now_chat = val.now_chat
         now_chat.insert(0, chat)
         val.set('now_chat', now_chat)
+
+async def ai_game():
+    from utils.bot import val, bot, rm, mu, art, xo
+    from utils.daily import get_real_time
+    from utils.ui import bot_notice, music_embed, normal_embed, xo_embed
+    from utils.reply import send_embed
+    
+    if xo.ai_match and xo.in_match:
+        xo.notice = val.now_chat_ai
+        embed, view = await xo_embed()
+        
+        xo.ai_move(move=True)
+        
+        inter = val.now_inter
+        await inter.edit_original_response(embed=embed, view=view)
+            

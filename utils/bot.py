@@ -37,6 +37,7 @@ class AllStatus:
         self.pr_vch_id = None               # ID voice channel cuối cùng mà bot kết nối tới
         self.pr_vch = None                  # Voice channel cuối cùng
         self.last_vch_id = None             # Lưu lại voice channel cuối
+        self.now_inter:discord.Interaction = None # interaction hiện tại của bot
         
         # Chat area - AI
         self.ai_chat = ""                   # Chat gần nhất của bot
@@ -53,6 +54,7 @@ class AllStatus:
         self.now_chat_user = ""             # chat mới của user
         self.last_uname = "User"            # Username gần nhất
         
+        self.in_game = False                # Xem bot có đang chat trong game hay không
         self.in_reply = False               # Bot có đang reply hay không
         self.in_notice = False              # Check xem bot có đang bị nhắc nhở hay không
         self.in_creative = False            # Tương tự như trên
@@ -267,6 +269,7 @@ async def on_ready():
     val.set('in_reply', False)
     val.set('CD', val.to_breaktime)
     val.set('CD_idle', val.to_worktime)
+    val.set('in_game', False)
     mu.set('sound_ctn_se', False)
     
     # Load các button
