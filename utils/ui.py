@@ -1394,6 +1394,7 @@ async def xo_embed():
     if xo.winner:
         if xo.winner == "x": title = f"{Xname} là người chiến thắng! ✨"
         else: title = f"{Oname} là người chiến thắng! ✨"
+        des = "> Ấn 🔅 join để new game."
     if xo.draw: title = f"Hoà rồi! 💫"
     if xo.waiting: des = "> Cần thêm 1 user nữa để bắt đầu!"
     if xo.in_match: des = ""
@@ -1407,8 +1408,8 @@ async def xo_embed():
     
     
     embed=discord.Embed(title=title, description=des, color=color)
-    if Xname: embed.add_field(name=f"> {Xname} - {xo.iconX}", value="", inline=False)
-    if Oname: embed.add_field(name=f"> {Oname} - {xo.iconO}", value="", inline=False)
+    if Xname and not xo.winner: embed.add_field(name=f"> {Xname} - {xo.iconX}", value="", inline=False)
+    if Oname and not xo.winner: embed.add_field(name=f"> {Oname} - {xo.iconO}", value="", inline=False)
     if xo.in_match: embed.add_field(name="", value="\n", inline=False) 
     if xo.in_match: embed.add_field(name=board, value="", inline=False)
     if xo.in_match: embed.set_footer(text=notice)
