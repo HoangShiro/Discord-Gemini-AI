@@ -893,7 +893,7 @@ async def ai_game():
     from utils.reply import send_embed
     
     if xo.ai_match and xo.in_match:
-        xo.notice = val.now_chat_ai
+        xo.set('notice', val.now_chat_ai)
         
         xo.ai_move(move=True)
         
