@@ -1928,7 +1928,7 @@ class XO():
             print(self.board[1])
             print(self.board[2])
             
-            #self.check()
+            self.check()
             self.moved = True
             return True
         else:
@@ -1989,10 +1989,11 @@ class XO():
         
         def _notice(noti=None):
             
-            x,y = self.suggest()
+            #x,y = self.suggest()
             
             if self.turn == "o":
-                board = f"gợi ý -> [{x},{y}]"
+                #board = f"gợi ý -> [{x},{y}]"
+                board = ""
                 print(board)
                 if not noti: noti = "X-O Game: Tới lượt bạn đi"
                 prompt = f"{noti}, {board}"
