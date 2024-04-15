@@ -2010,7 +2010,7 @@ class XO():
             pattern = r"\d+"
             num = []
             mv = None
-            
+            ok = None
             for string in chat:
                 numbers = re.findall(pattern, string)
                 for i in numbers:
