@@ -1935,7 +1935,6 @@ class XO():
             self.notice = "Ô này đã đi rồi."
             return False
 
-    
     def check(self):
         win_conditions = [
             [(0, 0), (0, 1), (0, 2)],  # Row 1: a1, a2, a3
@@ -2000,13 +1999,12 @@ class XO():
                 now_chat.append(prompt)
                 val.set('now_chat', now_chat)
                 val.set('CD', 1)
-        
+
         def _move(mv):
             self.cursor = mv
             return self.select()
         
         if notice: _notice()
-
         elif move:
             chat = val.now_chat_ai.lower()
             pattern = r"\d+"
@@ -2023,7 +2021,8 @@ class XO():
                     if 0 <= num[1] <=2:
                         mv = f"{num[0]},{num[1]}"
             
-            if mv: ok = _move(mv)
+            if mv:
+                if self.turn == "o": ok = _move(mv)
             if not ok: _notice(noti=f"Vị trí sai, hãy đi lại đúng vị trí.")
     
     def suggest(self):
@@ -2101,13 +2100,9 @@ class XO():
                     [None, None, None],
                     [None, None, None]] # Bàn cờ hiện tại
         
-        self.map = [["a1", "a2", "a3"],
-                    ["b1", "b2", "b3"],
-                    ["c1", "c2", "c3"]] # Map gốc của bàn cờ
-        
         self.X = None # uid của player X
         self.O = None # uid của player O
-        self.cursor = "a1" # Con trỏ
+        self.cursor = None # Con trỏ
         self.moved = None # Vừa đi
         self.turn = None # Lượt của X hoặc O
         self.waiting = True # Liệu bàn cờ có đang được tạo?
