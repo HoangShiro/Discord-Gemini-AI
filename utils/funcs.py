@@ -1975,7 +1975,8 @@ class XO():
     def ai_move(self, move=None, notice=None):
         from utils.bot import val
         
-        def _suggest(board):
+        def _suggest():
+            board = self.board.copy()
             def _check_win(board, player):
                 # Check rows
                 for row in board:
@@ -2032,7 +2033,7 @@ class XO():
         
         def _notice(noti=None):
             
-            x,y = _suggest(self.board)
+            x,y = _suggest()
             
             if self.turn == "o":
                 board = f"gợi ý -> [{x},{y}]"
