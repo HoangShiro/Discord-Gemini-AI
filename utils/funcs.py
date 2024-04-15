@@ -1903,10 +1903,11 @@ class XO():
             raise Exception("Match has not started yet.")
 
         r, c = None, None
-        for i in self.map:
-            for j in i:
+        for i in range(len(self.map)):
+            for j in range(len(self.map[i])):
                 if self.cursor == self.map[i][j]:
                     r, c = i, j
+                    break
 
         # Handle the case where cursor is not found in the map
         if not r or not c:
