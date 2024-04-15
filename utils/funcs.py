@@ -2027,59 +2027,59 @@ class XO():
             if not ok: _notice(noti=f"Vị trí sai, hãy đi lại đúng vị trí.")
     
     def suggest(self):
-        def _check_win(board, player):
+        def _check_win(b, player):
             # Check rows
-            for row in board:
+            for row in b:
                 if all(cell == player for cell in row):
                     return True
 
             # Check columns
             for col in range(3):
-                if all(board[row][col] == player for row in range(3)):
+                if all(b[row][col] == player for row in range(3)):
                     return True
 
             # Check diagonals
-            if all(board[i][i] == player for i in range(3)):
+            if all(b[i][i] == player for i in range(3)):
                 return True
-            if all(board[i][2 - i] == player for i in range(3)):
+            if all(b[i][2 - i] == player for i in range(3)):
                 return True
 
             return False
         
-        board = self.board
+        b = self.board
         # Check for winning move
         for row in range(3):
             for col in range(3):
-                if board[row][col] is None:
-                    board[row][col] = 'o'  # Try placing 'o'
-                    if _check_win(board, 'o'):
+                if b[row][col] is None:
+                    b[row][col] = 'o'  # Try placing 'o'
+                    if _check_win(b, 'o'):
                         return row, col
                     else:
-                        board[row][col] = None  # Reset
+                        b[row][col] = None  # Reset
 
         # Check for blocking move
         for row in range(3):
             for col in range(3):
-                if board[row][col] is None:
-                    board[row][col] = 'x'  # Try placing 'x'
-                    if _check_win(board, 'x'):
+                if b[row][col] is None:
+                    b[row][col] = 'x'  # Try placing 'x'
+                    if _check_win(b, 'x'):
                         return row, col
                     else:
-                        board[row][col] = None  # Reset
+                        b[row][col] = None  # Reset
 
         # Choose center if available
-        if board[1][1] is None:
+        if b[1][1] is None:
             return 1, 1
 
         # Choose a corner if available
         for row, col in [(0, 0), (0, 2), (2, 0), (2, 2)]:
-            if board[row][col] is None:
+            if b[row][col] is None:
                 return row, col
 
         # Choose any available space
         for row in range(3):
             for col in range(3):
-                if board[row][col] is None:
+                if b[row][col] is None:
                     return row, col
           
     def update(self, val_name, value):
