@@ -1866,21 +1866,30 @@ class XO():
         self.iconB1 = val.iconB1
         self.iconB2 = val.iconB2
         self.iconS = val.iconS
-        
-    def move(self, drt):
-        current_row, current_col = None, None
+    
+    def _curlc(self):
+        r, c = None, None
         for i in range(len(self.map)):
             for j in range(len(self.map[i])):
                 if self.map[i][j] == self.cursor:
-                    current_row, current_col = i, j
+                    r, c = i, j
                     break
+        
+        if not r or not c:
+            self.notice = "Lỗi vị trí rồi!"
+            r, c = 0, 0
+        
+        return r, c
+        
+    def move(self, drt):
+        r, c = self._curlc()
 
         if drt == "next":
-            next_col = (current_col + 1) % len(self.map)  # Move right, wrap around if needed
-            next_row = current_row
+            next_col = (c + 1) % len(self.map)  # Move right, wrap around if needed
+            next_row = r
         elif drt == "down":
-            next_row = (current_row + 1) % len(self.map)  # Move down, wrap around if needed
-            next_col = current_col
+            next_row = (r + 1) % len(self.map)  # Move down, wrap around if needed
+            next_col = c
         else:
             raise ValueError("Invalid direction. Use 'next' or 'down'.")
 
@@ -1902,22 +1911,25 @@ class XO():
         if not self.in_match:
             raise Exception("Match has not started yet.")
 
-        r, c = None, None
-        for i in range(len(self.map)):
-            for j in range(len(self.map[i])):
-                if self.cursor == self.map[i][j]:
-                    r, c = i, j
-                    break
+        r, c = self._curlc()
 
-        # Handle the case where cursor is not found in the map
-        if not r or not c:
-            self.notice = "Lỗi vị trí rồi!"
-            r, c = 0, 0
-
+        print(f"CURSOR: {self.cursor}")
+        print(f"POINT POSITION: {self.board[r][c]}")
+        print()
+        print(self.board[0])
+        print(self.board[1])
+        print(self.board[2])
+        
         if not self.board[r][c]:
             self.board[r][c] = self.turn
             # Switch turns after a successful selection
             self.turn = "o" if self.turn == "x" else "x"
+            
+            print()
+            print(self.board[0])
+            print(self.board[1])
+            print(self.board[2])
+            
             self.check()
             self.moved = True
             return True
@@ -2016,7 +2028,6 @@ class XO():
             if not ok: _notice(noti=f"Vị trí sai, hãy đi lại đúng vị trí.")
     
     def suggest(self):
-        board = self.board
         def _check_win(board, player):
             # Check rows
             for row in board:
@@ -2035,7 +2046,8 @@ class XO():
                 return True
 
             return False
-
+        
+        board = self.board
         # Check for winning move
         for row in range(3):
             for col in range(3):
