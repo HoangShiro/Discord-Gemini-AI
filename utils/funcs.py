@@ -1928,7 +1928,7 @@ class XO():
             print(self.board[1])
             print(self.board[2])
             
-            self.check()
+            #self.check()
             self.moved = True
             return True
         else:
