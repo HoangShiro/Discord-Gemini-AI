@@ -2000,8 +2000,9 @@ class XO():
             for row in range(3):
                 for col in range(3):
                     if board[row][col] is None:
-                        #board[row][col] = 'o'  # Try placing 'o'
-                        if _check_win(board, 'x'):
+                        board[row][col] = 'o'  # Try placing 'o'
+                        if _check_win(board, 'o'):
+                            board[row][col] = None  # Reset
                             return row, col, "Hãy block đối thủ không sẽ thua"
                         else:
                             board[row][col] = None  # Reset
@@ -2010,8 +2011,9 @@ class XO():
             for row in range(3):
                 for col in range(3):
                     if board[row][col] is None:
-                        #board[row][col] = 'x'  # Try placing 'x'
-                        if _check_win(board, 'o'):
+                        board[row][col] = 'x'  # Try placing 'x'
+                        if _check_win(board, 'x'):
+                            board[row][col] = None  # Reset
                             return row, col, "Đi nước này sẽ thắng"
                         else:
                             board[row][col] = None  # Reset
