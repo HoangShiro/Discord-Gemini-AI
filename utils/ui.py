@@ -1438,19 +1438,21 @@ async def xo_embed():
     board = f"{xo.icon()[0][0]}{xo.iconB1}{xo.icon()[0][1]}{xo.iconB1}{xo.icon()[0][2]}\n{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}\n{xo.icon()[1][0]}{xo.iconB1}{xo.icon()[1][1]}{xo.iconB1}{xo.icon()[1][2]}\n{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}\n{xo.icon()[2][0]}{xo.iconB1}{xo.icon()[2][1]}{xo.iconB1}{xo.icon()[2][2]}"
     
     notice = xo.notice
-    if xo.turn == "x":
-        icon1 = xo.iconS
-        icon2 = ""
-        notice = f"Tới lượt của {Xname}."
-    else:
-        icon1 = ""
-        icon2 = xo.iconS
-        notice = f"Tới lượt của {Oname}."
+    
+    if not xo.winner or xo.draw:
+        if xo.turn == "x":
+            icon1 = xo.iconS
+            icon2 = ""
+            notice = f"Tới lượt của {Xname}."
+        else:
+            icon1 = ""
+            icon2 = xo.iconS
+            notice = f"Tới lượt của {Oname}."
     
     
     embed=discord.Embed(title=title, description=des, color=color)
-    if Xname: embed.add_field(name=f"> {xo.iconX}: {Xname} {icon1}", value="", inline=False)
-    if Oname: embed.add_field(name=f"> {xo.iconO}: {Oname} {icon2}", value="", inline=False)
+    if Xname: embed.add_field(name=f"> {xo.iconX} - {Xname} {icon1}", value="", inline=False)
+    if Oname: embed.add_field(name=f"> {xo.iconO} - {Oname} {icon2}", value="", inline=False)
     if xo.in_match or xo.winner or xo.draw: embed.add_field(name="", value="\n", inline=False) 
     if xo.in_match or xo.winner or xo.draw: embed.add_field(name=board, value="", inline=False)
     if xo.in_match: embed.set_footer(text=notice)
