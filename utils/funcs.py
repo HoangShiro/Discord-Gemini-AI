@@ -2019,7 +2019,7 @@ class XO():
             if len(num) == 2:
                 if 0 <= num[0] <=2:
                     if 0 <= num[1] <=2:
-                        mv = ",".join(num)
+                        mv = f"{num[0]},{num[1]}"
             
             if mv: ok = _move(mv)
             if not ok: _notice(noti=f"Vị trí sai, hãy đi lại đúng vị trí.")
