@@ -889,7 +889,7 @@ async def cmd_msg_user():
         val.set('now_chat', now_chat)
 
     if x_o:
-        chat = "X-O Game: Bạn có thể đi theo nước đi gợi ý ví dụ [1,1]. Game sắp bắt đầu rồi, sẵn sàng?"
+        chat = "X-O Game: Bạn có thể đi theo nước đi gợi ý để có thể thắng. Game sắp bắt đầu rồi, sẵn sàng?"
         now_chat = val.now_chat
         now_chat.insert(0, chat)
         val.set('now_chat', now_chat)
