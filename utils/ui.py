@@ -1435,13 +1435,11 @@ async def xo_embed():
     elif xo.in_match and xo.ai_match: des = val.now_chat_ai
     
     board = xo.icon()
-    board = f"""
-        {xo.icon()[0][0]}{xo.iconB1}{xo.icon()[0][1]}{xo.iconB1}{xo.icon()[0][2]}\n
-        {xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}\n
-        {xo.icon()[1][0]}{xo.iconB1}{xo.icon()[1][1]}{xo.iconB1}{xo.icon()[1][2]}\n
-        {xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}\n
-        {xo.icon()[2][0]}{xo.iconB1}{xo.icon()[2][1]}{xo.iconB1}{xo.icon()[2][2]}
-        """
+    board = f"""{xo.icon()[0][0]}{xo.iconB1}{xo.icon()[0][1]}{xo.iconB1}{xo.icon()[0][2]}
+                {xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}
+                {xo.icon()[1][0]}{xo.iconB1}{xo.icon()[1][1]}{xo.iconB1}{xo.icon()[1][2]}
+                {xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}
+                {xo.icon()[2][0]}{xo.iconB1}{xo.icon()[2][1]}{xo.iconB1}{xo.icon()[2][2]}"""
     
     notice = xo.notice
     
