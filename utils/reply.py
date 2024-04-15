@@ -106,12 +106,12 @@ async def reply_id(channel=None, rep=False):
             async with channel.channel.typing():
                 reply = await gemini_rep(text)
                 if reply and not val.in_game: await send_mess(channel, reply, rep)
-                elif reply and val.in_game: asyncio.create_task(ai_game())
+                elif reply and val.in_game: await ai_game()
         else:
             async with channel.typing():
                 reply = await gemini_rep(text)
                 if reply and not val.in_game: await send_mess(channel, reply, rep)
-                elif reply and val.in_game: asyncio.create_task(ai_game())
+                elif reply and val.in_game: await ai_game()
 # Gửi embed
 async def send_embed(embed=None, view=None, content=None):
     channel = await get_channel()
@@ -904,7 +904,7 @@ async def ai_game():
     
     if xo.ai_match and xo.in_match:
         
-        #xo.ai_move(move=True)
+        xo.ai_move(move=True)
         
         embed, view = await xo_embed()
         inter = val.now_inter
