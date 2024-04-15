@@ -1438,6 +1438,7 @@ async def xo_embed():
             icon2 = "👑"
             
         if xo.ai_match:
+            val.set('now_chat_user', "")
             val.set('in_game', False)
             val.set('now_chat', now_chat)
             val.set('CD', 1)
