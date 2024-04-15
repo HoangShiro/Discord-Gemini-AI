@@ -1882,9 +1882,11 @@ class XO():
             if c < 2: next_col = c + 1
             elif c >= 2: next_col = 0
             next_row = r
+            
         elif drt == "down":
-            if r < 2: next_col = r + 1
-            elif r >= 2: next_col = 0
+            if r < 2: next_row = r + 1
+            elif r >= 2: next_row = 0
+            
             next_col = c
         else:
             raise ValueError("Invalid direction. Use 'next' or 'down'.")
