@@ -1988,10 +1988,10 @@ class XO():
     def ai_move(self, move=None, notice=None):
         from utils.bot import val
         
-        x,y = self.suggest()
-        guess = self.map[x][y]
-        
         def _notice(noti=None):
+            
+            x,y = self.suggest()
+            guess = self.map[x][y]
             
             if self.turn == "o":
                 board = f"gợi ý -> [{guess}]"
