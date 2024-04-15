@@ -1875,6 +1875,9 @@ class XO():
     def move(self, drt):
         r, c = self._curlc()
 
+        next_row = r
+        next_col = c
+        
         if drt == "next":
             if c < 2: next_col = c + 1
             elif c >= 2: next_col = 0
