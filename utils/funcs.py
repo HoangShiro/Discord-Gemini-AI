@@ -1944,6 +1944,7 @@ class XO():
             if all(value == values[0] for value in values) and values[0] is not None:
                 self.winner = values[0]  # Set the winner based on the winning symbol
                 self.loser = "o" if self.winner == "x" else "x"
+                self.notice = "Ấn ✨ join để new game."
                 self.in_match = False  # End the match
                 self.waiting = True
                 return True  # Indicate that a winner was found

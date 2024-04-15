@@ -1403,16 +1403,24 @@ async def xo_embed():
         
     title = f"{xo.iconX}{xo.iconO} Game!"
     des = "> Ấn ✨ join để tham gia."
+    icon1 = ""
+    icon2 = ""
     
     if xo.winner:
         now_chat = val.now_chat
-        xo.set('notice', "Ấn ✨ join để new game.")
         if xo.winner == "x":
             title = f"{Xname} là người chiến thắng! ✨"
             now_chat.append(f"X-O Game: {Xname} là người chiến thắng!")
+            
+            icon1 = "👑"
+            icon2 = ""
+            
         else:
             title = f"{Oname} là người chiến thắng! ✨"
             now_chat.append(f"X-O Game: {Oname} là người chiến thắng!")
+            
+            icon1 = ""
+            icon2 = "👑"
             
         if xo.ai_match:
             val.set('in_game', False)
@@ -1430,13 +1438,19 @@ async def xo_embed():
     board = f"{xo.icon()[0][0]}{xo.iconB1}{xo.icon()[0][1]}{xo.iconB1}{xo.icon()[0][2]}\n{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}\n{xo.icon()[1][0]}{xo.iconB1}{xo.icon()[1][1]}{xo.iconB1}{xo.icon()[1][2]}\n{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}\n{xo.icon()[2][0]}{xo.iconB1}{xo.icon()[2][1]}{xo.iconB1}{xo.icon()[2][2]}"
     
     notice = xo.notice
-    if xo.turn == "x": notice = f"Tới lượt của {Xname}."
-    else: notice = f"Tới lượt của {Oname}."
+    if xo.turn == "x":
+        icon1 = xo.iconS
+        icon2 = ""
+        notice = f"Tới lượt của {Xname}."
+    else:
+        icon1 = ""
+        icon2 = xo.iconS
+        notice = f"Tới lượt của {Oname}."
     
     
     embed=discord.Embed(title=title, description=des, color=color)
-    if Xname: embed.add_field(name=f"> {Xname} - {xo.iconX}", value="", inline=False)
-    if Oname: embed.add_field(name=f"> {Oname} - {xo.iconO}", value="", inline=False)
+    if Xname: embed.add_field(name=f"> {xo.iconX}: {Xname} {icon1}", value="", inline=False)
+    if Oname: embed.add_field(name=f"> {xo.iconO}: {Oname} {icon2}", value="", inline=False)
     if xo.in_match or xo.winner or xo.draw: embed.add_field(name="", value="\n", inline=False) 
     if xo.in_match or xo.winner or xo.draw: embed.add_field(name=board, value="", inline=False)
     if xo.in_match: embed.set_footer(text=notice)
