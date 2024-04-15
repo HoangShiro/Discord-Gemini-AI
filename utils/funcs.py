@@ -2003,7 +2003,7 @@ class XO():
                         board[row][col] = 'o'  # Try placing 'o'
                         if _check_win(board, 'o'):
                             board[row][col] = None  # Reset
-                            return row, col, "Hãy block đối thủ không sẽ thua"
+                            return row, col, "Đi nước này sẽ thắng"
                         else:
                             board[row][col] = None  # Reset
 
@@ -2014,7 +2014,7 @@ class XO():
                         board[row][col] = 'x'  # Try placing 'x'
                         if _check_win(board, 'x'):
                             board[row][col] = None  # Reset
-                            return row, col, "Đi nước này sẽ thắng"
+                            return row, col, "Hãy block đối thủ không sẽ thua"
                         else:
                             board[row][col] = None  # Reset
 
