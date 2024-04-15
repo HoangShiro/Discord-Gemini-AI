@@ -1977,7 +1977,7 @@ class XO():
         
         def _notice(noti=None):
             
-            x,y = self.suggest(self.board)
+            x,y = self.suggest(board=self.board)
             
             if self.turn == "o":
                 board = f"gợi ý -> [{x},{y}]"
