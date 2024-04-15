@@ -1221,7 +1221,9 @@ async def x_o_play(interaction: discord.Interaction):
 
 @bot.slash_command(name="xo_edit", description=f"Edit X-O emoji.")
 async def x_o_play(interaction: discord.Interaction, x:str=None, o:str=None, cursor:str=None, board1:str=None, board2:str=None, board3:str=None):
-    if interaction.user.id != val.owner_uid: return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    if not val.public:
+        if interaction.user.id != val.owner_uid:
+            return await interaction.response.send_message(val.no_perm, ephemeral=True)
     
     if x:
         val.set('iconX', x)
