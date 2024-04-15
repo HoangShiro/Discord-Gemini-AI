@@ -2009,42 +2009,16 @@ class XO():
         if notice: _notice()
 
         elif move:
+            chat = val.now_chat_ai.lower()
+            mv = None
             ok = False
-            turn = ""
-            if "a1" in val.now_chat_ai.lower():
-                ok = _move("a1")
-                turn = "a1"
-            elif "a2" in val.now_chat_ai.lower():
-                ok = _move("a2")
-                turn = "a2"
-            elif "a3" in val.now_chat_ai.lower():
-                ok = _move("a3")
-                turn = "a3"
-            elif "b1" in val.now_chat_ai.lower():
-                ok = _move("b1")
-                turn = "b1"
-            elif "b2" in val.now_chat_ai.lower():
-                ok = _move("b2")
-                turn = "b2"
-            elif "b3" in val.now_chat_ai.lower():
-                ok = _move("b3")
-                turn = "b3"
-            elif "c1" in val.now_chat_ai.lower():
-                ok = _move("c1")
-                turn = "c1"
-            elif "c2" in val.now_chat_ai.lower():
-                ok = _move("c2")
-                turn = "c2"
-            elif "c3" in val.now_chat_ai.lower():
-                ok = _move("c3")
-                turn = "c3"
-                
-            else:
-                ok = True
-                _notice(noti=f"Vị trí sai, hãy đi lại đúng vị trí.")
-            
-            if not ok:
-                _notice(noti=f"Vị trí [{turn}] không trống, hãy đi lại.")
+            for i in self.map:
+                for j in i:
+                    if j in chat:
+                        mv = j
+
+            if mv: ok = _move(mv)
+            if not ok: _notice(noti=f"Vị trí sai, hãy đi lại đúng vị trí.")
     
     def suggest(self):
         board = self.board
