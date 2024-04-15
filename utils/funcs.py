@@ -1937,35 +1937,33 @@ class XO():
 
     def check(self):
         win_conditions = [
-            [(0, 0), (0, 1), (0, 2)],  # Row 1
-            [(1, 0), (1, 1), (1, 2)],  # Row 2
-            [(2, 0), (2, 1), (2, 2)],  # Row 3
-            [(0, 0), (1, 0), (2, 0)],  # Column 1
-            [(0, 1), (1, 1), (2, 1)],  # Column 2
-            [(0, 2), (1, 2), (2, 2)],  # Column 3
-            [(0, 0), (1, 1), (2, 2)],  # Diagonal 1
-            [(2, 0), (1, 1), (0, 2)]  # Diagonal 2 
+            [(0, 0), (0, 1), (0, 2)],  # Row 1: a1, a2, a3
+            [(1, 0), (1, 1), (1, 2)],  # Row 2: b1, b2, b3
+            [(2, 0), (2, 1), (2, 2)],  # Row 3: c1, c2, c3
+            [(0, 0), (1, 0), (2, 0)],  # Column 1: a1, b1, c1
+            [(0, 1), (1, 1), (2, 1)],  # Column 2: a2, b2, c2
+            [(0, 2), (1, 2), (2, 2)],  # Column 3: a3, b3, c3
+            [(0, 0), (1, 1), (2, 2)],  # Diagonal: a1, b2, c3
+            [(2, 0), (1, 1), (0, 2)]   # Diagonal: c1, b2, a3 
         ]
 
         for condition in win_conditions:
             values = [self.board[row][col] for row, col in condition]
-            # Check if all values are the same and not None, but also ensure 
-            # that the middle cell is part of the winning condition 
-            if all(value == values[0] for value in values) and values[0] is not None and (1,1) in condition: 
-                self.winner = values[0] 
+            if all(value == values[0] for value in values) and values[0] is not None:
+                self.winner = values[0]  # Set the winner based on the winning symbol
                 self.loser = "o" if self.winner == "x" else "x"
                 self.notice = "Ấn ✨ join để new game."
-                self.in_match = False 
+                self.in_match = False  # End the match
                 self.waiting = True
-                return True 
+                return True  # Indicate that a winner was found
 
-        # Check for a draw 
+        # Check for a draw (no empty cells and no winner)
         if all(cell is not None for row in self.board for cell in row):
-            self.in_match = False 
-            self.draw = True 
-            return False 
+            self.in_match = False  # End the match
+            self.draw = True # Draw
+            return False  # Indicate a draw (no winner)
 
-        return False 
+        return False  # No winner or draw yet
     
     def icon(self):
         new_board = []
@@ -1995,6 +1993,7 @@ class XO():
             
             if self.turn == "o":
                 board = f"gợi ý -> [{x},{y}]"
+                print(board)
                 if not noti: noti = "X-O Game: Tới lượt bạn đi"
                 prompt = f"{noti}, {board}"
                 now_chat = val.now_chat
@@ -2104,7 +2103,7 @@ class XO():
         
         self.X = None # uid của player X
         self.O = None # uid của player O
-        self.cursor = None # Con trỏ
+        self.cursor = "0,0" # Con trỏ
         self.moved = None # Vừa đi
         self.turn = None # Lượt của X hoặc O
         self.waiting = True # Liệu bàn cờ có đang được tạo?
