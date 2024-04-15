@@ -2031,13 +2031,12 @@ class XO():
                     if board[row][col] is None:
                         return row, col
         
+        x,y = _suggest()
+        
         def _notice(noti=None):
-            
-            x,y = _suggest()
             
             if self.turn == "o":
                 board = f"gợi ý -> [{x},{y}]"
-                print(board)
                 if not noti: noti = "X-O Game: Tới lượt bạn đi"
                 prompt = f"{noti}, {board}"
                 now_chat = val.now_chat
@@ -2068,7 +2067,7 @@ class XO():
             
             if mv:
                 if self.turn == "o": ok = _move(mv)
-            if not ok: _notice(noti=f"Vị trí sai, hãy đi lại đúng vị trí.")
+            if not ok: _notice(noti=f"Vị trí sai, hãy đi lại đúng vị trí. Gợi ý -> [{x},{y}]")
           
     def update(self, val_name, value):
         if hasattr(self, val_name):
