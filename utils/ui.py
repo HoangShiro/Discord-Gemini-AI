@@ -1400,6 +1400,10 @@ async def xo_embed():
 {xo.iconB1}{xo.icon()[2][0]}{xo.iconB1}{xo.icon()[2][1]}{xo.iconB1}{xo.icon()[2][2]}{xo.iconB1}
 {xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}"""
     
+    print(xo.board[0])
+    print(xo.board[1])
+    print(xo.board[2])
+    
     if xo.X:
         user = await bot.fetch_user(xo.X)
         Xname = user.display_name

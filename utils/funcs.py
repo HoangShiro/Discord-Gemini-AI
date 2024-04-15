@@ -1960,10 +1960,6 @@ class XO():
     def icon(self):
         new_board = []
         
-        print(self.board[0])
-        print(self.board[1])
-        print(self.board[2])
-        
         current_row, current_col = None, None
         for i in range(len(self.map)):
             for j in range(len(self.map[i])):
