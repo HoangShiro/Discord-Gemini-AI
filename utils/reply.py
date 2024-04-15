@@ -904,7 +904,7 @@ async def ai_game():
     
     if xo.ai_match and xo.in_match:
         
-        xo.ai_move(move=True)
+        #xo.ai_move(move=True)
         
         embed, view = await xo_embed()
         inter = val.now_inter

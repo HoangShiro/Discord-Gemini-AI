@@ -1902,24 +1902,22 @@ class XO():
         if not self.in_match:
             raise Exception("Match has not started yet.")
 
-        current_row, current_col = None, None
-        for i in range(len(self.map)):
-            for j in range(len(self.map[i])):
-                if self.map[i][j] == self.cursor:
-                    current_row, current_col = i, j
-                    break  # Exit the inner loop once cursor is found
+        r, c = None, None
+        for i in self.map:
+            for j in i:
+                if self.cursor == self.map[i][j]:
+                    r, c = i, j
 
         # Handle the case where cursor is not found in the map
-        if current_row is None or current_col is None:
+        if not r or not c:
             self.notice = "Lỗi vị trí rồi!"
-            return False
+            r, c = 0, 0
 
-        # Access board element only if cursor is found
-        if self.board[current_row][current_col] is None:
-            self.board[current_row][current_col] = self.turn
+        if not self.board[r][c]:
+            self.board[r][c] = self.turn
             # Switch turns after a successful selection
             self.turn = "o" if self.turn == "x" else "x"
-            check = self.check()
+            self.check()
             self.moved = True
             return True
         else:
@@ -1998,8 +1996,8 @@ class XO():
                 val.set('now_chat', now_chat)
                 val.set('CD', 1)
         
-        def _move(mov):
-            self.cursor = mov
+        def _move(mv):
+            self.cursor = mv
             return self.select()
         
         if notice: _notice()
