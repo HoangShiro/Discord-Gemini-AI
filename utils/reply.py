@@ -903,7 +903,7 @@ async def ai_game():
     if val.chat_csl: print(f"{get_real_time()}> [{val.ai_name} - {val.ai_char}]: {val.now_chat_ai}")
     
     if xo.ai_match and xo.in_match:
-        
+        print("AI MOVE")
         xo.ai_move(move=True)
         
         embed, view = await xo_embed()

@@ -1391,7 +1391,6 @@ async def xo_embed():
     Xname = None
     Oname = None
     
-    board = xo.icon()
     board = f"""{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}
 {xo.iconB1}{xo.icon()[0][0]}{xo.iconB1}{xo.icon()[0][1]}{xo.iconB1}{xo.icon()[0][2]}{xo.iconB1}
 {xo.iconB1}{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB1}
