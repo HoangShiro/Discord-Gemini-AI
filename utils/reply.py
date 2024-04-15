@@ -774,7 +774,7 @@ async def cmd_msg():
     
     # Music
     if "song_mentioned" in cmd or "music_start" in cmd:
-        start = True if "music_start" in cmd else False
+        start = True if ("music_start" in cmd or re.search(r'mở|play|phát|hát', clear_chat, re.IGNORECASE)) else False
         
         guild = bot.get_guild(val.ai_guild)
         if guild:
