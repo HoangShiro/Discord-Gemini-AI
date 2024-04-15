@@ -1995,7 +1995,7 @@ class XO():
                 #board = f"gợi ý -> [{x},{y}]"
                 board = ""
                 print(board)
-                if not noti: noti = "X-O Game: Tới lượt bạn đi"
+                if not noti: noti = "X-O Game: Tới lượt bạn đi. vd: 1,1"
                 prompt = f"{noti}, {board}"
                 now_chat = val.now_chat
                 now_chat.append(prompt)
