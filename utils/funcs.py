@@ -2041,6 +2041,7 @@ class XO():
             
             if self.turn == "o":
                 board = f"gợi ý -> [{x},{y}] {no}"
+                if val.cmd_csl: print(board)
                 if not noti: noti = "X-O Game: Tới lượt bạn đi"
                 prompt = f"{noti}, {board}"
                 now_chat = val.now_chat
