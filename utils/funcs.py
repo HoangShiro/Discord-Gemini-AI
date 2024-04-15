@@ -2035,8 +2035,6 @@ class XO():
             
         x,y,no = _suggest()
         
-        if not x and not y: self.clear()
-        
         if not no: no = ""
         
         def _notice(noti=None):
