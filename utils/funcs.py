@@ -1761,8 +1761,11 @@ class Music:
                 await music_show(interaction=inter, play_bt=True, rmv_bt=None, edit=True, ermv_bt=True, msg_edit=msg_edit)
                 end = True
                 break
+
+        if not end:
+            if not msg_edit: await inter.delete_original_response()
+            else: await inter.delete()
         
-        if not end: await inter.delete_original_response()
     # Hàm play song
     async def music_play(self, inter: discord.Interaction, msg_edit=False):
         from utils.bot import mu
