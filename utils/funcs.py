@@ -2046,10 +2046,10 @@ class XO():
                 
             else:
                 ok = True
-                _notice(noti=f"Vị trí sai, hãy đi lại đúng vị trí. Gợi ý -> [{guess}]")
+                _notice(noti=f"Vị trí sai, hãy đi lại đúng vị trí.")
             
             if not ok:
-                _notice(noti=f"Vị trí [{turn}] không trống, hãy đi lại. Gợi ý -> [{guess}]")
+                _notice(noti=f"Vị trí [{turn}] không trống, hãy đi lại.")
     
     def suggest(self):
         board = self.board
