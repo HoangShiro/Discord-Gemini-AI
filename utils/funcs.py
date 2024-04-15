@@ -2002,7 +2002,7 @@ class XO():
                     if board[row][col] is None:
                         #board[row][col] = 'o'  # Try placing 'o'
                         if _check_win(board, 'o'):
-                            return row, col
+                            return row, col, "Đi nước này sẽ thắng"
                         else:
                             board[row][col] = None  # Reset
 
@@ -2012,31 +2012,37 @@ class XO():
                     if board[row][col] is None:
                         #board[row][col] = 'x'  # Try placing 'x'
                         if _check_win(board, 'x'):
-                            return row, col
+                            return row, col, "Hãy block đối thủ không sẽ thua"
                         else:
                             board[row][col] = None  # Reset
 
             # Choose center if available
             if board[1][1] is None:
-                return 1, 1
+                return 1, 1, None
 
             # Choose a corner if available
             for row, col in [(0, 0), (0, 2), (2, 0), (2, 2)]:
                 if board[row][col] is None:
-                    return row, col
+                    return row, col, None
 
             # Choose any available space
             for row in range(3):
                 for col in range(3):
                     if board[row][col] is None:
-                        return row, col
+                        return row, col, None
+
+            return None, None, None
+            
+        x,y,no = _suggest()
         
-        x,y = _suggest()
+        if not x and not y: self.clear()
+        
+        if not no: no = ""
         
         def _notice(noti=None):
             
             if self.turn == "o":
-                board = f"gợi ý -> [{x},{y}]"
+                board = f"gợi ý -> [{x},{y}] {no}"
                 if not noti: noti = "X-O Game: Tới lượt bạn đi"
                 prompt = f"{noti}, {board}"
                 now_chat = val.now_chat

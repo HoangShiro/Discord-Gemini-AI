@@ -1411,8 +1411,8 @@ async def xo_embed():
     icon1 = ""
     icon2 = ""
     
+    now_chat = val.now_chat
     if xo.winner:
-        now_chat = val.now_chat
         if xo.winner == "x":
             title = f"{Xname} là người chiến thắng! ✨"
             now_chat.append(f"X-O Game: {Xname} là người chiến thắng!")
@@ -1436,6 +1436,11 @@ async def xo_embed():
         
     if xo.draw:
         title = f"Hoà rồi! 💫"
+        
+        now_chat.append(f"X-O Game: Hoà rồi!")
+        val.set('in_game', False)
+        val.set('now_chat', now_chat)
+        val.set('CD', 1)
         des = board
         
     if xo.waiting and not xo.winner and not xo.draw: des = "> Cần thêm 1 user nữa để bắt đầu!"
