@@ -116,8 +116,7 @@ async def reply_id(channel=None, rep=False):
 async def send_embed(embed=None, view=None, content=None):
     channel = await get_channel()
     if channel:
-        if embed:
-            return await channel.send(content=content, embed=embed, view=view)
+        if embed or content: return await channel.send(content=content, embed=embed, view=view)
 
 # Set tính cách nhân vật dựa vào prompt
 async def char_check():
