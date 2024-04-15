@@ -918,6 +918,8 @@ async def ai_game():
     
     if val.chat_csl: print(f"{get_real_time()}> [{val.ai_name} - {val.ai_char}]: {val.now_chat_ai}")
     
+    if val.tts_toggle and not mu.sound_playing: await voice_make_tts(val.now_chat_ai) # Gửi voice
+    
     if xo.ai_match and xo.in_match:
         xo.ai_move(move=True)
         
