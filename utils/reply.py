@@ -818,8 +818,8 @@ async def cmd_msg():
     if "illust_mentioned" in cmd:
         found = False
 
-        nsfw = re.search(r'nsfw|sex')
-        ani = re.search(r'video|ani|mp4')
+        nsfw = re.search(r'nsfw|sex', clear_chat, re.IGNORECASE)
+        ani = re.search(r'video|ani|mp4', clear_chat, re.IGNORECASE)
         
         async def _get_keywords():
             prompt = txt_read("utils/find_character.txt").replace("[chat]", clear_chat)
