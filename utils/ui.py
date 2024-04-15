@@ -645,6 +645,7 @@ async def xstart_atv(interaction: discord.Interaction):
     if xo.ai_match:
         inter = await send_embed(embed=embed, view=view)
         val.set('now_inter', inter, save=False)
+        await interaction.delete_original_response()
     else: await interaction.response.edit_message(embed=embed, view=view)
 
 async def xnext_atv(interaction: discord.Interaction):
