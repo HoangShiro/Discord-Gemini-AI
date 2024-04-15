@@ -1960,6 +1960,10 @@ class XO():
     def icon(self):
         new_board = []
         
+        print(self.board[0])
+        print(self.board[1])
+        print(self.board[2])
+        
         current_row, current_col = None, None
         for i in range(len(self.map)):
             for j in range(len(self.map[i])):
@@ -1988,17 +1992,8 @@ class XO():
         guess = self.map[x][y]
         
         def _notice(noti=None):
-            new_board = self.map  # Tạo bản sao 'map'
-
-            for i in range(3):
-                for j in range(3):
-                    if self.board[i][j] == "x":
-                        new_board[i][j] = "x"
-                    elif self.board[i][j] == "o":
-                        new_board[i][j] = "o"
             
             if self.turn == "o":
-                #board = f"đây là bàn cờ X-O hiện tại: {new_board}"
                 board = f"gợi ý -> [{guess}]"
                 if not noti: noti = "X-O Game: Tới lượt bạn đi"
                 prompt = f"{noti}, {board}"
