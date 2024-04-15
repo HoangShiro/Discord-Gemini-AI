@@ -1867,8 +1867,8 @@ class XO():
         
         loc = self.cursor.split(",")
         
-        r = loc[0].strip()
-        c = loc[1].strip()
+        r = int(loc[0].strip())
+        c = int(loc[1].strip())
         
         return r, c
         
