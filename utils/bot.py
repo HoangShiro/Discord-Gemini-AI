@@ -1214,7 +1214,8 @@ async def x_o_play(interaction: discord.Interaction):
     if not val.public:
         if interaction.user.id != val.owner_uid:
             return await interaction.response.send_message(val.no_perm, ephemeral=True)
-    
+        
+    xo.clear()
     embed, view = await xo_embed()
     await interaction.response.send_message(embed=embed, view=view)
 

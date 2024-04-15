@@ -1876,7 +1876,7 @@ class XO():
                     break
 
         if drt == "next":
-            next_col = (current_col + 1) % len(self.map[0])  # Move right, wrap around if needed
+            next_col = (current_col + 1) % len(self.map)  # Move right, wrap around if needed
             next_row = current_row
         elif drt == "down":
             next_row = (current_row + 1) % len(self.map)  # Move down, wrap around if needed
@@ -2044,7 +2044,7 @@ class XO():
                 _notice(noti="Vị trí sai, hãy chắc rằng bạn đọc đúng vị trí muốn đi trên bàn cờ ví dụ [a1]")
             
             if not ok:
-                _notice(noti=f"Vị trí [{turn}] đã đi, hãy chắc rằng bạn đọc đúng vị trí muốn đi trên bàn cờ")
+                _notice(noti=f"Vị trí [{turn}] không trống, hãy chắc rằng bạn đọc đúng vị trí muốn đi trên bàn cờ")
             
     def update(self, val_name, value):
         if hasattr(self, val_name):
