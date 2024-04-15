@@ -1910,23 +1910,11 @@ class XO():
             raise Exception("Match has not started yet.")
 
         r, c = self._curlc()
-
-        print(f"CURSOR: {self.cursor}")
-        print(f"POINT POSITION: {self.board[r][c]}")
-        print()
-        print(self.board[0])
-        print(self.board[1])
-        print(self.board[2])
         
         if not self.board[r][c]:
             self.board[r][c] = self.turn
             # Switch turns after a successful selection
             self.turn = "o" if self.turn == "x" else "x"
-            
-            print()
-            print(self.board[0])
-            print(self.board[1])
-            print(self.board[2])
             
             self.check()
             self.moved = True
@@ -1989,13 +1977,12 @@ class XO():
         
         def _notice(noti=None):
             
-            #x,y = self.suggest()
+            x,y = self.suggest()
             
             if self.turn == "o":
-                #board = f"gợi ý -> [{x},{y}]"
-                board = ""
+                board = f"gợi ý -> [{x},{y}]"
                 print(board)
-                if not noti: noti = "X-O Game: Tới lượt bạn đi. vd: 1,1"
+                if not noti: noti = "X-O Game: Tới lượt bạn đi"
                 prompt = f"{noti}, {board}"
                 now_chat = val.now_chat
                 now_chat.append(prompt)
@@ -2047,40 +2034,39 @@ class XO():
 
             return False
         
-        b = self.board
         # Check for winning move
         for row in range(3):
             for col in range(3):
-                if b[row][col] is None:
-                    b[row][col] = 'o'  # Try placing 'o'
-                    if _check_win(b, 'o'):
+                if self.board[row][col] is None:
+                    self.board[row][col] = 'o'  # Try placing 'o'
+                    if _check_win(self.board, 'o'):
                         return row, col
                     else:
-                        b[row][col] = None  # Reset
+                        self.board[row][col] = None  # Reset
 
         # Check for blocking move
         for row in range(3):
             for col in range(3):
-                if b[row][col] is None:
-                    b[row][col] = 'x'  # Try placing 'x'
-                    if _check_win(b, 'x'):
+                if self.board[row][col] is None:
+                    self.board[row][col] = 'x'  # Try placing 'x'
+                    if _check_win(self.board, 'x'):
                         return row, col
                     else:
-                        b[row][col] = None  # Reset
+                        self.board[row][col] = None  # Reset
 
         # Choose center if available
-        if b[1][1] is None:
+        if self.board[1][1] is None:
             return 1, 1
 
         # Choose a corner if available
         for row, col in [(0, 0), (0, 2), (2, 0), (2, 2)]:
-            if b[row][col] is None:
+            if self.board[row][col] is None:
                 return row, col
 
         # Choose any available space
         for row in range(3):
             for col in range(3):
-                if b[row][col] is None:
+                if self.board[row][col] is None:
                     return row, col
           
     def update(self, val_name, value):
