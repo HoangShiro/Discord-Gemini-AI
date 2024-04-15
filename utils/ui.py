@@ -1435,10 +1435,10 @@ async def xo_embed():
     
     
     embed=discord.Embed(title=title, description=des, color=color)
-    if Xname and not xo.winner and not xo.draw: embed.add_field(name=f"> {Xname} - {xo.iconX}", value="", inline=False)
-    if Oname and not xo.winner and not xo.draw: embed.add_field(name=f"> {Oname} - {xo.iconO}", value="", inline=False)
-    if xo.in_match: embed.add_field(name="", value="\n", inline=False) 
-    if xo.in_match: embed.add_field(name=board, value="", inline=False)
+    if Xname: embed.add_field(name=f"> {Xname} - {xo.iconX}", value="", inline=False)
+    if Oname: embed.add_field(name=f"> {Oname} - {xo.iconO}", value="", inline=False)
+    if xo.in_match or xo.winner or xo.draw: embed.add_field(name="", value="\n", inline=False) 
+    if xo.in_match or xo.winner or xo.draw: embed.add_field(name=board, value="", inline=False)
     if xo.in_match: embed.set_footer(text=notice)
     
     view = View(timeout=None)
