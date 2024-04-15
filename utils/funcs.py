@@ -1844,13 +1844,9 @@ class XO():
                     [None, None, None],
                     [None, None, None]] # Bàn cờ hiện tại
         
-        self.map = [["a1", "a2", "a3"],
-                    ["b1", "b2", "b3"],
-                    ["c1", "c2", "c3"]] # Map gốc của bàn cờ
-        
         self.X = None # uid của player X
         self.O = None # uid của player O
-        self.cursor = "a1" # Con trỏ
+        self.cursor = "0,0" # Con trỏ
         self.moved = None # Vừa đi
         self.turn = None # Lượt của X hoặc O
         self.waiting = False # Liệu bàn cờ có đang được tạo?
@@ -1868,16 +1864,11 @@ class XO():
         self.iconS = val.iconS
     
     def _curlc(self):
-        r, c = None, None
-        for i in range(len(self.map)):
-            for j in range(len(self.map[i])):
-                if self.map[i][j] == self.cursor:
-                    r, c = i, j
-                    break
         
-        if not r or not c:
-            self.notice = "Lỗi vị trí rồi!"
-            r, c = 0, 0
+        loc = self.cursor.split(",")
+        
+        r = loc[0].strip()
+        c = loc[1].strip()
         
         return r, c
         
@@ -1885,15 +1876,17 @@ class XO():
         r, c = self._curlc()
 
         if drt == "next":
-            next_col = (c + 1) % len(self.map)  # Move right, wrap around if needed
+            if c < 2: next_col = c + 1
+            elif c >= 2: next_col = 0
             next_row = r
         elif drt == "down":
-            next_row = (r + 1) % len(self.map)  # Move down, wrap around if needed
+            if r < 2: next_col = r + 1
+            elif r >= 2: next_col = 0
             next_col = c
         else:
             raise ValueError("Invalid direction. Use 'next' or 'down'.")
 
-        self.cursor = self.map[next_row][next_col]
+        self.cursor = f"{next_row},{next_col}"
         self.moved = False
         
     def start(self):
@@ -1971,13 +1964,8 @@ class XO():
     def icon(self):
         new_board = []
         
-        current_row, current_col = None, None
-        for i in range(len(self.map)):
-            for j in range(len(self.map[i])):
-                if self.map[i][j] == self.cursor:
-                    current_row, current_col = i, j
-                    break
-                
+        r, c = self._curlc()
+        
         for row in self.board:
             new_row = []
             for cell in row:
@@ -1989,7 +1977,7 @@ class XO():
                     new_row.append(self.iconB)
             new_board.append(new_row)
                 
-        if not self.moved: new_board[current_row][current_col] = self.iconS
+        if not self.moved: new_board[r][c] = self.iconS
         return new_board
     
     def ai_move(self, move=None, notice=None):
@@ -1998,10 +1986,9 @@ class XO():
         def _notice(noti=None):
             
             x,y = self.suggest()
-            guess = self.map[x][y]
             
             if self.turn == "o":
-                board = f"gợi ý -> [{guess}]"
+                board = f"gợi ý -> [{x},{y}]"
                 if not noti: noti = "X-O Game: Tới lượt bạn đi"
                 prompt = f"{noti}, {board}"
                 now_chat = val.now_chat
@@ -2017,13 +2004,20 @@ class XO():
 
         elif move:
             chat = val.now_chat_ai.lower()
+            pattern = r"\d+"
+            num = []
             mv = None
-            ok = False
-            for i in self.map:
-                for j in i:
-                    if j in chat:
-                        mv = j
-
+            
+            for string in chat:
+                numbers = re.findall(pattern, string)
+                for i in numbers:
+                    if i: num.append(int(i))
+            
+            if len(num) == 2:
+                if 0 <= num[0] <=2:
+                    if 0 <= num[1] <=2:
+                        mv = ",".join(num)
+            
             if mv: ok = _move(mv)
             if not ok: _notice(noti=f"Vị trí sai, hãy đi lại đúng vị trí.")
     
