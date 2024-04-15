@@ -618,6 +618,7 @@ async def mrmv_atv(interaction: discord.Interaction):
 # X-O
 async def xstart_atv(interaction: discord.Interaction):
     from utils.bot import bot, val, xo
+    from utils.reply import send_embed
     
     if xo.winner or xo.draw: xo.clear()
     
@@ -632,10 +633,19 @@ async def xstart_atv(interaction: discord.Interaction):
         val.set('in_game', True)
         val.set('ignore_chat', now_chat)
     
-    if xo.X and xo.O: xo.start()
+    if xo.X and xo.O:
+        if xo.X == xo.O:
+            xo.set('O', bot.user.id)
+            xo.set('ai_match', True)
+            val.set('in_game', True)
+        xo.start()
     
     embed, view = await xo_embed()
-    await interaction.response.edit_message(embed=embed, view=view)
+    
+    if xo.ai_match:
+        inter = await send_embed(embed=embed, view=view)
+        val.set('now_inter', inter, save=False)
+    else: await interaction.response.edit_message(embed=embed, view=view)
 
 async def xnext_atv(interaction: discord.Interaction):
     from utils.bot import bot, val, xo
