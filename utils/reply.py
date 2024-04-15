@@ -818,6 +818,9 @@ async def cmd_msg():
     if "illust_mentioned" in cmd:
         found = False
 
+        nsfw = re.search(r'nsfw|sex')
+        ani = re.search(r'video|ani|mp4')
+        
         async def _get_keywords():
             prompt = txt_read("utils/find_character.txt").replace("[chat]", clear_chat)
             try: return await gemini_cmd(prompt)
@@ -830,13 +833,19 @@ async def cmd_msg():
             async def _start_search():
                 gacha = re.search(r'ngẫu nhiên|bất kỳ|random|nào đó|tuỳ ý|gacha', clear_chat, re.IGNORECASE)
                 limit = 1; page = 1; mode = "safebooru"; random = False
-                if not val.public: mode = val.search_mode
+                if not val.public:
+                    if nsfw: keywords = keywords + " " + "sex"
+                    if ani: keywords = keywords + " " + "video"
+                    mode = val.search_mode
                 else:
                     guild = bot.get_guild(val.ai_guild)
                     if guild:
                         channel = guild.get_channel(val.ai_channel)
                         if channel:
-                            if channel.nsfw: mode = val.search_mode
+                            if channel.nsfw:
+                                if nsfw: keywords = keywords + " " + "sex"
+                                if ani: keywords = keywords + " " + "video"
+                                mode = val.search_mode
                 if gacha: limit = 10
                 try: return await art.search_one(keywords=keywords, limit=limit, page=page, random=random, gacha=gacha, block=val.img_block, mode=mode)
                 except Exception as e:
