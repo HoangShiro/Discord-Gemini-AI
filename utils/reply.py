@@ -830,12 +830,12 @@ async def cmd_msg():
         keywords = keywords.strip().lower().replace(" ", "_").replace("\n", " ")
         if val.cmd_csl: print(f"{get_real_time()}> Art keyword: ", keywords)
         if keywords:
-            async def _start_search():
+            async def _start_search(keys):
                 gacha = re.search(r'ngẫu nhiên|bất kỳ|random|nào đó|tuỳ ý|gacha', clear_chat, re.IGNORECASE)
                 limit = 1; page = 1; mode = "safebooru"; random = False
                 if not val.public:
-                    if nsfw: keywords = keywords + " " + "sex"
-                    if ani: keywords = keywords + " " + "video"
+                    if nsfw: keys = keys + " " + "sex"
+                    if ani: keys = keys + " " + "video"
                     mode = val.search_mode
                 else:
                     guild = bot.get_guild(val.ai_guild)
@@ -843,15 +843,15 @@ async def cmd_msg():
                         channel = guild.get_channel(val.ai_channel)
                         if channel:
                             if channel.nsfw:
-                                if nsfw: keywords = keywords + " " + "sex"
-                                if ani: keywords = keywords + " " + "video"
+                                if nsfw: keys = keys + " " + "sex"
+                                if ani: keys = keys + " " + "video"
                                 mode = val.search_mode
                 if gacha: limit = 10
-                try: return await art.search_one(keywords=keywords, limit=limit, page=page, random=random, gacha=gacha, block=val.img_block, mode=mode)
+                try: return await art.search_one(keywords=keys, limit=limit, page=page, random=random, gacha=gacha, block=val.img_block, mode=mode)
                 except Exception as e:
                     print(f"{get_real_time()}> Lỗi khi tìm art: ", e)
                     return None
-            img_url, fixkws = await _start_search()
+            img_url, fixkws = await _start_search(keywords)
             if val.cmd_csl: print(f"{get_real_time()}> Art found: ", fixkws)
             
             if fixkws: noti = f"*Bạn vừa gửi artwork: {fixkws}*"
