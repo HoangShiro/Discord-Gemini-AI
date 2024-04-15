@@ -1337,13 +1337,14 @@ async def art_embed(title=None, des=None, img_url: str=None, footer=None, slide=
     return content, embed, view
 
 # Music show
-async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True, edit=False, resp_edit=False, ermv_bt=True):
+async def music_show(interaction: discord.Interaction, play_bt=None, rmv_bt=True, edit=False, resp_edit=False, msg_edit=False, ermv_bt=True):
     
     embed, view = await music_embed(play_bt=play_bt, rmv_bt=rmv_bt, ermv_bt=ermv_bt)
     
     msg = None
-    if edit: await interaction.edit_original_response(embed=embed, view=view)
+    if edit and not msg_edit: await interaction.edit_original_response(embed=embed, view=view)
     elif resp_edit: await interaction.response.edit_message(embed=embed, view=view)
+    elif msg_edit: await interaction.edit(embed=embed, view=view)
     else: msg = await interaction.response.send_message(embed=embed, view=view)
     
     return msg

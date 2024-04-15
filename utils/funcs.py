@@ -1710,7 +1710,7 @@ class Music:
             print(f"Error: Variable '{val_name}' not found.")
 
     # Hàm đếm tiến
-    async def count_to_max(self, inter: discord.Interaction, update=False):
+    async def count_to_max(self, inter: discord.Interaction, update=False, msg_edit=False):
         from utils.bot import mu
         from utils.ui import music_show
 
@@ -1748,7 +1748,7 @@ class Music:
             progress_bar = _create_progress_bar(current_time, max_seconds)
             mu.set("sound_time", f"{current_str} [{progress_bar}] {end_str}")
 
-            if update: await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
+            if update: await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False, msg_edit=msg_edit)
 
             # Sleep for a short duration to avoid overwhelming the UI
             await asyncio.sleep(2)
@@ -1758,13 +1758,13 @@ class Music:
                 mu.set("sound_playing", False)
                 mu.set("sound_time", "Đã kết thúc.")
                 mu.set('sound_cap', "")
-                await music_show(interaction=inter, play_bt=True, rmv_bt=None, edit=True, ermv_bt=True)
+                await music_show(interaction=inter, play_bt=True, rmv_bt=None, edit=True, ermv_bt=True, msg_edit=msg_edit)
                 end = True
                 break
         
         if not end: await inter.delete_original_response()
     # Hàm play song
-    async def music_play(self, inter: discord.Interaction):
+    async def music_play(self, inter: discord.Interaction, msg_edit=False):
         from utils.bot import mu
         from utils.funcs import sob_play
         from utils.ui import music_show
@@ -1775,7 +1775,7 @@ class Music:
         mu.set('sound_ctn_se', True)
         
         if not os.path.exists(file):
-            asyncio.create_task(self.count_to_max(inter=inter, update=True))
+            asyncio.create_task(self.count_to_max(inter=inter, update=True, msg_edit=msg_edit))
             asyncio.create_task(sob_play("now.mp3"))
             return False
 
@@ -1793,7 +1793,7 @@ class Music:
                     captions.append((start_time, duration, text))
                 except ValueError: pass
 
-        asyncio.create_task(self.count_to_max(inter=inter, update=True))
+        asyncio.create_task(self.count_to_max(inter=inter, update=True, msg_edit=msg_edit))
         asyncio.create_task(sob_play("now.mp3"))
 
         # Play cap with datetime
@@ -1807,13 +1807,13 @@ class Music:
                     if text != mu.sound_cap and text not in printed_captions:
                         printed_captions.add(text)
                         mu.set('sound_cap', text)  # Update current caption
-                        await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
+                        await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False, msg_edit=msg_edit)
                     found_caption = True
                     break
 
             if not found_caption and mu.sound_cap:  # Caption ended
                 mu.set('sound_cap', "。。。")  # Reset current caption
-                await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False)
+                await music_show(interaction=inter, play_bt=None, rmv_bt=True, edit=True, ermv_bt=False, msg_edit=msg_edit)
 
             if elapsed_time > captions[-1][0] + captions[-1][1]:
                 break

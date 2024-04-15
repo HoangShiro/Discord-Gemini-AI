@@ -37,7 +37,7 @@ class AllStatus:
         self.pr_vch_id = None               # ID voice channel cuối cùng mà bot kết nối tới
         self.pr_vch = None                  # Voice channel cuối cùng
         self.last_vch_id = None             # Lưu lại voice channel cuối
-        self.now_inter:discord.Interaction = None # interaction hiện tại của bot
+        self.now_inter:discord.Message = None # interaction hiện tại của bot
         
         # Chat area - AI
         self.ai_chat = ""                   # Chat gần nhất của bot

@@ -774,6 +774,8 @@ async def cmd_msg():
     
     # Music
     if "song_mentioned" in cmd or "music_start" in cmd:
+        start = True if "music_start" in cmd else False
+        
         guild = bot.get_guild(val.ai_guild)
         if guild:
             if not guild.voice_client:
@@ -793,6 +795,8 @@ async def cmd_msg():
             
             embed, view = await music_embed(play_bt=True, rmv_bt=False, ermv_bt=True)
             inter = await send_embed(embed=embed, view=view)
+            
+            if start: await mu.music_play(inter=inter, msg_edit=True)
             
     if mu.sound_playing and "music_stop" in cmd: await sob_stop()
         
