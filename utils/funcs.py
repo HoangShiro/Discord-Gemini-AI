@@ -2027,13 +2027,32 @@ class XO():
             if not ok: _notice(noti=f"Vị trí sai, hãy đi lại đúng vị trí.")
     
     def suggest(self):
+        def _check_win(board, player):
+            # Check rows
+            for row in board:
+                if all(cell == player for cell in row):
+                    return True
+
+            # Check columns
+            for col in range(3):
+                if all(board[row][col] == player for row in range(3)):
+                    return True
+
+            # Check diagonals
+            if all(board[i][i] == player for i in range(3)):
+                return True
+            if all(board[i][2 - i] == player for i in range(3)):
+                return True
+
+            return False
+        
         board = self.board
         # Check for winning move
         for row in range(3):
             for col in range(3):
                 if board[row][col] is None:
                     board[row][col] = 'o'  # Try placing 'o'
-                    if self._check_win(board, 'o'):
+                    if _check_win(board, 'o'):
                         return row, col
                     else:
                         board[row][col] = None  # Reset
@@ -2043,7 +2062,7 @@ class XO():
             for col in range(3):
                 if board[row][col] is None:
                     board[row][col] = 'x'  # Try placing 'x'
-                    if self._check_win(board, 'x'):
+                    if _check_win(board, 'x'):
                         return row, col
                     else:
                         board[row][col] = None  # Reset
@@ -2062,26 +2081,7 @@ class XO():
             for col in range(3):
                 if board[row][col] is None:
                     return row, col
-    
-    def _check_win(self, board, player):
-        # Check rows
-        for row in board:
-            if all(cell == player for cell in row):
-                return True
-
-        # Check columns
-        for col in range(3):
-            if all(board[row][col] == player for row in range(3)):
-                return True
-
-        # Check diagonals
-        if all(board[i][i] == player for i in range(3)):
-            return True
-        if all(board[i][2 - i] == player for i in range(3)):
-            return True
-
-        return False
-    
+          
     def update(self, val_name, value):
         if hasattr(self, val_name):
             current_value = getattr(self, val_name)
