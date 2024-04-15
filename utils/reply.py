@@ -889,7 +889,7 @@ async def cmd_msg_user():
         val.set('now_chat', now_chat)
 
     if x_o:
-        chat = "X-O Game: Khi bàn cờ xuất hiện hãy đi nước cờ bằng cách chat theo mã hiệu như 'a1' hoặc 'b2',... chỉ đi những nước cờ đang trống trên bàn cờ. Sẵn sàng?"
+        chat = "X-O Game: Bạn có thể đi theo nước đi gợi ý. Game sắp bắt đầu rồi, sẵn sàng?"
         now_chat = val.now_chat
         now_chat.insert(0, chat)
         val.set('now_chat', now_chat)
