@@ -1069,7 +1069,7 @@ def remove_preset(name: str):
   
 # New chat
 async def new_chat():
-    from utils.bot import val, mu
+    from utils.bot import val, mu, xo
     from utils.api import chat
     from utils.ui import edit_last_msg
     
@@ -1109,6 +1109,9 @@ async def new_chat():
     val.set('one_cmd', 0)
     
     mu.set('sound_playing', False)
+    
+    xo.clear()
+    
     if val.public:
         public_remind = load_prompt("saves/public.txt")
         chat.history.extend(public_remind)

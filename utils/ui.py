@@ -626,7 +626,6 @@ async def xstart_atv(interaction: discord.Interaction):
         elif not xo.O: xo.set('O', interaction.user.id)
     else:
         xo.set('X', interaction.user.id)
-        xo.set('O', bot.user.id)
         
         now_chat = val.ignore_chat
         now_chat.append(f"X-O Game: {interaction.user.display_name} vừa bắt đầu game mới với bạn.")

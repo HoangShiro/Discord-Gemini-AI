@@ -862,14 +862,18 @@ async def cmd_msg():
         await status_busy_set()
     
     # X-O
-    if "x_o" in cmd and not (xo.winner or xo.draw):
-        xo.set('waiting', True)
-        xo.set('ai_match', True)
-        val.set('in_game', True)
-        embed, view = await xo_embed()
-        inter = await send_embed(embed=embed, view=view)
+    if "x_o" in cmd and not xo.in_match:
+        if not xo.winner or not xo.draw: 
+            xo.set('waiting', True)
+            xo.set('ai_match', True)
+            xo.set('O', bot.user.id)
+            val.set('in_game', True)
+            embed, view = await xo_embed()
+            inter = await send_embed(embed=embed, view=view)
 
-        val.set('now_inter', inter, save=False)
+            val.set('now_inter', inter, save=False)
+        else: xo.clear()
+        
         
 async def cmd_msg_user():
     from utils.bot import val
