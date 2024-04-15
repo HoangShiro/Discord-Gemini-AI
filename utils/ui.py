@@ -1456,6 +1456,7 @@ async def xo_embed():
     if xo.waiting and not xo.winner and not xo.draw:
         if not xo.X: des = f"> {xo.iconX} - Ấn `✨ join` để tham gia."
         if not xo.O: des = f"> {xo.iconO} - Ấn `✨ join` để tham gia."
+        if not xo.X and not xo.O: des = f"> {xo.iconX} - Ấn `✨ join` để tham gia.\n> {xo.iconO} - Ấn `✨ join` để tham gia."
     if xo.in_match: des = board
     
     notice = xo.notice
