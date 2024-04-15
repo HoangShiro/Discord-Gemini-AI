@@ -1394,6 +1394,15 @@ async def xo_embed():
     Xname = None
     Oname = None
     
+    board = xo.icon()
+    board = f"""{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}
+{xo.iconB1}{xo.icon()[0][0]}{xo.iconB1}{xo.icon()[0][1]}{xo.iconB1}{xo.icon()[0][2]}{xo.iconB1}
+{xo.iconB1}{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB1}
+{xo.iconB1}{xo.icon()[1][0]}{xo.iconB1}{xo.icon()[1][1]}{xo.iconB1}{xo.icon()[1][2]}{xo.iconB1}
+{xo.iconB1}{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB1}
+{xo.iconB1}{xo.icon()[2][0]}{xo.iconB1}{xo.icon()[2][1]}{xo.iconB1}{xo.icon()[2][2]}{xo.iconB1}
+{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}"""
+    
     if xo.X:
         user = await bot.fetch_user(xo.X)
         Xname = user.display_name
@@ -1431,19 +1440,11 @@ async def xo_embed():
         
     if xo.draw: title = f"Hoà rồi! 💫"
     if xo.waiting and not xo.winner: des = "> Cần thêm 1 user nữa để bắt đầu!"
-    if xo.in_match and not xo.ai_match: des = ""
-    elif xo.in_match and xo.ai_match: des = val.now_chat_ai
-    
-    board = xo.icon()
-    board = f"""{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}
-{xo.iconB1}{xo.icon()[0][0]}{xo.iconB1}{xo.icon()[0][1]}{xo.iconB1}{xo.icon()[0][2]}{xo.iconB1}
-{xo.iconB1}{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB1}
-{xo.iconB1}{xo.icon()[1][0]}{xo.iconB1}{xo.icon()[1][1]}{xo.iconB1}{xo.icon()[1][2]}{xo.iconB1}
-{xo.iconB1}{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB2}{xo.iconB1}{xo.iconB1}
-{xo.iconB1}{xo.icon()[2][0]}{xo.iconB1}{xo.icon()[2][1]}{xo.iconB1}{xo.icon()[2][2]}{xo.iconB1}
-{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}{xo.iconB1}"""
+    if xo.in_match: des = board
     
     notice = xo.notice
+    
+    if xo.ai_match: notice = f"{val.now_chat_ai}\n\n{notice}"
     
     if not xo.winner or xo.draw:
         if xo.turn == "x":
@@ -1457,10 +1458,9 @@ async def xo_embed():
     
     
     embed=discord.Embed(title=title, description=des, color=color)
+    if xo.in_match or xo.winner or xo.draw: embed.add_field(name="", value="\n", inline=False)
     if Xname: embed.add_field(name=f"> {xo.iconX} - {Xname} {icon1}", value="", inline=False)
-    if Oname: embed.add_field(name=f"> {xo.iconO} - {Oname} {icon2}", value="", inline=False)
-    if xo.in_match or xo.winner or xo.draw: embed.add_field(name="", value="\n", inline=False) 
-    if xo.in_match or xo.winner or xo.draw: embed.add_field(name=board, value="", inline=False)
+    if Oname: embed.add_field(name=f"> {xo.iconO} - {Oname} {icon2}", value="", inline=False) 
     if xo.in_match: embed.set_footer(text=notice)
     
     view = View(timeout=None)
