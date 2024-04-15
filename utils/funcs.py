@@ -1976,7 +1976,7 @@ class XO():
         from utils.bot import val
         
         def _suggest():
-            board = self.board.copy()
+            board = self.board
             def _check_win(board, player):
                 # Check rows
                 for row in board:
@@ -2000,7 +2000,7 @@ class XO():
             for row in range(3):
                 for col in range(3):
                     if board[row][col] is None:
-                        board[row][col] = 'o'  # Try placing 'o'
+                        #board[row][col] = 'o'  # Try placing 'o'
                         if _check_win(board, 'o'):
                             return row, col
                         else:
@@ -2010,7 +2010,7 @@ class XO():
             for row in range(3):
                 for col in range(3):
                     if board[row][col] is None:
-                        board[row][col] = 'x'  # Try placing 'x'
+                        #board[row][col] = 'x'  # Try placing 'x'
                         if _check_win(board, 'x'):
                             return row, col
                         else:
