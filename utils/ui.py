@@ -1453,7 +1453,9 @@ async def xo_embed():
         val.set('CD', 1)
         des = board
         
-    if xo.waiting and not xo.winner and not xo.draw: des = "> Cần thêm 1 user nữa để bắt đầu!"
+    if xo.waiting and not xo.winner and not xo.draw:
+        if not xo.X: des = f"> {xo.iconX} - Ấn `✨ join` để tham gia."
+        if not xo.Y: des = f"> {xo.iconO} - Ấn `✨ join` để tham gia."
     if xo.in_match: des = board
     
     notice = xo.notice
