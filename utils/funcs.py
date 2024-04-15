@@ -1975,9 +1975,64 @@ class XO():
     def ai_move(self, move=None, notice=None):
         from utils.bot import val
         
+        def _suggest(board):
+            def _check_win(board, player):
+                # Check rows
+                for row in board:
+                    if all(cell == player for cell in row):
+                        return True
+
+                # Check columns
+                for col in range(3):
+                    if all(board[row][col] == player for row in range(3)):
+                        return True
+
+                # Check diagonals
+                if all(board[i][i] == player for i in range(3)):
+                    return True
+                if all(board[i][2 - i] == player for i in range(3)):
+                    return True
+
+                return False
+            
+            # Check for winning move
+            for row in range(3):
+                for col in range(3):
+                    if board[row][col] is None:
+                        board[row][col] = 'o'  # Try placing 'o'
+                        if _check_win(board, 'o'):
+                            return row, col
+                        else:
+                            board[row][col] = None  # Reset
+
+            # Check for blocking move
+            for row in range(3):
+                for col in range(3):
+                    if board[row][col] is None:
+                        board[row][col] = 'x'  # Try placing 'x'
+                        if _check_win(board, 'x'):
+                            return row, col
+                        else:
+                            board[row][col] = None  # Reset
+
+            # Choose center if available
+            if board[1][1] is None:
+                return 1, 1
+
+            # Choose a corner if available
+            for row, col in [(0, 0), (0, 2), (2, 0), (2, 2)]:
+                if board[row][col] is None:
+                    return row, col
+
+            # Choose any available space
+            for row in range(3):
+                for col in range(3):
+                    if board[row][col] is None:
+                        return row, col
+        
         def _notice(noti=None):
             
-            x,y = self.suggest(board=self.board)
+            x,y = _suggest(self.board)
             
             if self.turn == "o":
                 board = f"gợi ý -> [{x},{y}]"
@@ -2013,61 +2068,6 @@ class XO():
             if mv:
                 if self.turn == "o": ok = _move(mv)
             if not ok: _notice(noti=f"Vị trí sai, hãy đi lại đúng vị trí.")
-    
-    def suggest(board):
-        def _check_win(board, player):
-            # Check rows
-            for row in board:
-                if all(cell == player for cell in row):
-                    return True
-
-            # Check columns
-            for col in range(3):
-                if all(board[row][col] == player for row in range(3)):
-                    return True
-
-            # Check diagonals
-            if all(board[i][i] == player for i in range(3)):
-                return True
-            if all(board[i][2 - i] == player for i in range(3)):
-                return True
-
-            return False
-        
-        # Check for winning move
-        for row in range(3):
-            for col in range(3):
-                if board[row][col] is None:
-                    board[row][col] = 'o'  # Try placing 'o'
-                    if _check_win(board, 'o'):
-                        return row, col
-                    else:
-                        board[row][col] = None  # Reset
-
-        # Check for blocking move
-        for row in range(3):
-            for col in range(3):
-                if board[row][col] is None:
-                    board[row][col] = 'x'  # Try placing 'x'
-                    if _check_win(board, 'x'):
-                        return row, col
-                    else:
-                        board[row][col] = None  # Reset
-
-        # Choose center if available
-        if board[1][1] is None:
-            return 1, 1
-
-        # Choose a corner if available
-        for row, col in [(0, 0), (0, 2), (2, 0), (2, 2)]:
-            if board[row][col] is None:
-                return row, col
-
-        # Choose any available space
-        for row in range(3):
-            for col in range(3):
-                if board[row][col] is None:
-                    return row, col
           
     def update(self, val_name, value):
         if hasattr(self, val_name):
