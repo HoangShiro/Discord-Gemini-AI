@@ -900,6 +900,8 @@ async def ai_game():
     from utils.ui import bot_notice, music_embed, normal_embed, xo_embed
     from utils.reply import send_embed
     
+    if val.chat_csl: print(f"{get_real_time()}> [{val.ai_name} - {val.ai_char}]: {val.now_chat_ai}")
+    
     if xo.ai_match and xo.in_match:
         
         xo.ai_move(move=True)

@@ -1454,7 +1454,7 @@ async def xo_embed():
             icon2 = xo.iconS
             notice = f"Tới lượt của {Oname}."
     
-    if xo.ai_match: notice = f"{val.now_chat_ai}\n\n{notice}"
+    if xo.ai_match: notice = f"💬 {val.now_chat_ai}\n\n{notice}"
     
     embed=discord.Embed(title=title, description=des, color=color)
     if xo.in_match or xo.winner or xo.draw: embed.add_field(name="", value="\n", inline=False)
