@@ -1437,7 +1437,7 @@ async def xo_embed():
             
             icon1 = ""
             icon2 = "👑"
-            
+        
         if xo.ai_match:
             val.set('now_chat_user', "")
             val.set('in_game', False)
@@ -1487,5 +1487,7 @@ async def xo_embed():
     if xo.in_match and not xo.winner: view.add_item(xdown_bt)
     if xo.in_match and not xo.winner: view.add_item(xsl_bt)
     view.add_item(xrmv_bt)
+    
+    if xo.winner or xo.draw: xo.clear()
     
     return embed, view
