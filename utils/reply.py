@@ -902,11 +902,11 @@ async def cmd_msg_user():
         now_chat.insert(0, chat)
         val.set('now_chat', now_chat)
 
-    if x_o:
-        chat = "X-O Game: Bạn là O, có thể đi theo nước đi gợi ý để thắng. Game sắp bắt đầu rồi, sẵn sàng?"
-        now_chat = val.now_chat
-        now_chat.insert(0, chat)
-        val.set('now_chat', now_chat)
+    #if x_o:
+    #    chat = "X-O Game: Bạn là O, có thể đi theo nước đi gợi ý để thắng. Game sắp bắt đầu rồi, sẵn sàng?"
+    #    now_chat = val.now_chat
+    #    now_chat.insert(0, chat)
+    #    val.set('now_chat', now_chat)
     
 async def ai_game():
     from utils.bot import val, bot, rm, mu, art, xo
