@@ -26,6 +26,7 @@ async def sec_check():
         
     # Trời lại làm việc nếu không có chat mới
     elif val.CD == 0 and not val.now_chat:
+        if val.CD_pass: return
         val.set('in_reply', False)
         if val.public: val.set('CD', val.chat_speed, save=False) # Chờ trước khi rep tiếp
         if val.CD_idle == (val.to_worktime - 1) and not mu.sound_playing:
@@ -45,6 +46,7 @@ async def sec_check():
     
     # Work trở lại
     if val.CD_idle == (val.to_worktime - 1) and not mu.sound_playing:
+        if val.CD_pass: return
         val.set('CD', val.to_breaktime)
         # Set lại status
         val.set('in_game', False)

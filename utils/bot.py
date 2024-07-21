@@ -60,6 +60,7 @@ class AllStatus:
         self.in_creative = False            # Tương tự như trên
         self.stop_chat = 0                  # Dừng chat nếu phát hiện lỗi API
         
+        self.CD_pass = False
         self.CD = 300                       # Thời gian đếm ngược trước khi check tin nhắn
         self.CD_idle = 0                    # Thời gian đếm tiến trước khi work trở lại
         self.to_breaktime = 300             # Max của CD
@@ -1245,6 +1246,15 @@ async def x_o_play(interaction: discord.Interaction, x:str=None, o:str=None, cur
         xo.set('iconB2', board3)
     
     await interaction.response.send_message("> Đã đổi các emoji của board!", ephemeral=True)
+
+# Luôn rep
+@bot.slash_command(name="cd", description=f"Mức độ sẵn sàng reply.")
+async def cd_change(interaction: discord.Interaction, alway_reply:bool):
+    if not val.public:
+        if interaction.user.id != val.owner_uid:
+            return await interaction.response.send_message(val.no_perm, ephemeral=True)
+    
+    val.set('CD_pass', alway_reply)
 
 def bot_run():
     try:
